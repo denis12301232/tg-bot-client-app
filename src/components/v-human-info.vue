@@ -7,7 +7,7 @@
    .info_error {{ error }}
    .info_finded(v-show="finded.length")
       .info_finded_all Всего найдено: {{ finded.length }}
-      div(v-for="item in finded")
+      .info_block(v-for="item in finded")
          h3 Найдено:
          table.collapsed
             tbody
@@ -86,8 +86,14 @@ export default defineComponent({
       margin-top: 10px;
       width: 50%;
 
-      & .info_finded_all{
+      & .info_finded_all {
          text-align: center;
+      }
+
+      & .info_block {
+         display: flex;
+         flex-direction: column;
+         align-items: center;
       }
    }
 }
