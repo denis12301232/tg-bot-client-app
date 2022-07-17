@@ -1,0 +1,350 @@
+<template lang="pug">
+.form_container
+   form(type="submit", @submit.prevent="submit")
+      div.title-list Заявка на получение гуманитарной помощи
+      .points
+         label.points_point(:class="{ error: !form.fio.valid && form.fio.touched }")
+            .label_title ФИО
+            input(type="text", placeholder="ФИО", v-model="form.fio.value", @blur="form.fio.blur")
+            small(v-if="form.fio.errors.required && form.fio.touched")
+               span.note ! 
+               | Это обязательное поле
+         label.points_point(:class="{ error: !form.phone.valid && form.phone.touched }")
+            .label_title Введите телефон
+            input(type="text", placeholder="Телефон", v-model="form.phone.value", @blur="form.phone.blur")
+            small(v-if="form.phone.errors.required && form.phone.touched")
+               span.note ! 
+               | Это обязательное поле
+            small(v-else-if="form.phone.errors.isPhone && form.phone.touched")
+               | Номер должен начинатся +380 и содержать 13 символов
+         label.points_point(:class="{ error: !form.birth.valid && form.birth.touched }")
+            .label_title Введите дату рождения (дд.мм.гггг)
+            input(type="date", placeholder="дд.мм.гггг", v-model="form.birth.value", @blur="form.birth.blur")
+            small(v-if="form.birth.errors.required && form.birth.touched")
+               span.note ! 
+               | Это обязательное поле
+            small(v-else-if="form.birth.errors.isDDMMYYYY && form.birth.touched") Введите дату в формате ДД.ММ.ГГГГ
+         label.points_point(:class="{ error: !form.addr.valid && form.addr.touched }")
+            .label_title Введите адрес
+            input(type="text", placeholder="Адрес", v-model="form.addr.value", @blur="form.addr.blur")
+            small(v-if="form.addr.errors.required && form.addr.touched")
+               span.note ! 
+               | Это обязательное поле
+         label.points_point(:class="{ error: !form.people_num.valid && form.people_num.touched }")
+            .label_title Введите число проживающих
+            input(type="number", placeholder="Число проживающих", v-model="form.people_num.value", @blur="form.people_num.blur")
+            small(v-if="form.people_num.errors.required && form.people_num.touched")
+               span.note ! 
+               | Это обязательное поле
+         label.points_point(v-if="+form.people_num.value > 1")
+            .label_title Введите ФИО и возраст проживающих
+            input(
+               v-for="item in +form.people_num.value - 1",
+               type="text", 
+               placeholder="ФИО и возраст", 
+               v-model="form.people_fio.value[+item - 1]",
+               )
+         div.points_point
+            .label_title Есть ли среди проживающих инвалиды?
+               .choose
+                  div
+                     input(type="radio", :value="true", v-model="form.invalids.value")
+                     | Да
+                  div
+                     input(type="radio", :value="false", v-model="form.invalids.value")
+                     | Нет    
+         div.points_point
+            .label_title Есть ли дети?
+               .choose
+                  div
+                     input(type="radio", :value="true", v-model="form.children.value")
+                     | Да
+                  div
+                     input(type="radio", :value="false", v-model="form.children.value")
+                     | Нет
+         div.points_point(v-if="form.children.value")
+            .label_title Отметьте возраст детей
+               .choose
+                  div 
+                     input(type="checkbox", value="0-1", v-model="form.children_age.value")
+                     | 0-1
+                  div
+                     input(type="checkbox", value="1-3", v-model="form.children_age.value")
+                     | 1-3
+                  div
+                     input(type="checkbox", value="3-9", v-model="form.children_age.value")
+                     | 3-9
+                  div 
+                     input(type="checkbox", value="9-18", v-model="form.children_age.value")
+                     | 9-18
+         div.points_point 
+            .label_title Нужны ли продукты питания?
+               .choose
+                  div
+                     input(type="radio", :value="true", v-model="form.food.value")
+                     | Да
+                  div
+                     input(type="radio", :value="false", v-model="form.food.value")
+                     | Нет
+         div.points_point 
+            .label_title Нужна ли вода?
+               .choose
+                  div
+                     input(type="radio", :value="true", v-model="form.water.value")
+                     | Да
+                  div
+                     input(type="radio", :value="false", v-model="form.water.value")
+                     | Нет
+         div.points_point 
+            .label_title Нужны ли лекарства?
+               .choose
+                  div
+                     input(type="radio", :value="true", v-model="form.drugs.value")
+                     | Да
+                  div
+                     input(type="radio", :value="false", v-model="form.drugs.value")
+                     | Нет
+         label.points_point(v-if="form.drugs.value")
+            .label_title Раскажите, какие именно, кол-во, дозу
+            input(type="text", v-model="form.products_detail.value")
+         div.points_point
+            .label_title Нужны ли средства личной гигиены?
+               .choose
+                  div
+                     input(type="radio", :value="true", v-model="form.gigien.value")
+                     | Да
+                  div
+                     input(type="radio", :value="false", v-model="form.gigien.value")
+                     | Нет
+         label.points_point(v-if="form.gigien.value")
+            .label_title Укажите кол-во
+            input(type="number", v-model="form.gigien_num.value")
+         div.points_point 
+            .label_title Памперсы?
+            input(type="text", v-model="form.pampers.value")
+         .label_title.points_point Особенности диеты, алергии, диабет и т.д.
+            input(type="text", v-model="form.diet.value")
+         div.points_point
+            .label_title Даю согласие на обработку персональных данных
+            input(type="checkbox", :value="true", v-model="form.pers_data_agreement.value")
+            | Согласен/согласна
+         div.points_point
+            .label_title Даю согласие на фото/видео
+            input(type="checkbox", :value="true", v-model="form.photo_agreement.value")
+            | Согласен/согласна
+         div.bottom_block
+            v-button.submit(type="submit", :disabled="!form.valid || !form.photo_agreement.value || !form.photo_agreement.value") Отправить
+            v-loading-wheel(v-if="isLoading")
+            div.api_error {{ error }}
+            div.success {{ success }}
+</template>
+
+
+<script lang="ts">
+import { defineComponent, ref } from "vue"
+import Validate from "@/libs/Validate"
+import { useForm } from "@/hooks/useForm"
+import UserDataService from "@/api/services/UserDataService"
+import AssistanceFormDto from "@/api/dtos/AssistanseFormDto"
+import { AssistanceForm } from "@/intefaces/AssistanceForm"
+import { useDefaultValues } from "@/hooks/useDefaultValues"
+import { AssistanceFormValidators } from "@/intefaces/AssistanceFormValidators"
+
+export default defineComponent({
+   setup() {
+      const error = ref('');
+      const success = ref('');
+      const isLoading = ref(false);
+      const form: AssistanceFormValidators = useForm({
+         fio: {
+            value: '',
+            validators: { required: Validate.required },
+         },
+         phone: {
+            value: '',
+            validators: { required: Validate.required, isPhone: Validate.isPhone },
+         },
+         birth: {
+            value: '',
+            validators: {
+               required: Validate.required, isDDMMYYYY: Validate.isDDMMYYYY
+            },
+         },
+         addr: {
+            value: '',
+            validators: { required: Validate.required },
+         },
+         people_num: {
+            value: '',
+            validators: { required: Validate.required },
+         },
+         people_fio: {
+            value: <Array<string>>[],
+         },
+         invalids: {
+            value: false,
+         },
+         children: {
+            value: false,
+         },
+         children_age: {
+            value: <Array<string>>[],
+         },
+         food: {
+            value: false,
+         },
+         water: {
+            value: false,
+         },
+         drugs: {
+            value: false,
+         },
+         products_detail: {
+            value: '',
+         },
+         gigien: {
+            value: false,
+         },
+         gigien_num: {
+            value: 0,
+         },
+         pampers: {
+            value: '',
+         },
+         diet: {
+            value: '',
+         },
+         pers_data_agreement: {
+            value: false,
+         },
+         photo_agreement: {
+            value: false,
+         }
+      });
+
+      const submit = async (event: Event): Promise<void> => {
+         try {
+            isLoading.value = true;
+            const formToSend = { ...new AssistanceFormDto(form) };
+            await UserDataService.sendForm(<AssistanceForm>formToSend);
+            useDefaultValues(form);
+            success.value = 'Заявка отправлена!'
+            setTimeout(() => success.value = '', 2000);
+
+         } catch (e: any) {
+            error.value = e?.response?.data?.message;
+            setTimeout(() => error.value = '', 2000);
+         } finally {
+            isLoading.value = false;
+         }
+      }
+
+      return { form, submit, error, isLoading, success }
+   }
+})
+</script>
+
+<style lang="scss" scoped>
+.form_container {
+   display: flex;
+   justify-content: center;
+
+   & .buttons {
+      display: flex;
+      justify-content: space-around;
+   }
+
+   & .points_point {
+      border: 1px solid #dadce0;
+      display: block;
+      margin-top: 10px;
+      background-color: white;
+      border-radius: 5px;
+      padding: 15px;
+   }
+
+   & .choose {
+      display: flex;
+      flex-direction: column;
+   }
+
+   & small {
+      display: block;
+      margin-top: 20px;
+      color: red;
+   }
+
+   & .note {
+      font-size: 1.3em;
+      font-weight: bold;
+   }
+
+   & .error {
+      border: 1px solid red;
+   }
+}
+
+.bottom_block {
+   display: flex;
+   padding-bottom: 5px;
+   justify-items: baseline;
+   margin-top: 5px;
+
+   & .api_error {
+      color: red;
+      height: 30px;
+      line-height: 30px;
+      font-weight: bolder;
+      margin-right: 5px;
+   }
+
+   & .success {
+      color: rgb(10, 157, 10);
+      font-weight: bolder;
+      height: 30px;
+      line-height: 30px;
+      margin-right: 5px;
+   }
+}
+
+input {
+   margin-top: 20px;
+
+}
+
+input[type="text"],
+input[type="number"],
+input[type="date"] {
+   width: 100%;
+   border-top: 0;
+   border-left: 0;
+   border-right: 0;
+   -moz-appearance: textfield;
+   display: block;
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+   -webkit-appearance: none;
+}
+
+input[type="text"],
+input[type="number"]:active,
+:hover,
+:focus {
+   outline: 0;
+   outline-offset: 0;
+}
+
+.title-list {
+   text-align: center;
+   font-size: 1.5em;
+}
+
+@media(max-width: 768px) {
+   .form_container {
+      width: 95%;
+      margin: 0 auto;
+   }
+}
+</style>
