@@ -1,7 +1,7 @@
 <template lang="pug">
 .info
    .info_title Введите ФИО для поиска
-   input.info_search(type="text", placeholder="ФИО", v-model="fio")
+   input.info_search(type="text", placeholder="ФИО", v-model="fio", @keyup.enter="findHuman")
    v-button(@click="findHuman") Найти
    v-loading-wheel(v-if="isLoading")
    .info_error {{ error }}
