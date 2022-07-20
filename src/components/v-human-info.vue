@@ -142,6 +142,10 @@ export default defineComponent({
    .info_finded {
       width: 95% !important;
    }
+
+   .edit{
+   width: 95% !important;
+}
 }
 
 .collapsed {
