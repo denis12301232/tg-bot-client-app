@@ -18,7 +18,7 @@ export default class HumansFormListDto {
             continue;
          }
 
-         if (!form[item].value) continue;
+         //if (!form[item].value) continue;
          this[item] = form[item].value;
       }
    }
