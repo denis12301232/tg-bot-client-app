@@ -2,7 +2,9 @@
 v-modal(:show="isModalVisible", @hide="showModal")
    .title-list  Вы уверены?
    .buttons
-      v-button.confirm(@click="deleteHuman") Да
+      .buttons_load
+         v-button.confirm(@click="deleteHuman") Да
+         v-loading-wheel(v-if="isLoading")
       v-button.confirm(@click="showModal") Нет
 .full-list
    .title-list Полный список
@@ -29,6 +31,7 @@ export default defineComponent({
       const listStore = useListStore();
       const isModalVisible = ref(false);
       const currentId = ref('');
+      const isLoading = ref(false);
 
       onMounted(async (): Promise<void> => {
          if (!listStore.humansList.length) {
@@ -44,16 +47,18 @@ export default defineComponent({
 
       const deleteHuman = async (): Promise<void> => {
          try {
+            isLoading.value = true;
             await AssistanceService.deleteHuman(currentId.value);
             listStore.humansList = listStore.humansList.filter(item => item._id !== currentId.value);
          } catch (e: any) {
             listStore.error = e?.response?.data?.message;
          } finally {
+            isLoading.value = false;
             showModal();
          }
       }
 
-      return { listStore, showModal, isModalVisible, deleteHuman }
+      return { listStore, showModal, isModalVisible, deleteHuman, isLoading }
    }
 });
 </script>
@@ -101,6 +106,10 @@ export default defineComponent({
    margin-top: 10px;
    & .confirm{
       width: 40px;
+   }
+
+   & .buttons_load{
+      display: flex;
    }
 }
 
