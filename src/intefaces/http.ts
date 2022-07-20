@@ -1,9 +1,9 @@
-import { AssistanceForm  } from "./AssistanceForm"
+import { AssistanceForm } from "./AssistanceForm"
 
 export interface HumansList {
-   humansList: Array<string>
+   humansList: Array<{ fio: string, _id: string }>
 }
 
-export interface HumansFormList {
-   humansFormList: Array<AssistanceForm>
+export interface AssistanceFormsList {
+   humansFormList: Array<{ form: AssistanceForm, _id: string }>
 }

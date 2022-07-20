@@ -1,33 +1,59 @@
 <template lang="pug">
-div.full-list
-   div.title-list Полный список
-   div.error(v-if="listStore.error") {{ listStore.error }}
-   .list(v-for="(human, index) in listStore.humansList")
+v-modal(:show="isModalVisible", @hide="showModal")
+   .title-list  Вы уверены?
+   .buttons
+      v-button.confirm(@click="deleteHuman") Да
+      v-button.confirm(@click="showModal") Нет
+.full-list
+   .title-list Полный список
+   .error(v-if="listStore.error") {{ listStore.error }}
+   .list(v-for="(human, index) in listStore.humansList", :key="human._id")
       .list_item
-         div.number {{ index + 1 }}.
-         div.human {{ human }}
-div.loading
+         .number {{ index + 1 }}.
+         .human {{ human.fio }}
+         v-button-delete(@click="showModal($event, human._id)") test
+.loading
    v-loading-wheel(v-if="listStore.isLoading")
-div.observer
+.observer
    div(v-intersection="{ f: listStore.catchHumansList }")
 </template>
 
 
 <script lang="ts">
-import { defineComponent, onMounted } from "vue";
+import { defineComponent, onMounted, ref } from "vue";
 import { useListStore } from "@/store/listStore";
+import AssistanceService from "@/api/services/AssistanceService";
 
 export default defineComponent({
    setup() {
       const listStore = useListStore();
+      const isModalVisible = ref(false);
+      const currentId = ref('');
 
-      onMounted(async () => {
+      onMounted(async (): Promise<void> => {
          if (!listStore.humansList.length) {
             listStore.catchHumansList();
          }
       });
 
-      return { listStore }
+      const showModal = (event?: Event, id?: string): void => {
+         isModalVisible.value = !isModalVisible.value;
+         if (!event || !id) return;
+         currentId.value = id;
+      }
+
+      const deleteHuman = async (): Promise<void> => {
+         try {
+            await AssistanceService.deleteHuman(currentId.value);
+            listStore.humansList = listStore.humansList.filter(item => item._id !== currentId.value);
+         } catch (e: any) {
+            listStore.error = e?.response?.data?.message;
+         } finally {
+            showModal();
+         }
+      }
+
+      return { listStore, showModal, isModalVisible, deleteHuman }
    }
 });
 </script>
@@ -67,6 +93,15 @@ export default defineComponent({
 .title-list {
    text-align: center;
    font-size: 1.5em;
+}
+
+.buttons {
+   display: flex;
+   justify-content: space-between;
+   margin-top: 10px;
+   & .confirm{
+      width: 40px;
+   }
 }
 
 .error {

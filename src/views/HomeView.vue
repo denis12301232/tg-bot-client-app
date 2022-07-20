@@ -1,15 +1,15 @@
 <template lang="pug">
-v-assistance-form
+v-assistance
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import vAssistanceForm from "@/components/v-assistance-form.vue"
+import vAssistance from "@/components/v-assistance.vue"
 
 export default defineComponent({
   name: 'HomeView',
   components: {
-    vAssistanceForm
+    vAssistance
   },
 });
 </script>

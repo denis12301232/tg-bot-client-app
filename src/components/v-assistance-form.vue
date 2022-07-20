@@ -1,7 +1,7 @@
 <template lang="pug">
 .form_container
-   form(type="submit", @submit.prevent="submit")
-      div.title-list Заявка на получение гуманитарной помощи
+   form(type="submit", @submit.prevent="submit").form
+      div.title-list {{ title }}
       .points
          label.points_point(:class="{ error: !form.fio.valid && form.fio.touched }")
             .label_title ФИО
@@ -133,121 +133,71 @@
             input(type="checkbox", :value="true", v-model="form.photo_agreement.value")
             | Согласен/согласна
          div.bottom_block
-            v-button.submit(type="submit", :disabled="!form.valid || !form.photo_agreement.value || !form.photo_agreement.value") Отправить
-            v-loading-wheel(v-if="isLoading")
-            div.api_error {{ error }}
-            div.success {{ success }}
+            div.bottom_block_buttons
+               v-button.test(type="submit", :disabled="!form.valid || !form.pers_data_agreement.value || !form.photo_agreement.value") Отправить
+               v-loading-wheel(v-if="isLoading")
+               .api_error {{ error }}
+               .success {{ success }}
+            div.bottom_block_buttons
+               slot.test
 </template>
 
-
 <script lang="ts">
-import { defineComponent, ref } from "vue"
-import Validate from "@/libs/Validate"
-import { useForm } from "@/hooks/useForm"
-import UserDataService from "@/api/services/UserDataService"
-import AssistanceFormDto from "@/api/dtos/AssistanseFormDto"
-import { AssistanceForm } from "@/intefaces/AssistanceForm"
-import { useDefaultValues } from "@/hooks/useDefaultValues"
+import { defineComponent } from "vue";
 import { AssistanceFormValidators } from "@/intefaces/AssistanceFormValidators"
+import { computed } from "@vue/reactivity";
 
 export default defineComponent({
-   setup() {
-      const error = ref('');
-      const success = ref('');
-      const isLoading = ref(false);
-      const form: AssistanceFormValidators = useForm({
-         fio: {
-            value: '',
-            validators: { required: Validate.required },
-         },
-         phone: {
-            value: '',
-            validators: { required: Validate.required, isPhone: Validate.isPhone },
-         },
-         birth: {
-            value: '',
-            validators: {
-               required: Validate.required, isDDMMYYYY: Validate.isDDMMYYYY
-            },
-         },
-         addr: {
-            value: '',
-            validators: { required: Validate.required },
-         },
-         people_num: {
-            value: '',
-            validators: { required: Validate.required },
-         },
-         people_fio: {
-            value: <Array<string>>[],
-         },
-         invalids: {
-            value: false,
-         },
-         children: {
-            value: false,
-         },
-         children_age: {
-            value: <Array<string>>[],
-         },
-         food: {
-            value: false,
-         },
-         water: {
-            value: false,
-         },
-         drugs: {
-            value: false,
-         },
-         products_detail: {
-            value: '',
-         },
-         gigien: {
-            value: false,
-         },
-         gigien_num: {
-            value: 0,
-         },
-         pampers: {
-            value: '',
-         },
-         diet: {
-            value: '',
-         },
-         pers_data_agreement: {
-            value: false,
-         },
-         photo_agreement: {
-            value: false,
-         }
-      });
-
-      const submit = async (event: Event): Promise<void> => {
-         try {
-            isLoading.value = true;
-            const formToSend = { ...new AssistanceFormDto(form) };
-            await UserDataService.sendForm(<AssistanceForm>formToSend);
-            useDefaultValues(form);
-            success.value = 'Заявка отправлена!'
-            setTimeout(() => success.value = '', 2000);
-
-         } catch (e: any) {
-            error.value = e?.response?.data?.message;
-            setTimeout(() => error.value = '', 2000);
-         } finally {
-            isLoading.value = false;
-         }
+   props: {
+      form: {
+         type: Object as () => AssistanceFormValidators,
+         required: true,
+      },
+      error: {
+         type: String,
+         //required: true,
+         default: '',
+      },
+      success: {
+         type: String,
+         //required: true,
+         default: '',
+      },
+      isLoading: {
+         type: Boolean,
+         // required: true,
+         default: false,
+      },
+      submit: {
+         type: Function as any,
+         //required: true,
+         default: () => true,
+      },
+      title: {
+         type: String,
+         default: 'Заявка на получение гуманитарной помощи',
       }
+   },
+   setup(props) {
+      const form = computed(() => props.form);
+      const error = computed(() => props.error);
+      const success = computed(() => props.success);
+      const isLoading = computed(() => props.isLoading);
+      const submit = computed(() => props.submit);
 
-      return { form, submit, error, isLoading, success }
+      return { form, error, success, isLoading, submit }
    }
 })
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .form_container {
    display: flex;
    justify-content: center;
+
+   & .form {
+      width: 100%;
+   }
 
    & .buttons {
       display: flex;
@@ -284,7 +234,13 @@ export default defineComponent({
    }
 }
 
-.bottom_block {
+.bottom_block{
+   display: flex;
+   justify-content: space-between;
+   align-items: baseline;
+}
+
+.bottom_block_buttons {
    display: flex;
    padding-bottom: 5px;
    justify-items: baseline;
@@ -307,6 +263,9 @@ export default defineComponent({
    }
 }
 
+.test{
+   height: 30px;
+}
 input {
    margin-top: 20px;
 

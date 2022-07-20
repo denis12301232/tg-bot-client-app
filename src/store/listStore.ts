@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import UserDataService from '@/api/services/UserDataService';
+import AssistanceService from '@/api/services/AssistanceService';
 
 export const useListStore = defineStore('list', {
    state: () => ({
@@ -8,7 +8,7 @@ export const useListStore = defineStore('list', {
       limit: 10,
       error: '',
       isLoading: false,
-      humansList: <Array<string>>[],
+      humansList: <Array<{ fio: string, _id: string }>>[],
    }),
    actions: {
       async catchHumansList() {
@@ -16,13 +16,13 @@ export const useListStore = defineStore('list', {
             this.error = '';
             this.page++;
             this.isLoading = true;
-            const response = await UserDataService.catchHumansList({ limit: this.limit, page: this.page });
+            const response = await AssistanceService.catchHumansList({ limit: this.limit, page: this.page });
             this.total = Math.ceil(+response.headers['x-total-count'] / this.limit);
             this.humansList = [...this.humansList, ...response.data.humansList];
             if (!this.humansList.length) this.error = "Список пуст";
 
          } catch (e: any) {
-            this.error = e.message;
+            this.error = e?.response?.data?.message;
          } finally {
             this.isLoading = false;
          }

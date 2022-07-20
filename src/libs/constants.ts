@@ -1,3 +1,5 @@
+import Validate from "@/libs/Validate"
+
 export const table = {
    fio: 'ФИО',
    phone: 'Телефон',
@@ -42,4 +44,71 @@ export const defaultValues = {
    pers_data_agreement: false,
    photo_agreement: false,
 
+}
+
+export const init = {
+   fio: {
+      value: '',
+      validators: { required: Validate.required },
+   },
+   phone: {
+      value: '',
+      validators: { required: Validate.required, isPhone: Validate.isPhone },
+   },
+   birth: {
+      value: '',
+      validators: {
+         required: Validate.required, isDDMMYYYY: Validate.isDDMMYYYY
+      },
+   },
+   addr: {
+      value: '',
+      validators: { required: Validate.required },
+   },
+   people_num: {
+      value: '',
+      validators: { required: Validate.required },
+   },
+   people_fio: {
+      value: <Array<string>>[],
+   },
+   invalids: {
+      value: false,
+   },
+   children: {
+      value: false,
+   },
+   children_age: {
+      value: <Array<string>>[],
+   },
+   food: {
+      value: false,
+   },
+   water: {
+      value: false,
+   },
+   drugs: {
+      value: false,
+   },
+   products_detail: {
+      value: '',
+   },
+   gigien: {
+      value: false,
+   },
+   gigien_num: {
+      value: 0,
+   },
+   pampers: {
+      value: '',
+   },
+   diet: {
+      value: '',
+   },
+   pers_data_agreement: {
+      value: false,
+   },
+   photo_agreement: {
+      value: false,
+   }
 }
