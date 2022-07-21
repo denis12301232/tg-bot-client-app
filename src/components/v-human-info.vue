@@ -166,6 +166,7 @@ export default defineComponent({
    border-style: hidden;
    box-shadow: 0 0 0 1px #ccc;
    width: 100%;
+   table-layout: fixed;
 
    & td,
    th {
