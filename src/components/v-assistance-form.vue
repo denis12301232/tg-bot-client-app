@@ -199,11 +199,6 @@ export default defineComponent({
       width: 100%;
    }
 
-   & .buttons {
-      display: flex;
-      justify-content: space-around;
-   }
-
    & .points_point {
       border: 1px solid #dadce0;
       display: block;
@@ -234,7 +229,7 @@ export default defineComponent({
    }
 }
 
-.bottom_block{
+.bottom_block {
    display: flex;
    justify-content: space-between;
    align-items: baseline;
@@ -263,9 +258,10 @@ export default defineComponent({
    }
 }
 
-.test{
+.test {
    height: 30px;
 }
+
 input {
    margin-top: 20px;
 
@@ -278,17 +274,14 @@ input[type="date"] {
    border-top: 0;
    border-left: 0;
    border-right: 0;
-   -moz-appearance: textfield;
+   border-bottom: 1px solid black;
    display: block;
-}
-
-input[type="number"]::-webkit-outer-spin-button,
-input[type="number"]::-webkit-inner-spin-button {
+   -moz-appearance: textfield;
    -webkit-appearance: none;
+   background-color: white;
 }
 
-input[type="text"],
-input[type="number"]:active,
+input:active,
 :hover,
 :focus {
    outline: 0;

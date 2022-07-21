@@ -13,7 +13,7 @@ export const table = {
    food: 'Нужны ли продукты питания?',
    water: 'Нужна ли вода?',
    drugs: 'Лекарства?',
-   products_detail: 'Укажите кол-во(Лекарств)',
+   products_detail: 'Укажите кол-во (лекарств)',
    gigien: 'Средства личной гигиены',
    gigien_num: 'Укажите кол-во (средств)',
    pampers: 'Памперсы?',
@@ -43,7 +43,6 @@ export const defaultValues = {
    diet: '',
    pers_data_agreement: false,
    photo_agreement: false,
-
 }
 
 export const init = {
