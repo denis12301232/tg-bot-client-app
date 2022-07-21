@@ -1,5 +1,5 @@
 <template lang="pug">
-button.home-button
+button(:class="$style.button")
    slot
 </template>
 
@@ -12,8 +12,8 @@ export default defineComponent({
 </script>
 
 
-<style lang="scss" scoped>
-.home-button {
+<style lang="scss" module>
+.button {
    border: none;
    padding: 5px;
    margin: 0;

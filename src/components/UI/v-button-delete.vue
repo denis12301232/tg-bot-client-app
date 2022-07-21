@@ -1,5 +1,5 @@
 <template lang="pug">
-button.delete-button
+button(:class="$style.delete_button")
 </template>
 
 <script lang="ts">
@@ -11,8 +11,8 @@ export default defineComponent({
 </script>
 
 
-<style lang="scss" scoped>
-.delete-button {
+<style lang="scss" module>
+.delete_button {
    width: 20px;
    height: 20px;
    background-image: url("@/assets/images/delete-light.png");

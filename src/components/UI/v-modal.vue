@@ -1,14 +1,13 @@
 <template lang="pug">
-.window(
-   v-if="show",
-   @click="hideWindow",
+div(
+   :class="$style.window",
    @keyup.esc="hideWindow",
+   @click="hideWindow",
    tabindex="0",
-   v-focus
+   v-if="show",
+   v-focus,
 )
-   .window_content(
-      @click.stop,
-   )
+   div(:class="$style.window_content", @click.stop)
       slot
 </template>
 
@@ -34,7 +33,7 @@ export default defineComponent({
 });
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss" module>
 .window {
    top: 0;
    bottom: 0;

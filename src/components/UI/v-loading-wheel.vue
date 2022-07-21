@@ -1,6 +1,6 @@
 <template lang="pug">
-.loading
-   img.lodaing_image(src="@/assets/images/loading.png", alt="")
+div(:class="$style.loading")
+   img(:class="$style.lodaing_image", src="@/assets/images/loading.png")
 </template>
 
 <script lang="ts">
@@ -8,10 +8,10 @@ import { defineComponent } from "vue"
 
 export default defineComponent({
    name: "v-loading-wheel",
-   setup() { },
 });
 </script>
-<style lang="scss" scoped>
+
+<style lang="scss" module>
 .loading {
    width: 30px;
    height: 30px;

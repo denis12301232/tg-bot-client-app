@@ -1,6 +1,6 @@
 <template lang="pug">
-div.header_burger
-   span
+div(:class="$style.header_burger")
+   span(:class="$style.line")
 </template>
 
 
@@ -13,7 +13,7 @@ export default defineComponent({
 });
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss" module>
 .header_burger {
 
    display: block;
@@ -39,7 +39,7 @@ export default defineComponent({
       bottom: 0;
    }
 
-   & span {
+   & .line {
       position: absolute;
       background-color: white;
       left: 0;
