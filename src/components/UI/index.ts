@@ -3,7 +3,8 @@ import VBurger from "@/components/UI/v-burger.vue"
 import VLoadingWheel from "@/components/UI/v-loading-wheel.vue"
 import VModal from "@/components/UI/v-modal.vue"
 import VButtonDelete from "@/components/UI/v-button-delete.vue"
+import VInputFind from "@/components/UI/v-input-find.vue"
 
 export default [
-   VButton, VBurger, VLoadingWheel, VModal, VButtonDelete
+   VButton, VBurger, VLoadingWheel, VModal, VButtonDelete, VInputFind
 ];

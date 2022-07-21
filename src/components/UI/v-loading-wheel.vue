@@ -1,6 +1,6 @@
 <template lang="pug">
 .loading
-   img.lodaing_image(src="@/assets/images/loading.png", alt="") 
+   img.lodaing_image(src="@/assets/images/loading.png", alt="")
 </template>
 
 <script lang="ts">

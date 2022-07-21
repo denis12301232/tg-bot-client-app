@@ -25,8 +25,8 @@ export const useInfoStore = defineStore('info', {
                this.error = `Ничего не найдено по запросу ${this.fio}`;
             }
          }
-         catch (e: any) {
-            this.error = e?.response?.data?.message;
+         catch (e: any) {    
+            this.error = e.message;
          }
          finally {
             this.isListLoading = false;

@@ -1,7 +1,7 @@
 <template lang="pug">
 .info
    .info_title Введите ФИО для поиска
-   input.info_search(type="text", placeholder="ФИО", v-model="infoStore.fio", @keyup.enter="infoStore.findHuman")
+   v-input-find.info_search(type="text", placeholder="ФИО", v-model="infoStore.fio", @keyup.enter="infoStore.findHuman")
    v-button(@click="infoStore.findHuman") Найти
    v-loading-wheel(v-if="infoStore.isListLoading")
    .info_error {{ infoStore.error }}

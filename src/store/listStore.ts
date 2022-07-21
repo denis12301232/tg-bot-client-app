@@ -21,8 +21,8 @@ export const useListStore = defineStore('list', {
             this.humansList = [...this.humansList, ...response.data.humansList];
             if (!this.humansList.length) this.error = "Список пуст";
 
-         } catch (e: any) {
-            this.error = e?.response?.data?.message;
+         } catch (e: any) {   
+            this.error = e.message;
          } finally {
             this.isLoading = false;
          }

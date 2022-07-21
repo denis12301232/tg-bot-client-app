@@ -190,7 +190,7 @@ export default defineComponent({
 })
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .form_container {
    display: flex;
    justify-content: center;
