@@ -18,11 +18,11 @@
                   td {{ useBeautifyValue(key) }}
    .info_edit(v-show="infoStore.isEditable")
       v-assistance-form(
-         :form="form", 
+         :form="assistance.form", 
          :submit="submit",  
-         :error="error", 
-         :success="success", 
-         :is-loading="isLoading",
+         :error="assistance.error", 
+         :success="assistance.success", 
+         :is-loading="assistance.isLoading",
          title="Редактирование",
          )
          v-button.cancel_button(@click="setEditable", type="button") Отмена
@@ -30,7 +30,7 @@
 
 
 <script lang="ts">
-import { defineComponent, ref } from "vue"
+import { defineComponent, reactive, ref } from "vue"
 import { useInfoStore } from "@/store/infoStore"
 import { useBeautifyValue } from "@/hooks/useBeautifyValue"
 import { table, init } from "@/libs/constants"
@@ -41,14 +41,17 @@ import AssistanceFormDto from "@/api/dtos/AssistanseFormDto"
 import AssistanceService from "@/api/services/AssistanceService"
 import { onBeforeRouteLeave } from "vue-router"
 
+
 export default defineComponent({
    setup() {
       const infoStore = useInfoStore();
       const currentId = ref('');
-      const form: AssistanceFormValidators = useForm(init);
-      const error = ref('');
-      const success = ref('');
-      const isLoading = ref(false);
+      const assistance = reactive({
+         form: <AssistanceFormValidators>useForm(init),
+         error: '',
+         success: '',
+         isLoading: false,
+      });
 
       const setEditable = (event: Event, index?: number, id?: string): void => {
          infoStore.isEditable = !infoStore.isEditable;
@@ -56,21 +59,21 @@ export default defineComponent({
          window.scrollTo(0, 0);
          currentId.value = id;
          Object.keys(table).forEach(key => {
-            (<any>form)[key].value = (<any>infoStore.finded)[index].form[key];
+            (<any>assistance.form)[key].value = (<any>infoStore.finded)[index].form[key];
          });
       }
       const submit = async (): Promise<void> => {
          try {
-            isLoading.value = true;
-            const formToSend = { ...new AssistanceFormDto(form) };
+            assistance.isLoading = true;
+            const formToSend = { ...new AssistanceFormDto(assistance.form) };
             await AssistanceService.modifyAssistanceForm(<any>formToSend, currentId.value);
-            success.value = 'Сохранено!'
-            setTimeout(() => success.value = '', 2000);
+            assistance.success = 'Сохранено!'
+            setTimeout(() => assistance.success = '', 2000);
          } catch (e: any) {
-            error.value = e?.response?.data?.message;
-            setTimeout(() => error.value = '', 2000);
+            assistance.error = e?.response?.data?.message;
+            setTimeout(() => assistance.error = '', 2000);
          } finally {
-            isLoading.value = false;
+            assistance.isLoading = false;
          }
       }
 
@@ -79,7 +82,7 @@ export default defineComponent({
          next();
       });
 
-      return { infoStore, table, useBeautifyValue, setEditable, form, submit, error, success, isLoading };
+      return { infoStore, assistance, table, useBeautifyValue, setEditable, submit, };
    },
    components: { VAssistanceForm }
 })

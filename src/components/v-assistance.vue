@@ -1,17 +1,17 @@
 <template lang="pug">
-div.assistance-form-container
+.assistance-form-container
    v-assistance-form(
-      :form="form", 
-      :error="error", 
-      :success="success", 
-      :is-loading="isLoading", 
+      :form="assistance.form", 
+      :error="assistance.error", 
+      :success="assistance.success", 
+      :is-loading="assistance.isLoading", 
       :submit="submit"
       )
 </template>
 
 
 <script lang="ts">
-import { defineComponent, ref } from "vue"
+import { defineComponent, reactive } from "vue"
 import { useForm } from "@/hooks/useForm"
 import AssistanceService from "@/api/services/AssistanceService"
 import AssistanceFormDto from "@/api/dtos/AssistanseFormDto"
@@ -24,35 +24,36 @@ import { init } from "@/libs/constants"
 export default defineComponent({
    components: { vAssistanceForm },
    setup() {
-      const error = ref('');
-      const success = ref('');
-      const isLoading = ref(false);
-      const form: AssistanceFormValidators = useForm(init);
+      const assistance = reactive({
+         form: <AssistanceFormValidators>useForm(init),
+         error: '',
+         success: '',
+         isLoading: false,
+      });
 
-      const submit = async (event: Event): Promise<void> => {
+      const submit = async (): Promise<void> => {
          try {
-            isLoading.value = true;
-            const formToSend = { ...new AssistanceFormDto(form) };
+            assistance.isLoading = true;
+            const formToSend = { ...new AssistanceFormDto(assistance.form) };
             await AssistanceService.sendForm(<AssistanceForm>formToSend);
-            useDefaultValues(form);
-            success.value = 'Заявка отправлена!'
-            setTimeout(() => success.value = '', 2000);
-
+            useDefaultValues(assistance.form);
+            assistance.success = 'Заявка отправлена!'
+            setTimeout(() => assistance.success = '', 2000);
          } catch (e: any) {
-            error.value = e?.response?.data?.message;
-            setTimeout(() => error.value = '', 2000);
+            assistance.error = e?.response?.data?.message;
+            setTimeout(() => assistance.error = '', 2000);
          } finally {
-            isLoading.value = false;
+            assistance.isLoading = false;
          }
       }
 
-      return { form, submit, error, isLoading, success }
+      return { assistance, submit }
    }
 })
 </script>
 
 <style lang="scss" scoped>
-.assistance-form-container{
+.assistance-form-container {
    display: flex;
    justify-content: center;
 }
