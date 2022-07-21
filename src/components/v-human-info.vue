@@ -16,7 +16,7 @@
                tr(v-for="(key, value) in item.form")
                   td {{ (table as any)[value] }}
                   td {{ useBeautifyValue(key) }}
-   .edit(v-show="infoStore.isEditable")
+   .info_edit(v-show="infoStore.isEditable")
       v-assistance-form(
          :form="form", 
          :submit="submit",  
@@ -25,7 +25,7 @@
          :is-loading="isLoading",
          title="Редактирование",
          )
-         v-button.test(@click="setEditable", type="button") Отмена
+         v-button.cancel_button(@click="setEditable", type="button") Отмена
 </template>
 
 
@@ -39,6 +39,7 @@ import { useForm } from "@/hooks/useForm"
 import { AssistanceFormValidators } from "@/intefaces/AssistanceFormValidators"
 import AssistanceFormDto from "@/api/dtos/AssistanseFormDto"
 import AssistanceService from "@/api/services/AssistanceService"
+import { onBeforeRouteLeave } from "vue-router"
 
 export default defineComponent({
    setup() {
@@ -57,12 +58,11 @@ export default defineComponent({
             (<any>form)[key].value = (<any>infoStore.finded)[index].form[key];
          });
       }
-      const submit = async (event: Event): Promise<void> => {
+      const submit = async (): Promise<void> => {
          try {
             isLoading.value = true;
             const formToSend = { ...new AssistanceFormDto(form) };
-            const response = await AssistanceService.modifyAssistanceForm(<any>formToSend, currentId.value);
-            console.log(response);
+            await AssistanceService.modifyAssistanceForm(<any>formToSend, currentId.value);
             success.value = 'Сохранено!'
             setTimeout(() => success.value = '', 2000);
          } catch (e: any) {
@@ -73,12 +73,16 @@ export default defineComponent({
          }
       }
 
+      onBeforeRouteLeave((to, from, next) => {
+         infoStore.isEditable = false;
+         next();
+      });
+
       return { infoStore, table, useBeautifyValue, setEditable, form, submit, error, success, isLoading };
    },
    components: { VAssistanceForm }
 })
 </script>
-
 
 <style lang="scss" scoped>
 .info {
@@ -86,6 +90,20 @@ export default defineComponent({
    display: flex;
    flex-direction: column;
    align-items: center;
+
+   & .info_error {
+      color: red;
+      text-align: center;
+      font-weight: bolder;
+   }
+
+   & .info_edit {
+      width: 50%;
+
+      & .cancel_button {
+         height: 30px;
+      }
+   }
 
    & .info_title {
       text-align: center;
@@ -124,15 +142,6 @@ export default defineComponent({
    }
 }
 
-.edit{
-   width: 50%;
-}
-
-.test {
-   height: 30px;
-}
-
-
 @media(max-width: 700px) {
 
    .info_search {
@@ -143,9 +152,9 @@ export default defineComponent({
       width: 95% !important;
    }
 
-   .edit{
-   width: 95% !important;
-}
+   .info_edit {
+      width: 95% !important;
+   }
 }
 
 .collapsed {
@@ -169,11 +178,4 @@ export default defineComponent({
 button {
    margin-top: 5px !important;
 }
-
-.info_error {
-   color: red;
-   text-align: center;
-   font-weight: bolder;
-}
-
 </style>
