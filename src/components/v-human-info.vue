@@ -53,6 +53,7 @@ export default defineComponent({
       const setEditable = (event: Event, index?: number, id?: string): void => {
          infoStore.isEditable = !infoStore.isEditable;
          if (index === undefined || !id) return;
+         window.scrollTo(0, 0);
          currentId.value = id;
          Object.keys(table).forEach(key => {
             (<any>form)[key].value = (<any>infoStore.finded)[index].form[key];
