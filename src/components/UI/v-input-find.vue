@@ -19,11 +19,13 @@ export default defineComponent({
    },
 });
 </script>
+
 <style lang="scss" module>
 .find_human {
-   height: 30px;
+   height: 35px;
    border-radius: 10px;
    border: 1px solid #ccc;
-   padding: 5px;
+   padding: 10px 5px;
+   font-size: 1em;
 }
 </style>
