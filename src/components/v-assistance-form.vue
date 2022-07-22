@@ -229,7 +229,7 @@ export default defineComponent({
 
          & .select_point {
             display: flex;
-            align-items: baseline;
+            align-items: center;
             margin-bottom: 5px;
 
             & .set {
