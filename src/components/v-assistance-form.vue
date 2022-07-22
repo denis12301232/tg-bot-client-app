@@ -5,13 +5,13 @@
       .points
          label.points_point(:class="{ error: !form.fio.valid && form.fio.touched }")
             .label_title ФИО
-            input(type="text", v-model="form.fio.value", @blur="form.fio.blur")
+            input(type="text", placeholder="ФИО", v-model="form.fio.value", @blur="form.fio.blur")
             small(v-if="form.fio.errors.required && form.fio.touched")
                span.note ! 
                | Это обязательное поле
          label.points_point(:class="{ error: !form.phone.valid && form.phone.touched }")
-            .label_title Телефон
-            input(type="tel", maxlength="13", @input="usePhone" :value="form.phone.value", @blur="form.phone.blur")
+            .label_title Введите телефон
+            input(type="tel", placeholder="Телефон", maxlength="13", @input="usePhone" :value="form.phone.value", @blur="form.phone.blur")
             small(v-if="form.phone.errors.required && form.phone.touched")
                span.note ! 
                | Это обязательное поле
@@ -19,8 +19,8 @@
                span.note ! 
                | Неверный номер
          label.points_point(:class="{ error: !form.birth.valid && form.birth.touched }")
-            .label_title Дата рождения (дд.мм.гггг)
-            input(type="date", v-model="form.birth.value", @blur="form.birth.blur")
+            .label_title Введите дату рождения (дд.мм.гггг)
+            input(type="date", placeholder="дд.мм.гггг", v-model="form.birth.value", @blur="form.birth.blur")
             small(v-if="form.birth.errors.required && form.birth.touched")
                span.note ! 
                | Это обязательное поле
@@ -29,13 +29,13 @@
                | Неверный формат даты
          label.points_point(:class="{ error: !form.addr.valid && form.addr.touched }")
             .label_title Введите адрес
-            input(type="text", v-model="form.addr.value", @blur="form.addr.blur")
+            input(type="text", placeholder="Адрес", v-model="form.addr.value", @blur="form.addr.blur")
             small(v-if="form.addr.errors.required && form.addr.touched")
                span.note ! 
                | Это обязательное поле
          label.points_point(:class="{ error: !form.people_num.valid && form.people_num.touched }")
-            .label_title Число проживающих
-            input(type="number", v-model="form.people_num.value", @blur="form.people_num.blur")
+            .label_title Введите число проживающих
+            input(type="number", placeholder="Число проживающих", v-model="form.people_num.value", @blur="form.people_num.blur")
             small(v-if="form.people_num.errors.required && form.people_num.touched")
                span.note ! 
                | Это обязательное поле
@@ -44,6 +44,7 @@
             input(
                v-for="item in +form.people_num.value - 1",
                type="text", 
+               placeholder="ФИО и возраст", 
                v-model="form.people_fio.value[+item - 1]",
                )
          div.points_point
@@ -108,7 +109,7 @@
                      | Нет
          label.points_point(v-if="form.drugs.value")
             .label_title Раскажите, какие именно, кол-во, дозу
-            input(type="text", v-model="form.products_detail.value")
+            input(type="text", v-model="form.products_detail.value", placeholder="Мой ответ")
          div.points_point
             .label_title Нужны ли средства личной гигиены?
                .choose
@@ -120,12 +121,12 @@
                      | Нет
          label.points_point(v-if="form.gigien.value")
             .label_title Укажите кол-во
-            input(type="number", v-model="form.gigien_num.value")
+            input(type="number", v-model="form.gigien_num.value", placeholder="Мой ответ")
          div.points_point 
             .label_title Памперсы?
-            input(type="text", v-model="form.pampers.value")
+            input(type="text", v-model="form.pampers.value", placeholder="Мой ответ")
          .label_title.points_point Особенности диеты, алергии, диабет и т.д.
-            input(type="text", v-model="form.diet.value")
+            input(type="text", v-model="form.diet.value", placeholder="Мой ответ")
          div.points_point
             .label_title Даю согласие на обработку персональных данных
             input(type="checkbox", :value="true", v-model="form.pers_data_agreement.value")
@@ -210,6 +211,10 @@ export default defineComponent({
 .form_container {
    display: flex;
    justify-content: center;
+
+   & .label_title {
+      font-weight: 530;
+   }
 
    & .form {
       width: 100%;
@@ -296,6 +301,18 @@ input[type="tel"] {
    -moz-appearance: textfield;
    -webkit-appearance: none;
    background-color: white;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+   -webkit-appearance: none;
+   margin: 0;
+}
+
+::-webkit-datetime-edit-month-field,
+::-webkit-datetime-edit-day-field,
+::-webkit-datetime-edit-year-field {
+   color: #757575;
 }
 
 input:active,
