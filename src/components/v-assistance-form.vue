@@ -212,10 +212,6 @@ export default defineComponent({
    display: flex;
    justify-content: center;
 
-   & .label_title {
-      font-weight: 530;
-   }
-
    & .form {
       width: 100%;
    }
