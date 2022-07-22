@@ -11,19 +11,22 @@
                | Это обязательное поле
          label.points_point(:class="{ error: !form.phone.valid && form.phone.touched }")
             .label_title Введите телефон
-            input(type="text", placeholder="Телефон", v-model="form.phone.value", @blur="form.phone.blur")
+            input(type="tel", placeholder="Телефон", maxlength="13", @input="usePhone" :value="form.phone.value", @blur="form.phone.blur")
             small(v-if="form.phone.errors.required && form.phone.touched")
                span.note ! 
                | Это обязательное поле
             small(v-else-if="form.phone.errors.isPhone && form.phone.touched")
-               | Номер должен начинатся +380 и содержать 13 символов
+               span.note ! 
+               | Неверный номер
          label.points_point(:class="{ error: !form.birth.valid && form.birth.touched }")
             .label_title Введите дату рождения (дд.мм.гггг)
             input(type="date", placeholder="дд.мм.гггг", v-model="form.birth.value", @blur="form.birth.blur")
             small(v-if="form.birth.errors.required && form.birth.touched")
                span.note ! 
                | Это обязательное поле
-            small(v-else-if="form.birth.errors.isDDMMYYYY && form.birth.touched") Введите дату в формате ДД.ММ.ГГГГ
+            small(v-else-if="form.birth.errors.isDDMMYYYY && form.birth.touched")
+               span.note !  
+               | Неверный формат даты
          label.points_point(:class="{ error: !form.addr.valid && form.addr.touched }")
             .label_title Введите адрес
             input(type="text", placeholder="Адрес", v-model="form.addr.value", @blur="form.addr.blur")
@@ -155,23 +158,19 @@ export default defineComponent({
       },
       error: {
          type: String,
-         //required: true,
          default: '',
       },
       success: {
          type: String,
-         //required: true,
          default: '',
       },
       isLoading: {
          type: Boolean,
-         // required: true,
          default: false,
       },
       submit: {
-         type: Function as any,
-         //required: true,
-         default: () => true,
+         type: Function as (...args: any) => any,
+         required: true,
       },
       title: {
          type: String,
@@ -185,7 +184,25 @@ export default defineComponent({
       const isLoading = computed(() => props.isLoading);
       const submit = computed(() => props.submit);
 
-      return { form, error, success, isLoading, submit }
+      const usePhone = (event: Event): string => {
+         const target = <HTMLInputElement>event.target;
+         props.form.phone.value = target.value;
+
+         const numbers = props.form.phone.value.replace(/\D/g, "");
+
+         if (!numbers) {
+            target.value = "";
+            return props.form.phone.value = "";
+         }
+
+         if (numbers.startsWith('0')) {
+            return props.form.phone.value = '+38' + numbers;
+         } else {
+            return props.form.phone.value = '+' + numbers;
+         }
+      }
+
+      return { form, error, success, isLoading, submit, usePhone }
    }
 })
 </script>
@@ -269,7 +286,8 @@ input {
 
 input[type="text"],
 input[type="number"],
-input[type="date"] {
+input[type="date"],
+input[type="tel"] {
    width: 100%;
    border-top: 0;
    border-left: 0;

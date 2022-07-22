@@ -5,6 +5,8 @@ import VModal from "@/components/UI/v-modal.vue"
 import VButtonDelete from "@/components/UI/v-button-delete.vue"
 import VInputFind from "@/components/UI/v-input-find.vue"
 
+
 export default [
-   VButton, VBurger, VLoadingWheel, VModal, VButtonDelete, VInputFind
+   VButton, VBurger, VLoadingWheel, VModal, VButtonDelete, 
+   VInputFind
 ];
