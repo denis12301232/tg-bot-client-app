@@ -5,13 +5,13 @@
       .points
          label.points_point(:class="{ error: !form.fio.valid && form.fio.touched }")
             .label_title ФИО
-            input(type="text", placeholder="ФИО", v-model="form.fio.value", @blur="form.fio.blur")
+            input(type="text", v-model="form.fio.value", @blur="form.fio.blur")
             small(v-if="form.fio.errors.required && form.fio.touched")
                span.note ! 
                | Это обязательное поле
          label.points_point(:class="{ error: !form.phone.valid && form.phone.touched }")
             .label_title Введите телефон
-            input(type="tel", placeholder="Телефон", maxlength="13", @input="usePhone" :value="form.phone.value", @blur="form.phone.blur")
+            input(type="tel", maxlength="13", @input="usePhone" :value="form.phone.value", @blur="form.phone.blur")
             small(v-if="form.phone.errors.required && form.phone.touched")
                span.note ! 
                | Это обязательное поле
@@ -20,7 +20,7 @@
                | Неверный номер
          label.points_point(:class="{ error: !form.birth.valid && form.birth.touched }")
             .label_title Введите дату рождения (дд.мм.гггг)
-            input(type="date", placeholder="дд.мм.гггг", v-model="form.birth.value", @blur="form.birth.blur")
+            input(type="date", v-model="form.birth.value", @blur="form.birth.blur")
             small(v-if="form.birth.errors.required && form.birth.touched")
                span.note ! 
                | Это обязательное поле
@@ -29,13 +29,13 @@
                | Неверный формат даты
          label.points_point(:class="{ error: !form.addr.valid && form.addr.touched }")
             .label_title Введите адрес
-            input(type="text", placeholder="Адрес", v-model="form.addr.value", @blur="form.addr.blur")
+            input(type="text", v-model="form.addr.value", @blur="form.addr.blur")
             small(v-if="form.addr.errors.required && form.addr.touched")
                span.note ! 
                | Это обязательное поле
          label.points_point(:class="{ error: !form.people_num.valid && form.people_num.touched }")
             .label_title Введите число проживающих
-            input(type="number", placeholder="Число проживающих", v-model="form.people_num.value", @blur="form.people_num.blur")
+            input(type="number", v-model="form.people_num.value", @blur="form.people_num.blur")
             small(v-if="form.people_num.errors.required && form.people_num.touched")
                span.note ! 
                | Это обязательное поле
@@ -44,7 +44,6 @@
             input(
                v-for="item in +form.people_num.value - 1",
                type="text", 
-               placeholder="ФИО и возраст", 
                v-model="form.people_fio.value[+item - 1]",
                )
          div.points_point
