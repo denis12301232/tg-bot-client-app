@@ -96,7 +96,7 @@ export const init = {
       value: false,
    },
    gigien_num: {
-      value: 0,
+      value: '',
    },
    pampers: {
       value: '',
