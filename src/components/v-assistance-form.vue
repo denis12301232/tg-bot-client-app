@@ -10,7 +10,7 @@
                span.note ! 
                | Это обязательное поле
          label.points_point(:class="{ error: !form.phone.valid && form.phone.touched }")
-            .label_title Введите телефон
+            .label_title Телефон
             input(type="tel", maxlength="13", @input="usePhone" :value="form.phone.value", @blur="form.phone.blur")
             small(v-if="form.phone.errors.required && form.phone.touched")
                span.note ! 
@@ -19,7 +19,7 @@
                span.note ! 
                | Неверный номер
          label.points_point(:class="{ error: !form.birth.valid && form.birth.touched }")
-            .label_title Введите дату рождения (дд.мм.гггг)
+            .label_title Дата рождения (дд.мм.гггг)
             input(type="date", v-model="form.birth.value", @blur="form.birth.blur")
             small(v-if="form.birth.errors.required && form.birth.touched")
                span.note ! 
@@ -34,7 +34,7 @@
                span.note ! 
                | Это обязательное поле
          label.points_point(:class="{ error: !form.people_num.valid && form.people_num.touched }")
-            .label_title Введите число проживающих
+            .label_title Число проживающих
             input(type="number", v-model="form.people_num.value", @blur="form.people_num.blur")
             small(v-if="form.people_num.errors.required && form.people_num.touched")
                span.note ! 
