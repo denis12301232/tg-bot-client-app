@@ -19,7 +19,7 @@
             | Неверный номер
       .select(:class="{ error: !form.birth.valid && form.birth.touched }")
          .select_title Введите дату рождения (дд.мм.гггг)
-         input(type="date", placeholder="дд.мм.гггг", v-model="form.birth.value", @blur="form.birth.blur")
+         input(type="date", placeholder="дд.мм.гггг", v-model="form.birth.value", @blur="form.birth.blur", required)
          small.error_message(v-if="form.birth.errors.required && form.birth.touched")
             span.note ! 
             | Это обязательное поле
@@ -315,6 +315,15 @@ input[type="tel"]::-webkit-outer-spin-button,
 ::-webkit-inner-spin-button {
    -webkit-appearance: none;
    margin: 0;
+}
+
+
+input[type="date"]:not(:invalid) {
+   &::-webkit-datetime-edit-month-field,
+   &::-webkit-datetime-edit-day-field,
+   &::-webkit-datetime-edit-year-field {
+      color: black !important;
+   }
 }
 
 input[type="date"]::-webkit-datetime-edit-month-field,
