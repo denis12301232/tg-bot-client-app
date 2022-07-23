@@ -10,7 +10,7 @@
             | Это обязательное поле
       .select(:class="{ error: !form.phone.valid && form.phone.touched }")
          .select_title Введите телефон
-         input(type="tel", placeholder="Телефон", maxlength="13", @input="usePhone" :value="form.phone.value", @blur="form.phone.blur")
+         input(type="tel", placeholder="Телефон", maxlength="13", @input="formatPhone" :value="form.phone.value", @blur="form.phone.blur")
          small.error_message(v-if="form.phone.errors.required && form.phone.touched")
             span.note ! 
             | Это обязательное поле
@@ -179,7 +179,7 @@ export default defineComponent({
       const isLoading = computed(() => props.isLoading);
       const submit = computed(() => props.submit);
 
-      const usePhone = (event: Event): string => {
+      const formatPhone = (event: Event): string => {
          const target = <HTMLInputElement>event.target;
          props.form.phone.value = target.value;
 
@@ -197,7 +197,7 @@ export default defineComponent({
          }
       }
 
-      return { form, error, success, isLoading, submit, usePhone }
+      return { form, error, success, isLoading, submit, formatPhone }
    }
 })
 </script>
