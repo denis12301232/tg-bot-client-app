@@ -303,18 +303,21 @@ input[type="tel"] {
    border-right: 0;
    border-bottom: 1px solid black;
    display: block;
-   -webkit-appearance: none;
    background-color: white;
+   -webkit-appearance: none;
+   -moz-appearance: textfield;
 }
 
-input[type="text"],
-input[type="number"],
-input[type="date"],
+input[type="text"]::-webkit-outer-spin-button,
+input[type="text"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button,
+input[type="date"]::-webkit-outer-spin-button,
+input[type="date"]::-webkit-inner-spin-button,
 input[type="tel"]::-webkit-outer-spin-button,
-::-webkit-inner-spin-button {
+input[type="tel"]::-webkit-inner-spin-button {
    -webkit-appearance: none;
    margin: 0;
-   -moz-appearance: textfield;
 }
 
 
