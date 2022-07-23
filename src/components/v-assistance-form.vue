@@ -303,7 +303,6 @@ input[type="tel"] {
    border-right: 0;
    border-bottom: 1px solid black;
    display: block;
-   -moz-appearance: textfield;
    -webkit-appearance: none;
    background-color: white;
 }
@@ -315,10 +314,12 @@ input[type="tel"]::-webkit-outer-spin-button,
 ::-webkit-inner-spin-button {
    -webkit-appearance: none;
    margin: 0;
+   -moz-appearance: textfield;
 }
 
 
 input[type="date"]:not(:invalid) {
+
    &::-webkit-datetime-edit-month-field,
    &::-webkit-datetime-edit-day-field,
    &::-webkit-datetime-edit-year-field {
