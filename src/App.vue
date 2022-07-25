@@ -14,6 +14,11 @@ import vHeader from "./components/v-header.vue";
   box-sizing: border-box;
 }
 
+html {
+  width: 100vw;
+  overflow-x: hidden;
+}
+
 html,
 body {
   margin: 0;
@@ -25,7 +30,6 @@ body {
   -moz-osx-font-smoothing: grayscale;
   background-color: rgb(240, 235, 248);
   color: #2c3e50;
-  margin-right: calc(-1 * (100vw - 100%)) !important;
 }
 
 img {
