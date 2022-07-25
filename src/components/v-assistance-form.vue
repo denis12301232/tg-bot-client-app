@@ -140,66 +140,60 @@
             slot.confirm_button
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
-import { AssistanceFormValidators } from "@/intefaces/AssistanceFormValidators"
+<script setup lang="ts">
+import { AssistanceFormValidators } from "@/intefaces/interfaces"
 import { computed } from "@vue/reactivity";
 
-export default defineComponent({
-   props: {
-      form: {
-         type: Object as () => AssistanceFormValidators,
-         required: true,
-      },
-      error: {
-         type: String,
-         default: '',
-      },
-      success: {
-         type: String,
-         default: '',
-      },
-      isLoading: {
-         type: Boolean,
-         default: false,
-      },
-      submit: {
-         type: Function as (...args: any) => any,
-         required: true,
-      },
-      title: {
-         type: String,
-         default: 'Заявка на получение гуманитарной помощи',
-      }
+const props = defineProps({
+   form: {
+      type: Object as () => AssistanceFormValidators,
+      required: true,
    },
-   setup(props) {
-      const form = computed(() => props.form);
-      const error = computed(() => props.error);
-      const success = computed(() => props.success);
-      const isLoading = computed(() => props.isLoading);
-      const submit = computed(() => props.submit);
-
-      const formatPhone = (event: Event): string => {
-         const target = <HTMLInputElement>event.target;
-         props.form.phone.value = target.value;
-
-         const numbers = props.form.phone.value.replace(/\D/g, "");
-
-         if (!numbers) {
-            target.value = "";
-            return props.form.phone.value = "";
-         }
-
-         if (numbers.startsWith('0')) {
-            return props.form.phone.value = '+38' + numbers;
-         } else {
-            return props.form.phone.value = '+' + numbers;
-         }
-      }
-
-      return { form, error, success, isLoading, submit, formatPhone }
+   error: {
+      type: String,
+      default: '',
+   },
+   success: {
+      type: String,
+      default: '',
+   },
+   isLoading: {
+      type: Boolean,
+      default: false,
+   },
+   submit: {
+      type: Function as (...args: any) => any,
+      required: true,
+   },
+   title: {
+      type: String,
+      default: 'Заявка на получение гуманитарной помощи',
    }
 })
+
+const form = computed(() => props.form);
+const error = computed(() => props.error);
+const success = computed(() => props.success);
+const isLoading = computed(() => props.isLoading);
+const submit = computed(() => props.submit);
+
+const formatPhone = (event: Event): string => {
+   const target = <HTMLInputElement>event.target;
+   props.form.phone.value = target.value;
+
+   const numbers = props.form.phone.value.replace(/\D/g, "");
+
+   if (!numbers) {
+      target.value = "";
+      return props.form.phone.value = "";
+   }
+
+   if (numbers.startsWith('0')) {
+      return props.form.phone.value = '+38' + numbers;
+   } else {
+      return props.form.phone.value = '+' + numbers;
+   }
+}
 </script>
 
 <style lang="scss" scoped>

@@ -7,7 +7,6 @@ div(:class="$style.header_burger")
 <script lang="ts">
 import { defineComponent } from "vue"
 
-
 export default defineComponent({
    name: 'v-burger',
 });
@@ -20,6 +19,7 @@ export default defineComponent({
    position: relative;
    width: 30px;
    height: 20px;
+   cursor: pointer;
 
    &::before,
    &::after {

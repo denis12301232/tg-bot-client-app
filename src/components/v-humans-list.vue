@@ -21,46 +21,40 @@ v-modal(:show="isModalVisible", @hide="showModal")
 </template>
 
 
-<script lang="ts">
-import { defineComponent, onMounted, ref } from "vue";
+<script setup lang="ts">
+import { onMounted, ref } from "vue";
 import { useListStore } from "@/store/listStore";
 import AssistanceService from "@/api/services/AssistanceService";
 
-export default defineComponent({
-   setup() {
-      const listStore = useListStore();
-      const isModalVisible = ref(false);
-      const currentId = ref('');
-      const isLoading = ref(false);
+const listStore = useListStore();
+const isModalVisible = ref(false);
+const currentId = ref('');
+const isLoading = ref(false);
 
-      onMounted(async (): Promise<void> => {
-         if (!listStore.humansList.length) {
-            listStore.catchHumansList();
-         }
-      });
-
-      const showModal = (event?: Event, id?: string): void => {
-         isModalVisible.value = !isModalVisible.value;
-         if (!event || !id) return;
-         currentId.value = id;
-      }
-
-      const deleteHuman = async (): Promise<void> => {
-         try {
-            isLoading.value = true;
-            await AssistanceService.deleteHuman(currentId.value);
-            listStore.humansList = listStore.humansList.filter(item => item._id !== currentId.value);
-         } catch (e: any) {
-            listStore.error = e?.response?.data?.message;
-         } finally {
-            isLoading.value = false;
-            showModal();
-         }
-      }
-
-      return { listStore, showModal, isModalVisible, deleteHuman, isLoading }
+onMounted(async (): Promise<void> => {
+   if (!listStore.humansList.length) {
+      listStore.catchHumansList();
    }
 });
+
+const showModal = (event?: Event, id?: string): void => {
+   isModalVisible.value = !isModalVisible.value;
+   if (!event || !id) return;
+   currentId.value = id;
+}
+
+const deleteHuman = async (): Promise<void> => {
+   try {
+      isLoading.value = true;
+      await AssistanceService.deleteHuman(currentId.value);
+      listStore.humansList = listStore.humansList.filter(item => item._id !== currentId.value);
+   } catch (e: any) {
+      listStore.error = e?.response?.data?.message;
+   } finally {
+      isLoading.value = false;
+      showModal();
+   }
+}
 </script>
 
 
@@ -104,11 +98,12 @@ export default defineComponent({
    display: flex;
    justify-content: space-between;
    margin-top: 10px;
-   & .confirm{
+
+   & .confirm {
       width: 40px;
    }
 
-   & .buttons_load{
+   & .buttons_load {
       display: flex;
    }
 }

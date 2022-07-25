@@ -2,16 +2,8 @@
 v-humans-list
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue';
+<script setup lang="ts">
 import vHumansList from "@/components/v-humans-list.vue"
-
-export default defineComponent({
-   name: 'HomeView',
-   components: {
-      vHumansList
-   },
-});
 </script>
 
 <style lang="scss" scoped>

@@ -29,63 +29,56 @@
 </template>
 
 
-<script lang="ts">
-import { defineComponent, reactive, ref } from "vue"
+<script setup lang="ts">
+import { reactive, ref } from "vue"
+import { onBeforeRouteLeave } from "vue-router"
 import { useInfoStore } from "@/store/infoStore"
 import { useBeautifyValue } from "@/hooks/useBeautifyValue"
 import { table, init } from "@/libs/constants"
 import VAssistanceForm from "./v-assistance-form.vue"
 import { useForm } from "@/hooks/useForm"
-import { AssistanceFormValidators } from "@/intefaces/AssistanceFormValidators"
+import { AssistanceFormValidators } from "@/intefaces/interfaces"
 import AssistanceFormDto from "@/api/dtos/AssistanseFormDto"
 import AssistanceService from "@/api/services/AssistanceService"
-import { onBeforeRouteLeave } from "vue-router"
 
 
-export default defineComponent({
-   setup() {
-      const infoStore = useInfoStore();
-      const currentId = ref('');
-      const assistance = reactive({
-         form: <AssistanceFormValidators>useForm(init),
-         error: '',
-         success: '',
-         isLoading: false,
-      });
+const infoStore = useInfoStore();
+const currentId = ref('');
+const assistance = reactive({
+   form: <AssistanceFormValidators>useForm(init),
+   error: '',
+   success: '',
+   isLoading: false,
+});
 
-      const setEditable = (event: Event, index?: number, id?: string): void => {
-         infoStore.isEditable = !infoStore.isEditable;
-         if (index === undefined || !id) return;
-         window.scrollTo(0, 0);
-         currentId.value = id;
-         Object.keys(table).forEach(key => {
-            (<any>assistance.form)[key].value = (<any>infoStore.finded)[index].form[key];
-         });
-      }
-      const submit = async (): Promise<void> => {
-         try {
-            assistance.isLoading = true;
-            const formToSend = { ...new AssistanceFormDto(assistance.form) };
-            await AssistanceService.modifyAssistanceForm(<any>formToSend, currentId.value);
-            assistance.success = 'Сохранено!'
-            setTimeout(() => assistance.success = '', 2000);
-         } catch (e: any) {
-            assistance.error = e?.response?.data?.message;
-            setTimeout(() => assistance.error = '', 2000);
-         } finally {
-            assistance.isLoading = false;
-         }
-      }
+const setEditable = (event: Event, index?: number, id?: string): void => {
+   infoStore.isEditable = !infoStore.isEditable;
+   if (index === undefined || !id) return;
+   window.scrollTo(0, 0);
+   currentId.value = id;
+   Object.keys(table).forEach(key => {
+      (<any>assistance.form)[key].value = (<any>infoStore.finded)[index].form[key];
+   });
+}
+const submit = async (): Promise<void> => {
+   try {
+      assistance.isLoading = true;
+      const formToSend = { ...new AssistanceFormDto(assistance.form) };
+      await AssistanceService.modifyAssistanceForm(<any>formToSend, currentId.value);
+      assistance.success = 'Сохранено!'
+      setTimeout(() => assistance.success = '', 2000);
+   } catch (e: any) {
+      assistance.error = e?.response?.data?.message;
+      setTimeout(() => assistance.error = '', 2000);
+   } finally {
+      assistance.isLoading = false;
+   }
+}
 
-      onBeforeRouteLeave((to, from, next) => {
-         infoStore.isEditable = false;
-         next();
-      });
-
-      return { infoStore, assistance, table, useBeautifyValue, setEditable, submit, };
-   },
-   components: { VAssistanceForm }
-})
+onBeforeRouteLeave((to, from, next) => {
+   infoStore.isEditable = false;
+   next();
+});
 </script>
 
 <style lang="scss" scoped>

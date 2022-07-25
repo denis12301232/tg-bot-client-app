@@ -1,7 +1,7 @@
 import $api from "../index";
 import { AxiosResponse } from "axios";
 import { HumansList, AssistanceFormsList } from "@/intefaces/http";
-import { AssistanceForm } from "@/intefaces/AssistanceForm";
+import { AssistanceForm } from "@/intefaces/interfaces";
 
 
 export default class AssistanceService {

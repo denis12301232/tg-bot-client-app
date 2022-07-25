@@ -6,26 +6,17 @@ div.buttons
 </template>
 
 
-<script lang="ts">
-import { defineComponent } from "vue";
+<script setup lang="ts">
 import { useHeaderStore } from "@/store/headerStore"
 import { useRouter } from 'vue-router'
 
-export default defineComponent({
-   name: "v-header-menu",
-   setup() {
-      const router = useRouter();
-      const headerStore = useHeaderStore();
+const router = useRouter();
+const headerStore = useHeaderStore();
 
-      const changeRoute = (route: string): void => {
-         headerStore.isHeaderMenuVisible = false;
-         router.push(route);
-      }
-
-      return { changeRoute }
-   }
-
-})
+const changeRoute = (route: string): void => {
+   headerStore.isHeaderMenuVisible = false;
+   router.push(route);
+}
 </script>
 
 

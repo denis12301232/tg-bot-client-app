@@ -10,28 +10,20 @@ h1.title Kharkov Volonteer
 </template>
 
 
-<script lang="ts">
+<script setup lang="ts">
 import { useHeaderStore } from "@/store/headerStore"
-import { defineComponent, computed } from "vue";
+import { computed } from "vue";
 import VHeaderMenu from "./v-header-menu.vue";
 import { useRoute } from "vue-router";
 
-export default defineComponent({
-   name: "v-header",
-   components: { VHeaderMenu },
-   setup() {
-      const headerStore = useHeaderStore();
-      const currentRoute = computed(() => {
-         return useRoute().name;
-      })
+const headerStore = useHeaderStore();
+const currentRoute = computed(() => {
+   return useRoute().name;
+})
 
-      const showMenu = (): void => {
-         headerStore.isHeaderMenuVisible = !headerStore.isHeaderMenuVisible;
-      };
-
-      return { headerStore, showMenu, currentRoute };
-   }
-});
+const showMenu = (): void => {
+   headerStore.isHeaderMenuVisible = !headerStore.isHeaderMenuVisible;
+};
 </script>
 
 

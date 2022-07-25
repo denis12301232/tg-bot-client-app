@@ -11,7 +11,7 @@ export const useListStore = defineStore('list', {
       humansList: <Array<{ fio: string, _id: string }>>[],
    }),
    actions: {
-      async catchHumansList() {
+      async catchHumansList(): Promise<void> {
          try {
             this.error = '';
             this.page++;
@@ -21,7 +21,7 @@ export const useListStore = defineStore('list', {
             this.humansList = [...this.humansList, ...response.data.humansList];
             if (!this.humansList.length) this.error = "Список пуст";
 
-         } catch (e: any) {   
+         } catch (e: any) {
             this.error = e.message;
          } finally {
             this.isLoading = false;
