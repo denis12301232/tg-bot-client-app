@@ -21,16 +21,17 @@ export default defineComponent({
    font-size: 1rem;
    outline: none;
    user-select: none;
-   background-color: $main-color;
+   border-radius: 2px;
+   background-color: rgb(19, 24, 114);
    color: white;
 
    &:hover {
-      background-color: $main-color-hover;
+      background-color: rgb(38, 43, 150);
       cursor: pointer;
    }
 
    &:disabled {
-      background: rgba(4, 57, 136, 0.3);
+      background: rgba(19, 24, 114, 0.481);;
    }
 }
 </style>

@@ -206,7 +206,7 @@ const formatPhone = (event: Event): string => {
 
       & .title-list {
          text-align: center;
-         font-size: 1.5em;
+         font-size: 1.7em;
       }
 
       & .select {
@@ -219,6 +219,7 @@ const formatPhone = (event: Event): string => {
 
          & .select_title {
             margin-bottom: 20px;
+            font-size: 1.1rem;
          }
 
          & .select_point {
