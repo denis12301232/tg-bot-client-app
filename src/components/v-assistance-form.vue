@@ -40,7 +40,7 @@
             | Это обязательное поле
       .select(v-if="+form.people_num.value > 1")
          .select_title Введите ФИО и возраст проживающих
-         input(
+         input.select_variants(
             v-for="item in +form.people_num.value - 1",
             type="text", 
             placeholder="ФИО и возраст", 
@@ -220,6 +220,10 @@ const formatPhone = (event: Event): string => {
          & .select_title {
             margin-bottom: 20px;
             font-size: 1.1rem;
+         }
+
+         & .select_variants {
+            margin-top: 10px;
          }
 
          & .select_point {
