@@ -5,7 +5,7 @@ export const useListStore = defineStore('list', {
    state: () => ({
       page: 0,
       total: 0,
-      limit: 10,
+      limit: 20,
       error: '',
       isLoading: false,
       humansList: <Array<{ fio: string, _id: string }>>[],

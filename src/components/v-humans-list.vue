@@ -6,19 +6,18 @@ v-modal(:show="isModalVisible", @hide="showModal")
          v-button.confirm(@click="deleteHuman") Да
          v-loading-wheel(v-if="isLoading")
       v-button.confirm(@click="showModal") Нет
-.container
-   .full-list
-      .title-list Полный список
-      .error(v-if="listStore.error") {{ listStore.error }}
-      .list(v-for="(human, index) in listStore.humansList", :key="human._id")
-         .list_item
-            .number {{ index + 1 }}.
-            .human {{ human.fio }}
-            v-button-delete(@click="showModal($event, human._id)") test
-   .loading
-      v-loading-wheel(v-if="listStore.isLoading")
-   .observer
-      div(v-intersection="{ f: listStore.catchHumansList }")
+.full-list
+   .title-list Полный список
+   .error(v-if="listStore.error") {{ listStore.error }}
+   .list(v-for="(human, index) in listStore.humansList", :key="human._id")
+      .list_item
+         .number {{ index + 1 }}.
+         .human {{ human.fio }}
+         v-button-delete(@click="showModal($event, human._id)") test
+.loading
+   v-loading-wheel(v-if="listStore.isLoading")
+.observer
+   div(v-intersection="{ f: listStore.catchHumansList }")
 </template>
 
 
@@ -60,11 +59,6 @@ const deleteHuman = async (): Promise<void> => {
 
 
 <style lang="scss" scoped>
-.container {
-   height: 100vh;
-   position: relative;
-}
-
 .full-list {
    padding: 10px;
    display: flex;
@@ -128,7 +122,7 @@ const deleteHuman = async (): Promise<void> => {
 
 .observer {
    padding: 1px;
-   position: absolute;
+   //position: absolute;
    bottom: 0px;
 }
 
