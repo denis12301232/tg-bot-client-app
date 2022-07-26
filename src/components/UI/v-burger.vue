@@ -20,6 +20,7 @@ export default defineComponent({
    width: 30px;
    height: 20px;
    cursor: pointer;
+   user-select: none;
 
    &::before,
    &::after {
