@@ -28,8 +28,9 @@ body {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: rgb(240, 235, 248);
-  color: #2c3e50;
+  //background-color: rgb(240, 235, 248);
+  background-color: $light-main-color;
+  //color: #2c3e50;
 }
 
 img {

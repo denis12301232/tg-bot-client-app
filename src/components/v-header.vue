@@ -33,7 +33,7 @@ const showMenu = (): void => {
 }
 
 .menu_container {
-   background-color: $main-color;
+   background-color: #303B44;
    height: 50px;
    position: relative;
 
