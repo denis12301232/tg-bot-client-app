@@ -218,7 +218,7 @@ const formatPhone = (event: Event): string => {
          padding: 15px;
 
          & .select_title {
-            // margin-bottom: 20px;
+            margin-bottom: 15px;
             font-size: 1.1rem;
          }
 
@@ -305,7 +305,7 @@ input[type="tel"] {
    background-color: white;
    -webkit-appearance: none;
    -moz-appearance: textfield;
-   padding: 15px 5px 1px 2px;
+      padding: 0px 0px 1px 1px;
    font-size: 0.95em;
 }
 
