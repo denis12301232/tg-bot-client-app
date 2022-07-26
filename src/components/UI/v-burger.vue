@@ -30,6 +30,7 @@ export default defineComponent({
       width: 100%;
       height: 2px;
       left: 0;
+      user-select: none;
    }
 
    &::before {
@@ -47,6 +48,7 @@ export default defineComponent({
       width: 100%;
       height: 2px;
       top: 9px;
+      user-select: none;
    }
 
 }
