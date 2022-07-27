@@ -40,7 +40,7 @@ const showMenu = (): void => {
    &>.menu {
       flex-basis: 10%;
       display: flex;
-      right: 15px;
+      left: 15px;
       position: absolute;
       top: 50%;
       transform: translate(0, -50%);
