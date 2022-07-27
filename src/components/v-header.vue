@@ -1,12 +1,21 @@
 <template lang="pug">
-.menu_container
-   .menu
-      div.point(@click="$router.push('/')", :class="{ selected: currentRoute === 'home' }") Внести данные
-      div.point(@click="$router.push('/list')", :class="{ selected: currentRoute === 'list' }") Полный список
-      div.point(@click="$router.push('/info')", :class="{ selected: currentRoute === 'info' }") Информация по человеку
-      v-burger.burger_hide(@click="showMenu")
-   v-header-menu.header_menu(v-show="headerStore.isHeaderMenuVisible")
-h1.title Kharkov Volonteer
+div(:class="$style.menu_container")
+   div(:class="$style.menu")
+      div(
+         :class="[$style.point, currentRoute === 'home' ? $style.selected : '']",
+         @click="$router.push('/')") 
+         | Внести данные
+      div(
+         :class="[$style.point, currentRoute === 'list' ? $style.selected : '']",
+         @click="$router.push('/list')") 
+         | Полный список
+      div( 
+         :class="[$style.point, currentRoute === 'info' ? $style.selected : '']",
+         @click="$router.push('/info')")
+         | Информация по человеку
+      v-burger(:class="$style.burger_hide", @click="showMenu")
+   v-header-menu(:class="$style.header_menu", v-show="headerStore.isHeaderMenuVisible")
+h1(:class="$style.title") Kharkov Volonteer
 </template>
 
 
@@ -27,7 +36,7 @@ const showMenu = (): void => {
 </script>
 
 
-<style lang="scss" scoped>
+<style lang="scss" module>
 .title {
    text-align: center;
 }
@@ -63,7 +72,7 @@ const showMenu = (): void => {
 
 .header_menu {
    position: absolute;
-   right: 10px;
+   left: 10px;
    top: 50px;
 }
 
