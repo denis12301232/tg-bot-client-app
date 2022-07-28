@@ -10,6 +10,7 @@ import vHeader from "./components/v-header.vue";
 
 onBeforeMount(async () => {
   if (localStorage.getItem("token")) {
+    console.log(localStorage.getItem("token"));
     await AuthController.refresh();
   }
 });
