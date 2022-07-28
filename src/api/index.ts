@@ -26,7 +26,7 @@ $api.interceptors.response.use(
             await AuthController.refresh();
             return $api.request(originalRequest);
          } catch (e) {
-            if (e) console.log(e);
+            if (e) console.log(`Ошибка: ` + e);
          }
 
       }
