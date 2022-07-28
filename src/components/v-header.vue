@@ -128,7 +128,7 @@ const swapForms = (): void => {
 .selected {
    //color: rgba(8, 186, 79, 0.414) !important;
    color: $water-color;
-   font-weight: bold;
+   font-weight: bold; 
 }
 
 @media(max-width:768px) {
