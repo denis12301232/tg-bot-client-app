@@ -4,7 +4,15 @@ router-view
 </template>
 
 <script setup lang="ts">
+import { onBeforeMount } from "vue";
+import AuthController from "./api/controllers/AuthController";
 import vHeader from "./components/v-header.vue";
+
+onBeforeMount(async () => {
+  if (localStorage.getItem("token")) {
+    await AuthController.refresh();
+  }
+});
 </script>
 
 <style lang="scss">
@@ -29,7 +37,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   //background-color: rgb(240, 235, 248);
-  background-color: $light-main-color;
+  background-color: $light-content-color;
   //color: #2c3e50;
 }
 

@@ -1,3 +1,11 @@
+export interface IUser {
+   email: string,
+   id: string,
+   isActivated: boolean,
+   isAdmin: boolean,
+   name: string,
+}
+
 export interface AssistanceForm {
    fio: string,
    phone: string,
@@ -172,5 +180,78 @@ export interface AssistanceFormValidators {
    },
 }
 
+export interface LogForm {
+   valid: boolean,
+   email: {
+      value: string,
+      validators: {
+         required: () => boolean,
+         isEmail: () => boolean,
+      },
+      valid: boolean,
+      touched: boolean,
+      errors: {
+         required: boolean,
+         isEmail: boolean,
+      },
+      blur: () => boolean;
+   },
+   password: {
+      value: string,
+      validators: {
+         required: () => boolean,
+         minLength: (length: number) => boolean;
+      },
+      valid: boolean,
+      touched: boolean,
+      errors: {
+         required: boolean,
+         minLength: boolean,
+      },
+      blur: () => boolean;
+   }
+}
 
-
+export interface RegForm {
+   valid: boolean,
+   name: {
+      value: string,
+      validators: {
+         required: () => boolean,
+      },
+      valid: boolean,
+      touched: boolean,
+      errors: {
+         required: boolean,
+      },
+      blur: () => boolean;
+   },
+   email: {
+      value: string,
+      validators: {
+         required: () => boolean,
+         isEmail: () => boolean,
+      },
+      valid: boolean,
+      touched: boolean,
+      errors: {
+         required: boolean,
+         isEmail: boolean,
+      },
+      blur: () => boolean;
+   },
+   password: {
+      value: string,
+      validators: {
+         required: () => boolean,
+         minLength: (length: number) => boolean;
+      },
+      valid: boolean,
+      touched: boolean,
+      errors: {
+         required: boolean,
+         minLength: boolean,
+      },
+      blur: () => boolean;
+   }
+}

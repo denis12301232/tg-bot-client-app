@@ -1,5 +1,7 @@
 import Validate from "@/libs/Validate"
 
+export const API_URL: string = process.env.VUE_APP_API_URL;
+
 export const table = {
    fio: 'ФИО',
    phone: 'Телефон',
@@ -21,7 +23,6 @@ export const table = {
    pers_data_agreement: 'Согласие на обработку перс данных',
    photo_agreement: 'Согласие на фото',
 }
-
 
 export const defaultValues = {
    fio: '',
@@ -110,4 +111,44 @@ export const init = {
    photo_agreement: {
       value: false,
    }
+}
+
+export const LogFormInit = {
+   email: {
+      value: "",
+      validators: {
+         required: Validate.required,
+         isEmail: Validate.isEmail,
+      },
+   },
+   password: {
+      value: "",
+      validators: {
+         required: Validate.required,
+         minLength: Validate.minLength(6),
+      },
+   },
+}
+
+export const RegFormInit = {
+   name: {
+      value: "",
+      validators: {
+         required: Validate.required,
+      }
+   },
+   email: {
+      value: "",
+      validators: {
+         required: Validate.required,
+         isEmail: Validate.isEmail,
+      },
+   },
+   password: {
+      value: "",
+      validators: {
+         required: Validate.required,
+         minLength: Validate.minLength(6),
+      },
+   },
 }

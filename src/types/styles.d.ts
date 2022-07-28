@@ -1,9 +1,9 @@
 declare module "*.css" {
-    const styles: any;
+    const styles: { [name: string]: string };
     export default styles;
 }
 
 declare module '*.scss' {
-    const styles: any;
+    const styles: { [name: string]: string };
     export default styles;
 }

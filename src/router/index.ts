@@ -17,6 +17,11 @@ const routes: Array<RouteRecordRaw> = [
     name: 'list',
     component: () => import('../views/ListView.vue'),
   },
+  {
+    path: "/:pathMatch(.*)*",
+    name: '404',
+    component: () => import('@/components/errors/NotFound.vue')
+  }
 ]
 
 const router = createRouter({

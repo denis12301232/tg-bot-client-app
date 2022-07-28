@@ -213,7 +213,7 @@ const formatPhone = (event: Event): string => {
          border: 1px solid #dadce0;
          display: block;
          margin-top: 10px;
-         background-color: white;
+         background-color: $light-content-color;
          border-radius: 5px;
          padding: 15px;
 
