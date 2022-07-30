@@ -1,16 +1,13 @@
 <template lang="pug">
-v-header
 router-view
 </template>
 
 <script setup lang="ts">
 import { onBeforeMount } from "vue";
 import AuthController from "./api/controllers/AuthController";
-import vHeader from "./components/v-header.vue";
 
 onBeforeMount(async () => {
   if (localStorage.getItem("token")) {
-    console.log(localStorage.getItem("token"));
     await AuthController.refresh();
   }
 });

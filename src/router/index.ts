@@ -20,7 +20,8 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: "/:pathMatch(.*)*",
     name: '404',
-    component: () => import('@/components/errors/NotFound.vue')
+    component: () => import('@/components/v-error.vue'),
+    props: { code: 404, message: 'Not Found' }
   }
 ]
 
