@@ -7,11 +7,16 @@ export interface IUser {
 }
 
 export interface AssistanceForm {
-   fio: string,
+   name: string,
+   surname: string,
+   patronymic: string,
    phone: string,
    birth: string,
-   addr: string,
-   people_num: number,
+   district: string,
+   street: string,
+   house: string,
+   flat: string,
+   people_num: string,
    people_fio?: Array<string>,
    invalids: boolean,
    children: boolean,
@@ -21,7 +26,7 @@ export interface AssistanceForm {
    water: boolean,
    products_detail: string,
    gigien: boolean,
-   gigien_num: number,
+   gigien_num: string,
    pampers: string,
    diet: string,
    pers_data_agreement: boolean,
@@ -31,6 +36,42 @@ export interface AssistanceForm {
 export interface AssistanceFormValidators {
    valid: boolean,
    fio: {
+      value: string,
+      validators: {
+         required: () => boolean,
+      },
+      valid: boolean,
+      touched: boolean,
+      errors: {
+         required: boolean,
+      },
+      blur: () => boolean;
+   },
+   name: {
+      value: string,
+      validators: {
+         required: () => boolean,
+      },
+      valid: boolean,
+      touched: boolean,
+      errors: {
+         required: boolean,
+      },
+      blur: () => boolean;
+   },
+   surname: {
+      value: string,
+      validators: {
+         required: () => boolean,
+      },
+      valid: boolean,
+      touched: boolean,
+      errors: {
+         required: boolean,
+      },
+      blur: () => boolean;
+   },
+   patronymic: {
       value: string,
       validators: {
          required: () => boolean,
@@ -82,6 +123,54 @@ export interface AssistanceFormValidators {
       },
       blur: () => boolean;
    },
+   district: {
+      value: string,
+      validators: {
+         required: () => boolean,
+      },
+      valid: boolean,
+      touched: boolean,
+      errors: {
+         required: boolean,
+      },
+      blur: () => boolean;
+   },
+   street: {
+      value: string,
+      validators: {
+         required: () => boolean,
+      },
+      valid: boolean,
+      touched: boolean,
+      errors: {
+         required: boolean,
+      },
+      blur: () => boolean;
+   },
+   house: {
+      value: string,
+      validators: {
+         required: () => boolean,
+      },
+      valid: boolean,
+      touched: boolean,
+      errors: {
+         required: boolean,
+      },
+      blur: () => boolean;
+   },
+   flat: {
+      value: string,
+      validators: {
+         required: () => boolean,
+      },
+      valid: boolean,
+      touched: boolean,
+      errors: {
+         required: boolean,
+      },
+      blur: () => boolean;
+   },
    people_num: {
       value: string,
       validators: {
@@ -101,13 +190,13 @@ export interface AssistanceFormValidators {
       blur: () => boolean;
    },
    invalids: {
-      value: boolean,
+      value: string,
       valid: boolean,
       touched: boolean,
       blur: () => boolean;
    },
    children: {
-      value: boolean,
+      value: string,
       valid: boolean,
       touched: boolean,
       blur: () => boolean;
@@ -119,19 +208,19 @@ export interface AssistanceFormValidators {
       blur: () => boolean;
    },
    food: {
-      value: boolean,
+      value: string,
       valid: boolean,
       touched: boolean,
       blur: () => boolean;
    },
    water: {
-      value: boolean,
+      value: string,
       valid: boolean,
       touched: boolean,
       blur: () => boolean;
    },
    drugs: {
-      value: boolean,
+      value: string,
       valid: boolean,
       touched: boolean,
       blur: () => boolean;
@@ -143,7 +232,7 @@ export interface AssistanceFormValidators {
       blur: () => boolean;
    },
    gigien: {
-      value: boolean,
+      value: string,
       valid: boolean,
       touched: boolean,
       blur: () => boolean;

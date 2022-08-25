@@ -13,3 +13,8 @@ export interface AuthResponse {
    refreshToken: string,
    user: IUser,
 }
+
+export interface SendFormResponse {
+   message: string,
+   saved: AssistanceForm & { _id: string }
+}

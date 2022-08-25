@@ -11,6 +11,7 @@ const routes: Array<RouteRecordRaw> = [
     path: '/info',
     name: 'info',
     component: () => import('../views/InfoView.vue'),
+
   },
   {
     path: '/list',
@@ -18,11 +19,26 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import('../views/ListView.vue'),
   },
   {
+    path: '/tools',
+    name: 'tools',
+    component: () => import('../views/ToolsView.vue'),
+  },
+  {
+    path: '/account',
+    name: 'account',
+    component: () => import('../views/AccountView.vue'),
+  },
+  {
     path: "/:pathMatch(.*)*",
     name: '404',
-    component: () => import('@/components/v-error.vue'),
+    component: () => import('@/components/TheError.vue'),
     props: { code: 404, message: 'Not Found' }
-  }
+  },
+  // {
+  //   path: '/test',
+  //   name: 'test',
+  //   component: () => import('@/views/TestView.vue')
+  // }
 ]
 
 const router = createRouter({

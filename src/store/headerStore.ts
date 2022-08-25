@@ -13,6 +13,9 @@ export const useHeaderStore = defineStore('header', {
          this.isModalVisible = false;
          this.isRegVisible = false;
          this.isLogVisible = false;
+      },
+      showMenu(): void {
+         
       }
    }
 });

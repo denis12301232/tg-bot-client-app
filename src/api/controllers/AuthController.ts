@@ -45,7 +45,7 @@ export default class AuthController {
          store.user = response.data.user;
 
       } catch (e: any) {
-         console.log(e?.response?.data?.message);
+         console.log(e.message);
       }
    }
 

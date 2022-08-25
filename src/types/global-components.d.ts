@@ -11,10 +11,22 @@ import VRadio from "@/components/UI/v-radio.vue"
 import VButtonUser from "@/components/UI/v-button-user.vue"
 import VSelect from "@/components/UI/v-select.vue"
 import VButtonEdit from "@/components/UI/v-button-edit.vue"
+import VIntersection from "@/directives/v-intersection"
 
-
-export default [
-   VButton, VBurger, VLoadingWheel, VModal, VButtonDelete,
-   VInputFind, VButtonConfirm, VButtonCancel, VCheckbox, VRadio, 
-   VButtonUser, VSelect, VButtonEdit
-];
+declare module '@vue/runtime-core' {
+   export interface GlobalComponents {
+      VButton: typeof VButton,
+      VBurger: typeof VBurger,
+      VLoadingWheel: typeof VLoadingWheel,
+      VModal: typeof VModal,
+      VButtonDelete: typeof VButtonDelete,
+      VInputFind: typeof VInputFind,
+      VButtonConfirm: typeof VButtonConfirm,
+      VButtonCancel: typeof VButtonCancel,
+      VCheckbox: typeof VCheckbox,
+      VRadio: typeof VRadio,
+      VButtonUser: typeof VButtonUser,
+      VSelect: typeof VSelect,
+      VButtonEdit: typeof VButtonEdit,
+   }
+}

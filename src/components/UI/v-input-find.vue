@@ -22,10 +22,15 @@ export default defineComponent({
 
 <style lang="scss" module>
 .find_human {
-   height: 35px;
+   height: 45px;
    border-radius: 10px;
    border: 1px solid #ccc;
    padding: 10px 5px;
    font-size: 1em;
+   outline: none;
+
+   &:focus {
+      border: 2px solid $water-color;
+   }
 }
 </style>

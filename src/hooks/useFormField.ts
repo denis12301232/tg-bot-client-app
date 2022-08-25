@@ -1,13 +1,19 @@
-import { ref, reactive, watch, Ref } from 'vue';
+import { ref, reactive, watch } from 'vue';
 
+interface Field {
+   value: string,
+   validators: {
+      [name: string]: (value: string) => boolean
+   },
+}
 
-export function useFormField(field: any) {
-   const valid: Ref<boolean> = ref(true);
-   const value: Ref<string> = ref(field.value);
-   const touched: Ref<boolean> = ref(false);
-   const errors: any = reactive({});
+export function useFormField(field: Field) {
+   const valid = ref(true);
+   const value = ref(field.value);
+   const touched = ref(false);
+   const errors = reactive<{ [name: string]: boolean }>({});
 
-   const validate = (value: any): void => {
+   const validate = (value: string): void => {
       valid.value = true;
 
       Object.keys(field.validators ?? {}).forEach(name => {

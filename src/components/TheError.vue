@@ -1,19 +1,19 @@
 <template lang="pug">
 div(:class="$style.error")
    div(:class="$style.error_info")
-      div(:class="$style.error_code") {{ props.code }}
-      div(:class="$style.error_text") {{ props.message }}
+      div(:class="$style.error_code") {{ code }}
+      div(:class="$style.error_text") {{ message }}
       v-button(:class="$style.error_button", @click="$router.push('/')") На главную
 </template>
 
 <script setup lang="ts">
-const props = defineProps({
+defineProps({
    code: {
       type: [String, Number],
       required: true,
    },
    message: {
-      type: [String],
+      type: String,
       required: true,
    }
 })

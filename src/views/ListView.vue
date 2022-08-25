@@ -1,11 +1,11 @@
 <template lang="pug">
-v-header
-v-humans-list
+TheHeader
+HumansList
 </template>
 
 <script setup lang="ts">
-import vHeader from "@/components/v-header.vue";
-import vHumansList from "@/components/v-humans-list.vue"
+import TheHeader from "@/components/TheHeader.vue";
+import HumansList from "@/components/HumansList.vue"
 </script>
 
 <style lang="scss" scoped>

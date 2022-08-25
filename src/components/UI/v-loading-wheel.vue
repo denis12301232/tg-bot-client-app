@@ -13,9 +13,11 @@ export default defineComponent({
 
 <style lang="scss" module>
 .loading {
-   width: 30px;
-   height: 30px;
-   padding: 5px;
+   width: 35px;
+   height: 35px;
+   //padding: 5px;
+   min-width: 35px;
+   min-height: 35px;
 
    &>.lodaing_image {
       animation: rotate 5s infinite linear;

@@ -1,4 +1,5 @@
-const { defineConfig } = require('@vue/cli-service')
+const { defineConfig } = require('@vue/cli-service');
+
 module.exports = defineConfig({
   transpileDependencies: true,
   css: {
@@ -6,8 +7,7 @@ module.exports = defineConfig({
       sass: {
         additionalData: `@import "@/assets/scss/variables.scss";`,
       },
-
     }
   },
-})
+});
 

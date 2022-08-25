@@ -1,16 +1,6 @@
 <template lang="pug">
 form(:class="style.form", action="submit", @submit.prevent="submit")
-   h1(:class="style.title") Регистрация
-   div(:class="style.enter")
-      div(:class="style.input_title") Имя
-      v-input-find(
-         :class="style.form_input", 
-         type="text", 
-         placeholder="name",
-         v-model="form.name.value",
-         @blur="form.name.blur"
-         )
-      small(:class="style.error_message") {{ nameErrorMessage }}
+   h1(:class="style.title") Вход
    div(:class="style.enter")
       div(:class="style.input_title") Е-мэйл
       v-input-find(
@@ -32,34 +22,26 @@ form(:class="style.form", action="submit", @submit.prevent="submit")
          )
       small(:class="style.error_message") {{ passwordErrorMessage }}
    div(:class="style.submit")
-      v-button(type="submit", :disabled="!form.valid") Регистрация
+      v-button(type="submit", :disabled="!form.valid") Вход
       v-loading-wheel(v-if="isLoading")
-   div(:class="style.swap") Уже зарегестрированы? 
-      span(@click="$emit('swap')") Вход
+   div(:class="style.swap") Не зарегестрированы? 
+      span(@click="$emit('swap')") Регистрация
 </template>
 
 <script setup lang="ts">
 import { ref, computed } from "vue"
-import style from "@/assets/scss/modules/AuthForm.module.scss";
-import { RegForm } from "@/intefaces/interfaces"
-import { RegFormInit } from "@/libs/constants"
 import { useForm } from "@/hooks/useForm";
-import AuthController from "@/api/controllers/AuthController";
+import { LogForm } from "@/intefaces/interfaces"
 import { useHeaderStore } from "@/store/headerStore";
+import style from "@/assets/scss/modules/AuthForm.module.scss";
+import AuthController from "@/api/controllers/AuthController";
+import Constants from "@/libs/Constants";
 
+const form = useForm<LogForm>(Constants.LogFormInit);
 const headerStore = useHeaderStore();
-const form: RegForm = useForm(RegFormInit);
 const emailError = ref("");
 const passwordError = ref("");
 const isLoading = ref(false);
-
-const nameErrorMessage = computed(() => {
-   if (form.name.errors.required && form.name.touched) {
-      return "Это обязательное поле!";
-   }
-   return "";
-
-});
 
 const emailErrorMessage = computed(() => {
    if (form.email.errors.required && form.email.touched) {
@@ -83,15 +65,14 @@ const passwordErrorMessage = computed(() => {
    return passwordError.value;
 });
 
-const submit = async (): Promise<void> => {
+const submit = async () => {
    isLoading.value = true;
-   const { message, errors } = await AuthController.registration(
+   const { message, errors } = await AuthController.login(
       form.email.value,
-      form.password.value,
-      form.name.value,
+      form.password.value
    );
    if (!errors.length) {
-      headerStore.hideWindow();
+      headerStore.hideWindow()
    }
    else if (errors[0] === "email") {
       emailError.value = message;
@@ -100,4 +81,5 @@ const submit = async (): Promise<void> => {
    }
    isLoading.value = false;
 };
+
 </script>

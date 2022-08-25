@@ -1,43 +1,46 @@
 <template lang="pug">
-.assistance-form-container
-   v-assistance-form(
+div(class="container")
+   FormAssistance(
       :form="assistance.form", 
-      :error="assistance.error", 
-      :success="assistance.success", 
       :is-loading="assistance.isLoading", 
-      :submit="submit"
+      :submit="submit",
+      :success-message="assistance.successMessage"
+      :error-message="assistance.errorMessage"
       )
+      template(v-slot:submit="slotProps")
+         v-button(type="submit" :disabled="!slotProps.form.valid") Отправить
 </template>
 
 
 <script setup lang="ts">
-import { reactive } from "vue"
+
+import FormAssistance from "@/components/FormAssistance.vue";
+import { reactive } from "vue";
 import { useForm } from "@/hooks/useForm"
-import AssistanceService from "@/api/services/AssistanceService"
+import { AssistanceFormValidators } from "@/intefaces/interfaces"
 import AssistanceFormDto from "@/api/dtos/AssistanseFormDto"
-import { AssistanceForm, AssistanceFormValidators } from "@/intefaces/interfaces"
-import { useDefaultValues } from "@/hooks/useDefaultValues"
-import vAssistanceForm from "./v-assistance-form.vue"
-import { init } from "@/libs/constants"
+import Constants from "@/libs/Constants"
+import { useDefaultValues } from "@/hooks/useDefaultValues";
+import AssistanceService from "@/api/services/AssistanceService";
 
 const assistance = reactive({
-   form: <AssistanceFormValidators>useForm(init),
-   error: '',
-   success: '',
+   form: useForm<AssistanceFormValidators>(Constants.assistance),
+   errorMessage: '',
+   successMessage: '',
    isLoading: false,
 });
 
 const submit = async (): Promise<void> => {
    try {
       assistance.isLoading = true;
-      const formToSend = { ...new AssistanceFormDto(assistance.form) };
-      await AssistanceService.sendForm(<AssistanceForm>formToSend);
+      const formToSend = new AssistanceFormDto(assistance.form);
+      await AssistanceService.sendForm(formToSend);
       useDefaultValues(assistance.form);
-      assistance.success = 'Заявка отправлена!'
-      setTimeout(() => assistance.success = '', 2000);
+      assistance.successMessage = 'Заявка отправлена!'
+      setTimeout(() => assistance.successMessage = '', 2000);
    } catch (e: any) {
-      assistance.error = e?.response?.data?.message;
-      setTimeout(() => assistance.error = '', 2000);
+      assistance.errorMessage = e?.response?.data?.message;
+      setTimeout(() => assistance.errorMessage = '', 2000);
    } finally {
       assistance.isLoading = false;
    }
@@ -45,7 +48,7 @@ const submit = async (): Promise<void> => {
 </script>
 
 <style lang="scss" scoped>
-.assistance-form-container {
+.container {
    display: flex;
    justify-content: center;
 }

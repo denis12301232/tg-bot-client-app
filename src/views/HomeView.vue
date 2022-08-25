@@ -1,11 +1,12 @@
 <template lang="pug">
-v-header
+TheHeader
 v-assistance
 </template>
 
 <script setup lang="ts">
-import vHeader from "@/components/v-header.vue";
+import TheHeader from "@/components/TheHeader.vue";
 import vAssistance from "@/components/v-assistance.vue"
+
 </script>
 
 <style lang="scss" scoped>

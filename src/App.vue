@@ -4,7 +4,7 @@ router-view
 
 <script setup lang="ts">
 import { onBeforeMount } from "vue";
-import AuthController from "./api/controllers/AuthController";
+import AuthController from "@/api/controllers/AuthController";
 
 onBeforeMount(async () => {
   if (localStorage.getItem("token")) {
@@ -34,9 +34,8 @@ body {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  //background-color: rgb(240, 235, 248);
   background-color: $light-content-color;
-  //color: #2c3e50;
+  letter-spacing: 0.5px;
 }
 
 img {
@@ -49,6 +48,13 @@ ol {
   padding: 0;
   margin: 0;
   list-style: none;
+}
+
+input,
+button,
+textarea,
+select {
+  font: inherit;
 }
 
 ::-webkit-scrollbar {

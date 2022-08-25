@@ -1,26 +1,28 @@
 <template lang="pug">
-button(:class="$style.delete_button")
+button(:class="$style.confirm_button")
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
 
 export default defineComponent({
-   name: "v-button-delete",
+   name: "v-button-edit",
 });
 </script>
 
 
 <style lang="scss" module>
-.delete_button {
-   width: 20px;
-   height: 20px;
-   background-image: url("@/assets/images/delete-light.png");
+.confirm_button {
+   width: 25px;
+   height: 25px;
+   min-width: 25px;
+   min-height: 25px;
+   background-image: url("@/assets/images/edit.png");
+   background-color: transparent;
    border: none;
    background-size: cover;
+   display: block;
    -webkit-tap-highlight-color: transparent;
-   background-color: transparent;
-   
 
    &:hover {
       cursor: pointer;

@@ -1,9 +1,10 @@
 import { AssistanceFormValidators } from "@/intefaces/interfaces";
-import { defaultValues } from "@/libs/constants";
+import Constants from "@/libs/Constants";
 
 export function useDefaultValues(form: AssistanceFormValidators) {
-   Object.entries(defaultValues).forEach(([key, value]) => {
-      (<any>form)[key].value = value;
-      (<any>form)[key].touched = false;
-   });
+   (<Array<keyof typeof Constants.assistance>>Object.keys(Constants.assistance))
+      .forEach((key: keyof typeof Constants.assistance) => {
+         form[key].value = Constants.assistance[key].default;
+         form[key].touched = false;
+      });
 }

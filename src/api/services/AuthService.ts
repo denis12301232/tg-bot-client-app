@@ -1,7 +1,7 @@
 import $api from "../index";
-import { API_URL } from "@/libs/constants";
 import axios, { AxiosResponse } from "axios";
 import { AuthResponse } from "@/intefaces/http";
+import Constants from "@/libs/Constants";
 
 export default class AuthService {
    static async login(email: string, password: string): Promise<AxiosResponse<AuthResponse>> {
@@ -17,7 +17,7 @@ export default class AuthService {
    }
 
    static async refresh(): Promise<AxiosResponse<AuthResponse>> {
-      return axios.get<AuthResponse>(`${API_URL}/auth/refresh`, { withCredentials: true });
+      return axios.get<AuthResponse>(`${Constants.API_URL}/auth/refresh`, { withCredentials: true });
    }
 
 }

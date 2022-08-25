@@ -1,7 +1,7 @@
 import { reactive, computed } from "vue";
 import { useFormField } from "./useFormField";
 
-export function useForm(init: {} = {}) {
+export function useForm<T>(init: { [name: string]: any } = {}): T {
    const form: any = reactive({});
 
    for (const [key, value] of Object.entries(init)) {

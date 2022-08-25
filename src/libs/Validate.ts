@@ -13,7 +13,8 @@ export default class Validate {
    }
 
    static isPhone(value: string) {
-      return /^\+380([0-9]{9})$/.test(value);
+      //return /^\+380([0-9]{9})$/.test(value);
+      return /^([0-9]){9}$/.test(value);
    }
 
    static minLength(length: number) {

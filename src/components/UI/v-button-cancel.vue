@@ -1,30 +1,31 @@
 <template lang="pug">
-button(:class="$style.delete_button")
+button(:class="$style.cancel_button")
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
 
 export default defineComponent({
-   name: "v-button-delete",
+   name: "v-button-cancel",
 });
 </script>
 
 
 <style lang="scss" module>
-.delete_button {
-   width: 20px;
-   height: 20px;
-   background-image: url("@/assets/images/delete-light.png");
+.cancel_button {
+   width: 25px;
+   height: 25px;
+   background-image: url("@/assets/images/cancel.png");
    border: none;
    background-size: cover;
-   -webkit-tap-highlight-color: transparent;
    background-color: transparent;
-   
+   min-width: 25px;
+   min-height: 25px;
+   -webkit-tap-highlight-color: transparent;
 
    &:hover {
       cursor: pointer;
-      transform: scale(1.05);
+      transform: scale(1.02);
    }
 }
 </style>

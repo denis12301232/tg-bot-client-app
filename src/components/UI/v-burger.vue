@@ -21,6 +21,7 @@ export default defineComponent({
    height: 20px;
    cursor: pointer;
    user-select: none;
+   -webkit-tap-highlight-color: transparent;
 
    &::before,
    &::after {

@@ -3,4 +3,4 @@ import vFocus from "./v-focus";
 
 export default [
    vIntersection, vFocus
-]
+];

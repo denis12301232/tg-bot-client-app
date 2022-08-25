@@ -14,24 +14,28 @@ export default defineComponent({
 
 <style lang="scss" module>
 .button {
-   border: none;
-   padding: 5px;
    margin: 0;
    box-sizing: border-box;
    font-size: 1rem;
    outline: none;
    user-select: none;
-   border-radius: 2px;
    background-color: rgb(19, 24, 114);
-   color: white;
+   padding: 10px 20px;
+   border: none;
+   border-radius: 5px;
+   color: #fff;
+   outline: none;
+   cursor: pointer;
+   letter-spacing: 1px;
+   -webkit-tap-highlight-color: transparent;
 
    &:hover {
       background-color: rgb(38, 43, 150);
-      cursor: pointer;
    }
 
    &:disabled {
-      background: rgba(19, 24, 114, 0.481);;
+      background: rgba(19, 24, 114, 0.481);
+      ;
    }
 }
 </style>

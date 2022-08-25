@@ -1,154 +1,172 @@
 import Validate from "@/libs/Validate"
 
-export const API_URL: string = process.env.VUE_APP_API_URL;
+export default class Constants {
+   static readonly API_URL = process.env.VUE_APP_API_URL;
 
-export const table = {
-   fio: 'ФИО',
-   phone: 'Телефон',
-   birth: 'Дата рождения',
-   addr: 'Адрес',
-   people_num: 'Число проживающих',
-   people_fio: 'ФИО и возраст проживающих',
-   invalids: 'Есть ли среди проживающих инвалиды?',
-   children: 'Есть ли дети?',
-   children_age: 'Возраст детей',
-   food: 'Нужны ли продукты питания?',
-   water: 'Нужна ли вода?',
-   drugs: 'Лекарства?',
-   products_detail: 'Укажите кол-во (лекарств)',
-   gigien: 'Средства личной гигиены',
-   gigien_num: 'Укажите кол-во (средств)',
-   pampers: 'Памперсы?',
-   diet: 'Особенности диеты и т.п.',
-   pers_data_agreement: 'Согласие на обработку перс данных',
-   photo_agreement: 'Согласие на фото',
-}
+   static readonly districts = [
+      'Индустриальный', 'Киевский', 'Московский', 'Немышлянский', 'Новобаварский',
+      'Основянский', 'Слободской', 'Холодногорский', 'Шевченковский'
+   ];
 
-export const defaultValues = {
-   fio: '',
-   phone: '',
-   birth: '',
-   addr: '',
-   people_num: '',
-   people_fio: [''],
-   invalids: false,
-   children: false,
-   children_age: [''],
-   food: false,
-   water: false,
-   drugs: false,
-   products_detail: '',
-   gigien: false,
-   gigien_num: 0,
-   pampers: '',
-   diet: '',
-   pers_data_agreement: false,
-   photo_agreement: false,
-}
-
-export const init = {
-   fio: {
-      value: '',
-      validators: { required: Validate.required },
-   },
-   phone: {
-      value: '',
-      validators: { required: Validate.required, isPhone: Validate.isPhone },
-   },
-   birth: {
-      value: '',
-      validators: {
-         required: Validate.required, isDDMMYYYY: Validate.isDDMMYYYY
+   static readonly assistance = {
+      surname: {
+         display: 'Фамилия',
+         default: '',
+         value: '',
+         validators: { required: Validate.required },
       },
-   },
-   addr: {
-      value: '',
-      validators: { required: Validate.required },
-   },
-   people_num: {
-      value: '',
-      validators: { required: Validate.required },
-   },
-   people_fio: {
-      value: <Array<string>>[],
-   },
-   invalids: {
-      value: false,
-   },
-   children: {
-      value: false,
-   },
-   children_age: {
-      value: <Array<string>>[],
-   },
-   food: {
-      value: false,
-   },
-   water: {
-      value: false,
-   },
-   drugs: {
-      value: false,
-   },
-   products_detail: {
-      value: '',
-   },
-   gigien: {
-      value: false,
-   },
-   gigien_num: {
-      value: '',
-   },
-   pampers: {
-      value: '',
-   },
-   diet: {
-      value: '',
-   },
-   pers_data_agreement: {
-      value: false,
-   },
-   photo_agreement: {
-      value: false,
+      name: {
+         display: 'Имя',
+         default: '',
+         value: '',
+         validators: { required: Validate.required },
+      },
+      patronymic: {
+         display: 'Отчество',
+         default: '',
+         value: '',
+         validators: { required: Validate.required },
+      },
+      phone: {
+         display: 'Телефон',
+         default: '',
+         value: '',
+         validators: { required: Validate.required, isPhone: Validate.isPhone },
+      },
+      birth: {
+         display: 'Дата рождения',
+         default: '',
+         value: '',
+         validators: { required: Validate.required, isDDMMYYYY: Validate.isDDMMYYYY },
+      },
+      district: {
+         display: 'Район',
+         default: '',
+         value: '',
+         validators: { required: Validate.required },
+      },
+      street: {
+         display: 'Улица',
+         default: '',
+         value: '',
+         validators: { required: Validate.required },
+      },
+      house: {
+         display: 'Дом',
+         default: '',
+         value: '',
+         validators: { required: Validate.required },
+      },
+      flat: {
+         display: 'Квартира',
+         default: '',
+         value: '',
+         validators: { required: Validate.required },
+      },
+      people_num: {
+         display: 'Число проживающих',
+         default: '',
+         value: '',
+         validators: { required: Validate.required },
+      },
+      people_fio: {
+         display: 'ФИО и возраст проживающих',
+         default: [''],
+         value: <Array<string>>[],
+      },
+      invalids: {
+         display: 'Есть ли среди проживающих инвалиды?',
+         default: 'Нет',
+         value: 'Нет',
+      },
+      children: {
+         display: 'Есть ли дети?',
+         default: 'Нет',
+         value: 'Нет',
+      },
+      children_age: {
+         display: 'Возраст детей',
+         default: [],
+         value: <Array<string>>[],
+      },
+      food: {
+         display: 'Нужны ли продукты питания?',
+         default: 'Нет',
+         value: 'Нет',
+      },
+      water: {
+         display: 'Нужна ли вода?',
+         default: 'Нет',
+         value: 'Нет',
+      },
+      drugs: {
+         display: 'Лекарства?',
+         default: 'Нет',
+         value: 'Нет',
+      },
+      products_detail: {
+         display: 'Укажите кол-во (лекарств)',
+         default: '',
+         value: '',
+      },
+      gigien: {
+         display: 'Средства личной гигиены',
+         default: 'Нет',
+         value: 'Нет',
+      },
+      gigien_num: {
+         display: 'Укажите кол-во (средств)',
+         default: '',
+         value: '',
+      },
+      pampers: {
+         display: 'Памперсы?',
+         default: '',
+         value: '',
+      },
+      diet: {
+         display: 'Особенности диеты и т.п.',
+         default: '',
+         value: '',
+      },
+      pers_data_agreement: {
+         display: 'Согласие на обработку перс данных',
+         default: false,
+         value: false,
+         validators: { required: Validate.required },
+      },
+      photo_agreement: {
+         display: 'Согласие на фото',
+         default: false,
+         value: false,
+         validators: { required: Validate.required },
+      },
+   };
+
+   static readonly LogFormInit = {
+      email: {
+         value: "",
+         validators: {
+            required: Validate.required,
+            isEmail: Validate.isEmail,
+         },
+      },
+      password: {
+         value: "",
+         validators: {
+            required: Validate.required,
+            minLength: Validate.minLength(6),
+         },
+      },
+   };
+
+   static readonly RegFormInit = {
+      ...this.LogFormInit,
+      name: {
+         value: "",
+         validators: {
+            required: Validate.required,
+         }
+      },
    }
-}
-
-export const LogFormInit = {
-   email: {
-      value: "",
-      validators: {
-         required: Validate.required,
-         isEmail: Validate.isEmail,
-      },
-   },
-   password: {
-      value: "",
-      validators: {
-         required: Validate.required,
-         minLength: Validate.minLength(6),
-      },
-   },
-}
-
-export const RegFormInit = {
-   name: {
-      value: "",
-      validators: {
-         required: Validate.required,
-      }
-   },
-   email: {
-      value: "",
-      validators: {
-         required: Validate.required,
-         isEmail: Validate.isEmail,
-      },
-   },
-   password: {
-      value: "",
-      validators: {
-         required: Validate.required,
-         minLength: Validate.minLength(6),
-      },
-   },
 }
