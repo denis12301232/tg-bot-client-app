@@ -1,20 +1,18 @@
 <template lang="pug">
-form(:class="style.form", action="submit", @submit.prevent="submit")
+form(:class="style.form", action="submit", @submit.prevent="registration")
    h1(:class="style.title") Регистрация
    div(:class="style.enter")
       div(:class="style.input_title") Имя
-      v-input-find(
-         :class="style.form_input", 
+      v-input( 
          type="text", 
          placeholder="name",
          v-model="form.name.value",
          @blur="form.name.blur"
          )
-      small(:class="style.error_message") {{ nameErrorMessage }}
+      small(:class="style.error_message") {{ nameErrorMessage}}
    div(:class="style.enter")
       div(:class="style.input_title") Е-мэйл
-      v-input-find(
-         :class="style.form_input", 
+      v-input(
          type="text", 
          placeholder="email",
          v-model="form.email.value",
@@ -23,8 +21,7 @@ form(:class="style.form", action="submit", @submit.prevent="submit")
       small(:class="style.error_message") {{ emailErrorMessage }}
    div(:class="style.enter")
       div(:class="style.input_title") Пароль
-      v-input-find(
-         :class="style.form_input", 
+      v-input(
          type="password", 
          placeholder="password",
          v-model="form.password.value",
@@ -40,13 +37,15 @@ form(:class="style.form", action="submit", @submit.prevent="submit")
 
 <script setup lang="ts">
 import { ref, computed } from "vue"
-import style from "@/assets/scss/modules/AuthForm.module.scss";
 import { RegForm } from "@/intefaces/interfaces"
-import { useForm } from "@/hooks/useForm";
-import AuthController from "@/api/controllers/AuthController";
-import { useHeaderStore } from "@/store/headerStore";
-import Constants from "@/libs/Constants";
+import { useForm } from "@/hooks/useForm"
+import { useStore } from "@/store/main"
+import { useHeaderStore } from "@/store/headerStore"
+import Constants from "@/libs/Constants"
+import AuthService from "@/api/services/AuthService"
+import style from "@/assets/scss/modules/AuthForm.module.scss"
 
+const store = useStore();
 const headerStore = useHeaderStore();
 const form = useForm<RegForm>(Constants.RegFormInit);
 const emailError = ref("");
@@ -83,20 +82,19 @@ const passwordErrorMessage = computed(() => {
    return passwordError.value;
 });
 
-const submit = async (): Promise<void> => {
+function registration(): void {
    isLoading.value = true;
-   const { message, errors } = await AuthController.registration(
-      form.email.value,
-      form.password.value,
-      form.name.value,
-   );
-   if (!errors.length) {
-      headerStore.hideWindow();
-   } else if (errors[0] === "email") {
-      emailError.value = message;
-   } else if (errors[0] === "password") {
-      passwordError.value = message;
-   }
-   isLoading.value = false;
-};
+   AuthService.registration(form.email.value, form.password.value, form.name.value)
+      .then((response) => {
+         localStorage.setItem('token', response.data.accessToken);
+         store.user = response.data.user;
+         headerStore.hideWindow();
+      })
+      .catch((e: any) => {
+         const message = e?.response?.data?.message;
+         if (e?.response?.data?.errors[0] === 'email') emailError.value = message;
+         else if (e?.response?.data?.errors[0] === 'email') passwordError.value = message;
+      })
+      .finally(() => isLoading.value = false);
+}
 </script>

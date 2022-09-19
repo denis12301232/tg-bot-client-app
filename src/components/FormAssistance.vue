@@ -31,7 +31,7 @@ form(:class="$style.form", @submit.prevent="submit")
       div(:class="$style.select_title") Адрес
       div(:class="$style.form_group")
          label(:class="[$style.form_label, form.district.value ? $style.movePlaceholder : '']") Район
-         v-select(:class="$style.form_select", v-model="form.district.value", @blur="form.district.blur")
+         v-select-district(:class="$style.form_select", v-model="form.district.value", @blur="form.district.blur")
       div(:class="$style.form_group")
          input(:class="$style.form_input", placeholder=" ", type="text", v-model="form.street.value", @blur="form.street.blur")
          label(:class="$style.form_label") Улица/Проспект/Переулок
@@ -241,7 +241,7 @@ const filterPhone = (event: ClipboardEvent): void => {
    }
 
    & .form_error {
-      border: 1px solid rgb(240, 30, 30) !important;
+      border: 1px solid $error-message-color !important;
    }
 
    & .form_input {
@@ -259,7 +259,8 @@ const filterPhone = (event: ClipboardEvent): void => {
       border: 1px solid transparent;
 
       & .select_error {
-         color: rgb(240, 30, 30);
+         color: $error-message-color;
+         font-weight: 550;
          display: block;
          position: absolute;
          bottom: -37px;
@@ -343,26 +344,30 @@ const filterPhone = (event: ClipboardEvent): void => {
    & .form_buttons {
       padding: 10px 0 10px 0;
       display: flex;
+      align-items: center;
       justify-content: space-between;
 
       & .form_button_submit {
          display: flex;
-         justify-items: baseline;
-         align-items: flex-start;
+         align-items: center;
       }
 
       & .form_message_success {
          align-self: center;
          color: rgb(10, 157, 10);
          font-weight: bolder;
-         padding: 5px;
+         min-height: 1em;
+         line-height: 1em;
+         padding-left: 5px;
       }
 
       & .form_message_error {
          align-self: center;
-         color: rgb(240, 30, 30);
+         color: $error-message-color;
          font-weight: bolder;
-         padding: 5px;
+         min-height: 1em;
+         line-height: 1em;
+         padding-left: 5px;
       }
    }
 }

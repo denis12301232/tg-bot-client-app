@@ -49,9 +49,8 @@ onMounted(async (): Promise<void> => {
 });
 
 const sortedHumansList = computed(() => {
-   return [...listStore.humansList].sort((a, b) => {
-      return (a as { [name: string]: string })[selectedSort.value]
-         ?.localeCompare((b as { [name: string]: string })[selectedSort.value], undefined, { numeric: true });
+   return [...listStore.humansList].sort((a: { [name: string]: string }, b: { [name: string]: string }) => {
+      return a[selectedSort.value]?.localeCompare(b[selectedSort.value]);
    });
 });
 
@@ -102,7 +101,6 @@ const deleteHuman = async (): Promise<void> => {
       border: 1px solid #dadce0;
       margin-top: 10px;
       border-radius: 5px;
-
 
       & .list_item {
          display: flex;
@@ -165,7 +163,7 @@ const deleteHuman = async (): Promise<void> => {
    justify-content: center;
 }
 
-@media(max-width: 700px) {
+@media(max-width: 768px) {
    .container {
 
       & .list,

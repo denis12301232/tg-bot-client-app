@@ -1,5 +1,5 @@
 <template lang="pug">
-TheError(v-if="!store.user.email", :code="403", message="Forbidden")
+TheError(v-if="!store.isAdmin", :code="403", message="Forbidden")
 TheTools(v-else)
 </template>
 
@@ -7,7 +7,6 @@ TheTools(v-else)
 import { useStore } from '@/store/main';
 import TheError from '@/components/TheError.vue';
 import TheTools from '@/components/TheTools.vue';
-
 const store = useStore();
 </script>
 

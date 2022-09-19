@@ -1,12 +1,17 @@
 <template lang="pug">
-select(:class="$style.select", @change="setSelectValue", :value="modelValue")
-   option(:class="$style.select_label", disabled, selected) Район
-   option(:class="$style.select_variants" v-for="district in districts") {{ district }}
+select(
+   @change="$emit('update:modelValue', ($event.target as HTMLSelectElement).value)", 
+   :value="modelValue",
+   class="select"
+   )
+   option(value="", disabled) {{title}}
+   option(v-for="option in options", :key="option.value", :value="option.value") {{option.name}}
 </template>
-
+   
+   
 <script lang="ts">
 import { defineComponent } from 'vue';
-import Constants from '@/libs/Constants';
+
 
 export default defineComponent({
    name: 'v-select',
@@ -14,47 +19,29 @@ export default defineComponent({
       modelValue: {
          type: String,
       },
-   },
-   setup(props, { emit }) {
-      const districts = Constants.districts;
-
-      const setSelectValue = (event: Event): void => {
-         const target = event.target as HTMLSelectElement;
-         emit('update:modelValue', target.value);
-      };
-
-      return { districts, setSelectValue }
+      options: {
+         type: Array as () => Array<{ value: string, name: string }>,
+         default: () => [],
+      },
+      title: {
+         type: String,
+         default: 'Сортировать',
+      }
    }
 });
 </script>
-
-
-<style lang="scss" module>
+   
+<style lang="scss" scoped>
 .select {
-   display: block;
-   border: none;
-   font-family: sans-serif;
-   letter-spacing: 1px;
-   font-size: 1em;
-   width: 100%;
-   height: 1.7em;
-   border-bottom: 1px solid #e0e0e0;
+   padding: 5px;
+   border-radius: 4px;
    cursor: pointer;
-   background-color: transparent;
-   -webkit-tap-highlight-color: transparent;
-
-   & .select_label {
-      color: #9e9e9e;
-   }
-
-   & .select_variants {
-      color: black;
-   }
+   outline: none;
+   background-color: inherit;
 
    &:focus {
-      border: none;
-      border-bottom: 1px solid #1a73a8;
-      outline: none;
+      border-color: rgb(38, 43, 150);
+      outline: 1px solid $main-color  !important;
    }
 }
 </style>

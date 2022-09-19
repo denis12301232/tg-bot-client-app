@@ -2,8 +2,8 @@ export interface IUser {
    email: string,
    id: string,
    isActivated: boolean,
-   isAdmin: boolean,
    name: string,
+   roles: string[],
 }
 
 export interface AssistanceForm {

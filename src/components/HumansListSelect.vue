@@ -34,7 +34,7 @@ defineProps({
    background-color: inherit;
 
    &:focus {
-      border-color: $main-color;
+      border-color: rgb(38, 43, 150);
       outline: 1px solid $main-color  !important;
    }
 }

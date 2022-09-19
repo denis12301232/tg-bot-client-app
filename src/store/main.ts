@@ -7,8 +7,16 @@ export const useStore = defineStore({
     id: name,
     state: () => {
         return {
-            isAuth: false,
             user: <IUser>{},
+            isPageLoading: false,
         }
     },
+    getters: {
+        isAuth(state): boolean {
+            return !!Object.keys(state.user).length;
+        },
+        isAdmin(state): boolean {
+            return state?.user?.roles?.includes('admin');
+        },
+    }
 })

@@ -3,7 +3,7 @@ div(:class="$style.menu")
    ul(:class="$style.menu_list")
       li(:class="$style.list_item")
          router-link(:class="$style.menu_link", to="/account", @click="headerStore.isUserMenuVisible = false") Аккаунт
-      li(:class="$style.list_item")
+      li(:class="$style.list_item", v-if="store?.user?.roles?.includes('admin')")
          router-link(:class="$style.menu_link", to="/tools", @click="headerStore.isUserMenuVisible = false") Инструменты
       li(:class="$style.list_item")
          a(:class="$style.menu_link", @click="logout") Выйти
@@ -11,22 +11,15 @@ div(:class="$style.menu")
 
 
 <script setup lang="ts">
-import { useRouter } from 'vue-router'
-import { useStore } from '@/store/main';
+import { useStore } from '@/store/main'
 import { useHeaderStore } from '@/store/headerStore'
 import AuthController from '@/api/controllers/AuthController'
 
 const store = useStore();
 const headerStore = useHeaderStore();
-const router = useRouter();
 
 const logout = async (): Promise<void> => {
    await AuthController.logout();
-   headerStore.isUserMenuVisible = false;
-}
-
-const settings = (): void => {
-   router.push('/tools');
    headerStore.isUserMenuVisible = false;
 }
 </script>
@@ -38,6 +31,8 @@ const settings = (): void => {
    background-color: white;
    border-radius: 4px;
    box-shadow: 0 4px 16px #ccc;
+   user-select: none;
+   -webkit-tap-highlight-color: transparent;
 
    &::before {
       content: "";

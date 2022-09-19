@@ -1,16 +1,16 @@
 <template lang="pug">
 input(
-   :class="$style.find_human", 
+   class="input"
    :value="modelValue", 
    @input="$emit('update:modelValue', ($event.target as HTMLInputElement).value)"
-   )
+)
 </template>
-
+   
 <script lang="ts">
 import { defineComponent } from "vue"
 
 export default defineComponent({
-   name: "v-input-find",
+   name: "v-input",
    props: {
       modelValue: {
          type: [String, Number],
@@ -19,21 +19,24 @@ export default defineComponent({
    },
 });
 </script>
-
-<style lang="scss" module>
-.find_human {
-   height: 45px;
-   border-radius: 10px;
-   border: 2px solid #cfd7e6;
-   box-shadow: inset 0 1px 2px 0 rgb(207 215 230 / 40%);
-   padding: 10px 5px;
-   font-size: 1em;
-   outline: none;
-   letter-spacing: 1px;
-   transition: all .1s ease;
+   
+<style lang="scss" scoped>
+.input {
    -webkit-appearance: none;
    -moz-appearance: none;
    outline: 0;
+   border-radius: 4px;
+   padding: 5px 10px;
+   font-size: inherit;
+   background: #fff;
+   border: 2px solid #cfd7e6;
+   box-shadow: inset 0 1px 2px 0 rgb(207 215 230 / 40%);
+   letter-spacing: 1px;
+   font-size: 1em;
+   transition: all .1s ease;
+   width: 100%;
+   height: 42px;
+   min-width: 240px;
 
    &:focus {
       border: 2px solid $water-color;

@@ -1,20 +1,18 @@
 <template lang="pug">
-form(:class="style.form", action="submit", @submit.prevent="submit")
+form(:class="style.form", action="submit", @submit.prevent="login")
    h1(:class="style.title") Вход
    div(:class="style.enter")
       div(:class="style.input_title") Е-мэйл
-      v-input-find(
-         :class="style.form_input", 
+      v-input( 
          type="text", 
          placeholder="email",
          v-model="form.email.value",
-         @blur="form.email.blur"
+         @blur="form.email.blur",
          )
-      small(:class="style.error_message") {{ emailErrorMessage }}
+      small(:class="style.error_message") {{ emailErrorMessage}}
    div(:class="style.enter")
       div(:class="style.input_title") Пароль
-      v-input-find(
-         :class="style.form_input", 
+      v-input(
          type="password", 
          placeholder="password",
          v-model="form.password.value",
@@ -23,22 +21,26 @@ form(:class="style.form", action="submit", @submit.prevent="submit")
       small(:class="style.error_message") {{ passwordErrorMessage }}
    div(:class="style.submit")
       v-button(type="submit", :disabled="!form.valid") Вход
-      v-loading-wheel(v-if="isLoading")
+      v-loading-wheel(:class="style.submit_wheel", v-if="isLoading")
    div(:class="style.swap") Не зарегестрированы? 
       span(@click="$emit('swap')") Регистрация
+   div(:class="style.swap") Забыли пароль? 
+      span(@click="$emit('restore')") Восстановить
 </template>
 
 <script setup lang="ts">
 import { ref, computed } from "vue"
-import { useForm } from "@/hooks/useForm";
+import { useForm } from "@/hooks/useForm"
 import { LogForm } from "@/intefaces/interfaces"
-import { useHeaderStore } from "@/store/headerStore";
-import style from "@/assets/scss/modules/AuthForm.module.scss";
-import AuthController from "@/api/controllers/AuthController";
-import Constants from "@/libs/Constants";
+import { useStore } from "@/store/main"
+import { useHeaderStore } from "@/store/headerStore"
+import style from "@/assets/scss/modules/AuthForm.module.scss"
+import Constants from "@/libs/Constants"
+import AuthService from "@/api/services/AuthService"
 
-const form = useForm<LogForm>(Constants.LogFormInit);
+const store = useStore();
 const headerStore = useHeaderStore();
+const form = useForm<LogForm>(Constants.LogFormInit);
 const emailError = ref("");
 const passwordError = ref("");
 const isLoading = ref(false);
@@ -65,21 +67,19 @@ const passwordErrorMessage = computed(() => {
    return passwordError.value;
 });
 
-const submit = async () => {
+function login(): void {
    isLoading.value = true;
-   const { message, errors } = await AuthController.login(
-      form.email.value,
-      form.password.value
-   );
-   if (!errors.length) {
-      headerStore.hideWindow()
-   }
-   else if (errors[0] === "email") {
-      emailError.value = message;
-   } else if (errors[0] === "password") {
-      passwordError.value = message;
-   }
-   isLoading.value = false;
-};
-
+   AuthService.login(form.email.value, form.password.value)
+      .then((response) => {
+         localStorage.setItem("token", response.data.accessToken);
+         store.user = response.data.user;
+         headerStore.hideWindow();
+      })
+      .catch((e: any) => {
+         const message = e?.response?.data?.message;
+         if(e?.response?.data?.errors[0] === 'email') emailError.value = message;
+         else if(e?.response?.data?.errors[0] === 'password') passwordError.value = message;
+      })
+      .finally(() => isLoading.value = false);
+}
 </script>

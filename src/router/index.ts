@@ -1,5 +1,7 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
+import { useStore } from '@/store/main'
+
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -29,6 +31,11 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import('../views/AccountView.vue'),
   },
   {
+    path: '/restore',
+    name: 'restore',
+    component: () => import('../views/RestoreView.vue'),
+  },
+  {
     path: "/:pathMatch(.*)*",
     name: '404',
     component: () => import('@/components/TheError.vue'),
@@ -44,6 +51,18 @@ const routes: Array<RouteRecordRaw> = [
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes
-})
+});
+
+router.beforeEach((to, from, next) => {
+  const store = useStore();
+  store.isPageLoading = true;
+  next();
+});
+
+router.beforeResolve((to, from, next) => {
+  const store = useStore();
+  store.isPageLoading = false;
+  next();
+});
 
 export default router;

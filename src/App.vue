@@ -1,12 +1,23 @@
 <template lang="pug">
+PageLoader(:is-loading="store.isPageLoading")
 router-view
 </template>
 
 <script setup lang="ts">
-import { onBeforeMount } from "vue";
-import AuthController from "@/api/controllers/AuthController";
+import { onBeforeMount} from "vue"
+import { useStore } from "./store/main"
+import { useHeaderStore } from "./store/headerStore"
+import AuthController from "@/api/controllers/AuthController"
+import PageLoader from "@/components/PageLoader.vue"
+
+const store = useStore();
+const headerStore = useHeaderStore();
 
 onBeforeMount(async () => {
+  window.addEventListener('click', () => {
+    headerStore.isHeaderMenuVisible = false;
+    headerStore.isUserMenuVisible = false;
+  });
   if (localStorage.getItem("token")) {
     await AuthController.refresh();
   }
@@ -26,7 +37,7 @@ html {
 }
 
 html,
-body {
+body, #app {
   margin: 0;
   padding: 0;
   font: 16px/1.4 Georgia, serif;

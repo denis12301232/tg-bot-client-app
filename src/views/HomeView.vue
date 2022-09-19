@@ -1,6 +1,7 @@
 <template lang="pug">
 TheHeader
-v-assistance
+div(class="content")
+   v-assistance
 </template>
 
 <script setup lang="ts">
@@ -10,4 +11,8 @@ import vAssistance from "@/components/v-assistance.vue"
 </script>
 
 <style lang="scss" scoped>
+.content {
+   top: 50px;
+   position: relative;
+}
 </style>

@@ -9,9 +9,10 @@ import VButtonCancel from "@/components/UI/v-button-cancel.vue"
 import VCheckbox from "@/components/UI/v-checkbox.vue"
 import VRadio from "@/components/UI/v-radio.vue"
 import VButtonUser from "@/components/UI/v-button-user.vue"
-import VSelect from "@/components/UI/v-select.vue"
+import VSelectDistrict from "@/components/UI/v-select-district.vue"
 import VButtonEdit from "@/components/UI/v-button-edit.vue"
-import VIntersection from "@/directives/v-intersection"
+import VInput from "@/components/UI/v-input.vue"
+import VSelect from "@/components/UI/v-select.vue"
 
 declare module '@vue/runtime-core' {
    export interface GlobalComponents {
@@ -26,7 +27,9 @@ declare module '@vue/runtime-core' {
       VCheckbox: typeof VCheckbox,
       VRadio: typeof VRadio,
       VButtonUser: typeof VButtonUser,
-      VSelect: typeof VSelect,
+      VSelectDistrict: typeof VSelectDistrict,
       VButtonEdit: typeof VButtonEdit,
+      VInput: typeof VInput,
+      VSelect: typeof VSelect,
    }
 }

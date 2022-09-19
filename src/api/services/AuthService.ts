@@ -20,4 +20,11 @@ export default class AuthService {
       return axios.get<AuthResponse>(`${Constants.API_URL}/auth/refresh`, { withCredentials: true });
    }
 
+   static async sendMail(email: string): Promise<AxiosResponse<{ message: string }>> {
+      return axios.post(`${Constants.API_URL}/auth/restore/password`, { email }, { withCredentials: true });
+   }
+
+   static async restorePassword(password: string, link: string): Promise<AxiosResponse<{ message: string }>> {
+      return axios.post(`${Constants.API_URL}/auth/restore/password/new`, { password, link }, { withCredentials: true });
+   }
 }

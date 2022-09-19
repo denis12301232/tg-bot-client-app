@@ -6,7 +6,7 @@ div(:class="$style.account")
       li(:class="$style.tools_list")
          div(:class="$style.list_title") Имя пользователя
          div(:class="$style.list_block")
-            input(
+            v-input(
                :class="$style.list_input", 
                placeholder="Имя пользователя", 
                type="text", 
@@ -23,7 +23,7 @@ div(:class="$style.account")
       li(:class="$style.tools_list")
          div(:class="$style.list_title") Адрес электронной почты
          div(:class="$style.list_block")
-            input(
+            v-input(
                :class="$style.list_input", 
                placeholder="Е-мэйл", 
                type="email", 
@@ -40,8 +40,8 @@ div(:class="$style.account")
       li(:class="$style.tools_list")
          div(:class="$style.list_title") Пароль
          div(:class="$style.list_fields")
-            input(:class="$style.list_input", placeholder="Старый пароль", type="password", v-model="tools.password.old")
-            input(:class="$style.list_input", placeholder="Новый пароль", type="password", v-model="tools.password.new")
+            v-input(:class="$style.list_input", placeholder="Старый пароль", type="password", v-model="tools.password.old")
+            v-input(:class="$style.list_input", placeholder="Новый пароль", type="password", v-model="tools.password.new")
          div(:class="$style.list_block")
             v-button(@click="setNewPassword", :disabled="!(tools.password.old.length >= 6) || !(tools.password.new.length >= 6)") Изменить
             v-loading-wheel(v-if="tools.password.isLoading")
@@ -64,12 +64,12 @@ const tools = reactive({
       isLoading: false,
       errorMessage: '',
       okMessage: '',
-      input: function (event: Event) {
+      input(event: Event): void {
          const target = event.target as HTMLInputElement;
          this.value = target.value;
          !Validate.required(this.value) ? this.errorMessage = '! Ввведите имя' : this.errorMessage = '';
       },
-      cancel: function () {
+      cancel(): void {
          this.value = store.user.name;
          this.errorMessage = '';
       },
@@ -80,12 +80,12 @@ const tools = reactive({
       isLoading: false,
       errorMessage: '',
       okMessage: '',
-      input: function (event: Event) {
+      input(event: Event): void {
          const target = event.target as HTMLInputElement;
          this.value = target.value;
          !Validate.isEmail(this.value) ? this.errorMessage = '! Ввведите корректный е-мэйл' : this.errorMessage = '';
       },
-      cancel: function () {
+      cancel(): void {
          this.value = store.user.email;
          this.errorMessage = '';
       },
@@ -180,7 +180,7 @@ const setNewPassword = async (): Promise<void> => {
             }
 
             & .list_error {
-               color: red;
+               color: $error-message-color;
             }
 
             & .list_ok {
@@ -212,25 +212,7 @@ const setNewPassword = async (): Promise<void> => {
          }
 
          & .list_input {
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            outline: 0;
-            border-radius: 4px;
-            padding: 5px 10px;
-            font-size: 13px;
-            background: #fff;
-            border: 2px solid #cfd7e6;
-            box-shadow: inset 0 1px 2px 0 rgb(207 215 230 / 40%);
-            letter-spacing: 1px;
-            font-size: 1em;
-            transition: all .1s ease;
             width: 30%;
-            height: 42px;
-            min-width: 240px;
-
-            &:focus {
-               border: 2px solid $water-color;
-            }
          }
 
          & .list_fields {
