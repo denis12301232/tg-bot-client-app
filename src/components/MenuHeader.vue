@@ -23,9 +23,9 @@ div(class="nav")
 
 
 <script setup lang="ts">
-import { computed } from "vue"
+import { computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
-import { useHeaderStore } from "@/store/headerStore"
+import { useHeaderStore } from '@/store/headerStore'
 
 const router = useRouter();
 const headerStore = useHeaderStore();
@@ -33,7 +33,7 @@ const currentRoute = computed(() => {
    return useRoute().name;
 });
 
-const changeRoute = (route: string): void => {
+function changeRoute(route: string): void {
    headerStore.isHeaderMenuVisible = false;
    router.push(route);
 };

@@ -1,5 +1,5 @@
-import { reactive, computed } from "vue";
-import { useFormField } from "./useFormField";
+import { reactive, computed } from 'vue'
+import { useFormField } from './useFormField'
 
 export function useForm<T>(init: { [name: string]: any } = {}): T {
    const form: any = reactive({});

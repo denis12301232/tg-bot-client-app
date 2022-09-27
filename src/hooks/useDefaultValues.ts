@@ -1,5 +1,5 @@
-import { AssistanceFormValidators } from "@/intefaces/interfaces";
-import Constants from "@/libs/Constants";
+import { AssistanceFormValidators } from '@/intefaces/interfaces'
+import Constants from '@/libs/Constants'
 
 export function useDefaultValues(form: AssistanceFormValidators) {
    (<Array<keyof typeof Constants.assistance>>Object.keys(Constants.assistance))

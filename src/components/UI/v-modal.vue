@@ -1,14 +1,15 @@
 <template lang="pug">
-div(
-   :class="$style.window",
-   @keyup.esc="hideWindow",
-   @click="hideWindow",
-   tabindex="0",
-   v-if="show",
-   v-focus,
-)
-   div(:class="$style.window_content", @click.stop)
-      slot
+Transition(name="fade")
+   div(
+      :class="$style.window",
+      @keyup.esc="hideWindow",
+      @click="hideWindow",
+      tabindex="0",
+      v-if="show",
+      v-focus,
+   )
+      div(:class="$style.window_content", @click.stop)
+         slot
 </template>
 
 <script lang="ts">
@@ -55,5 +56,15 @@ export default defineComponent({
       overflow-y: auto;
       scrollbar-width: thin;
    }
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
 }
 </style>

@@ -77,7 +77,7 @@ const restore = reactive({
    }
 });
 
-const sendMail = async () => {
+async function sendMail(): Promise<void> {
    try {
       restore.email.isLoading = true;
       const response = await AuthService.sendMail(restore.email.value);
@@ -92,7 +92,7 @@ const sendMail = async () => {
    }
 };
 
-const restorePassword = async () => {
+async function restorePassword(): Promise<void> {
    try {
       restore.password.isLoading = true;
       const response = await AuthService.restorePassword(restore.password.value, link.value as string);
@@ -148,6 +148,7 @@ const restorePassword = async () => {
       & .form_input {
          -webkit-appearance: none;
          -moz-appearance: none;
+         appearance: none;
          outline: 0;
          border-radius: 4px;
          padding: 5px 10px;
@@ -163,7 +164,7 @@ const restorePassword = async () => {
          min-width: 240px;
 
          &:focus {
-            border: 2px solid $water-color;
+            border: 2px solid var(--water-color);
          }
 
       }

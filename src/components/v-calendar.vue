@@ -212,7 +212,7 @@ const setNextMenu = (): void => {
          &:hover,
          &:focus {
             cursor: pointer;
-            background-color: $main-background-color;
+            background-color: white;
          }
       }
 

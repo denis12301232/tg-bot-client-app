@@ -36,47 +36,47 @@ form(:class="style.form", action="submit", @submit.prevent="registration")
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from "vue"
-import { RegForm } from "@/intefaces/interfaces"
-import { useForm } from "@/hooks/useForm"
-import { useStore } from "@/store/main"
-import { useHeaderStore } from "@/store/headerStore"
-import Constants from "@/libs/Constants"
-import AuthService from "@/api/services/AuthService"
-import style from "@/assets/scss/modules/AuthForm.module.scss"
+import { ref, computed } from 'vue'
+import { RegForm } from '@/intefaces/interfaces'
+import { useForm } from '@/hooks/useForm'
+import { useStore } from '@/store/main'
+import { useHeaderStore } from '@/store/headerStore'
+import Constants from '@/libs/Constants'
+import AuthService from '@/api/services/AuthService'
+import style from '@/assets/scss/modules/AuthForm.module.scss'
 
 const store = useStore();
 const headerStore = useHeaderStore();
 const form = useForm<RegForm>(Constants.RegFormInit);
-const emailError = ref("");
-const passwordError = ref("");
+const emailError = ref('');
+const passwordError = ref('');
 const isLoading = ref(false);
 
 const nameErrorMessage = computed(() => {
    if (form.name.errors.required && form.name.touched) {
-      return "Это обязательное поле!";
+      return 'Это обязательное поле!';
    }
-   return "";
+   return '';
 
 });
 
 const emailErrorMessage = computed(() => {
    if (form.email.errors.required && form.email.touched) {
-      emailError.value = "";
-      return "Введите е-мэйл!";
+      emailError.value = '';
+      return 'Введите е-мэйл!';
    } else if (form.email.errors.isEmail && form.email.touched) {
       emailError.value = "";
-      return "Это не е-мэйл!";
+      return 'Это не е-мэйл!';
    }
    return emailError.value;
 });
 
 const passwordErrorMessage = computed(() => {
    if (form.password.errors.required && form.password.touched) {
-      passwordError.value = "";
-      return "Введите пароль!";
+      passwordError.value = '';
+      return 'Введите пароль!';
    } else if (form.password.errors.minLength && form.password.touched) {
-      passwordError.value = "";
+      passwordError.value = '';
       return `Пароль должен содержать 6-20 символов!`;
    }
    return passwordError.value;

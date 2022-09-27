@@ -1,18 +1,15 @@
-import $api from "../index";
-import { AxiosResponse } from "axios";
-import { HumansList, AssistanceFormsList, SendFormResponse } from "@/intefaces/http";
-import AssistanceFormDto from "@/api/dtos/AssistanseFormDto"
+import $api from '../index'
+import { AxiosResponse } from 'axios'
+import AssistanceFormDto from '@/api/dtos/AssistanseFormDto'
+import { HumansList, AssistanceFormsList, SendFormResponse } from '@/intefaces/http'
 
 
 export default class AssistanceService {
    static async catchHumansList({ limit, page }: any): Promise<AxiosResponse<HumansList>> {
-      return $api.get<HumansList>('/assistance/list', {
-         params: { limit, page },
-      });
+      return $api.get<HumansList>('/assistance/list', { params: { limit, page } });
    }
 
    static async findHuman(surname: string, name: string, patronymic: string,): Promise<AxiosResponse<AssistanceFormsList>> {
-      //return $api.post<AssistanceFormsList>('/assistance/info', { fio });
       return $api.post<AssistanceFormsList>('/assistance/info', { name, patronymic, surname });
    }
 

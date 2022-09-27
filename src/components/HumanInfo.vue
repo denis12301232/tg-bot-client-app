@@ -25,12 +25,12 @@ div(:class="$style.container")
                   td {{ useBeautifyValue(key) }}
 div(:class="$style.form", v-show="infoStore.isEditable")
    FormAssistance(
+      @save="submit",
       :form="assistance.form",
-         :is-loading="assistance.isLoading",
-         :success-message="assistance.successMessage",
-         :error-message="assistance.errorMessage"
-         :submit="submit",
-         title="Редактировать"
+      :is-loading="assistance.isLoading",
+      :success-message="assistance.successMessage",
+      :error-message="assistance.errorMessage",
+      title="Редактировать"
       )
       template(v-slot:submit="slotProps")
          v-button-confirm(type="submit", :disabled="!slotProps.form.valid")
@@ -40,16 +40,16 @@ div(:class="$style.form", v-show="infoStore.isEditable")
 
 
 <script setup lang="ts">
-import { ref, reactive } from "vue"
-import Constants from "@/libs/Constants"
-import { useForm } from "@/hooks/useForm"
-import { useInfoStore } from "@/store/infoStore"
-import { useBeautifyValue } from "@/hooks/useBeautifyValue"
-import { AssistanceFormValidators } from "@/intefaces/interfaces"
-import FormAssistance from "./FormAssistance.vue"
+import { ref, reactive } from 'vue'
+import Constants from '@/libs/Constants'
+import { useForm } from '@/hooks/useForm'
+import { useInfoStore } from '@/store/infoStore'
+import { useBeautifyValue } from '@/hooks/useBeautifyValue'
+import { AssistanceFormValidators } from '@/intefaces/interfaces'
+import FormAssistance from './FormAssistance.vue'
 import { onBeforeRouteLeave } from "vue-router"
-import AssistanseFormDto from "@/api/dtos/AssistanseFormDto"
-import AssistanceService from "@/api/services/AssistanceService"
+import AssistanseFormDto from '@/api/dtos/AssistanseFormDto'
+import AssistanceService from '@/api/services/AssistanceService'
 
 
 const infoStore = useInfoStore();
@@ -61,7 +61,7 @@ const assistance = reactive({
    isLoading: false,
 });
 
-const setEditable = (event: Event, index?: number, id?: string): void => {
+function setEditable(event: Event, index?: number, id?: string): void {
    if (index === undefined || !id) {
       infoStore.isEditable = !infoStore.isEditable;
       window.scrollTo(0, infoStore.currentScrollY);
@@ -80,7 +80,7 @@ const setEditable = (event: Event, index?: number, id?: string): void => {
          });
    }
 }
-const submit = async (): Promise<void> => {
+async function submit(): Promise<void> {
    try {
       assistance.isLoading = true;
       const formToSend = new AssistanseFormDto(assistance.form);
@@ -89,7 +89,6 @@ const submit = async (): Promise<void> => {
       setTimeout(() => assistance.successMessage = '', 3000);
    } catch (e: any) {
       console.log(e);
-
       assistance.errorMessage = e?.response?.data?.message;
       setTimeout(() => assistance.errorMessage = '', 3000);
    } finally {
@@ -128,7 +127,7 @@ onBeforeRouteLeave((to, from, next) => {
       }
 
       & .search_error {
-         color: $error-message-color;
+         color: var(--error-message-color);
          text-align: center;
          font-weight: bolder;
       }

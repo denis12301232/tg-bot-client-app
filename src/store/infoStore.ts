@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
-import AssistanceService from '@/api/services/AssistanceService';
-import { AssistanceForm } from "@/intefaces/interfaces";
+import AssistanceService from '@/api/services/AssistanceService'
+import { AssistanceForm } from "@/intefaces/interfaces"
 
 export const useInfoStore = defineStore('info', {
    state: () => ({

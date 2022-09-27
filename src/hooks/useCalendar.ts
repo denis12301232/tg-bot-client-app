@@ -1,4 +1,4 @@
-import Time from "@/libs/Time";
+import Time from '@/libs/Time'
 
 export function useCalendar(elem: HTMLElement, year: number, month: number) {
 

@@ -262,7 +262,7 @@ function takeAdminRights(): void {
             }
 
             & .form_title {
-               color: $water-color;
+               color: var(--water-color);
                font-weight: 500;
             }
          }
@@ -306,6 +306,7 @@ function takeAdminRights(): void {
                      border-bottom: 1px solid black;
                      -webkit-appearance: none;
                      -moz-appearance: textfield;
+                     appearance: none;
                      outline: none;
                      padding: 5px 0;
                      width: 155px;
@@ -317,6 +318,7 @@ function takeAdminRights(): void {
                      &::-webkit-outer-spin-button,
                      &::-webkit-inner-spin-button {
                         -webkit-appearance: none;
+                        appearance: none;
                      }
 
                   }

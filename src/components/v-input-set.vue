@@ -58,7 +58,7 @@ defineProps({
       font-size: 1rem;
 
       &:focus {
-         border: 1px solid $water-color;
+         border: 1px solid var(--water-color);
       }
    }
 

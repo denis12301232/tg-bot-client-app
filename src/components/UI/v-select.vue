@@ -41,7 +41,7 @@ export default defineComponent({
 
    &:focus {
       border-color: rgb(38, 43, 150);
-      outline: 1px solid $main-color  !important;
+      outline: 1px solid var(--water-color)  !important;
    }
 }
 </style>

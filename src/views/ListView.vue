@@ -7,10 +7,10 @@ div(v-else)
 </template>
 
 <script setup lang="ts">
-import TheHeader from "@/components/TheHeader.vue"
-import HumansList from "@/components/HumansList.vue"
-import { useStore } from "@/store/main"
-import TheError from "@/components/TheError.vue"
+import TheHeader from '@/components/TheHeader.vue'
+import HumansList from '@/components/HumansList.vue'
+import TheError from '@/components/TheError.vue'
+import { useStore } from '@/store/main'
 
 const store = useStore();
 </script>

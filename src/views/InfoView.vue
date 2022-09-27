@@ -7,16 +7,16 @@ div(v-else)
 </template>
 
 <script setup lang="ts">
-import TheHeader from "@/components/TheHeader.vue"
-import HumanInfo from "@/components/HumanInfo.vue"
-import TheError from "@/components/TheError.vue"
-import { useStore } from "@/store/main"
+import TheHeader from '@/components/TheHeader.vue'
+import HumanInfo from '@/components/HumanInfo.vue'
+import TheError from '@/components/TheError.vue'
+import { useStore } from '@/store/main'
 
 const store = useStore();
 </script>
 
 <style lang="scss" scoped>
-.content{
+.content {
    top: 50px;
    position: relative;
 }

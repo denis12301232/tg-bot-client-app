@@ -1,5 +1,5 @@
-import { IUser } from "@/intefaces/interfaces";
-import { defineStore } from "pinia";
+import { IUser } from '@/intefaces/interfaces'
+import { defineStore } from 'pinia'
 
 const name: string = 'main';
 

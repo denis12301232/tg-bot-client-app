@@ -39,7 +39,7 @@ export default defineComponent({
    min-width: 240px;
 
    &:focus {
-      border: 2px solid $water-color;
+      border: 2px solid var(--water-color);
    }
 }
 </style>

@@ -4,12 +4,13 @@ TheAccount(v-else)
 </template>
 
 <script setup lang="ts">
-import { useStore } from '@/store/main';
-import TheError from '@/components/TheError.vue';
-import TheAccount from '@/components/TheAccount.vue';
+import { useStore } from '@/store/main'
+import TheError from '@/components/TheError.vue'
+import TheAccount from '@/components/TheAccount.vue'
 
 const store = useStore();
 </script>
 
 <style lang="scss" module>
+
 </style>

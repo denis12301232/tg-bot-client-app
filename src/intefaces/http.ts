@@ -1,4 +1,4 @@
-import { AssistanceForm, IUser } from "./interfaces"
+import { AssistanceForm, IUser } from './interfaces'
 
 export interface HumansList {
    humansList: Array<{ fio: string, _id: string }>

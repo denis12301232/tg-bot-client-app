@@ -1,23 +1,28 @@
 <template lang="pug">
-div(:class="$style.loading")
+div(:class="$style.loading", :style="style")
    img(:class="$style.lodaing_image", src="@/assets/images/loading.png")
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue"
-
-export default defineComponent({
-   name: "v-loading-wheel",
+<script setup lang="ts">
+const props = defineProps({
+   width: {
+      type: String,
+      default: '35px'
+   },
+   height: {
+      type: String,
+      default: '35px'
+   }
 });
+
+const style = {
+   width: props.width,
+   height: props.height,
+};
 </script>
 
 <style lang="scss" module>
 .loading {
-   width: 35px;
-   height: 35px;
-   //padding: 5px;
-   min-width: 35px;
-   min-height: 35px;
 
    &>.lodaing_image {
       animation: rotate 5s infinite linear;

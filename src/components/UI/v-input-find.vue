@@ -33,10 +33,11 @@ export default defineComponent({
    transition: all .1s ease;
    -webkit-appearance: none;
    -moz-appearance: none;
+   appearance: none;
    outline: 0;
 
    &:focus {
-      border: 2px solid $water-color;
+      border: 2px solid var(--water-color);
    }
 }
 </style>

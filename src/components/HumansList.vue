@@ -12,12 +12,13 @@ div(class="container")
       div(class="title") Список
       HumansListSelect(v-model="selectedSort", :options="sortOptions")
    div(class="error", v-if="listStore.error") {{ listStore.error }}
-   div(class="list", v-for="(human, index) in sortedHumansList", :key="human._id")
-      div(class="list_item")
-         div(class="item_number")
-            div {{ index + 1 }}.
-         div(class="item_name") {{ human.fio }}
-         v-button-delete(class="item_button", @click="showModal($event, human._id)")
+   TransitionGroup(name="list")
+      div(class="list", v-for="(human, index) in sortedHumansList", :key="human._id")
+         div(class="list_item")
+            div(class="item_number")
+               div {{ index + 1 }}.
+            div(class="item_name") {{ human.fio }}
+            v-button-delete(class="item_button", @click="showModal($event, human._id)")
 div(class="loading")
    v-loading-wheel(v-if="listStore.isLoading")
 div(class="observer")
@@ -26,10 +27,10 @@ div(class="observer")
 
 
 <script setup lang="ts">
-import { onMounted, ref, computed } from "vue";
-import { useListStore } from "@/store/listStore";
-import AssistanceService from "@/api/services/AssistanceService";
-import HumansListSelect from "./HumansListSelect.vue";
+import { onMounted, ref, computed } from 'vue'
+import { useListStore } from '@/store/listStore'
+import AssistanceService from '@/api/services/AssistanceService'
+import HumansListSelect from './HumansListSelect.vue'
 
 
 const listStore = useListStore();
@@ -54,13 +55,13 @@ const sortedHumansList = computed(() => {
    });
 });
 
-const showModal = (event?: Event, id?: string): void => {
+function showModal(event?: Event, id?: string): void {
    isModalVisible.value = !isModalVisible.value;
    if (!event || !id) return;
    currentId.value = id;
 };
 
-const deleteHuman = async (): Promise<void> => {
+async function deleteHuman(): Promise<void> {
    try {
       isLoading.value = true;
       await AssistanceService.deleteHuman(currentId.value);
@@ -171,6 +172,22 @@ const deleteHuman = async (): Promise<void> => {
          width: 90%;
       }
    }
+}
 
+.list-item {
+  display: inline-block;
+  margin-right: 10px;
+}
+.list-enter-active,
+.list-leave-active {
+  transition: all 1s ease;
+}
+.list-enter-from,
+.list-leave-to {
+  opacity: 0;
+  transform: translateY(30px);
+}
+.list-move {
+  transition: transform 0.8s ease;
 }
 </style>

@@ -1,4 +1,4 @@
-import Validate from "@/libs/Validate"
+import Validate from '@/libs/Validate'
 
 export default class Constants {
    static readonly API_URL = process.env.VUE_APP_API_URL;

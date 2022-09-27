@@ -35,7 +35,7 @@ defineProps({
 
    &:focus {
       border-color: rgb(38, 43, 150);
-      outline: 1px solid $main-color  !important;
+      outline: 1px solid #2c3e50  !important;
    }
 }
 </style>

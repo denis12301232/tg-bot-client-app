@@ -1,4 +1,4 @@
-import { useListStore } from "@/store/listStore";
+import { useListStore } from '@/store/listStore'
 
 export default {
    mounted(el: HTMLElement, binding: { value: { f: () => Promise<void> } }): void {

@@ -1,5 +1,5 @@
 <template lang="pug">
-form(:class="$style.form", @submit.prevent="submit")
+form(:class="$style.form", @submit.prevent="$emit('save')")
    div(:class="$style.form_title") {{ title }}
    div(:class="[$style.select, ((form.surname.errors.required || form.name.errors.required || form.patronymic.errors.required) && (form.surname.touched || form.name.touched || form.patronymic.touched)) ? $style.form_error : '']")
       div(:class="$style.select_title") ФИО
@@ -186,10 +186,6 @@ const props = defineProps({
       type: Boolean,
       default: false,
    },
-   submit: {
-      type: Function as (...args: any) => any,
-      required: true,
-   },
    title: {
       type: String,
       default: 'Заявка на получение гуманитарной помощи',
@@ -241,7 +237,7 @@ const filterPhone = (event: ClipboardEvent): void => {
    }
 
    & .form_error {
-      border: 1px solid $error-message-color !important;
+      border: 1px solid var(--error-message-color) !important;
    }
 
    & .form_input {
@@ -252,14 +248,14 @@ const filterPhone = (event: ClipboardEvent): void => {
 
    & .select {
       margin-top: 10px;
-      background-color: $light-content-color;
+      background-color: var(--background-color-light);
       border-radius: 5px;
       padding: 20px 20px;
       box-shadow: 0 4px 16px #ccc;
       border: 1px solid transparent;
 
       & .select_error {
-         color: $error-message-color;
+         color: var(--error-message-color);
          font-weight: 550;
          display: block;
          position: absolute;
@@ -288,10 +284,12 @@ const filterPhone = (event: ClipboardEvent): void => {
             z-index: 1;
             position: relative;
             -moz-appearance: textfield;
+            appearance: none;
 
             &::-webkit-outer-spin-button,
             &::-webkit-inner-spin-button {
                -webkit-appearance: none;
+               appearance: none;
             }
 
             &:focus {
@@ -363,7 +361,7 @@ const filterPhone = (event: ClipboardEvent): void => {
 
       & .form_message_error {
          align-self: center;
-         color: $error-message-color;
+         color: var(--error-message-color);
          font-weight: bolder;
          min-height: 1em;
          line-height: 1em;

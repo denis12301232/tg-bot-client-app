@@ -1,6 +1,6 @@
-import axios from "axios";
-import AuthController from "./controllers/AuthController";
-import Constants from "@/libs/Constants";
+import axios from 'axios'
+import AuthController from './controllers/AuthController'
+import Constants from '@/libs/Constants'
 
 const $api = axios.create({
    withCredentials: true,

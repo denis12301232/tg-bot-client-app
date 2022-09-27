@@ -15,12 +15,15 @@ import { useStore } from '@/store/main'
 import { useHeaderStore } from '@/store/headerStore'
 import AuthController from '@/api/controllers/AuthController'
 
+const emit = defineEmits<{(e: 'loading', value: boolean): void}>();
 const store = useStore();
 const headerStore = useHeaderStore();
 
-const logout = async (): Promise<void> => {
+async function logout(): Promise<void> {
+   emit('loading', true);
    await AuthController.logout();
    headerStore.isUserMenuVisible = false;
+   emit('loading', false);
 }
 </script>
 

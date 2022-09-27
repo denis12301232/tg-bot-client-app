@@ -1,5 +1,5 @@
-import { AxiosResponse } from "axios";
-import $api from "../index";
+import { AxiosResponse } from 'axios'
+import $api from '../index'
 
 export default class ToolsService {
    static async setNewName(name: string): Promise<void> {

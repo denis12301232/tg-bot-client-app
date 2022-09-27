@@ -21,7 +21,7 @@
       & .error_message {
          min-height: 20px;
          display: block;
-         color: $error-message-color;
+         color: var(--error-message-color);
          font-weight: bold;
       }
    }
@@ -33,7 +33,7 @@
       align-items: center;
 
       & .submit_wheel {
-         margin-top: 5px;
+         margin-top: 10px;
       }
    }
 
@@ -41,14 +41,14 @@
       margin-top: 10px;
 
       &>span {
-         color: $main-color;
+         color: #2c3e50;
          cursor: pointer;
          font-weight: 700;
       }
 
       &>span:hover {
-         border-bottom: 1px solid $main-color;
-         color: $main-color-hover;
+         border-bottom: 1px solid #2c3e50;
+         color: #113c64;
       }
    }
 }

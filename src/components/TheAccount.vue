@@ -100,7 +100,7 @@ const tools = reactive({
    }
 });
 
-const setNewName = async (): Promise<void> => {
+async function setNewName(): Promise<void> {
    try {
       tools.name.isLoading = true;
       await ToolsService.setNewName(tools.name.value);
@@ -118,7 +118,7 @@ const setNewName = async (): Promise<void> => {
    }
 }
 
-const setNewEmail = async (): Promise<void> => {
+async function setNewEmail(): Promise<void> {
    try {
       tools.email.isLoading = true;
       await ToolsService.setNewEmail(tools.email.value);
@@ -136,7 +136,7 @@ const setNewEmail = async (): Promise<void> => {
    }
 }
 
-const setNewPassword = async (): Promise<void> => {
+async function setNewPassword(): Promise<void> {
    try {
       tools.password.isLoading = true;
       await ToolsService.setNewPassword(tools.password.new, tools.password.old);
@@ -180,7 +180,7 @@ const setNewPassword = async (): Promise<void> => {
             }
 
             & .list_error {
-               color: $error-message-color;
+               color: var(--error-message-color);
             }
 
             & .list_ok {

@@ -4,11 +4,11 @@ router-view
 </template>
 
 <script setup lang="ts">
-import { onBeforeMount} from "vue"
-import { useStore } from "./store/main"
-import { useHeaderStore } from "./store/headerStore"
-import AuthController from "@/api/controllers/AuthController"
-import PageLoader from "@/components/PageLoader.vue"
+import { onBeforeMount } from 'vue'
+import { useStore } from '@/store/main'
+import { useHeaderStore } from '@/store/headerStore'
+import AuthController from '@/api/controllers/AuthController'
+import PageLoader from '@/components/PageLoader.vue'
 
 const store = useStore();
 const headerStore = useHeaderStore();
@@ -18,7 +18,7 @@ onBeforeMount(async () => {
     headerStore.isHeaderMenuVisible = false;
     headerStore.isUserMenuVisible = false;
   });
-  if (localStorage.getItem("token")) {
+  if (localStorage.getItem('token')) {
     await AuthController.refresh();
   }
 });
@@ -31,22 +31,24 @@ onBeforeMount(async () => {
   box-sizing: border-box;
 }
 
-html {
+:root {
   width: 100vw;
   overflow-x: hidden;
-}
-
-html,
-body, #app {
-  margin: 0;
-  padding: 0;
-  font: 16px/1.4 Georgia, serif;
-  height: 100vh;
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+  font: 16px/1.4 Avenir, Helvetica, Arial, sans-serif;
+  letter-spacing: 0.5px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: $light-content-color;
-  letter-spacing: 0.5px;
+
+  --background-color-light: #FFFFFF;
+  --water-color: rgb(19, 24, 114);
+  --error-message-color: rgb(131, 12, 12);
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background-color: var(--background-color-light);
 }
 
 img {

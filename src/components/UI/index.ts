@@ -14,9 +14,31 @@ import VButtonEdit from "@/components/UI/v-button-edit.vue"
 import VInput from "@/components/UI/v-input.vue"
 import VSelect from "@/components/UI/v-select.vue"
 
+VLoadingWheel.name = 'v-loading-wheel';
+
+declare module '@vue/runtime-core' {
+   export interface GlobalComponents {
+      VButton: typeof VButton;
+      VBurger: typeof VBurger;
+      VLoadingWheel: typeof VLoadingWheel;
+      VModal: typeof VModal;
+      VButtonDelete: typeof VButtonDelete;
+      VInputFind: typeof VInputFind;
+      VButtonConfirm: typeof VButtonConfirm;
+      VButtonCancel: typeof VButtonCancel;
+      VCheckbox: typeof VCheckbox;
+      VRadio: typeof VRadio;
+      VButtonUser: typeof VButtonUser;
+      VSelectDistrict: typeof VSelectDistrict;
+      VButtonEdit: typeof VButtonEdit;
+      VInput: typeof VInput;
+      VSelect: typeof VSelect;
+   }
+}
+
 
 export default [
    VButton, VBurger, VLoadingWheel, VModal, VButtonDelete,
-   VInputFind, VButtonConfirm, VButtonCancel, VCheckbox, VRadio, 
-   VButtonUser,VSelectDistrict, VButtonEdit, VInput, VSelect
+   VInputFind, VButtonConfirm, VButtonCancel, VCheckbox, VRadio,
+   VButtonUser, VSelectDistrict, VButtonEdit, VInput, VSelect
 ];
