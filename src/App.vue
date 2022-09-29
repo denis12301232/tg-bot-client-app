@@ -56,6 +56,10 @@ img {
   display: block;
 }
 
+a {
+  color: inherit;
+}
+
 ul,
 ol {
   padding: 0;

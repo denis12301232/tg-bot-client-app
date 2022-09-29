@@ -19,7 +19,7 @@ export default defineComponent({
    font-size: 1rem;
    outline: none;
    user-select: none;
-   background-color: rgb(19, 24, 114);
+   background-image: linear-gradient(90deg, rgb(41, 47, 164) 0%, rgb(32, 37, 141) 33%, rgb(19, 24, 114) 100%);
    padding: 10px 20px;
    border: none;
    border-radius: 5px;
@@ -30,7 +30,7 @@ export default defineComponent({
    -webkit-tap-highlight-color: transparent;
 
    &:hover {
-      background-color: rgb(38, 43, 150);
+      background-image: linear-gradient(90deg, rgba(41, 47, 164, 0.937) 0%, rgba(32, 37, 141, 0.888) 33%, rgba(19, 24, 114, 0.899) 100%);
    }
 
    &:disabled {

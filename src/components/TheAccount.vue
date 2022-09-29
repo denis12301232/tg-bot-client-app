@@ -40,8 +40,20 @@ div(:class="$style.account")
       li(:class="$style.tools_list")
          div(:class="$style.list_title") Пароль
          div(:class="$style.list_fields")
-            v-input(:class="$style.list_input", placeholder="Старый пароль", type="password", v-model="tools.password.old")
-            v-input(:class="$style.list_input", placeholder="Новый пароль", type="password", v-model="tools.password.new")
+            v-input(
+               :class="$style.list_input",
+               placeholder="Старый пароль",
+               type="password",
+               v-model="tools.password.old",
+               autocomplete="disabled"
+               )
+            v-input(
+               :class="$style.list_input",
+               placeholder="Новый пароль", 
+               type="password",
+               v-model="tools.password.new",
+               autocomplete="disabled"
+               )
          div(:class="$style.list_block")
             v-button(@click="setNewPassword", :disabled="!(tools.password.old.length >= 6) || !(tools.password.new.length >= 6)") Изменить
             v-loading-wheel(v-if="tools.password.isLoading")
