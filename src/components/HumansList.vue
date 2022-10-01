@@ -1,82 +1,119 @@
 <template lang="pug">
-v-modal(:show="isModalVisible", @hide="showModal")
+v-modal(:show="deleteOptions.isModalVisible", @hide="showModal")
    div(class="title") Вы уверены?
    div(class="buttons")
       div(class="buttons_load")
          v-button(class="confirm", @click="deleteHuman") Да
-         v-loading-wheel(class="wheel", v-if="isLoading")
+         v-loading-wheel(class="wheel", v-if="deleteOptions.isLoading")
       div(class="buttons_load")
          v-button(class="confirm", @click="showModal") Нет
 div(class="container")
    div(class="header")
       div(class="title") Список
-      HumansListSelect(v-model="selectedSort", :options="sortOptions")
-   div(class="error", v-if="listStore.error") {{ listStore.error }}
+      HumansListSelect(v-model="humanStore.list.selectedSort", :options="sortOptions")
+   div(class="error", v-if="error") {{ error }}
    TransitionGroup(name="list")
-      div(class="list", v-for="(human, index) in sortedHumansList", :key="human._id")
+      div(class="list", v-for="(human, index) in humanStore.sortedHumansList", :key="human._id")
          div(class="list_item")
             div(class="item_number")
                div {{ index + 1 }}.
             div(class="item_name") {{ human.fio }}
-            v-button-delete(class="item_button", @click="showModal($event, human._id)")
+            ButtonImage(
+               class="item_button", 
+               @click="aboutHuman(human.fio)", 
+               image="images/info.png", 
+               width="20px", 
+               height="20px"
+               )
+            ButtonImage(
+               class="item_button", 
+               @click="showModal($event, human._id)", 
+               image="images/delete-light.png", 
+               width="20px", 
+               height="20px"
+               )
 div(class="loading")
-   v-loading-wheel(v-if="listStore.isLoading")
+   v-loading-wheel(v-if="humanStore.list.isLoading")
 div(class="observer")
-   div(v-intersection="{ f: listStore.catchHumansList }")
+   div(v-intersection="{ f: catchHumans }")
 </template>
 
 
 <script setup lang="ts">
-import { onMounted, ref, computed } from 'vue'
-import { useListStore } from '@/store/listStore'
+import { onMounted, ref, reactive } from 'vue'
+import { useRouter } from 'vue-router'
+import { useHumanStore } from '@/store/humanStore'
 import AssistanceService from '@/api/services/AssistanceService'
 import HumansListSelect from './HumansListSelect.vue'
 
 
-const listStore = useListStore();
-const isModalVisible = ref(false);
-const currentId = ref('');
-const isLoading = ref(false);
-const selectedSort = ref('');
+const router = useRouter();
+const humanStore = useHumanStore();
+const error = ref('');
 const sortOptions = ref([
    { value: '_id', name: 'По умолчанию' },
    { value: 'fio', name: 'По фамилии' },
 ]);
+const deleteOptions = reactive({
+   isModalVisible: false,
+   isLoading: false,
+   id: '',
+});
 
-onMounted(async (): Promise<void> => {
-   if (!listStore.humansList.length) {
-      listStore.catchHumansList();
+onMounted((): void => {
+   if (!humanStore.list.humansList.length) {
+      catchHumans();
    }
 });
 
-const sortedHumansList = computed(() => {
-   return [...listStore.humansList].sort((a: { [name: string]: string }, b: { [name: string]: string }) => {
-      return a[selectedSort.value]?.localeCompare(b[selectedSort.value]);
-   });
-});
+async function catchHumans(): Promise<void> {
+   try {
+      error.value = '';
+      humanStore.list.page++;
+      humanStore.list.isLoading = true;
+      const response = await AssistanceService.catchHumansList({ limit: humanStore.list.limit, page: humanStore.list.page });
+      humanStore.list.total = Math.ceil(+response.headers['x-total-count'] / humanStore.list.limit);
+      humanStore.list.humansList = [...humanStore.list.humansList, ...response.data.humansList];
+      if (!humanStore.list.humansList.length) throw new Error('Список пуст');
+   } catch (e: any) {
+      error.value = e.message;
+   } finally {
+      humanStore.list.isLoading = false;
+   }
+}
 
 function showModal(event?: Event, id?: string): void {
-   isModalVisible.value = !isModalVisible.value;
+   deleteOptions.isModalVisible = !deleteOptions.isModalVisible;
    if (!event || !id) return;
-   currentId.value = id;
-};
+   deleteOptions.id = id;
+}
 
-async function deleteHuman(): Promise<void> {
-   try {
-      isLoading.value = true;
-      await AssistanceService.deleteHuman(currentId.value);
-      listStore.humansList = listStore.humansList.filter(item => item._id !== currentId.value);
-   } catch (e: any) {
-      listStore.error = e?.response?.data?.message;
-   } finally {
-      isLoading.value = false;
-      showModal();
-   }
-};
+function deleteHuman(): void {
+   deleteOptions.isLoading = true;
+   AssistanceService.deleteHuman(deleteOptions.id)
+      .then(() => humanStore.list.humansList = humanStore.list.humansList.filter(item => item._id !== deleteOptions.id))
+      .catch((e) => error.value = e?.response?.data?.message)
+      .finally(() => {
+         deleteOptions.isLoading = false;
+         showModal();
+      });
+}
+
+function aboutHuman(fio: string): void {
+   humanStore.info.finded = [];
+   humanStore.info.fio = fio;
+   router.push('/info');
+   humanStore.findHuman();
+}
 </script>
 
 
 <style lang="scss" scoped>
+.title {
+   text-align: center;
+   font-size: 1.5em;
+}
+
 .container {
    padding: 10px;
    display: flex;
@@ -105,7 +142,7 @@ async function deleteHuman(): Promise<void> {
 
       & .list_item {
          display: flex;
-         align-items: center;
+         place-items: center;
 
          & .item_number {
             flex-basis: 3%;
@@ -123,15 +160,10 @@ async function deleteHuman(): Promise<void> {
          }
 
          & .item_button {
-            margin-right: 10px;
+            margin-right: 5px;
          }
       }
    }
-}
-
-.title {
-   text-align: center;
-   font-size: 1.5em;
 }
 
 .buttons {

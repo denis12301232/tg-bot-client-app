@@ -6,24 +6,24 @@ div(:class="$style.container")
          :class="$style.search_input", 
          type="text", 
          placeholder="ФИО", 
-         v-model="infoStore.fio", 
-         @keyup.enter="infoStore.findHuman"
+         v-model="humanStore.info.fio", 
+         @keyup.enter="humanStore.findHuman"
          )
-      v-button(@click="infoStore.findHuman") Найти
-      v-loading-wheel(v-if="infoStore.isListLoading")
-      div(:class="$style.search_error") {{ infoStore.error }}
-   div(:class="$style.info", v-show="infoStore.finded.length", v-if="!infoStore.isEditable") 
-      div(:class="$style.info_finded") Всего найдено: {{ infoStore.finded.length  }}
-      div(:class="$style.info_item", v-for="(item, index) in infoStore.finded", :key="item._id")
+      v-button(@click="humanStore.findHuman") Найти
+      v-loading-wheel(v-if="humanStore.info.isLoading")
+      div(:class="$style.search_error") {{ humanStore.info.error }}
+   div(:class="$style.info", v-show="humanStore.info.finded.length", v-if="!humanStore.info.isEditable") 
+      div(:class="$style.info_finded") Всего найдено: {{ humanStore.info.finded.length  }}
+      div(:class="$style.info_item", v-for="(item, index) in humanStore.info.finded", :key="item._id")
          div(:class="$style.item_about")
-            div(:class="$style.item_title") Найдено: {{ infoStore.currentQuery }}
-            v-button-edit(@click="setEditable($event, index, item._id)") Редактировать
+            div(:class="$style.item_title") Найдено: {{ humanStore.info.currentQuery }}
+            ButtonImage(@click="setEditable($event, index, item._id)", image="images/edit.png") Редактировать
          table(:class="$style.info_table", :data-id="item._id")
             tbody
                tr(v-for="(key, value) in item.form")
                   td {{ Constants.assistance[value].display }}
                   td {{ useBeautifyValue(key) }}
-div(:class="$style.form", v-show="infoStore.isEditable")
+div(:class="$style.form", v-show="humanStore.info.isEditable")
    FormAssistance(
       @save="submit",
       :form="assistance.form",
@@ -33,9 +33,22 @@ div(:class="$style.form", v-show="infoStore.isEditable")
       title="Редактировать"
       )
       template(v-slot:submit="slotProps")
-         v-button-confirm(type="submit", :disabled="!slotProps.form.valid")
+         ButtonImage(
+            type="submit", 
+            :disabled="!slotProps.form.valid", 
+            image="images/confirm.png", 
+            width="27px", 
+            height="27px",
+            background-color="var(--water-color)"
+            )
       template(v-slot:cancel)
-         v-button-cancel(@click="setEditable")
+         ButtonImage(
+            @click="setEditable", 
+            image="images/cancel.png",
+            width="27px", 
+            height="27px",
+            background-color="var(--water-color)"
+            )
 </template>
 
 
@@ -43,17 +56,18 @@ div(:class="$style.form", v-show="infoStore.isEditable")
 import { ref, reactive } from 'vue'
 import Constants from '@/libs/Constants'
 import { useForm } from '@/hooks/useForm'
-import { useInfoStore } from '@/store/infoStore'
+import { onBeforeRouteLeave } from 'vue-router'
+import { useHumanStore } from '@/store/humanStore'
 import { useBeautifyValue } from '@/hooks/useBeautifyValue'
 import { AssistanceFormValidators } from '@/intefaces/interfaces'
 import FormAssistance from './FormAssistance.vue'
-import { onBeforeRouteLeave } from "vue-router"
 import AssistanseFormDto from '@/api/dtos/AssistanseFormDto'
 import AssistanceService from '@/api/services/AssistanceService'
 
 
-const infoStore = useInfoStore();
+const humanStore = useHumanStore();
 const currentId = ref('');
+const currentScrollY = ref(0);
 const assistance = reactive({
    form: useForm<AssistanceFormValidators>(Constants.assistance),
    errorMessage: '',
@@ -61,25 +75,30 @@ const assistance = reactive({
    isLoading: false,
 });
 
+onBeforeRouteLeave((to, from, next) => {
+   humanStore.info.isEditable = false;
+   next();
+});
+
 function setEditable(event: Event, index?: number, id?: string): void {
    if (index === undefined || !id) {
-      infoStore.isEditable = !infoStore.isEditable;
-      window.scrollTo(0, infoStore.currentScrollY);
-   } else {
-      infoStore.currentScrollY = window.pageYOffset;
-      infoStore.isEditable = !infoStore.isEditable;
-      window.scrollTo(0, 0);
-      currentId.value = id;
-      (Object.keys(Constants.assistance) as Array<keyof typeof Constants.assistance>)
-         .forEach((key: keyof typeof Constants.assistance) => {
-            if (key === "phone") {
-               assistance.form[key].value = infoStore.finded[index].form[key]!.slice(4);
-            } else {
-               assistance.form[key].value = infoStore.finded[index].form[key]!
-            };
-         });
+      humanStore.info.isEditable = !humanStore.info.isEditable;
+      return window.scrollTo(0, currentScrollY.value);
    }
+   currentScrollY.value = window.scrollY;
+   humanStore.info.isEditable = !humanStore.info.isEditable;
+   window.scrollTo(0, 0);
+   currentId.value = id;
+   (Object.keys(Constants.assistance) as Array<keyof typeof Constants.assistance>)
+      .forEach((key: keyof typeof Constants.assistance) => {
+         if (key === "phone") {
+            assistance.form[key].value = humanStore.info.finded[index].form[key]!.slice(4);
+         } else {
+            assistance.form[key].value = humanStore.info.finded[index].form[key]!
+         };
+      });
 }
+
 async function submit(): Promise<void> {
    try {
       assistance.isLoading = true;
@@ -88,18 +107,12 @@ async function submit(): Promise<void> {
       assistance.successMessage = 'Сохранено!';
       setTimeout(() => assistance.successMessage = '', 3000);
    } catch (e: any) {
-      console.log(e);
       assistance.errorMessage = e?.response?.data?.message;
       setTimeout(() => assistance.errorMessage = '', 3000);
    } finally {
       assistance.isLoading = false;
    }
 }
-
-onBeforeRouteLeave((to, from, next) => {
-   infoStore.isEditable = false;
-   next();
-});
 </script>
 
 <style lang="scss" module>
@@ -177,8 +190,6 @@ onBeforeRouteLeave((to, from, next) => {
          }
       }
    }
-
-
 }
 
 .form {

@@ -32,7 +32,7 @@ form(:class="style.form", action="submit", @submit.prevent="login")
 import { ref, computed } from 'vue'
 import { useForm } from '@/hooks/useForm'
 import { LogForm } from '@/intefaces/interfaces'
-import { useStore } from '@/store/main'
+import { useStore } from '@/store/mainStore'
 import { useHeaderStore } from '@/store/headerStore'
 import style from '@/assets/scss/modules/AuthForm.module.scss'
 import Constants from '@/libs/Constants'

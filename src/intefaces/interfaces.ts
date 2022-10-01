@@ -1,3 +1,11 @@
+export interface StringObject {
+   [name: string]: string;
+}
+
+export interface AnyObject {
+   [name: string]: any;
+}
+
 export interface IUser {
    email: string,
    id: string,
@@ -301,7 +309,7 @@ export interface LogForm {
    }
 }
 
-export interface RegForm {
+export interface RegForm extends LogForm {
    valid: boolean,
    name: {
       value: string,
@@ -312,34 +320,6 @@ export interface RegForm {
       touched: boolean,
       errors: {
          required: boolean,
-      },
-      blur: () => boolean;
-   },
-   email: {
-      value: string,
-      validators: {
-         required: () => boolean,
-         isEmail: () => boolean,
-      },
-      valid: boolean,
-      touched: boolean,
-      errors: {
-         required: boolean,
-         isEmail: boolean,
-      },
-      blur: () => boolean;
-   },
-   password: {
-      value: string,
-      validators: {
-         required: () => boolean,
-         minLength: (length: number) => boolean;
-      },
-      valid: boolean,
-      touched: boolean,
-      errors: {
-         required: boolean,
-         minLength: boolean,
       },
       blur: () => boolean;
    }

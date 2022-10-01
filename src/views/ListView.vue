@@ -10,7 +10,7 @@ div(v-else)
 import TheHeader from '@/components/TheHeader.vue'
 import HumansList from '@/components/HumansList.vue'
 import TheError from '@/components/TheError.vue'
-import { useStore } from '@/store/main'
+import { useStore } from '@/store/mainStore'
 
 const store = useStore();
 </script>

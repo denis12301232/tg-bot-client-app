@@ -3,12 +3,8 @@ button(:class="$style.button")
    slot
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
+<script setup lang="ts">
 
-export default defineComponent({
-   name: "v-button",
-});
 </script>
 
 
@@ -35,7 +31,6 @@ export default defineComponent({
 
    &:disabled {
       background: rgba(19, 24, 114, 0.481);
-      ;
    }
 }
 </style>

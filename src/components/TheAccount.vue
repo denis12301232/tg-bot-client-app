@@ -45,14 +45,14 @@ div(:class="$style.account")
                placeholder="Старый пароль",
                type="password",
                v-model="tools.password.old",
-               autocomplete="disabled"
+               autocomplete="new-password"
                )
             v-input(
                :class="$style.list_input",
                placeholder="Новый пароль", 
                type="password",
                v-model="tools.password.new",
-               autocomplete="disabled"
+               autocomplete="new-password"
                )
          div(:class="$style.list_block")
             v-button(@click="setNewPassword", :disabled="!(tools.password.old.length >= 6) || !(tools.password.new.length >= 6)") Изменить
@@ -64,7 +64,7 @@ div(:class="$style.account")
 
 <script setup lang="ts">
 import { reactive } from 'vue'
-import { useStore } from '@/store/main'
+import { useStore } from '@/store/mainStore'
 import ToolsService from '@/api/services/ToolsService'
 import Validate from '@/libs/Validate'
 

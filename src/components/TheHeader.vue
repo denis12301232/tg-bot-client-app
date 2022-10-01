@@ -5,7 +5,7 @@ v-modal(:show="headerStore.isModalVisible", @hide="headerStore.hideWindow")
 div(:class="$style.container")
    ul(:class="$style.menu")
       li(v-if="store.isAdmin")
-         v-burger(:class="$style.burger_hide", @click.stop="setMenu('isHeaderMenuVisible')")
+         VBurger(:class="$style.burger_hide", @click.stop="setMenu('isHeaderMenuVisible')", :is-selected="headerStore.isHeaderMenuVisible")
       li(v-if="!store.isAdmin")
          div(:class="$style.title") Kharkov Volonteer
       li(v-if="store.isAdmin")
@@ -29,7 +29,13 @@ div(:class="$style.container")
    div(:class="$style.sign")
       v-loading-wheel(width="30px", height="30px", v-if="isLoading")
       v-button(@click="setLogVisible", v-if="!store.isAuth") Вход
-      v-button-user(@click.stop="setMenu('isUserMenuVisible')", v-else)
+      ButtonImage(
+         @click.stop="setMenu('isUserMenuVisible')", 
+         v-else,
+         image="images/user.png",
+         width="30px",
+         height="30px"
+         )
    Transition(name="fade")
       MenuHeader(:class="$style.header_menu", v-show="headerStore.isHeaderMenuVisible")
    Transition(name="fade")
@@ -39,7 +45,7 @@ div(:class="$style.container")
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { useStore } from '@/store/main'
+import { useStore } from '@/store/mainStore'
 import { useHeaderStore } from '@/store/headerStore'
 import MenuHeader from './MenuHeader.vue'
 import FormLog from './FormLog.vue'

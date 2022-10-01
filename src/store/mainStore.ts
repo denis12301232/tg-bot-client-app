@@ -1,10 +1,8 @@
 import { IUser } from '@/intefaces/interfaces'
 import { defineStore } from 'pinia'
 
-const name: string = 'main';
 
-export const useStore = defineStore({
-    id: name,
+export const useStore = defineStore('main', {
     state: () => {
         return {
             user: <IUser>{},

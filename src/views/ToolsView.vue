@@ -4,7 +4,7 @@ TheTools(v-else)
 </template>
 
 <script setup lang="ts">
-import { useStore } from '@/store/main'
+import { useStore } from '@/store/mainStore'
 import TheError from '@/components/TheError.vue'
 import TheTools from '@/components/TheTools.vue'
 

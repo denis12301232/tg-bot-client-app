@@ -11,7 +11,7 @@ div(:class="$style.menu")
 
 
 <script setup lang="ts">
-import { useStore } from '@/store/main'
+import { useStore } from '@/store/mainStore'
 import { useHeaderStore } from '@/store/headerStore'
 import AuthController from '@/api/controllers/AuthController'
 

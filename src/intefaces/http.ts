@@ -1,20 +1,30 @@
 import { AssistanceForm, IUser } from './interfaces'
 
-export interface HumansList {
-   humansList: Array<{ fio: string, _id: string }>
+export interface HumansListResponse {
+   humansList: Array<HumansList>;
 }
 
-export interface AssistanceFormsList {
-   humansFormList: Array<{ form: AssistanceForm, _id: string }>
+export interface HumansList  {
+   _id: string;
+   fio: string;
+}
+
+export interface FormsListResponse {
+   humansFormList: Array<FormsList>;
+}
+
+export interface FormsList {
+   form: AssistanceForm;
+   _id: string;
 }
 
 export interface AuthResponse {
-   accessToken: string,
-   refreshToken: string,
-   user: IUser,
+   accessToken: string;
+   refreshToken: string;
+   user: IUser;
 }
 
 export interface SendFormResponse {
-   message: string,
-   saved: AssistanceForm & { _id: string }
+   message: string;
+   saved: AssistanceForm & { _id: string };
 }

@@ -1,4 +1,4 @@
-import { useStore } from '@/store/main'
+import { useStore } from '@/store/mainStore'
 import { IUser } from '@/intefaces/interfaces'
 import AuthService from '../services/AuthService'
 

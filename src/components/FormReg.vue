@@ -39,7 +39,7 @@ form(:class="style.form", action="submit", @submit.prevent="registration")
 import { ref, computed } from 'vue'
 import { RegForm } from '@/intefaces/interfaces'
 import { useForm } from '@/hooks/useForm'
-import { useStore } from '@/store/main'
+import { useStore } from '@/store/mainStore'
 import { useHeaderStore } from '@/store/headerStore'
 import Constants from '@/libs/Constants'
 import AuthService from '@/api/services/AuthService'

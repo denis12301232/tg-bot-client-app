@@ -5,7 +5,7 @@ router-view
 
 <script setup lang="ts">
 import { onBeforeMount } from 'vue'
-import { useStore } from '@/store/main'
+import { useStore } from '@/store/mainStore'
 import { useHeaderStore } from '@/store/headerStore'
 import AuthController from '@/api/controllers/AuthController'
 import PageLoader from '@/components/PageLoader.vue'

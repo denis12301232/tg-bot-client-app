@@ -342,12 +342,12 @@ const filterPhone = (event: ClipboardEvent): void => {
    & .form_buttons {
       padding: 10px 0 10px 0;
       display: flex;
-      align-items: center;
+      place-items: center;
       justify-content: space-between;
 
       & .form_button_submit {
          display: flex;
-         align-items: center;
+         place-items: center;
       }
 
       & .form_message_success {

@@ -10,9 +10,7 @@ export const useHeaderStore = defineStore('header', {
    }),
    actions: {
       hideWindow(): void {
-         this.isModalVisible = false;
-         this.isRegVisible = false;
-         this.isLogVisible = false;
+         this.$patch({ isModalVisible: false, isRegVisible: false, isLogVisible: false });
       }
    }
 });
