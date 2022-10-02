@@ -43,7 +43,7 @@ div(:class="$style.form", v-show="humanStore.info.isEditable")
             )
       template(v-slot:cancel)
          ButtonImage(
-            @click="setEditable", 
+            @click.prevent="setEditable", 
             image="images/cancel.png",
             width="27px", 
             height="27px",
@@ -101,6 +101,8 @@ function setEditable(event: Event, index?: number, id?: string): void {
 
 async function submit(): Promise<void> {
    try {
+      console.log('submit');
+      
       assistance.isLoading = true;
       const formToSend = new AssistanseFormDto(assistance.form);
       await AssistanceService.modifyAssistanceForm(formToSend, currentId.value);
