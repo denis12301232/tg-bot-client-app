@@ -1,10 +1,10 @@
 import { ref, reactive, watch } from 'vue'
 
 interface Field {
-   value: string,
+   value: string;
    validators: {
       [name: string]: (value: string) => boolean
-   },
+   };
 }
 
 export function useFormField(field: Field) {
