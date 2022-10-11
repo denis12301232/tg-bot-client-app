@@ -1,8 +1,10 @@
 <template lang="pug">
-button(:class="$style.button_image", :style="style")
+button(:class="[$style.button_image, dark ? $style.button_image_dark: '']", :style="style")
 </template>
    
 <script setup lang="ts">
+import { useTheme } from '@/hooks/useTheme'
+
 const props = defineProps({
    image: {
       type: String,
@@ -16,17 +18,14 @@ const props = defineProps({
       type: String,
       default: '25px'
    },
-   backgroundColor: {
-      type: String,
-      default: 'transparent'
-   }
 });
+
+const { dark } = useTheme();
 
 const style = {
    backgroundImage: `url('${require('@/assets/' + props.image)}')`,
    width: props.width,
    height: props.height,
-   backgroundColor: props.backgroundColor
 };
 </script>
  
@@ -40,6 +39,7 @@ const style = {
    background-size: cover;
    display: block;
    outline: none;
+   background-color: transparent;
    -webkit-tap-highlight-color: transparent;
 
    &:hover {
@@ -50,5 +50,9 @@ const style = {
    &:disabled {
       transform: scale(1);
    }
+}
+
+.button_image_dark {
+   filter: invert(1);
 }
 </style>

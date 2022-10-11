@@ -229,7 +229,7 @@ function takeAdminRights(): void {
          }
 
          & .item_title {
-            color: #475366;
+            color: #738095;
             font-weight: bold;
             font-size: 1.2em;
             cursor: pointer;
@@ -263,7 +263,7 @@ function takeAdminRights(): void {
 
             & .form_title {
                color: var(--water-color);
-               font-weight: 500;
+               font-weight: 600;
             }
          }
 

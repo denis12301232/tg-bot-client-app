@@ -1,5 +1,5 @@
 <template lang="pug">
-div(:class="$style.menu")
+div(:class="[$style.menu, dark ? $style.menu_dark : $style.menu_light]")
    ul(:class="$style.menu_list")
       li(:class="$style.list_item")
          router-link(:class="$style.menu_link", to="/account", @click="headerStore.isUserMenuVisible = false") Аккаунт
@@ -13,11 +13,13 @@ div(:class="$style.menu")
 <script setup lang="ts">
 import { useStore } from '@/store/mainStore'
 import { useHeaderStore } from '@/store/headerStore'
+import { useTheme } from '@/hooks/useTheme'
 import AuthController from '@/api/controllers/AuthController'
 
-const emit = defineEmits<{(e: 'loading', value: boolean): void}>();
+const emit = defineEmits<{ (e: 'loading', value: boolean): void }>();
 const store = useStore();
 const headerStore = useHeaderStore();
+const { dark } = useTheme();
 
 async function logout(): Promise<void> {
    emit('loading', true);
@@ -33,7 +35,6 @@ async function logout(): Promise<void> {
    min-width: 150px;
    background-color: white;
    border-radius: 4px;
-   box-shadow: 0 4px 16px #ccc;
    user-select: none;
    -webkit-tap-highlight-color: transparent;
 
@@ -45,7 +46,6 @@ async function logout(): Promise<void> {
       right: 24.5px;
       width: 12px;
       height: 12px;
-      background: white;
       border: solid #ccc;
       border-width: 1px 0 0 1px;
       -webkit-transform: rotate(45deg);
@@ -76,6 +76,24 @@ async function logout(): Promise<void> {
             }
          }
       }
+   }
+}
+
+.menu_light {
+   background-color: var(--background-color-light);
+   box-shadow: 0 4px 16px #ccc;
+
+   &::before {
+      background-color: var(--background-color-light);
+   }
+}
+
+.menu_dark {
+   background-color: var(--background-color-dark);
+   box-shadow: 0px 4px 16px #e9e6e41a;
+
+   &::before {
+      background-color: var(--background-color-dark);
    }
 }
 </style>

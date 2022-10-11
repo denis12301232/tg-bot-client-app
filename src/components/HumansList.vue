@@ -13,7 +13,11 @@ div(class="container")
       HumansListSelect(v-model="humanStore.list.selectedSort", :options="sortOptions")
    div(class="error", v-if="error") {{ error }}
    TransitionGroup(name="list")
-      div(class="list", v-for="(human, index) in humanStore.sortedHumansList", :key="human._id")
+      div(
+         :class="['list', {'list_dark': dark, 'list_light': light}]", 
+         v-for="(human, index) in humanStore.sortedHumansList", 
+         :key="human._id"
+         )
          div(class="list_item")
             div(class="item_number")
                div {{ index + 1 }}.
@@ -45,8 +49,10 @@ import { useRouter } from 'vue-router'
 import { useHumanStore } from '@/store/humanStore'
 import AssistanceService from '@/api/services/AssistanceService'
 import HumansListSelect from './HumansListSelect.vue'
+import { useTheme } from '@/hooks/useTheme'
 
 
+const { light, dark } = useTheme();
 const router = useRouter();
 const humanStore = useHumanStore();
 const error = ref('');
@@ -99,11 +105,12 @@ function deleteHuman(): void {
       });
 }
 
-function aboutHuman(fio: string): void {
+async function aboutHuman(fio: string): Promise<void> {
    humanStore.info.finded = [];
    humanStore.info.fio = fio;
-   router.push('/info');
-   humanStore.findHuman();
+   await router.push('/info');
+   await humanStore.findHuman();
+   window.scrollTo(0, 0);
 }
 </script>
 
@@ -135,7 +142,6 @@ function aboutHuman(fio: string): void {
 
    & .list {
       width: 50%;
-      background-color: white;
       border: 1px solid #dadce0;
       margin-top: 10px;
       border-radius: 5px;
@@ -194,6 +200,14 @@ function aboutHuman(fio: string): void {
 .loading {
    display: flex;
    justify-content: center;
+}
+
+.list_light {
+   background-color: var(--background-color-light);
+}
+
+.list_dark {
+   background-color: var(--background-color-dark);
 }
 
 @media(max-width: 768px) {

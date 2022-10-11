@@ -14,6 +14,7 @@ const store = useStore();
 const headerStore = useHeaderStore();
 
 onBeforeMount(async () => {
+  store.ifThemeSaved();
   window.addEventListener('click', () => {
     headerStore.isHeaderMenuVisible = false;
     headerStore.isUserMenuVisible = false;
@@ -34,21 +35,51 @@ onBeforeMount(async () => {
 :root {
   width: 100vw;
   overflow-x: hidden;
+  scrollbar-width: thin;
   font: 16px/1.4 Avenir, Helvetica, Arial, sans-serif;
   letter-spacing: 0.5px;
+  transition: background-color 0.1s ease-in;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-
+  
   --background-color-light: #FFFFFF;
-  --water-color: rgb(19, 24, 114);
+  
+  --background-color-dark: #232529;
+
+  --water-color: rgb(66, 72, 186);
   --error-message-color: rgb(131, 12, 12);
+
+  &::-webkit-scrollbar {
+    width: 5px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #888;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+}
+
+html.light {
+  background-color: var(--background-color-light);
+  color: var(--background-color-dark);
+}
+
+html.dark {
+  background-color: var(--background-color-dark);
+  color: var(--background-color-light);
 }
 
 body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
-  background-color: var(--background-color-light);
 }
 
 img {
@@ -72,24 +103,5 @@ button,
 textarea,
 select {
   font: inherit;
-}
-
-::-webkit-scrollbar {
-  width: 2px;
-}
-
-/* Track */
-::-webkit-scrollbar-track {
-  background: #f1f1f1;
-}
-
-/* Handle */
-::-webkit-scrollbar-thumb {
-  background: #888;
-}
-
-/* Handle on hover */
-::-webkit-scrollbar-thumb:hover {
-  background: #555;
 }
 </style>

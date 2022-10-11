@@ -24,8 +24,7 @@ export default defineComponent({
 .find_human {
    height: 45px;
    border-radius: 10px;
-   border: 2px solid #cfd7e6;
-   box-shadow: inset 0 1px 2px 0 rgb(207 215 230 / 40%);
+   border: 2px solid #738095;
    padding: 10px 5px;
    font-size: 1em;
    outline: none;
@@ -35,6 +34,8 @@ export default defineComponent({
    -moz-appearance: none;
    appearance: none;
    outline: 0;
+   background-color: inherit;
+   color: inherit;
 
    &:focus {
       border: 2px solid var(--water-color);

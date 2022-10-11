@@ -1,7 +1,7 @@
 <template lang="pug">
 Transition(name="fade")
    div(
-      :class="$style.window",
+      :class="[$style.window, dark ? $style.window_dark : $style.window_light]",
       @keyup.esc="hideWindow",
       @click="hideWindow",
       tabindex="0",
@@ -12,26 +12,22 @@ Transition(name="fade")
          slot
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
+<script setup lang="ts">
+import { useTheme } from "@/hooks/useTheme"
 
-export default defineComponent({
-   name: "v-modal",
-   props: {
-      show: {
-         type: Boolean,
-         default: false,
-      },
-   },
-   setup(props, { emit }) {
-
-      const hideWindow = (): void => {
-         emit("hide");
-      };
-
-      return { hideWindow };
+defineProps({
+   show: {
+      type: Boolean,
+      default: false,
    },
 });
+
+const emit = defineEmits(['hide']);
+const { dark } = useTheme();
+
+const hideWindow = (): void => {
+   emit("hide");
+};
 </script>
 
 <style lang="scss" module>
@@ -51,10 +47,22 @@ export default defineComponent({
       min-width: 300px;
       min-height: 50px;
       padding: 20px;
-      background: white;
       max-height: calc(100vh);
       overflow-y: auto;
       scrollbar-width: thin;
+   }
+}
+
+.window_light {
+   & .window_content {
+      background-color: var(--background-color-light);
+   }
+
+}
+
+.window_dark {
+   & .window_content {
+      background-color: var(--background-color-dark);
    }
 }
 

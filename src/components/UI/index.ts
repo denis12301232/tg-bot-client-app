@@ -14,6 +14,12 @@ VButton.name = 'v-button';
 VLoadingWheel.name = 'v-loading-wheel';
 ButtonImage.name = 'ButtonImage';
 VBurger.name = 'VBurger';
+VModal.name = 'VModal';
+VCheckbox.name = 'VCheckbox';
+VRadio.name = 'VRadio';
+VSelect.name = 'VSelect';
+VSelectDistrict.name = 'VSelectDistrict';
+
 
 declare module '@vue/runtime-core' {
    export interface GlobalComponents {

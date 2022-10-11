@@ -1,21 +1,18 @@
 <template lang="pug">
 //v-calendar
-v-burger(@click.stop="setVisible", :is-selected="test")
-div(v-if="test") gfdggggggggggggggggggggggggggggggggsewrrrrrrrrrrrrrr
+//ThemeSwitch
+//FormAssistanceInput(placeholder="Фамилия")
 </template>
 
 <script setup lang="ts">
+import ThemeSwitch from '@/components/ThemeSwitch.vue'
+import FormAssistanceInput from '@/components/FormAssistanceInput.vue';
 import { ref } from 'vue';
 
-const test = ref(false);
 
-function setVisible(){
-   console.log('test');
-   
-   test.value = !test.value;
-}
 </script>
 
 
-<style lang="scss" module>
+<style lang="scss" scoped>
+
 </style>

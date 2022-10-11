@@ -34,12 +34,7 @@ export const useHumanStore = defineStore('human', {
                throw new Error('Введите ФИО через пробел!');
             }
             this.$patch({
-               info: {
-                  isLoading: true,
-                  isEditable: false,
-                  currentQuery: this.info.fio,
-                  error: '',
-               }
+               info: { isLoading: true, isEditable: false, currentQuery: this.info.fio, error: '' }
             });
             const response = await AssistanceService.findHuman(query[0], query[1], query[2]);
             this.info.finded = response.data.humansFormList;

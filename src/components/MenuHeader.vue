@@ -1,6 +1,6 @@
 <template lang="pug">
 div(class="nav")
-   ul(class="nav_menu")
+   ul(:class="['nav_menu', {'nav_light': light, 'nav_dark': dark}]")
       li(class="nav_item")
          a(
             :class="['nav_link', currentRoute === 'home' ? 'active' : '']", 
@@ -26,9 +26,12 @@ div(class="nav")
 import { computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useHeaderStore } from '@/store/headerStore'
+import { useTheme } from '@/hooks/useTheme'
+
 
 const router = useRouter();
 const headerStore = useHeaderStore();
+const { dark, light } = useTheme();
 const currentRoute = computed(() => {
    return useRoute().name;
 });
@@ -43,9 +46,7 @@ function changeRoute(route: string): void {
 <style lang="scss" scoped>
 .nav {
    min-width: 150px;
-   background-color: white;
    border-radius: 4px;
-   box-shadow: 0 4px 16px #ccc;
 
    & .nav_menu {
       & .nav_item {
@@ -72,5 +73,15 @@ function changeRoute(route: string): void {
          }
       }
    }
+}
+
+.nav_light {
+   background-color: var(--background-color-light);
+   box-shadow: 0 4px 16px #ccc;
+}
+
+.nav_dark {
+   background-color: var(--background-color-dark);
+   box-shadow: 0px 4px 16px #e9e6e41a;
 }
 </style>

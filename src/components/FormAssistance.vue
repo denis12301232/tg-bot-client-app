@@ -1,58 +1,38 @@
 <template lang="pug">
-form(:class="$style.form", @submit.prevent="$emit('save')")
+form(:class="[$style.form, dark ? $style.form_dark: $style.form_light]", @submit.prevent="$emit('save')")
    div(:class="$style.form_title") {{ title }}
    div(:class="[$style.select, ((form.surname.errors.required || form.name.errors.required || form.patronymic.errors.required) && (form.surname.touched || form.name.touched || form.patronymic.touched)) ? $style.form_error : '']")
       div(:class="$style.select_title") ФИО
-      div(:class="$style.form_group")
-         input(:class="$style.form_input", placeholder=" ", type="text", v-model="form.surname.value", @blur="form.surname.blur")
-         label(:class="$style.form_label") Фамилия
-      div(:class="$style.form_group")
-         input(:class="$style.form_input", placeholder=" ", type="text", v-model="form.name.value", @blur="form.name.blur")
-         label(:class="$style.form_label") Имя
-      div(:class="$style.form_group")
-         input(:class="$style.form_input", placeholder=" ", type="text", v-model="form.patronymic.value", @blur="form.patronymic.blur")
-         label(:class="$style.form_label") Отчество
-         small(:class="$style.select_error", v-if="((form.surname.errors.required || form.name.errors.required || form.patronymic.errors.required) && (form.surname.touched || form.name.touched || form.patronymic.touched))") ! Заполните все поля
+      FormAssistanceInput(:class="$style.form_group", placeholder="Фамилия", v-model="form.surname.value", @touch="form.surname.blur")
+      FormAssistanceInput(:class="$style.form_group", placeholder="Имя", v-model="form.name.value", @touch="form.name.blur")
+      FormAssistanceInput(:class="$style.form_group", placeholder="Отчество", v-model="form.patronymic.value", @touch="form.patronymic.blur")
+      small(:class="$style.select_error", v-if="((form.surname.errors.required || form.name.errors.required || form.patronymic.errors.required) && (form.surname.touched || form.name.touched || form.patronymic.touched))") ! Заполните все поля
    div(:class="[$style.select, (form.phone.errors.required && form.phone.touched) || (form.phone.errors.isPhone && form.phone.touched) ? $style.form_error : '']")
       div(:class="$style.select_title") Телефон
-      div(:class="$style.form_group")
-         input(:style="{ paddingLeft: '45px' }" :class="$style.form_input", placeholder=" ", type="tel", v-model="form.phone.value", @blur="form.phone.blur", maxlength="9", @paste="filterPhone")
-         label(:class="$style.form_phone") +380
-         small(:class="$style.select_error", v-if="form.phone.errors.required && form.phone.touched") ! Это обязательное поле
-         small(:class="$style.select_error", v-else-if="form.phone.errors.isPhone && form.phone.touched") ! Неверный номер
+      FormAssistanceInput(:class="$style.form_group", placeholder="+380", :mask="true", offset="45px", type="tel", v-model="form.phone.value", @touch="form.phone.blur", maxlength="9", @paste="filterPhone")
+      small(:class="$style.select_error", v-if="form.phone.errors.required && form.phone.touched") ! Это обязательное поле
+      small(:class="$style.select_error", v-else-if="form.phone.errors.isPhone && form.phone.touched") ! Неверный номер
    div(:class="[$style.select, (form.birth.errors.required && form.birth.touched) || (form.birth.errors.isDDMMYYYY && form.birth.touched) ? $style.form_error : '']")
       div(:class="$style.select_title") Дата рождения
-      div(:class="$style.form_group")
-         input(:class="$style.form_input", placeholder=" ", min="1920-01-01" max="2022-01-01" type="text", v-model="form.birth.value", @blur="form.birth.blur", onfocus="(this.type='date')", onblur="if(this.value==''){this.type='text'}")
-         label(:class="$style.form_label") Ваша дата рождения
-         small(:class="$style.select_error", v-if="form.birth.errors.required && form.birth.touched") ! Это обязательное поле
-         small(:class="$style.select_error", v-else-if="form.birth.errors.isDDMMYYYY && form.birth.touched") Неверный формат даты
+      FormAssistanceInput(:class="$style.form_group", placeholder="Ваша дата рождения", min="1920-01-01", max="2022-01-01", v-model="form.birth.value", @touch="form.birth.blur", onfocus="(this.type='date')", onblur="if(this.value==''){this.type='text'}")
+      small(:class="$style.select_error", v-if="form.birth.errors.required && form.birth.touched") ! Это обязательное поле
+      small(:class="$style.select_error", v-else-if="form.birth.errors.isDDMMYYYY && form.birth.touched") Неверный формат даты
    div(:class="[$style.select, ((form.district.errors.required || form.house.errors.required || form.flat.errors.required) && (form.district.touched || form.house.touched || form.flat.touched)) ? $style.form_error : '']")
       div(:class="$style.select_title") Адрес
       div(:class="$style.form_group")
          label(:class="[$style.form_label, form.district.value ? $style.movePlaceholder : '']") Район
          v-select-district(:class="$style.form_select", v-model="form.district.value", @blur="form.district.blur")
-      div(:class="$style.form_group")
-         input(:class="$style.form_input", placeholder=" ", type="text", v-model="form.street.value", @blur="form.street.blur")
-         label(:class="$style.form_label") Улица/Проспект/Переулок
-      div(:class="$style.form_group")
-         input(:class="$style.form_input", placeholder=" ", type="text", v-model="form.house.value", @blur="form.house.blur")
-         label(:class="$style.form_label") Дом
-      div(:class="$style.form_group")
-         input(:class="$style.form_input", placeholder=" ", type="number", v-model="form.flat.value", @blur="form.flat.blur")
-         label(:class="$style.form_label") Квартира
-         small(:class="$style.select_error", v-if="((form.district.errors.required || form.house.errors.required || form.flat.errors.required) && (form.district.touched || form.house.touched || form.flat.touched))") ! Заполните все поля
+      FormAssistanceInput(:class="$style.form_group", placeholder="Улица/Проспект/Переулок", v-model="form.street.value", @touch="form.street.blur")
+      FormAssistanceInput(:class="$style.form_group", placeholder="Дом", v-model="form.house.value", @touch="form.house.blur")
+      FormAssistanceInput(:class="$style.form_group", placeholder="Квартира", v-model="form.flat.value", @touch="form.flat.blur")
+      small(:class="$style.select_error", v-if="((form.district.errors.required || form.house.errors.required || form.flat.errors.required) && (form.district.touched || form.house.touched || form.flat.touched))") ! Заполните все поля
    div(:class="[$style.select, (form.people_num.errors.required && form.people_num.touched) ? $style.form_error : '']")
       div(:class="$style.select_title") Число проживающих
-      div(:class="$style.form_group")
-         input(:class="$style.form_input", placeholder=" ", type="number", v-model="form.people_num.value", @blur="form.people_num.blur")
-         label(:class="$style.form_label") Кол-во людей, проживающих с вами
-         small(:class="$style.select_error", v-if="form.people_num.errors.required && form.people_num.touched") ! Это обязательное поле
+      FormAssistanceInput(:class="$style.form_group", placeholder="Кол-во людей, проживающих с вами", type="number", v-model="form.people_num.value", @touch="form.people_num.blur")
+      small(:class="$style.select_error", v-if="form.people_num.errors.required && form.people_num.touched") ! Это обязательное поле
    div(:class="$style.select", v-if="+form.people_num.value > 1")
       div(:class="$style.select_title") Имя и возраст проживающих
-      div(:class="$style.form_group", v-for="item in +form.people_num.value - 1")
-         input(:class="$style.form_input", placeholder=" ", type="text", v-model="form.people_fio.value[+item - 1]")
-         label(:class="$style.form_label") Имя и возраст
+      FormAssistanceInput(:class="$style.form_group", placeholder="Имя и возраст", v-for="item in +form.people_num.value - 1", v-model="form.people_fio.value[+item - 1]", :key="item")
    div(:class="$style.select")
       div(:class="$style.select_title") Есть ли среди проживающих инвалиды?
       div(:class="$style.form_group")
@@ -115,9 +95,7 @@ form(:class="$style.form", @submit.prevent="$emit('save')")
             div(:class="$style.form_radio_title") Нет
    div(:class="$style.select", v-if="form.drugs.value === 'Да'")
       div(:class="$style.select_title") Укажите какие именно, кол-во, дозу
-      div(:class="$style.form_group")
-         input(:class="$style.form_input", placeholder=" ", type="text", v-model="form.products_detail.value")
-         label(:class="$style.form_label") О лекарствах
+      FormAssistanceInput(:class="$style.form_group", placeholder="О лекарствах", v-model="form.products_detail.value")
    div(:class="$style.select")
       div(:class="$style.select_title") Нужны ли средства личной гигиены?
       div(:class="$style.form_group")
@@ -129,19 +107,13 @@ form(:class="$style.form", @submit.prevent="$emit('save')")
             div(:class="$style.form_radio_title") Нет
    div(:class="$style.select", v-if="form.gigien.value === 'Да'")
       div(:class="$style.select_title") Укажите какие именно
-      div(:class="$style.form_group")
-         input(:class="$style.form_input", placeholder=" ", type="text", v-model="form.gigien_num.value")
-         label(:class="$style.form_label") О средствах гигиены
+      FormAssistanceInput(:class="$style.form_group", placeholder="О средствах гигиены", v-model="form.gigien_num.value")
    div(:class="$style.select")
       div(:class="$style.select_title") Памперсы? Если нужны, укажите какие (детские/взрослые, размер)
-      div(:class="$style.form_group")
-         input(:class="$style.form_input", placeholder=" ", type="text", v-model="form.pampers.value")
-         label(:class="$style.form_label") Памперсы
+      FormAssistanceInput(:class="$style.form_group", placeholder="Памперсы", v-model="form.pampers.value")
    div(:class="$style.select")
       div(:class="$style.select_title") Особенности диеты, алергии, диабет и т.д.
-      div(:class="$style.form_group")
-         input(:class="$style.form_input", placeholder=" ", type="text", v-model="form.diet.value")
-         label(:class="$style.form_label") Особенности
+      FormAssistanceInput(:class="$style.form_group", placeholder="Особенности", v-model="form.diet.value")
    div(:class="$style.select")
       div(:class="$style.select_title") Даю согласие на обработку персональных данных
       div(:class="$style.form_group")
@@ -165,9 +137,10 @@ form(:class="$style.form", @submit.prevent="$emit('save')")
 </template>
 
 <script setup lang="ts">
+import { computed } from "vue"
+import { useTheme } from "@/hooks/useTheme"
 import { AssistanceFormValidators } from "@/intefaces/interfaces"
-import { computed } from "vue";
-
+import FormAssistanceInput from "./FormAssistanceInput.vue";
 
 const props = defineProps({
    form: {
@@ -192,6 +165,7 @@ const props = defineProps({
    },
 });
 
+const { dark } = useTheme();
 const form = computed(() => props.form);
 
 const filterPhone = (event: ClipboardEvent): void => {
@@ -240,92 +214,16 @@ const filterPhone = (event: ClipboardEvent): void => {
       border: 1px solid var(--error-message-color) !important;
    }
 
-   & .form_input {
-      font-family: sans-serif;
-      letter-spacing: 1px;
-      font-size: 1em;
-   }
-
    & .select {
+      position: relative;
       margin-top: 10px;
-      background-color: var(--background-color-light);
       border-radius: 5px;
       padding: 20px 20px;
-      box-shadow: 0 4px 16px #ccc;
       border: 1px solid transparent;
 
-      & .select_error {
-         color: var(--error-message-color);
-         font-weight: 550;
-         display: block;
-         position: absolute;
-         bottom: -37px;
-      }
-
       & .form_group {
-         position: relative;
          margin: 32px 0 32px 0;
-         transition: 0.3s;
-
-         .form_select {
-            position: relative;
-            z-index: 1;
-         }
-
-         & .form_input {
-            height: 1.5rem;
-            width: 100%;
-            border: none;
-            border-bottom: 1px solid #e0e0e0;
-            background-color: transparent;
-            outline: none;
-            transition: 0.3s;
-            display: block;
-            z-index: 1;
-            position: relative;
-            -moz-appearance: textfield;
-            appearance: none;
-
-            &::-webkit-outer-spin-button,
-            &::-webkit-inner-spin-button {
-               -webkit-appearance: none;
-               appearance: none;
-            }
-
-            &:focus {
-               border-bottom: 1px solid #1a73a8;
-            }
-
-            &:focus+.form_label,
-            &:not(:placeholder-shown)+.form_label {
-               top: -18px;
-               font-size: 12px;
-               color: #e0e0e0;
-            }
-
-            & .form_radio {
-               display: flex;
-               align-items: center;
-               padding-top: 10px;
-
-               & .form_radio_title {
-                  padding-left: 10px;
-               }
-            }
-         }
-
-         & .form_label {
-            position: absolute;
-            top: 1.5px;
-            transition: 0.3s;
-            color: #9e9e9e;
-         }
-
-         & .form_phone {
-            position: absolute;
-            height: 1.5rem;
-            top: 0.3px;
-         }
+         position: relative;
 
          & .form_radio {
             display: flex;
@@ -336,6 +234,25 @@ const filterPhone = (event: ClipboardEvent): void => {
                padding-left: 10px;
             }
          }
+      }
+
+      .form_select {
+         position: relative;
+         z-index: 1;
+      }
+
+      & .select_error {
+         color: var(--error-message-color);
+         font-weight: 550;
+         position: absolute;
+         bottom: 15px;
+      }
+
+      & .form_label {
+         position: absolute;
+         top: 1.5px;
+         transition: 0.3s;
+         color: #9e9e9e;
       }
    }
 
@@ -367,6 +284,20 @@ const filterPhone = (event: ClipboardEvent): void => {
          line-height: 1em;
          padding-left: 5px;
       }
+   }
+}
+
+.form_light {
+   & .select {
+      background-color: var(--background-color-light);
+      box-shadow: 0 4px 16px #ccc;
+   }
+}
+
+.form_dark {
+   & .select {
+      background-color: var(--background-color-dark);
+      box-shadow: 0px 4px 8px #e9e6e41a;
    }
 }
 </style>

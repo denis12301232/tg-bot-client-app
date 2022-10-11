@@ -14,8 +14,8 @@ div(:class="$style.account")
                @input="tools.name.input.call(tools.name, $event)"
                )
             div(:class="$style.list_buttons")
-               v-button-confirm(v-if="tools.name.value !== store.user.name", @click="setNewName")
-               v-button-cancel(v-if="tools.name.value !== store.user.name", @click="tools.name.cancel.call(tools.name)")
+               ButtonImage(v-if="tools.name.value !== store.user.name", @click="setNewName", image="images/confirm.png")
+               ButtonImage(v-if="tools.name.value !== store.user.name", @click="tools.name.cancel.call(tools.name)", image="images/cancel.png")
                v-loading-wheel(v-if="tools.name.isLoading")
          div(:class="$style.list_message")
             small(:class="$style.list_error") {{ tools.name.errorMessage }}
@@ -31,8 +31,8 @@ div(:class="$style.account")
                @input="tools.email.input.call(tools.email, $event)"
                )
             div(:class="$style.list_buttons")
-               v-button-confirm(v-if="tools.email.value !== store.user.email", @click="setNewEmail")
-               v-button-cancel(v-if="tools.email.value !== store.user.email", @click="tools.email.cancel.call(tools.email)")
+               ButtonImage(v-if="tools.email.value !== store.user.email", @click="setNewEmail", image="images/confirm.png")
+               ButtonImage(v-if="tools.email.value !== store.user.email", @click="tools.email.cancel.call(tools.email)", image="images/cancel.png")
                v-loading-wheel(v-if="tools.email.isLoading")
          div(:class="$style.list_message")
             small(:class="$style.list_error") {{ tools.email.errorMessage }}
@@ -201,7 +201,7 @@ async function setNewPassword(): Promise<void> {
          }
 
          & .list_title {
-            color: #475366;
+            color: #738095;
             font-weight: 700;
          }
 

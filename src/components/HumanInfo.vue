@@ -33,22 +33,11 @@ div(:class="$style.form", v-show="humanStore.info.isEditable")
       title="Редактировать"
       )
       template(v-slot:submit="slotProps")
-         ButtonImage(
-            type="submit", 
-            :disabled="!slotProps.form.valid", 
-            image="images/confirm.png", 
-            width="27px", 
-            height="27px",
-            background-color="var(--water-color)"
-            )
+         v-button(type="submit", :disabled="!slotProps.form.valid")
+            img(src="@/assets/images/confirm.png", :style="{width: '20px', height:'20px'}")
       template(v-slot:cancel)
-         ButtonImage(
-            @click.prevent="setEditable", 
-            image="images/cancel.png",
-            width="27px", 
-            height="27px",
-            background-color="var(--water-color)"
-            )
+         v-button(@click.prevent="setEditable")
+            img(src="@/assets/images/cancel.png", :style="{width: '20px', height:'20px'}")
 </template>
 
 
@@ -102,7 +91,7 @@ function setEditable(event: Event, index?: number, id?: string): void {
 async function submit(): Promise<void> {
    try {
       console.log('submit');
-      
+
       assistance.isLoading = true;
       const formToSend = new AssistanseFormDto(assistance.form);
       await AssistanceService.modifyAssistanceForm(formToSend, currentId.value);
@@ -174,7 +163,7 @@ async function submit(): Promise<void> {
       & .info_table {
          border-spacing: 3px;
          margin-top: 5px;
-         background-color: white;
+         background-color: inherit;
          border-collapse: collapse;
          border-radius: 10px;
          border-style: hidden;

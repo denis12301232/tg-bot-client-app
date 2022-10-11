@@ -2,7 +2,7 @@
 v-modal(:show="headerStore.isModalVisible", @hide="headerStore.hideWindow")
    FormLog(v-show="headerStore.isLogVisible", @swap="swapForms", @restore="restore")
    FormReg(v-show="headerStore.isRegVisible", @swap="swapForms")
-div(:class="$style.container")
+div(:class="[$style.container, dark ? $style.container_dark: $style.container_light]")
    ul(:class="$style.menu")
       li(v-if="store.isAdmin")
          VBurger(:class="$style.burger_hide", @click.stop="setMenu('isHeaderMenuVisible')", :is-selected="headerStore.isHeaderMenuVisible")
@@ -27,6 +27,7 @@ div(:class="$style.container")
             href="/info"
          ) Информация по человеку
    div(:class="$style.sign")
+      ThemeSwitch(:class="$style.theme")
       v-loading-wheel(width="30px", height="30px", v-if="isLoading")
       v-button(@click="setLogVisible", v-if="!store.isAuth") Вход
       ButtonImage(
@@ -47,15 +48,18 @@ import { computed, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useStore } from '@/store/mainStore'
 import { useHeaderStore } from '@/store/headerStore'
+import { useTheme } from '@/hooks/useTheme'
 import MenuHeader from './MenuHeader.vue'
 import FormLog from './FormLog.vue'
 import FormReg from './FormReg.vue'
 import MenuUser from './MenuUser.vue'
+import ThemeSwitch from './ThemeSwitch.vue'
 
 
 const store = useStore();
 const router = useRouter();
 const headerStore = useHeaderStore();
+const { dark } = useTheme();
 const currentRoute = computed(() => useRoute().name);
 const isLoading = ref(false);
 
@@ -94,8 +98,6 @@ function restore(): void {
 }
 
 .container {
-   background-color: var(--background-color-light);
-   box-shadow: 0px 4px 8px #E9E6E4;
    height: 50px;
    position: relative;
    display: flex;
@@ -109,7 +111,7 @@ function restore(): void {
    &>.menu {
       display: flex;
       align-items: center;
-      margin: 0 15px;
+      margin: 0 5px;
 
       & .menu_link {
          cursor: pointer;
@@ -118,10 +120,7 @@ function restore(): void {
          padding: 5px;
          object-fit: cover;
          display: inline-block;
-
-         &:visited {
-            color: black;
-         }
+         color: inherit;
 
          &.selected,
          &:hover {
@@ -132,9 +131,13 @@ function restore(): void {
    }
 
    & .sign {
-      margin: 0 15px;
+      margin: 0 5px;
       display: flex;
       place-items: center;
+
+      & .theme{
+         margin-right: 2px;
+      }
    }
 
    & .header_menu {
@@ -148,6 +151,16 @@ function restore(): void {
       right: 0px;
       top: 50px;
    }
+}
+
+.container_light {
+   background-color: var(--background-color-light);
+   box-shadow: 0px 4px 8px #E9E6E4;
+}
+
+.container_dark {
+   background-color: var(--background-color-dark);
+   box-shadow: 0px 4px 8px #e9e6e41a;
 }
 
 .burger_hide {
