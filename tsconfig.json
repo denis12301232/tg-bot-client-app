@@ -38,7 +38,7 @@
     "src/**/*.vue",
     "tests/**/*.ts",
     "tests/**/*.tsx"
-, "old/useCalendar.ts"  ],
+, "old/useCalendar.ts", "old/Time.ts"  ],
   "exclude": [
     "node_modules"
   ]
