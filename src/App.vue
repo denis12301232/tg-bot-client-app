@@ -41,9 +41,9 @@ onBeforeMount(async () => {
   transition: background-color 0.1s ease-in;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  
+
   --background-color-light: #FFFFFF;
-  
+
   --background-color-dark: #232529;
 
   --water-color: rgb(66, 72, 186);

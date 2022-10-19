@@ -15,7 +15,7 @@ div(:class="$style.form_group")
 <script setup lang="ts">
 defineProps({
    modelValue: {
-      type: String
+      type: [String, Number]
    },
    placeholder: {
       type: String,

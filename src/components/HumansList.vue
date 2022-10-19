@@ -31,7 +31,7 @@ div(class="container")
                )
             ButtonImage(
                class="item_button", 
-               @click="showModal($event, human._id)", 
+               @click="showModal(human._id)", 
                image="images/delete-light.png", 
                width="20px", 
                height="20px"
@@ -39,12 +39,12 @@ div(class="container")
 div(class="loading")
    v-loading-wheel(v-if="humanStore.list.isLoading")
 div(class="observer")
-   div(v-intersection="{ f: catchHumans }")
+   div(v-intersection="{ f: catchHumans, canLoad: () => canLoad }")
 </template>
 
 
 <script setup lang="ts">
-import { onMounted, ref, reactive } from 'vue'
+import { onMounted, ref, reactive, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useHumanStore } from '@/store/humanStore'
 import AssistanceService from '@/api/services/AssistanceService'
@@ -55,6 +55,7 @@ import { useTheme } from '@/hooks/useTheme'
 const { light, dark } = useTheme();
 const router = useRouter();
 const humanStore = useHumanStore();
+const canLoad = computed(() => humanStore.list.page < humanStore.list.total && !humanStore.list.isLoading);
 const error = ref('');
 const sortOptions = ref([
    { value: '_id', name: 'По умолчанию' },
@@ -88,9 +89,9 @@ async function catchHumans(): Promise<void> {
    }
 }
 
-function showModal(event?: Event, id?: string): void {
+function showModal(id?: string): void {
    deleteOptions.isModalVisible = !deleteOptions.isModalVisible;
-   if (!event || !id) return;
+   if (!id) return;
    deleteOptions.id = id;
 }
 

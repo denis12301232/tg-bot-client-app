@@ -180,7 +180,7 @@ export interface AssistanceFormValidators {
       blur: () => boolean;
    },
    people_num: {
-      value: string,
+      value: number,
       validators: {
          required: () => boolean,
       },

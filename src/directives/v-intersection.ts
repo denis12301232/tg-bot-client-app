@@ -1,27 +1,39 @@
-import { useHumanStore } from '@/store/humanStore'
-
 interface Binding {
    value: {
-      f: () => Promise<void>
+      f: () => any;
+      canLoad: () => boolean;
    }
 }
 
-export default {
-   name: 'intersection',
-   mounted(el: HTMLElement, binding: Binding): void {
-      const humanStore = useHumanStore();
+class Observer {
+   name = 'intersection';
+   observer: null | IntersectionObserver = null;
+
+   constructor() {
+      this.mounted = this.mounted.bind(this);
+      this.beforeUnmount = this.beforeUnmount.bind(this);
+   }
+
+   mounted(el: HTMLElement, binding: Binding) {
+
       const options = {
          rootMargin: '0px',
          threshold: 1.0,
       };
 
-      const callback: IntersectionObserverCallback = (entries: Array<IntersectionObserverEntry>) => {
-         if (entries[0].isIntersecting && humanStore.list.page < humanStore.list.total) {
+      const callback: IntersectionObserverCallback = (entries) => {
+         if (entries[0].isIntersecting && binding.value.canLoad()) {
             binding.value.f();
          }
       };
 
-      const observer = new IntersectionObserver(callback, options);
-      observer.observe(el);
-   },
+      this.observer = new IntersectionObserver(callback, options);
+      this.observer.observe(el);
+   }
+
+   beforeUnmount() {
+      this.observer?.disconnect();
+   }
 }
+
+export default new Observer;
