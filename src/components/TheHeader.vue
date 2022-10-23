@@ -1,5 +1,5 @@
 <template lang="pug">
-v-modal(:show="headerStore.isModalVisible", @hide="headerStore.hideWindow")
+ModalWindow(:show="headerStore.isModalVisible", @hide="headerStore.hideWindow")
    FormLog(v-show="headerStore.isLogVisible", @swap="swapForms", @restore="restore")
    FormReg(v-show="headerStore.isRegVisible", @swap="swapForms")
 div(:class="[$style.container, dark ? $style.container_dark: $style.container_light]")
@@ -28,7 +28,7 @@ div(:class="[$style.container, dark ? $style.container_dark: $style.container_li
          ) Информация по человеку
    div(:class="$style.sign")
       ThemeSwitch(:class="$style.theme")
-      v-loading-wheel(width="30px", height="30px", v-if="isLoading")
+      LoadingWheel(width="30px", height="30px", v-if="isLoading")
       v-button(@click="setLogVisible", v-if="!store.isAuth") Вход
       ButtonImage(
          @click.stop="setMenu('isUserMenuVisible')", 

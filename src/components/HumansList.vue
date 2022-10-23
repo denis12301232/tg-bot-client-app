@@ -1,10 +1,10 @@
 <template lang="pug">
-v-modal(:show="deleteOptions.isModalVisible", @hide="showModal")
+ModalWindow(:show="deleteOptions.isModalVisible", @hide="showModal")
    div(class="title") Вы уверены?
    div(class="buttons")
       div(class="buttons_load")
          v-button(class="confirm", @click="deleteHuman") Да
-         v-loading-wheel(class="wheel", v-if="deleteOptions.isLoading")
+         LoadingWheel(class="wheel", v-if="deleteOptions.isLoading")
       div(class="buttons_load")
          v-button(class="confirm", @click="showModal") Нет
 div(class="container")
@@ -37,7 +37,7 @@ div(class="container")
                height="20px"
                )
 div(class="loading")
-   v-loading-wheel(v-if="humanStore.list.isLoading")
+   LoadingWheel(v-if="humanStore.list.isLoading")
 div(class="observer")
    div(v-intersection="{ f: catchHumans, canLoad: () => canLoad }")
 </template>

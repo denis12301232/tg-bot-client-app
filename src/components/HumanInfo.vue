@@ -10,7 +10,7 @@ div(:class="$style.container")
          @keyup.enter="humanStore.findHuman"
          )
       v-button(@click="humanStore.findHuman") Найти
-      v-loading-wheel(v-if="humanStore.info.isLoading")
+      LoadingWheel(v-if="humanStore.info.isLoading")
       div(:class="$style.search_error") {{ humanStore.info.error }}
    div(:class="$style.info", v-show="humanStore.info.finded.length", v-if="!humanStore.info.isEditable") 
       div(:class="$style.info_finded") Всего найдено: {{ humanStore.info.finded.length  }}

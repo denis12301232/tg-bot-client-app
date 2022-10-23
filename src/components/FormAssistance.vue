@@ -37,61 +37,61 @@ form(:class="[$style.form, dark ? $style.form_dark: $style.form_light]", @submit
       div(:class="$style.select_title") Есть ли среди проживающих инвалиды?
       div(:class="$style.form_group")
          div(:class="$style.form_radio")
-            v-radio(name="invalids", value="Да", v-model="form.invalids.value")
+            VRadio(name="invalids", value="Да", v-model="form.invalids.value")
             div(:class="$style.form_radio_title") Да
          div(:class="$style.form_radio")
-            v-radio(name="invalids", value="Нет", v-model="form.invalids.value")
+            VRadio(name="invalids", value="Нет", v-model="form.invalids.value")
             div(:class="$style.form_radio_title") Нет
    div(:class="$style.select")
       div(:class="$style.select_title") Есть ли дети?
       div(:class="$style.form_group")
          div(:class="$style.form_radio")
-            v-radio(name="kids", value="Да", v-model="form.children.value")
+            VRadio(name="kids", value="Да", v-model="form.children.value")
             div(:class="$style.form_radio_title") Да
          div(:class="$style.form_radio")
-            v-radio(name="kids", value="Нет", v-model="form.children.value")
+            VRadio(name="kids", value="Нет", v-model="form.children.value")
             div(:class="$style.form_radio_title") Нет
    div(:class="$style.select", v-if="form.children.value === 'Да'")
       div(:class="$style.select_title") Отметьте возраст детей
       div(:class="$style.form_group")
          div(:class="$style.form_radio")
-            v-checkbox(value="0-1", v-model="form.children_age.value")
+            VCheckbox(value="0-1", v-model="form.children_age.value")
             div(:class="$style.form_radio_title") От 0 до 1
          div(:class="$style.form_radio")
-            v-checkbox(value="1-3", v-model="form.children_age.value")
+            VCheckbox(value="1-3", v-model="form.children_age.value")
             div(:class="$style.form_radio_title") От 1 до 3
          div(:class="$style.form_radio")
-            v-checkbox(value="3-9", v-model="form.children_age.value")
+            VCheckbox(value="3-9", v-model="form.children_age.value")
             div(:class="$style.form_radio_title") От 3 до 9
          div(:class="$style.form_radio")
-            v-checkbox(value="9-18", v-model="form.children_age.value")
+            VCheckbox(value="9-18", v-model="form.children_age.value")
             div(:class="$style.form_radio_title") От 9 до 18
    div(:class="$style.select")
       div(:class="$style.select_title") Нужны ли продукты питания?
       div(:class="$style.form_group")
          div(:class="$style.form_radio")
-            v-radio(name="food", value="Да", v-model="form.food.value")
+            VRadio(name="food", value="Да", v-model="form.food.value")
             div(:class="$style.form_radio_title") Да
          div(:class="$style.form_radio")
-            v-radio(name="food", value="Нет", v-model="form.food.value")
+            VRadio(name="food", value="Нет", v-model="form.food.value")
             div(:class="$style.form_radio_title") Нет
    div(:class="$style.select")
       div(:class="$style.select_title") Нужна ли вода?
       div(:class="$style.form_group")
          div(:class="$style.form_radio")
-            v-radio(name="water", value="Да", v-model="form.water.value")
+            VRadio(name="water", value="Да", v-model="form.water.value")
             div(:class="$style.form_radio_title") Да
          div(:class="$style.form_radio")
-            v-radio(name="water", value="Нет", v-model="form.water.value")
+            VRadio(name="water", value="Нет", v-model="form.water.value")
             div(:class="$style.form_radio_title") Нет
    div(:class="$style.select")
       div(:class="$style.select_title") Нужны ли лекарства?
       div(:class="$style.form_group")
          div(:class="$style.form_radio")
-            v-radio(name="drugs", value="Да", v-model="form.drugs.value")
+            VRadio(name="drugs", value="Да", v-model="form.drugs.value")
             div(:class="$style.form_radio_title") Да
          div(:class="$style.form_radio")
-            v-radio(name="drugs", value="Нет", v-model="form.drugs.value")
+            VRadio(name="drugs", value="Нет", v-model="form.drugs.value")
             div(:class="$style.form_radio_title") Нет
    div(:class="$style.select", v-if="form.drugs.value === 'Да'")
       div(:class="$style.select_title") Укажите какие именно, кол-во, дозу
@@ -100,10 +100,10 @@ form(:class="[$style.form, dark ? $style.form_dark: $style.form_light]", @submit
       div(:class="$style.select_title") Нужны ли средства личной гигиены?
       div(:class="$style.form_group")
          div(:class="$style.form_radio")
-            v-radio(name="gigien", value="Да", v-model="form.gigien.value")
+            VRadio(name="gigien", value="Да", v-model="form.gigien.value")
             div(:class="$style.form_radio_title") Да
          div(:class="$style.form_radio")
-            v-radio(name="gigien", value="Нет", v-model="form.gigien.value", :checked="true")
+            VRadio(name="gigien", value="Нет", v-model="form.gigien.value", :checked="true")
             div(:class="$style.form_radio_title") Нет
    div(:class="$style.select", v-if="form.gigien.value === 'Да'")
       div(:class="$style.select_title") Укажите какие именно
@@ -118,20 +118,20 @@ form(:class="[$style.form, dark ? $style.form_dark: $style.form_light]", @submit
       div(:class="$style.select_title") Даю согласие на обработку персональных данных
       div(:class="$style.form_group")
          div(:class="$style.form_radio")
-            v-checkbox(v-model="form.pers_data_agreement.value", :value="true")
+            VCheckbox(v-model="form.pers_data_agreement.value", :value="true")
             div(:class="$style.form_radio_title") Согласен/согласна
    div(:class="$style.select")
       div(:class="$style.select_title") Даю согласие на фото/видео
       div(:class="$style.form_group")
          div(:class="$style.form_radio")
-            v-checkbox(v-model="form.photo_agreement.value", :value="true")
+            VCheckbox(v-model="form.photo_agreement.value", :value="true")
             div(:class="$style.form_radio_title") Согласен/согласна
    div(:class="$style.form_buttons")
       div(:class="$style.form_button_submit")
          slot(name="submit", :form="form")
          div(:class="$style.form_message_success") {{ successMessage }}
          div(:class="$style.form_message_error") {{ errorMessage }}
-         v-loading-wheel(v-if="isLoading")
+         LoadingWheel(v-if="isLoading")
       div
          slot(name="cancel")
 </template>
@@ -140,7 +140,7 @@ form(:class="[$style.form, dark ? $style.form_dark: $style.form_light]", @submit
 import { computed } from "vue"
 import { useTheme } from "@/hooks/useTheme"
 import { AssistanceFormValidators } from "@/intefaces/interfaces"
-import FormAssistanceInput from "./FormAssistanceInput.vue";
+import FormAssistanceInput from "@/components/FormAssistanceInput.vue";
 
 const props = defineProps({
    form: {

@@ -16,7 +16,7 @@ div(:class="$style.account")
             div(:class="$style.list_buttons")
                ButtonImage(v-if="tools.name.value !== store.user.name", @click="setNewName", image="images/confirm.png")
                ButtonImage(v-if="tools.name.value !== store.user.name", @click="tools.name.cancel.call(tools.name)", image="images/cancel.png")
-               v-loading-wheel(v-if="tools.name.isLoading")
+               LoadingWheel(v-if="tools.name.isLoading")
          div(:class="$style.list_message")
             small(:class="$style.list_error") {{ tools.name.errorMessage }}
             small(:class="$style.list_ok") {{ tools.name.okMessage }}
@@ -33,7 +33,7 @@ div(:class="$style.account")
             div(:class="$style.list_buttons")
                ButtonImage(v-if="tools.email.value !== store.user.email", @click="setNewEmail", image="images/confirm.png")
                ButtonImage(v-if="tools.email.value !== store.user.email", @click="tools.email.cancel.call(tools.email)", image="images/cancel.png")
-               v-loading-wheel(v-if="tools.email.isLoading")
+               LoadingWheel(v-if="tools.email.isLoading")
          div(:class="$style.list_message")
             small(:class="$style.list_error") {{ tools.email.errorMessage }}
             small(:class="$style.list_ok") {{ tools.email.okMessage }}
@@ -56,7 +56,7 @@ div(:class="$style.account")
                )
          div(:class="$style.list_block")
             v-button(@click="setNewPassword", :disabled="!(tools.password.old.length >= 6) || !(tools.password.new.length >= 6)") Изменить
-            v-loading-wheel(v-if="tools.password.isLoading")
+            LoadingWheel(v-if="tools.password.isLoading")
             div(:class="$style.list_message")
                small(:class="$style.list_error") {{ tools.password.errorMessage }}
                small(:class="$style.list_ok") {{ tools.password.okMessage }}

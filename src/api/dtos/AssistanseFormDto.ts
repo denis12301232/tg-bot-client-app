@@ -19,7 +19,7 @@ export default class AssistanseFormDto {
             this[item] = '+380' + form[item].value;
             continue;
          }
-         //if (!form[item].value) continue;
+         if (!form[item].value) continue;
          this[item] = form[item].value;
       }
    }

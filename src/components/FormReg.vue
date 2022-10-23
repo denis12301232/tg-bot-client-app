@@ -30,7 +30,7 @@ form(:class="style.form", action="submit", @submit.prevent="registration")
       small(:class="style.error_message") {{ passwordErrorMessage }}
    div(:class="style.submit")
       v-button(type="submit", :disabled="!form.valid") Регистрация
-      v-loading-wheel(v-if="isLoading")
+      LoadingWheel(v-if="isLoading")
    div(:class="style.swap") Уже зарегестрированы? 
       span(@click="$emit('swap')") Вход
 </template>

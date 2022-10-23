@@ -4,8 +4,8 @@ div(:class="$style.form_group")
       :class="$style.form_input", 
       placeholder=" ",
       :value="modelValue",
-      @input="$emit('update:modelValue', ($event.target as HTMLInputElement).value)", 
-      @blur="$emit('touch')",
+      @input="emit('update:modelValue', ($event.target as HTMLInputElement).value)", 
+      @blur="emit('touch')",
       :style="{paddingLeft: offset}",
       :="$attrs"
       )
@@ -29,6 +29,8 @@ defineProps({
       default: ''
    }
 });
+
+const emit = defineEmits(['update:modelValue', 'touch']);
 </script>
    
    

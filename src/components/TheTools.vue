@@ -17,7 +17,7 @@ div(class="container")
                   type="submit"
                   :disabled="!googleApi.serviceUser || !googleApi.servicePrivateKey || !googleApi.sheetId"
                   ) Сохранить
-               v-loading-wheel(v-if="googleApi.isLoading")
+               LoadingWheel(v-if="googleApi.isLoading")
                div(class="message") {{ googleApi.message }}
       li(class="tools_item")
          div(class="item_title", @click="setVisible('sheets')") Выгрузить заявки в Google Sheets
@@ -29,7 +29,7 @@ div(class="container")
                      @click="saveFormsToSheet(formsQueries.all)",
                      :disabled="isFormsLoading"
                      ) Сформировать
-                  v-loading-wheel(v-if="formsQueries.all.isLoading")
+                  LoadingWheel(v-if="formsQueries.all.isLoading")
                   div(class="message") {{ formsQueries.all.message }}
             li(class="sheets_block", v-if="selected === 'district'")
                v-select-district(v-model="formsQueries.district.query", :style="{ width: 'inherit' }")
@@ -38,7 +38,7 @@ div(class="container")
                      @click="saveFormsToSheet(formsQueries.district)",
                      :disabled="formsQueries.district.query === 'Район' || isFormsLoading"
                      ) Сформировать
-                  v-loading-wheel(v-if="formsQueries.district.isLoading")
+                  LoadingWheel(v-if="formsQueries.district.isLoading")
                   div(class="message") {{ formsQueries.district.message }}
             li(class="sheets_block", v-if="selected === 'birth'")
                div(class="block_year")
@@ -49,7 +49,7 @@ div(class="container")
                      @click="saveFormsToSheet(formsQueries.birth)",
                      :disabled="String(min).length < 4 || String(max).length < 4 || isFormsLoading"
                      ) Сформировать
-                  v-loading-wheel(v-if="formsQueries.birth.isLoading")
+                  LoadingWheel(v-if="formsQueries.birth.isLoading")
                   div(class="message") {{ formsQueries.birth.message }}
             li(class="sheets_block", v-if="link")
                a(class="sheets_link", target="_blank", :href="link") Ссылка на выгруженные заявки
@@ -69,7 +69,7 @@ div(class="container")
                   :disabled="!Validate.isEmail(adminRights.email) || !adminRights.email || adminRights.isLoading",
                   @click="takeAdminRights"
                   ) Забрать
-               v-loading-wheel(v-if="adminRights.isLoading")
+               LoadingWheel(v-if="adminRights.isLoading")
             div(class="message") {{ adminRights.message }}
 </template>
 

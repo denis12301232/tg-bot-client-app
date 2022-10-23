@@ -21,7 +21,7 @@ form(:class="style.form", action="submit", @submit.prevent="login")
       small(:class="style.error_message") {{ passwordErrorMessage }}
    div(:class="style.submit")
       v-button(type="submit", :disabled="!form.valid") Вход
-      v-loading-wheel(:class="style.submit_wheel", v-if="isLoading")
+      LoadingWheel(:class="style.submit_wheel", v-if="isLoading")
    div(:class="style.swap") Не зарегестрированы? 
       span(@click="$emit('swap')") Регистрация
    div(:class="style.swap") Забыли пароль? 

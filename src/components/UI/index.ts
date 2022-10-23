@@ -1,20 +1,20 @@
-import VButton from '@/components/UI/v-button.vue'
+import VButton from '@/components/UI/VButton.vue'
 import VBurger from '@/components/UI/VBurger.vue'
-import VLoadingWheel from '@/components/UI/v-loading-wheel.vue'
-import VModal from '@/components/UI/v-modal.vue'
-import VInputFind from '@/components/UI/v-input-find.vue'
-import VCheckbox from '@/components/UI/v-checkbox.vue'
-import VRadio from '@/components/UI/v-radio.vue'
-import VSelectDistrict from '@/components/UI/v-select-district.vue'
-import VInput from '@/components/UI/v-input.vue'
-import VSelect from '@/components/UI/v-select.vue'
+import LoadingWheel from '@/components/UI/LoadingWheel.vue'
+import VInputFind from '@/components/UI/VInputFind.vue'
+import VCheckbox from '@/components/UI/VCheckbox.vue'
+import VRadio from '@/components/UI/VRadio.vue'
+import VSelectDistrict from '@/components/UI/VSelectDistrict.vue'
+import VInput from '@/components/UI/VInput.vue'
+import VSelect from '@/components/UI/VSelect.vue'
 import ButtonImage from '@/components/UI/ButtonImage.vue'
+import ModalWindow from '@/components/UI/ModalWindow.vue'
 
 VButton.name = 'v-button';
-VLoadingWheel.name = 'v-loading-wheel';
+LoadingWheel.name = 'LoadingWheel';
 ButtonImage.name = 'ButtonImage';
 VBurger.name = 'VBurger';
-VModal.name = 'VModal';
+ModalWindow.name = 'ModalWindow';
 VCheckbox.name = 'VCheckbox';
 VRadio.name = 'VRadio';
 VSelect.name = 'VSelect';
@@ -25,8 +25,8 @@ declare module '@vue/runtime-core' {
    export interface GlobalComponents {
       VButton: typeof VButton;
       VBurger: typeof VBurger;
-      VLoadingWheel: typeof VLoadingWheel;
-      VModal: typeof VModal;
+      LoadingWheel: typeof LoadingWheel;
+      ModalWindow: typeof ModalWindow;
       VInputFind: typeof VInputFind;
       VCheckbox: typeof VCheckbox;
       VRadio: typeof VRadio;
@@ -38,7 +38,7 @@ declare module '@vue/runtime-core' {
 }
 
 export default [
-   VButton, VBurger, VLoadingWheel, VModal,
+   VButton, VBurger, LoadingWheel, ModalWindow,
    VInputFind, VCheckbox, VRadio,
    VSelectDistrict, VInput, VSelect, ButtonImage
 ];
