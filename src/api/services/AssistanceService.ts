@@ -25,7 +25,7 @@ export default class AssistanceService {
       return $api.patch('/assistance/modify/form', { form, id });
    }
 
-   static async saveFormsToSheet(filter: string, query: string): Promise<AxiosResponse<{ message: string, link: string }>> {
-      return $api.get('/assistance/sheet', { params: { filter, query } });
+   static async saveFormsToSheet(filters: any): Promise<AxiosResponse<{ message: string, link: string }>> {
+      return $api.post('/assistance/sheet', filters);
    }
 }

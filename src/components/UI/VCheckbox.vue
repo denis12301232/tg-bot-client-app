@@ -5,13 +5,15 @@ label(:class="[$style.checkbox, dark ? $style.checkbox_dark: $style.checkbox_lig
       type="checkbox", 
       @change="event => onChange(event, (event.target as HTMLInputElement).value)", 
       :value="value",
-      :checked="Array.isArray(modelValue) ? modelValue!.includes(value) : modelValue === value"
+      :checked="isChecked",
+      :disabled="disabled"
       )
    span(:class="$style.checkbox_img") 
 </template>
 
 <script setup lang="ts">
 import { useTheme } from '@/hooks/useTheme'
+import { computed } from 'vue';
 
 const props = defineProps({
    modelValue: {
@@ -20,10 +22,19 @@ const props = defineProps({
    value: {
       type: [String, Boolean],
       default: '',
+   },
+   disabled: {
+      type: Boolean,
+      default: false,
    }
 });
 
 const { dark } = useTheme();
+const isChecked = computed(() => {
+   return Array.isArray(props?.modelValue)
+      ? props.modelValue!.includes(props.value)
+      : props.modelValue === props.value;
+});
 const emit = defineEmits(['update:modelValue']);
 const onChange = (event: Event, value: string | boolean) => {
    const isChecked = (event.target as HTMLInputElement).checked;

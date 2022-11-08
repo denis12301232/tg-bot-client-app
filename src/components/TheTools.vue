@@ -1,83 +1,70 @@
 <template lang="pug">
-v-button(class="home_button", @click="$router.push('/')") На главную
+VButton(class="home_button", @click="$router.push('/')") На главную
 div(class="container")
    ul(class="tools")
       h1(class="tools_title") Инструменты
       li(class="tools_item")
-         div(class="item_title", @click="setVisible('integrate')") Настроить интеграцию с Google Sheets
-         form(class="item_form", v-if="tools.integrate", @submit.prevent="setGoogleApi")
-            div(class="form_title") Service account email
-            v-input(class="tools_input", v-model="googleApi.serviceUser", placeholder="email")
-            div(class="form_title") Service account private key
-            v-input(class="tools_input", v-model="googleApi.servicePrivateKey", placeholder="key")
-            div(class="form_title") Sheet ID
-            v-input(class="tools_input", v-model="googleApi.sheetId", placeholder="id")
-            div(class="buttons")
-               v-button(
-                  type="submit"
-                  :disabled="!googleApi.serviceUser || !googleApi.servicePrivateKey || !googleApi.sheetId"
-                  ) Сохранить
-               LoadingWheel(v-if="googleApi.isLoading")
-               div(class="message") {{ googleApi.message }}
+         div(class="item_title", @click="setVisible('integrate')") Настроить интеграцию с Google
+         TheToolsGoogle(v-if="tools.integrate")
       li(class="tools_item")
          div(class="item_title", @click="setVisible('sheets')") Выгрузить заявки в Google Sheets
          ul(class="item_sheets", v-if="tools.sheets")
-            v-select(class="sheets_select", :options="selectOptions", title="Выберите вариант", v-model="selected")
-            li(class="sheets_block", v-if="selected === 'all'")
-               div(class="buttons")
-                  v-button(
-                     @click="saveFormsToSheet(formsQueries.all)",
-                     :disabled="isFormsLoading"
-                     ) Сформировать
-                  LoadingWheel(v-if="formsQueries.all.isLoading")
-                  div(class="message") {{ formsQueries.all.message }}
-            li(class="sheets_block", v-if="selected === 'district'")
-               v-select-district(v-model="formsQueries.district.query", :style="{ width: 'inherit' }")
-               div(class="buttons")
-                  v-button(
-                     @click="saveFormsToSheet(formsQueries.district)",
-                     :disabled="formsQueries.district.query === 'Район' || isFormsLoading"
-                     ) Сформировать
-                  LoadingWheel(v-if="formsQueries.district.isLoading")
-                  div(class="message") {{ formsQueries.district.message }}
-            li(class="sheets_block", v-if="selected === 'birth'")
+            CheckboxFilter(:filters="filtersOptions", @filtered="filtered")
+            li(class="sheets_block", v-if="filter.includes('district')")
+               VSelect(
+                  class="sheets_select", 
+                  v-model="selectedFilters.district", 
+                  :options="Constants.districtOptions", 
+                  title="Район"
+                  )
+            li(class="sheets_block", v-if="filter.includes('birth')")
                div(class="block_year")
-                  input(class="year_interval", v-model="min", type="number", placeholder="С")
-                  input(class="year_interval", v-model="max", type="number", placeholder="По")
+                  VInput(class="year_interval", v-model="selectedFilters.birth.from", type="number", placeholder="С")
+                  VInput(class="year_interval", v-model="selectedFilters.birth.to", type="number", placeholder="По")
+            li(class="sheets_block", v-if="filter.length")
                div(class="buttons")
-                  v-button(
-                     @click="saveFormsToSheet(formsQueries.birth)",
-                     :disabled="String(min).length < 4 || String(max).length < 4 || isFormsLoading"
+                  VButton(
+                     @click="saveFormsToSheet", 
+                     :disabled="isDisabled"
                      ) Сформировать
-                  LoadingWheel(v-if="formsQueries.birth.isLoading")
-                  div(class="message") {{ formsQueries.birth.message }}
+                  LoadingWheel(v-if="isLoading")
+                  div(class="message") {{message}}
             li(class="sheets_block", v-if="link")
                a(class="sheets_link", target="_blank", :href="link") Ссылка на выгруженные заявки
       li(class="tools_item")
-         div(class="item_title", @click="setVisible('adminRights')") Дать/забрать права админа
+         div(class="item_title", @click="setVisible('adminRights')") Настроить роли пользователей
          form(class="item_form", v-if="tools.adminRights")
-            div(class="form_title") Email пользователя
-            v-input(class="tools_input", v-model="adminRights.email", placeholder="email")
-            div(class="buttons")
-               v-button(
-                  type="submit"
-                  :disabled="!Validate.isEmail(adminRights.email) || !adminRights.email || adminRights.isLoading",
-                  @click="giveAdminRights"
-                  ) Дать права
-               v-button(
-                  type="submit"
-                  :disabled="!Validate.isEmail(adminRights.email) || !adminRights.email || adminRights.isLoading",
-                  @click="takeAdminRights"
-                  ) Забрать
-               LoadingWheel(v-if="adminRights.isLoading")
-            div(class="message") {{ adminRights.message }}
+            UserList
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, computed, watch } from 'vue'
+import { ref, reactive, computed } from 'vue'
 import AssistanceService from '@/api/services/AssistanceService'
 import ToolsService from '@/api/services/ToolsService'
-import Validate from '@/libs/Validate'
+import Constants from '@/libs/Constants'
+import CheckboxFilter from './CheckboxFilter.vue'
+import UserList from './UserList.vue'
+import TheToolsGoogle from './TheToolsGoogle.vue'
+
+const filter = ref<string[]>([]);
+const filtersOptions = [
+   { name: 'По району', value: 'district' },
+   { name: 'По году', value: 'birth' },
+];
+const selectedFilters = reactive({
+   district: '', birth: { from: '', to: '' }
+});
+
+function filtered(value: string[]) {
+   filter.value = value;
+   if (!filter.value.includes('district')) {
+      selectedFilters.district = '';
+   }
+   if (!filter.value.includes('birth')) {
+      selectedFilters.birth.from = '';
+      selectedFilters.birth.to = '';
+   }
+}
 
 const tools = reactive({
    integrate: false,
@@ -93,123 +80,39 @@ const googleApi = reactive({
    serviceUser: '',
    servicePrivateKey: '',
    sheetId: '',
+   folderId: '',
    message: '',
    isLoading: false,
 });
 
-function setGoogleApi(): void {
-   googleApi.isLoading = true;
-   ToolsService.setGoogleServiceAccountSettings(googleApi.serviceUser, googleApi.servicePrivateKey, googleApi.sheetId)
-      .then(response => {
-         googleApi.message = response.data.message;
-         googleApi.serviceUser = '';
-         googleApi.servicePrivateKey = '';
-         googleApi.sheetId = '';
-      })
-      .catch((e: any) => {
-         googleApi.message = e?.response?.data?.message;
-      })
-      .finally(() => {
-         googleApi.isLoading = false;
-         setTimeout(() => googleApi.message = '', 3000);
-      });
-}
-
-const selected = ref('');
-const selectOptions = [
-   { value: 'all', name: 'Выгрузить все' },
-   { value: 'district', name: 'Выгрузить по району' },
-   { value: 'birth', name: 'Выгрузить по году' }
-];
-
-const min = ref('');
-const max = ref('');
-
-watch([min, max], () => {
-   if (String(min.value).length > 4) {
-      min.value = String(min.value).slice(0, 4);
-   };
-   if (String(max.value).length > 4) {
-      max.value = String(max.value).slice(0, 4);
-   };
-});
-const isFormsLoading = ref(false);
-const formsQueries = reactive({
-   all: {
-      filter: 'all',
-      query: 'all',
-      isLoading: false,
-      message: '',
-   },
-   district: {
-      filter: 'district',
-      query: 'Район',
-      isLoading: false,
-      message: '',
-   },
-   birth: {
-      filter: 'birth',
-      query: computed(() => min.value + '-' + max.value),
-      isLoading: false,
-      message: '',
-   }
-});
 const link = ref('');
+const isLoading = ref(false);
+const message = ref('');
+const isDisabled = computed(() => {
+   if (filter.value.includes('district') && filter.value.includes('birth')) {
+      return isLoading.value || !selectedFilters.district || !selectedFilters.birth.to || !selectedFilters.birth.from;
+   }
+   return isLoading.value || !selectedFilters.district && (!selectedFilters.birth.to || !selectedFilters.birth.from);
+})
 
-function saveFormsToSheet(opts: typeof formsQueries.all): void {
+function saveFormsToSheet(): void {
    link.value = '';
-   opts.isLoading = true;
-   isFormsLoading.value = true;
-   AssistanceService.saveFormsToSheet(opts.filter, opts.query)
+   isLoading.value = !isLoading.value;
+   const filters = {
+      district: selectedFilters.district,
+      birth: { to: selectedFilters.birth.to || 9999, from: selectedFilters.birth.from || 0 }
+   }
+   AssistanceService.saveFormsToSheet(filters)
       .then((response) => {
-         opts.message = response.data.message;
+         message.value = response.data.message;
          link.value = response.data.link;
       })
-      .catch((e: any) => {
-         opts.message = e.response.data.message;
-      })
+      .catch((e) => message.value = e?.response?.data?.message)
       .finally(() => {
-         isFormsLoading.value = false;
-         opts.isLoading = false;
-         setTimeout(() => opts.message = '', 2000);
+         isLoading.value = false;
+         setTimeout(() => message.value = '', 2000);
       });
-}
-
-const adminRights = reactive({
-   email: '',
-   isLoading: false,
-   message: '',
-});
-
-function giveAdminRights(): void {
-   adminRights.isLoading = true;
-   adminRights.message = '';
-   ToolsService.giveAdminRights(adminRights.email)
-      .then((response) => {
-         adminRights.message = response.data.message;
-      })
-      .catch((e: any) => {
-         adminRights.message = e.response.data.message;
-      })
-      .finally(() => {
-         adminRights.isLoading = false;
-      });
-}
-
-function takeAdminRights(): void {
-   adminRights.isLoading = true;
-   adminRights.message = '';
-   ToolsService.takeAdminRights(adminRights.email)
-      .then((response) => {
-         adminRights.message = response.data.message;
-      })
-      .catch((e: any) => {
-         adminRights.message = e.response.data.message;
-      })
-      .finally(() => {
-         adminRights.isLoading = false;
-      });
-}
+} 
 </script>
 
 <style lang="scss" scoped>
@@ -226,6 +129,7 @@ function takeAdminRights(): void {
 
          & .tools_input {
             width: 30%;
+            min-width: 250px;
          }
 
          & .item_title {
@@ -272,6 +176,7 @@ function takeAdminRights(): void {
             & .sheets_select {
                margin-top: 5px;
                margin-bottom: 5px;
+               min-width: 250px;
             }
 
             & .sheets_block {
@@ -301,15 +206,8 @@ function takeAdminRights(): void {
                   flex-direction: column;
 
                   & .year_interval {
-                     display: inline-block;
-                     border: none;
-                     border-bottom: 1px solid black;
-                     -webkit-appearance: none;
-                     -moz-appearance: textfield;
-                     appearance: none;
-                     outline: none;
-                     padding: 5px 0;
-                     width: 155px;
+                     width: 250px;
+                     margin-bottom: 5px;
 
                      &:focus {
                         border-bottom: 1px solid #1a73a8 !important;
@@ -320,7 +218,6 @@ function takeAdminRights(): void {
                         -webkit-appearance: none;
                         appearance: none;
                      }
-
                   }
                }
             }

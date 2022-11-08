@@ -6,21 +6,15 @@ router-view
 <script setup lang="ts">
 import { onBeforeMount } from 'vue'
 import { useStore } from '@/store/mainStore'
-import { useHeaderStore } from '@/store/headerStore'
 import AuthController from '@/api/controllers/AuthController'
 import PageLoader from '@/components/PageLoader.vue'
 
 const store = useStore();
-const headerStore = useHeaderStore();
 
-onBeforeMount(async () => {
+onBeforeMount(() => {
   store.ifThemeSaved();
-  window.addEventListener('click', () => {
-    headerStore.isHeaderMenuVisible = false;
-    headerStore.isUserMenuVisible = false;
-  });
   if (localStorage.getItem('token')) {
-    await AuthController.refresh();
+    AuthController.refresh();
   }
 });
 </script>

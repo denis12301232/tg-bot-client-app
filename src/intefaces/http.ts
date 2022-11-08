@@ -1,10 +1,15 @@
 import { AssistanceForm, IUser } from './interfaces'
 
+export interface ImagesResponse {
+   images: { link: string }[];
+   pageToken?: string;
+}
+
 export interface HumansListResponse {
    humansList: Array<HumansList>;
 }
 
-export interface HumansList  {
+export interface HumansList {
    _id: string;
    fio: string;
 }

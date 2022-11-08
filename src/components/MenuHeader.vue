@@ -7,18 +7,24 @@ div(class="nav")
             href="/", 
             @click.prevent="changeRoute('/')"
          ) Внести данные
-      li(class="nav_item")
+      li(class="nav_item", v-if="store.isAdmin")
          a(
             :class="['nav_link', currentRoute === 'list' ? 'active' : '']", 
             href="/list",
             @click.prevent="changeRoute('/list')"
          ) Полный список
-      li(class="nav_item")
+      li(class="nav_item", v-if="store.isAdmin")
          a(
             :class="['nav_link', currentRoute === 'info' ? 'active' : '']", 
             href="/info", 
             @click.prevent="changeRoute('/info')"
          ) Информация по человеку
+      li(class="nav_item")
+         a(
+            :class="['nav_link', currentRoute === 'images' ? 'active' : '']", 
+            href="/images", 
+            @click.prevent="changeRoute('/images')"
+         ) Галерея
 </template>
 
 
@@ -27,9 +33,11 @@ import { computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useHeaderStore } from '@/store/headerStore'
 import { useTheme } from '@/hooks/useTheme'
+import { useStore } from '@/store/mainStore'
 
 
 const router = useRouter();
+const store = useStore();
 const headerStore = useHeaderStore();
 const { dark, light } = useTheme();
 const currentRoute = computed(() => {

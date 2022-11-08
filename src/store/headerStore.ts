@@ -12,5 +12,5 @@ export const useHeaderStore = defineStore('header', {
       hideWindow(): void {
          this.$patch({ isModalVisible: false, isRegVisible: false, isLogVisible: false });
       }
-   }
+   },
 });

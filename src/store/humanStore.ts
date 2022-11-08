@@ -12,14 +12,14 @@ export const useHumanStore = defineStore('human', {
          isLoading: false,
          isEditable: false,
          currentQuery: '',
-         finded: [] as Array<FormsList>,
+         finded: [] as FormsList[],
       },
       list: {
          page: 0,
          total: 0,
          limit: 20,
          isLoading: false,
-         humansList: [] as Array<HumansList>,
+         humansList: [] as HumansList[],
          selectedSort: '',
       }
    }),
@@ -39,7 +39,7 @@ export const useHumanStore = defineStore('human', {
             const response = await AssistanceService.findHuman(query[0], query[1], query[2]);
             this.info.finded = response.data.humansFormList;
          } catch (e: any) {
-            this.info.error = e.message;
+            this.info.error = e?.response?.data?.message || e.message;
          } finally {
             this.info.isLoading = false;
          }
@@ -49,7 +49,7 @@ export const useHumanStore = defineStore('human', {
       sortedHumansList(state) {
          return [...state.list.humansList].sort((a: StringObject, b: StringObject) => {
             return a[state.list.selectedSort]?.localeCompare(b[state.list.selectedSort]);
-         })
+         });
       }
    }
 });

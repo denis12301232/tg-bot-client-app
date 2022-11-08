@@ -4,10 +4,10 @@ ModalWindow(:show="headerStore.isModalVisible", @hide="headerStore.hideWindow")
    FormReg(v-show="headerStore.isRegVisible", @swap="swapForms")
 div(:class="[$style.container, dark ? $style.container_dark: $style.container_light]")
    ul(:class="$style.menu")
-      li(v-if="store.isAdmin")
+      li
          VBurger(:class="$style.burger_hide", @click.stop="setMenu('isHeaderMenuVisible')", :is-selected="headerStore.isHeaderMenuVisible")
       li(v-if="!store.isAdmin")
-         div(:class="$style.title") Kharkov Volonteer
+         a(:class="$style.title", href="/", @click.prevent="$router.push('/')") Kharkov Volonteer
       li(v-if="store.isAdmin")
          a(
             :class="[$style.menu_link, currentRoute === 'home' ? $style.selected : '']", 
@@ -26,6 +26,12 @@ div(:class="[$style.container, dark ? $style.container_dark: $style.container_li
             @click.prevent="$router.push('/info')", 
             href="/info"
          ) Информация по человеку
+      li
+         a(
+            :class="[$style.menu_link, currentRoute === 'images' ? $style.selected : '']", 
+            @click.prevent="$router.push('/images')", 
+            href="/images"
+         ) Галерея
    div(:class="$style.sign")
       ThemeSwitch(:class="$style.theme")
       LoadingWheel(width="30px", height="30px", v-if="isLoading")
@@ -44,7 +50,7 @@ div(:class="[$style.container, dark ? $style.container_dark: $style.container_li
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref, onMounted, onBeforeUnmount } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useStore } from '@/store/mainStore'
 import { useHeaderStore } from '@/store/headerStore'
@@ -55,6 +61,9 @@ import FormReg from './FormReg.vue'
 import MenuUser from './MenuUser.vue'
 import ThemeSwitch from './ThemeSwitch.vue'
 
+onMounted(() => document.addEventListener('click', closeAllMenu));
+onBeforeUnmount(() => document.removeEventListener('click', closeAllMenu));
+
 
 const store = useStore();
 const router = useRouter();
@@ -62,6 +71,11 @@ const headerStore = useHeaderStore();
 const { dark } = useTheme();
 const currentRoute = computed(() => useRoute().name);
 const isLoading = ref(false);
+
+function closeAllMenu() {
+   headerStore.isHeaderMenuVisible = false;
+   headerStore.isUserMenuVisible = false;
+}
 
 function setLoading(value: boolean): void {
    isLoading.value = value;
@@ -74,17 +88,17 @@ function setMenu(value: keyof typeof headerStore.$state): void {
 function setLogVisible(): void {
    setMenu('isModalVisible');
    setMenu('isLogVisible');
-};
+}
 
 function swapForms(): void {
    setMenu('isRegVisible');
    setMenu('isLogVisible');
-};
+}
 
 function restore(): void {
    setLogVisible();
    router.push('/restore');
-};
+}
 </script>
 
 <style lang="scss" module>
@@ -93,8 +107,13 @@ function restore(): void {
    color: var(--water-color);
    position: relative;
    font-weight: 700;
-   font-style: italic;
    font-size: 1.3em;
+   text-decoration: none;
+   margin-right: 5px;
+
+   &:hover {
+      cursor: pointer;
+   }
 }
 
 .container {
@@ -110,7 +129,7 @@ function restore(): void {
 
    &>.menu {
       display: flex;
-      align-items: center;
+      place-items: center;
       margin: 0 5px;
 
       & .menu_link {
@@ -135,7 +154,7 @@ function restore(): void {
       display: flex;
       place-items: center;
 
-      & .theme{
+      & .theme {
          margin-right: 2px;
       }
    }
@@ -168,6 +187,11 @@ function restore(): void {
 }
 
 @media(max-width:768px) {
+
+   .title{
+      display: none;
+   }
+
    .burger_hide {
       display: block !important;
    }

@@ -5,7 +5,7 @@ form(:class="style.form", action="submit", @submit.prevent="login")
       div(:class="style.input_title") Е-мэйл
       v-input( 
          type="text", 
-         placeholder="email",
+         placeholder="Ваш е-мэйл",
          v-model="form.email.value",
          @blur="form.email.blur",
          )
@@ -14,7 +14,7 @@ form(:class="style.form", action="submit", @submit.prevent="login")
       div(:class="style.input_title") Пароль
       v-input(
          type="password", 
-         placeholder="password",
+         placeholder="Ваш пароль",
          v-model="form.password.value",
          @blur="form.password.blur"
          )
@@ -77,8 +77,8 @@ function login(): void {
       })
       .catch((e: any) => {
          const message = e?.response?.data?.message;
-         if(e?.response?.data?.errors[0] === 'email') emailError.value = message;
-         else if(e?.response?.data?.errors[0] === 'password') passwordError.value = message;
+         if (e?.response?.data?.errors[0] === 'email') emailError.value = message;
+         else if (e?.response?.data?.errors[0] === 'password') passwordError.value = message;
       })
       .finally(() => isLoading.value = false);
 }

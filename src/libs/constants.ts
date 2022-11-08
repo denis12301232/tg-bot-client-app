@@ -2,11 +2,14 @@ import Validate from '@/libs/Validate'
 
 export default class Constants {
    static readonly API_URL = process.env.VUE_APP_API_URL;
-
    static readonly districts = [
       'Индустриальный', 'Киевский', 'Московский', 'Немышлянский', 'Новобаварский',
       'Основянский', 'Слободской', 'Холодногорский', 'Шевченковский'
    ];
+   static readonly districtOptions = this.districts.reduce((box, item) => {      
+      box.push({ name: item, value: item });
+      return box;
+   }, [] as any);
 
    static readonly assistance = {
       surname: {

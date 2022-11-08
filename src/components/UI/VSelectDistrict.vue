@@ -3,18 +3,15 @@ select(:class="[$style.select, dark ? $style.select_dark : $style.select_light]"
    option(:class="$style.select_label", disabled, selected) Район
    option(:class="$style.select_variants" v-for="district in districts") {{ district }}
 </template>
-
+   
 <script setup lang="ts">
 import { useTheme } from '@/hooks/useTheme'
 import Constants from '@/libs/Constants'
-
-
 defineProps({
    modelValue: {
       type: String,
    },
 });
-
 const emit = defineEmits(['update:modelValue']);
 const { dark } = useTheme();
 const districts = Constants.districts;
@@ -22,10 +19,9 @@ const setSelectValue = (event: Event): void => {
    const target = event.target as HTMLSelectElement;
    emit('update:modelValue', target.value);
 };
-
 </script>
-
-
+   
+   
 <style lang="scss" module>
 .select {
    display: block;

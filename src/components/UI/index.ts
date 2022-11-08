@@ -10,16 +10,17 @@ import VSelect from '@/components/UI/VSelect.vue'
 import ButtonImage from '@/components/UI/ButtonImage.vue'
 import ModalWindow from '@/components/UI/ModalWindow.vue'
 
-VButton.name = 'v-button';
-LoadingWheel.name = 'LoadingWheel';
-ButtonImage.name = 'ButtonImage';
+VButton.name = 'VButton';
 VBurger.name = 'VBurger';
-ModalWindow.name = 'ModalWindow';
+LoadingWheel.name = 'LoadingWheel';
+VInputFind.name = 'VInputFind';
 VCheckbox.name = 'VCheckbox';
 VRadio.name = 'VRadio';
-VSelect.name = 'VSelect';
 VSelectDistrict.name = 'VSelectDistrict';
-
+VInput.name = 'VInput';
+VSelect.name = 'VSelect';
+ButtonImage.name = 'ButtonImage';
+ModalWindow.name = 'ModalWindow';
 
 declare module '@vue/runtime-core' {
    export interface GlobalComponents {

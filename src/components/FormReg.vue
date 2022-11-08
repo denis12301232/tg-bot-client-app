@@ -5,7 +5,7 @@ form(:class="style.form", action="submit", @submit.prevent="registration")
       div(:class="style.input_title") Имя
       v-input( 
          type="text", 
-         placeholder="name",
+         placeholder="Ваше имя",
          v-model="form.name.value",
          @blur="form.name.blur"
          )
@@ -14,7 +14,7 @@ form(:class="style.form", action="submit", @submit.prevent="registration")
       div(:class="style.input_title") Е-мэйл
       v-input(
          type="text", 
-         placeholder="email",
+         placeholder="Ваш е-мэйл",
          v-model="form.email.value",
          @blur="form.email.blur"
          )
@@ -23,7 +23,7 @@ form(:class="style.form", action="submit", @submit.prevent="registration")
       div(:class="style.input_title") Пароль
       v-input(
          type="password", 
-         placeholder="password",
+         placeholder="Ваш пароль",
          v-model="form.password.value",
          @blur="form.password.blur"
          )

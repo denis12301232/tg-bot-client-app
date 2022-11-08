@@ -9,7 +9,7 @@ div(:class="$style.container")
          v-model="humanStore.info.fio", 
          @keyup.enter="humanStore.findHuman"
          )
-      v-button(@click="humanStore.findHuman") Найти
+      VButton(@click="humanStore.findHuman") Найти
       LoadingWheel(v-if="humanStore.info.isLoading")
       div(:class="$style.search_error") {{ humanStore.info.error }}
    div(:class="$style.info", v-show="humanStore.info.finded.length", v-if="!humanStore.info.isEditable") 
@@ -17,7 +17,7 @@ div(:class="$style.container")
       div(:class="$style.info_item", v-for="(item, index) in humanStore.info.finded", :key="item._id")
          div(:class="$style.item_about")
             div(:class="$style.item_title") Найдено: {{ humanStore.info.currentQuery }}
-            ButtonImage(@click="setEditable($event, index, item._id)", image="images/edit.png") Редактировать
+            ButtonImage(@click="setEditable(index, item._id)", image="images/edit.png") Редактировать
          table(:class="$style.info_table", :data-id="item._id")
             tbody
                tr(v-for="(key, value) in item.form")
@@ -33,10 +33,10 @@ div(:class="$style.form", v-show="humanStore.info.isEditable")
       title="Редактировать"
       )
       template(v-slot:submit="slotProps")
-         v-button(type="submit", :disabled="!slotProps.form.valid")
+         VButton(type="submit", :disabled="!slotProps.form.valid")
             img(src="@/assets/images/confirm.png", :style="{width: '20px', height:'20px'}")
       template(v-slot:cancel)
-         v-button(@click.prevent="setEditable")
+         VButton(@click.prevent="setEditable")
             img(src="@/assets/images/cancel.png", :style="{width: '20px', height:'20px'}")
 </template>
 
@@ -69,7 +69,7 @@ onBeforeRouteLeave((to, from, next) => {
    next();
 });
 
-function setEditable(event: Event, index?: number, id?: string): void {
+function setEditable(index?: number, id?: string): void {
    if (index === undefined || !id) {
       humanStore.info.isEditable = !humanStore.info.isEditable;
       return window.scrollTo(0, currentScrollY.value);
@@ -90,8 +90,6 @@ function setEditable(event: Event, index?: number, id?: string): void {
 
 async function submit(): Promise<void> {
    try {
-      console.log('submit');
-
       assistance.isLoading = true;
       const formToSend = new AssistanseFormDto(assistance.form);
       await AssistanceService.modifyAssistanceForm(formToSend, currentId.value);

@@ -13,8 +13,9 @@ div(class="container")
             @input="restore.email.setEmail.call(restore.email, $event)"
             )
          div(class="form_buttons")
-            v-loading-wheel(v-if="restore.email.isLoading")
-            v-button-confirm(
+            LoadingWheel(v-if="restore.email.isLoading")
+            ButtonImage(
+               image="images/confirm.png"
                v-if="!restore.email.errorMessage && restore.email.value", 
                type="submit", 
                :disabled="restore.email.isLoading"
@@ -33,8 +34,9 @@ div(class="container")
             @input="restore.password.setPassword.call(restore.password, $event)"
             )
          div(class="form_buttons")
-            v-loading-wheel(v-if="restore.password.isLoading")
-            v-button-confirm(
+            LoadingWheel(v-if="restore.password.isLoading")
+            ButtonImage(
+               image="images/confirm.png",
                v-if="!restore.password.errorMessage && restore.password.value", 
                type="submit",
                :disabled="restore.password.isLoading"
@@ -174,7 +176,7 @@ async function restorePassword(): Promise<void> {
       font-weight: bold;
 
       & .message_error {
-         color: red;
+         color: var(--error-message-color);
       }
 
       & .message_success {

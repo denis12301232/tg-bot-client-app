@@ -3,7 +3,7 @@ import { useFormField } from './useFormField'
 import { AnyObject } from '@/intefaces/interfaces'
 
 export function useForm<T>(init: AnyObject = {}): T {
-   const form: any = reactive({});
+   const form = reactive<any>({});
 
    for (const [key, value] of Object.entries(init)) {
       form[key] = useFormField(value);

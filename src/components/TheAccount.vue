@@ -179,11 +179,12 @@ async function setNewPassword(): Promise<void> {
 
    & .tools {
       & .tools_list {
-         padding-bottom: 10px;
+         padding-bottom: 5px;
 
          & .list_message {
             height: 1em;
             font-weight: bold;
+            margin-left: 5px;
 
             & .list_error,
             & .list_ok {

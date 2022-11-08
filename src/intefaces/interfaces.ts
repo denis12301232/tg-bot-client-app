@@ -7,11 +7,11 @@ export interface AnyObject {
 }
 
 export interface IUser {
-   email: string,
-   id: string,
-   isActivated: boolean,
-   name: string,
-   roles: string[],
+   email: string;
+   _id: string;
+   isActivated?: boolean;
+   name: string;
+   roles: string[];
 }
 
 export interface AssistanceForm {
@@ -25,10 +25,10 @@ export interface AssistanceForm {
    house: string,
    flat: string,
    people_num: string,
-   people_fio?: Array<string>,
+   people_fio: string[],
    invalids: boolean,
    children: boolean,
-   children_age?: Array<string>,
+   children_age: string[],
    food: boolean,
    drugs: boolean,
    water: boolean,

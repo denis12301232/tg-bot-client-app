@@ -1,30 +1,41 @@
+import { IUser } from '@/intefaces/interfaces'
 import { AxiosResponse } from 'axios'
 import $api from '../index'
 
 export default class ToolsService {
-   static async setNewName(name: string): Promise<void> {
+   static setNewName(name: string): Promise<void> {
       return $api.patch('/tools/name', { name });
    }
 
-   static async setNewEmail(email: string): Promise<void> {
+   static setNewEmail(email: string): Promise<void> {
       return $api.patch('/tools/email', { email });
    }
 
-   static async setNewPassword(newPassword: string, oldPassword: string): Promise<void> {
+   static setNewPassword(newPassword: string, oldPassword: string): Promise<void> {
       return $api.patch('/tools/password', { newPassword, oldPassword });
    }
 
-   static async setGoogleServiceAccountSettings(serviceUser: string, servicePrivateKey: string, sheetId: string): Promise<AxiosResponse<{ message: string }>> {
+   static setGoogleServiceAccountSettings(serviceUser: string, servicePrivateKey: string, sheetId: string, folderId: string): Promise<AxiosResponse<{ message: string }>> {
       return $api.post<{ message: string }>('/tools/google/service', {
-         serviceUser, servicePrivateKey, sheetId
+         serviceUser, servicePrivateKey, sheetId, folderId
       });
    }
 
-   static async giveAdminRights(email: string): Promise<AxiosResponse<{ message: string }>> {
+   static giveAdminRights(email: string): Promise<AxiosResponse<{ message: string }>> {
       return $api.post<{ message: string }>('/tools/giverights', { email });
    }
 
-   static async takeAdminRights(email: string): Promise<AxiosResponse<{ message: string }>> {
+   static takeAdminRights(email: string): Promise<AxiosResponse<{ message: string }>> {
       return $api.post<{ message: string }>('/tools/takerights', { email });
+   }
+
+   static getUsers(_id: string): Promise<AxiosResponse<IUser[]>> {
+      return $api.get<IUser[]>('/tools/users', {
+         params: { _id }
+      });
+   }
+
+   static updateRoles(_id: string, roles: string[]): Promise<AxiosResponse<{ message: string }>> {
+      return $api.post<{ message: string }>('/tools/setroles', { _id, roles });
    }
 }

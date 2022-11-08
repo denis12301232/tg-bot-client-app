@@ -1,5 +1,5 @@
 <template lang="pug">
-button(:class="[$style.button_image, dark ? $style.button_image_dark: '']", :style="style")
+button(:class="[$style.button_image, dark && invert ? $style.button_image_dark: '']", :style="style")
 </template>
    
 <script setup lang="ts">
@@ -18,6 +18,10 @@ const props = defineProps({
       type: String,
       default: '25px'
    },
+   invert:{
+      type: Boolean,
+      default: true,
+   }
 });
 
 const { dark } = useTheme();

@@ -12,31 +12,35 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/info',
     name: 'info',
-    component: () => import('../views/InfoView.vue'),
-
+    component: () => import('@/views/InfoView.vue'),
   },
   {
     path: '/list',
     name: 'list',
-    component: () => import('../views/ListView.vue'),
+    component: () => import('@/views/ListView.vue'),
   },
   {
     path: '/tools',
     name: 'tools',
-    component: () => import('../views/ToolsView.vue'),
+    component: () => import('@/views/ToolsView.vue'),
   },
   {
     path: '/account',
     name: 'account',
-    component: () => import('../views/AccountView.vue'),
+    component: () => import('@/views/AccountView.vue'),
   },
   {
     path: '/restore',
     name: 'restore',
-    component: () => import('../views/RestoreView.vue'),
+    component: () => import('@/views/RestoreView.vue'),
   },
   {
-    path: "/:pathMatch(.*)*",
+    path: '/images',
+    name: 'images',
+    component: () => import('@/views/ImagesView.vue')
+  },
+  {
+    path: '/:pathMatch(.*)*',
     name: '404',
     component: () => import('@/components/TheError.vue'),
     props: { code: 404, message: 'Not Found' }
@@ -58,6 +62,7 @@ router.beforeEach((to, from, next) => {
   store.isPageLoading = true;
   next();
 });
+
 
 router.beforeResolve((to, from, next) => {
   const store = useStore();
