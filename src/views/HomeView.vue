@@ -1,19 +1,19 @@
 <template lang="pug">
 TheHeader
+AlertModal(
+   class="alert", 
+   :message="store.alert.message", 
+   @show="store.showAlert", 
+   :is-visible="store.alert.isVisible", :type="store.alert.type"
+   )
 div(class="content")
-   FormAssistance(
-      @save="submit",
-      :form="assistance.form", 
-      :is-loading="assistance.isLoading", 
-      :success-message="assistance.successMessage"
-      :error-message="assistance.errorMessage"
-      )
+   FormAssistance(@save="submit", :form="form", :is-loading="isLoading")
       template(v-slot:submit="slotProps")
          v-button(type="submit" :disabled="!slotProps.form.valid") Отправить
 </template>
 
 <script setup lang="ts">
-import { reactive } from "vue"
+import { ref } from "vue"
 import { useForm } from '@/hooks/useForm'
 import Constants from '@/libs/Constants'
 import TheHeader from '@/components/TheHeader.vue'
@@ -22,28 +22,25 @@ import AssistanceFormDto from '@/api/dtos/AssistanseFormDto'
 import { useDefaultValues } from '@/hooks/useDefaultValues'
 import { AssistanceFormValidators } from '@/intefaces/interfaces'
 import AssistanceService from '@/api/services/AssistanceService'
+import AlertModal from "@/components/AlertModal.vue"
+import { useStore } from "@/store/mainStore"
 
-
-const assistance = reactive({
-   form: useForm<AssistanceFormValidators>(Constants.assistance),
-   errorMessage: '',
-   successMessage: '',
-   isLoading: false,
-});
+const store = useStore();
+const form = ref(useForm<AssistanceFormValidators>(Constants.assistance));
+const isLoading = ref(false);
 
 async function submit(): Promise<void> {
    try {
-      assistance.isLoading = true;
-      const formToSend = new AssistanceFormDto(assistance.form);
+      isLoading.value = true;
+      const formToSend = new AssistanceFormDto(form.value);
       await AssistanceService.sendForm(formToSend);
-      useDefaultValues(assistance.form);
-      assistance.successMessage = 'Заявка отправлена!'
-      setTimeout(() => assistance.successMessage = '', 2000);
+      useDefaultValues(form.value);
+      store.setAlert('success', 'Отправлено!');
    } catch (e: any) {
-      assistance.errorMessage = e?.response?.data?.message;
-      setTimeout(() => assistance.errorMessage = '', 2000);
+      store.setAlert('error', e?.response?.data?.message);
    } finally {
-      assistance.isLoading = false;
+      isLoading.value = false;
+      store.showAlert();
    }
 }
 </script>
@@ -54,5 +51,12 @@ async function submit(): Promise<void> {
    position: relative;
    display: flex;
    justify-content: center;
+}
+
+.alert {
+   position: fixed;
+   right: 5px;
+   top: 55px;
+   z-index: 9999;
 }
 </style>

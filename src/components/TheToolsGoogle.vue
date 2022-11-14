@@ -17,7 +17,9 @@ form(class="google", @submit.prevent="setGoogleApi")
 <script setup lang="ts">
 import ToolsService from '@/api/services/ToolsService'
 import { reactive, computed } from 'vue'
+import { useStore } from '@/store/mainStore'
 
+const store = useStore();
 const googleApi = reactive({
    serviceUser: '',
    servicePrivateKey: '',
@@ -38,18 +40,18 @@ function setGoogleApi(): void {
       googleApi.serviceUser, googleApi.servicePrivateKey, googleApi.sheetId, googleApi.folderId
    )
       .then(response => {
-         googleApi.message = response.data.message;
          googleApi.serviceUser = '';
          googleApi.servicePrivateKey = '';
          googleApi.sheetId = '';
          googleApi.folderId = '';
+         store.setAlert('success', response.data.message);
       })
       .catch((e: any) => {
-         googleApi.message = e?.response?.data?.message;
+         store.setAlert('error', e?.response?.data?.message);
       })
       .finally(() => {
          googleApi.isLoading = false;
-         setTimeout(() => googleApi.message = '', 3000);
+         store.showAlert();
       });
 }
 </script>

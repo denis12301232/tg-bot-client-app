@@ -1,4 +1,4 @@
-import { IUser } from '@/intefaces/interfaces'
+import { IUser, AlertType } from '@/intefaces/interfaces'
 import { defineStore } from 'pinia'
 
 
@@ -7,6 +7,11 @@ export const useStore = defineStore('main', {
         user: <IUser>{},
         isPageLoading: false,
         theme: 'system',
+        alert: {
+            type: <AlertType>'success',
+            message: '',
+            isVisible: false,
+        }
     }),
     getters: {
         isAuth(state): boolean {
@@ -42,5 +47,12 @@ export const useStore = defineStore('main', {
                 localStorage.setItem('theme', this.theme);
             }
         },
+        showAlert() {
+            this.alert.isVisible = !this.alert.isVisible;
+        },
+        setAlert(type: AlertType, message: string) {
+            this.alert.type = type;
+            this.alert.message = message || 'Неизвестная ошибка!';
+        }
     }
 })

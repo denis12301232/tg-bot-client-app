@@ -30,7 +30,7 @@ form(:class="style.form", action="submit", @submit.prevent="registration")
       small(:class="style.error_message") {{ passwordErrorMessage }}
    div(:class="style.submit")
       v-button(type="submit", :disabled="!form.valid") Регистрация
-      LoadingWheel(v-if="isLoading")
+      LoadingWheel(:class="style.submit_wheel", v-if="isLoading")
    div(:class="style.swap") Уже зарегестрированы? 
       span(@click="$emit('swap')") Вход
 </template>
@@ -57,7 +57,6 @@ const nameErrorMessage = computed(() => {
       return 'Это обязательное поле!';
    }
    return '';
-
 });
 
 const emailErrorMessage = computed(() => {

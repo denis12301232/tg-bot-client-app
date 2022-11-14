@@ -40,7 +40,6 @@ const emit = defineEmits(['update:modelValue', 'touch']);
 
    & .form_input {
       font-family: inherit;
-      height: 1.5rem;
       width: 100%;
       border: none;
       border-bottom: 1px solid #e0e0e0;

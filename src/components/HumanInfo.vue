@@ -1,4 +1,9 @@
 <template lang="pug">
+AlertModal(
+   :class="$style.alert", 
+   :message="store.alert.message", 
+   @show="store.showAlert", :is-visible="store.alert.isVisible", :type="store.alert.type"
+   )
 div(:class="$style.container")
    div(:class="$style.search")
       div(:class="$style.search_title") Введите ФИО для поиска
@@ -24,14 +29,7 @@ div(:class="$style.container")
                   td {{ Constants.assistance[value].display }}
                   td {{ useBeautifyValue(key) }}
 div(:class="$style.form", v-show="humanStore.info.isEditable")
-   FormAssistance(
-      @save="submit",
-      :form="assistance.form",
-      :is-loading="assistance.isLoading",
-      :success-message="assistance.successMessage",
-      :error-message="assistance.errorMessage",
-      title="Редактировать"
-      )
+   FormAssistance(@save="submit", :form="form", :is-loading="isLoading", title="Редактировать")
       template(v-slot:submit="slotProps")
          VButton(type="submit", :disabled="!slotProps.form.valid")
             img(src="@/assets/images/confirm.png", :style="{width: '20px', height:'20px'}")
@@ -42,7 +40,7 @@ div(:class="$style.form", v-show="humanStore.info.isEditable")
 
 
 <script setup lang="ts">
-import { ref, reactive } from 'vue'
+import { ref } from 'vue'
 import Constants from '@/libs/Constants'
 import { useForm } from '@/hooks/useForm'
 import { onBeforeRouteLeave } from 'vue-router'
@@ -52,22 +50,21 @@ import { AssistanceFormValidators } from '@/intefaces/interfaces'
 import FormAssistance from './FormAssistance.vue'
 import AssistanseFormDto from '@/api/dtos/AssistanseFormDto'
 import AssistanceService from '@/api/services/AssistanceService'
+import AlertModal from "@/components/AlertModal.vue"
+import { useStore } from '@/store/mainStore'
 
-
+const store = useStore();
+const form = ref(useForm<AssistanceFormValidators>(Constants.assistance));
+const isLoading = ref(false);
 const humanStore = useHumanStore();
 const currentId = ref('');
 const currentScrollY = ref(0);
-const assistance = reactive({
-   form: useForm<AssistanceFormValidators>(Constants.assistance),
-   errorMessage: '',
-   successMessage: '',
-   isLoading: false,
-});
 
 onBeforeRouteLeave((to, from, next) => {
    humanStore.info.isEditable = false;
    next();
 });
+
 
 function setEditable(index?: number, id?: string): void {
    if (index === undefined || !id) {
@@ -81,30 +78,36 @@ function setEditable(index?: number, id?: string): void {
    (Object.keys(Constants.assistance) as Array<keyof typeof Constants.assistance>)
       .forEach((key: keyof typeof Constants.assistance) => {
          if (key === "phone") {
-            assistance.form[key].value = humanStore.info.finded[index].form[key]!.slice(4);
+            form.value[key].value = humanStore.info.finded[index].form[key]!.slice(4);
          } else {
-            assistance.form[key].value = humanStore.info.finded[index].form[key]!
+            form.value[key].value = humanStore.info.finded[index].form[key]!
          };
       });
 }
 
 async function submit(): Promise<void> {
    try {
-      assistance.isLoading = true;
-      const formToSend = new AssistanseFormDto(assistance.form);
+      isLoading.value = true;
+      const formToSend = new AssistanseFormDto(form.value);
       await AssistanceService.modifyAssistanceForm(formToSend, currentId.value);
-      assistance.successMessage = 'Сохранено!';
-      setTimeout(() => assistance.successMessage = '', 3000);
+      store.setAlert('success', 'Обновлено!');
    } catch (e: any) {
-      assistance.errorMessage = e?.response?.data?.message;
-      setTimeout(() => assistance.errorMessage = '', 3000);
+      store.setAlert('error', e?.response?.data?.message);
    } finally {
-      assistance.isLoading = false;
+      isLoading.value = false;
+      store.showAlert();
    }
 }
 </script>
 
 <style lang="scss" module>
+.alert {
+   position: fixed;
+   right: 5px;
+   top: 55px;
+   z-index: 9999;
+}
+
 .container {
    padding: 10px;
 

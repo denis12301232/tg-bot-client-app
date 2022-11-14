@@ -6,6 +6,8 @@ export interface AnyObject {
    [name: string]: any;
 }
 
+export type AlertType = 'success' | 'error';
+
 export interface IUser {
    email: string;
    _id: string;

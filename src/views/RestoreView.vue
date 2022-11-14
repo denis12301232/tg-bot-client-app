@@ -63,7 +63,7 @@ const restore = reactive({
       setEmail(event: Event): void {
          const target = event.target as HTMLInputElement;
          this.value = target.value;
-         !Validate.isEmail(this.value) ? this.errorMessage = '! Введите корректный е-мэйл.' : this.errorMessage = '';
+         !Validate.isEmail(this.value) ? this.errorMessage = 'Введите корректный е-мэйл.' : this.errorMessage = '';
       }
    },
    password: {
@@ -74,7 +74,7 @@ const restore = reactive({
       setPassword(event: Event): void {
          const target = event.target as HTMLInputElement;
          this.value = target.value;
-         (this.value.length < 6) ? this.errorMessage = '! Пароль должен содержать 6-20 символов.' : this.errorMessage = '';
+         (this.value.length < 6) ? this.errorMessage = 'От 6 до 20 символов.' : this.errorMessage = '';
       }
    }
 });
@@ -140,7 +140,7 @@ async function restorePassword(): Promise<void> {
          display: flex;
          align-items: center;
          padding: 3px;
-         width: 70px;
+         // width: 70px;
 
          &>*:not(:first-child) {
             margin-left: 3px;
@@ -163,7 +163,7 @@ async function restorePassword(): Promise<void> {
          transition: all .1s ease;
          width: 30%;
          height: 42px;
-         min-width: 240px;
+         min-width: 215px;
 
          &:focus {
             border: 2px solid var(--water-color);

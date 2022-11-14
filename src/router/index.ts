@@ -45,11 +45,11 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import('@/components/TheError.vue'),
     props: { code: 404, message: 'Not Found' }
   },
-  // {
-  //   path: '/test',
-  //   name: 'test',
-  //   component: () => import('@/views/TestView.vue')
-  // }
+  {
+    path: '/test',
+    name: 'test',
+    component: () => import('@/views/TestView.vue')
+  }
 ]
 
 const router = createRouter({

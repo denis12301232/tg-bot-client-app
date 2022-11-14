@@ -1,4 +1,11 @@
 <template lang="pug">
+AlertModal(
+   class="alert", 
+   :message="store.alert.message", 
+   @show="store.showAlert",
+   :is-visible="store.alert.isVisible", 
+   :type="store.alert.type"
+   )
 VButton(class="home_button", @click="$router.push('/')") На главную
 div(class="container")
    ul(class="tools")
@@ -40,12 +47,15 @@ div(class="container")
 <script setup lang="ts">
 import { ref, reactive, computed } from 'vue'
 import AssistanceService from '@/api/services/AssistanceService'
-import ToolsService from '@/api/services/ToolsService'
 import Constants from '@/libs/Constants'
 import CheckboxFilter from './CheckboxFilter.vue'
 import UserList from './UserList.vue'
 import TheToolsGoogle from './TheToolsGoogle.vue'
+import AlertModal from "@/components/AlertModal.vue"
+import { useStore } from '@/store/mainStore'
 
+
+const store = useStore();
 const filter = ref<string[]>([]);
 const filtersOptions = [
    { name: 'По району', value: 'district' },
@@ -76,15 +86,6 @@ function setVisible(key: keyof typeof tools): void {
    tools[key] = !tools[key];
 }
 
-const googleApi = reactive({
-   serviceUser: '',
-   servicePrivateKey: '',
-   sheetId: '',
-   folderId: '',
-   message: '',
-   isLoading: false,
-});
-
 const link = ref('');
 const isLoading = ref(false);
 const message = ref('');
@@ -104,18 +105,27 @@ function saveFormsToSheet(): void {
    }
    AssistanceService.saveFormsToSheet(filters)
       .then((response) => {
-         message.value = response.data.message;
+         store.setAlert('success', response.data.message);
          link.value = response.data.link;
       })
-      .catch((e) => message.value = e?.response?.data?.message)
+      .catch((e) => {
+         store.setAlert('error', e?.response?.data?.message);
+      })
       .finally(() => {
          isLoading.value = false;
-         setTimeout(() => message.value = '', 2000);
+         store.showAlert();
       });
 } 
 </script>
 
 <style lang="scss" scoped>
+.alert {
+   position: fixed;
+   right: 5px;
+   top: 65px;
+   z-index: 9999;
+}
+
 .home_button {
    margin: 10px 0px 0px 10px;
 }
@@ -188,8 +198,7 @@ function saveFormsToSheet(): void {
                   text-decoration: none;
                   font-weight: bolder;
                   cursor: pointer;
-                  margin-bottom: 20px;
-
+                  
                   &:visited {
                      color: rgb(32, 143, 71);
                   }
@@ -197,7 +206,6 @@ function saveFormsToSheet(): void {
                   &:hover,
                   &:focus {
                      color: #C4433A;
-                     border-bottom: 1px solid;
                   }
                }
 

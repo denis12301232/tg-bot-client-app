@@ -51,9 +51,11 @@ onMounted(() => {
 });
 
 function updateRoles(_id: string, roles: string[]) {
-   console.log(_id);
+   if (store.alert.isVisible) store.showAlert();
    ToolsService.updateRoles(_id, roles)
-      .then((response) => console.log(response.data.message));
+      .then((response) => store.setAlert('success', response.data.message))
+      .catch((e) => store.setAlert('error', e?.response?.data?.message))
+      .finally(store.showAlert);
 }
 </script>
    

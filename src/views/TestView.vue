@@ -1,20 +1,24 @@
 <template lang="pug">
-//v-calendar
-//ThemeSwitch
-//FormAssistanceInput(placeholder="Фамилия")
-TheToolsGoogle
+button(@click="show") show
+div(class="test")
+   AlertModal(message="ololo", @show="show", :is-visible="isVisible", type="success")
 </template>
 
 <script setup lang="ts">
-import ThemeSwitch from '@/components/ThemeSwitch.vue'
-import FormAssistanceInput from '@/components/FormAssistanceInput.vue';
+import AlertModal from '@/components/AlertModal.vue'
 import { ref } from 'vue';
-import TheToolsGoogle from '@/components/TheToolsGoogle.vue';
 
-
+const isVisible = ref(false);
+function show(){
+   isVisible.value = !isVisible.value;
+}
 </script>
 
 
 <style lang="scss" scoped>
-
+.test{
+   display: flex;
+   justify-content: end;
+   
+}
 </style>

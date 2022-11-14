@@ -129,8 +129,6 @@ form(:class="[$style.form, dark ? $style.form_dark: $style.form_light]", @submit
    div(:class="$style.form_buttons")
       div(:class="$style.form_button_submit")
          slot(name="submit", :form="form")
-         div(:class="$style.form_message_success") {{ successMessage }}
-         div(:class="$style.form_message_error") {{ errorMessage }}
          LoadingWheel(v-if="isLoading")
       div
          slot(name="cancel")
@@ -146,14 +144,6 @@ const props = defineProps({
    form: {
       type: Object as () => AssistanceFormValidators,
       required: true,
-   },
-   successMessage: {
-      type: String,
-      default: '',
-   },
-   errorMessage: {
-      type: String,
-      default: '',
    },
    isLoading: {
       type: Boolean,
@@ -265,24 +255,6 @@ const filterPhone = (event: ClipboardEvent): void => {
       & .form_button_submit {
          display: flex;
          place-items: center;
-      }
-
-      & .form_message_success {
-         align-self: center;
-         color: rgb(10, 157, 10);
-         font-weight: bolder;
-         min-height: 1em;
-         line-height: 1em;
-         padding-left: 5px;
-      }
-
-      & .form_message_error {
-         align-self: center;
-         color: var(--error-message-color);
-         font-weight: bolder;
-         min-height: 1em;
-         line-height: 1em;
-         padding-left: 5px;
       }
    }
 }

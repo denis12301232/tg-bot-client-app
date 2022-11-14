@@ -1,4 +1,11 @@
 <template lang="pug">
+AlertModal(
+   class="alert", 
+   :message="store.alert.message", 
+   @show="store.showAlert", 
+   :is-visible="store.alert.isVisible", 
+   :type="store.alert.type"
+   )
 ModalWindow(:show="deleteOptions.isModalVisible", @hide="showModal")
    div(class="title") Вы уверены?
    div(class="buttons")
@@ -50,8 +57,11 @@ import { useHumanStore } from '@/store/humanStore'
 import AssistanceService from '@/api/services/AssistanceService'
 import HumansListSelect from './HumansListSelect.vue'
 import { useTheme } from '@/hooks/useTheme'
+import AlertModal from "@/components/AlertModal.vue"
+import { useStore } from '@/store/mainStore'
 
 
+const store = useStore();
 const { light, dark } = useTheme();
 const router = useRouter();
 const humanStore = useHumanStore();
@@ -98,11 +108,17 @@ function showModal(id?: string): void {
 function deleteHuman(): void {
    deleteOptions.isLoading = true;
    AssistanceService.deleteHuman(deleteOptions.id)
-      .then(() => humanStore.list.humansList = humanStore.list.humansList.filter(item => item._id !== deleteOptions.id))
-      .catch((e) => error.value = e?.response?.data?.message)
+      .then(() => {
+         humanStore.list.humansList = humanStore.list.humansList.filter(item => item._id !== deleteOptions.id)
+         store.setAlert('success', 'Удалено!');
+      })
+      .catch((e) => {
+         store.setAlert('error', e?.response?.data?.message);
+      })
       .finally(() => {
          deleteOptions.isLoading = false;
          showModal();
+         store.showAlert();
       });
 }
 
@@ -117,6 +133,13 @@ async function aboutHuman(fio: string): Promise<void> {
 
 
 <style lang="scss" scoped>
+.alert {
+   position: fixed;
+   right: 5px;
+   top: 55px;
+   z-index: 9999;
+}
+
 .title {
    text-align: center;
    font-size: 1.5em;
@@ -136,7 +159,8 @@ async function aboutHuman(fio: string): Promise<void> {
    }
 
    & .error {
-      color: red;
+      margin-top: 10px;
+      color: var(--error-message-color);
       text-align: center;
       font-weight: bolder;
    }

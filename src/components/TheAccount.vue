@@ -1,4 +1,9 @@
 <template lang="pug">
+AlertModal(
+   :class="$style.alert", 
+   :message="store.alert.message", 
+   @show="store.showAlert", :is-visible="store.alert.isVisible", :type="store.alert.type"
+   )
 v-button(:class="$style.home_button", @click="$router.push('/')") На главную
 div(:class="$style.account")
    h1 Настройки аккаунта
@@ -14,12 +19,21 @@ div(:class="$style.account")
                @input="tools.name.input.call(tools.name, $event)"
                )
             div(:class="$style.list_buttons")
-               ButtonImage(v-if="tools.name.value !== store.user.name", @click="setNewName", image="images/confirm.png")
-               ButtonImage(v-if="tools.name.value !== store.user.name", @click="tools.name.cancel.call(tools.name)", image="images/cancel.png")
+               ButtonImage(
+                  v-if="tools.name.value !== store.user.name", 
+                  @click="setNewName", 
+                  image="images/confirm.png", 
+                  :invert="false"
+                  )
+               ButtonImage(
+                  v-if="tools.name.value !== store.user.name", 
+                  @click="tools.name.cancel.call(tools.name)", 
+                  image="images/cancel.png", 
+                  :invert="false"
+                  )
                LoadingWheel(v-if="tools.name.isLoading")
          div(:class="$style.list_message")
             small(:class="$style.list_error") {{ tools.name.errorMessage }}
-            small(:class="$style.list_ok") {{ tools.name.okMessage }}
       li(:class="$style.tools_list")
          div(:class="$style.list_title") Адрес электронной почты
          div(:class="$style.list_block")
@@ -31,12 +45,21 @@ div(:class="$style.account")
                @input="tools.email.input.call(tools.email, $event)"
                )
             div(:class="$style.list_buttons")
-               ButtonImage(v-if="tools.email.value !== store.user.email", @click="setNewEmail", image="images/confirm.png")
-               ButtonImage(v-if="tools.email.value !== store.user.email", @click="tools.email.cancel.call(tools.email)", image="images/cancel.png")
+               ButtonImage(
+                  v-if="tools.email.value !== store.user.email", 
+                  @click="setNewEmail", 
+                  image="images/confirm.png",
+                  :invert="false"
+                  )
+               ButtonImage(
+                  v-if="tools.email.value !== store.user.email", 
+                  @click="tools.email.cancel.call(tools.email)", 
+                  image="images/cancel.png",
+                  :invert="false"
+                  )
                LoadingWheel(v-if="tools.email.isLoading")
          div(:class="$style.list_message")
             small(:class="$style.list_error") {{ tools.email.errorMessage }}
-            small(:class="$style.list_ok") {{ tools.email.okMessage }}
       li(:class="$style.tools_list")
          div(:class="$style.list_title") Пароль
          div(:class="$style.list_fields")
@@ -59,14 +82,15 @@ div(:class="$style.account")
             LoadingWheel(v-if="tools.password.isLoading")
             div(:class="$style.list_message")
                small(:class="$style.list_error") {{ tools.password.errorMessage }}
-               small(:class="$style.list_ok") {{ tools.password.okMessage }}
 </template>
 
 <script setup lang="ts">
-import { reactive } from 'vue'
+import { reactive, ref } from 'vue'
 import { useStore } from '@/store/mainStore'
 import ToolsService from '@/api/services/ToolsService'
 import Validate from '@/libs/Validate'
+import AlertModal from "@/components/AlertModal.vue"
+
 
 const store = useStore();
 const tools = reactive({
@@ -75,7 +99,6 @@ const tools = reactive({
       hidden: true,
       isLoading: false,
       errorMessage: '',
-      okMessage: '',
       input(event: Event): void {
          const target = event.target as HTMLInputElement;
          this.value = target.value;
@@ -91,7 +114,6 @@ const tools = reactive({
       hidden: true,
       isLoading: false,
       errorMessage: '',
-      okMessage: '',
       input(event: Event): void {
          const target = event.target as HTMLInputElement;
          this.value = target.value;
@@ -108,7 +130,6 @@ const tools = reactive({
       hidden: true,
       isLoading: false,
       errorMessage: '',
-      okMessage: '',
    }
 });
 
@@ -117,16 +138,12 @@ async function setNewName(): Promise<void> {
       tools.name.isLoading = true;
       await ToolsService.setNewName(tools.name.value);
       store.user.name = tools.name.value;
-      tools.name.okMessage = `Имя изменено на ${store.user.name}`;
+      store.setAlert('success', 'Имя изменено!');
    } catch (e: any) {
-      tools.name.errorMessage = e?.response?.data?.message;
-      console.log(e);
+      store.setAlert('error', e?.response?.data?.message);
    } finally {
       tools.name.isLoading = false;
-      setTimeout(() => {
-         tools.name.okMessage = '';
-         tools.name.errorMessage = '';
-      }, 2000);
+      store.showAlert();
    }
 }
 
@@ -135,16 +152,12 @@ async function setNewEmail(): Promise<void> {
       tools.email.isLoading = true;
       await ToolsService.setNewEmail(tools.email.value);
       store.user.email = tools.email.value;
-      tools.email.okMessage = `Е-мэйл изменен на ${store.user.email}`;
+      store.setAlert('success', 'Е-мэйл изменен!');
    } catch (e: any) {
-      tools.email.errorMessage = e?.response?.data?.message;
-      console.log(e);
+      store.setAlert('error', e?.response?.data?.message);
    } finally {
       tools.email.isLoading = false;
-      setTimeout(() => {
-         tools.email.okMessage = '';
-         tools.email.errorMessage = '';
-      }, 2000);
+      store.showAlert();
    }
 }
 
@@ -152,23 +165,26 @@ async function setNewPassword(): Promise<void> {
    try {
       tools.password.isLoading = true;
       await ToolsService.setNewPassword(tools.password.new, tools.password.old);
-      tools.password.okMessage = `Пароль изменен!`;
+      store.setAlert('success', 'Пароль изменен!');
       tools.password.old = '';
       tools.password.new = '';
    } catch (e: any) {
-      tools.password.errorMessage = e?.response?.data?.message;
-      console.log(e);
+      store.setAlert('error', e?.response?.data?.message);
    } finally {
       tools.password.isLoading = false;
-      setTimeout(() => {
-         tools.password.okMessage = '';
-         tools.password.errorMessage = '';
-      }, 2000);
+      store.showAlert();
    }
 }
 </script>
 
 <style lang="scss" module>
+.alert {
+   position: fixed;
+   right: 5px;
+   top: 65px;
+   z-index: 9999;
+}
+
 .home_button {
    margin: 10px 0px 0px 10px;
 }
@@ -186,18 +202,13 @@ async function setNewPassword(): Promise<void> {
             font-weight: bold;
             margin-left: 5px;
 
-            & .list_error,
-            & .list_ok {
+            & .list_error{
                display: table-cell;
                vertical-align: middle;
             }
 
             & .list_error {
                color: var(--error-message-color);
-            }
-
-            & .list_ok {
-               color: rgb(11, 93, 49);
             }
          }
 

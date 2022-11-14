@@ -14,18 +14,21 @@ div(:class="[$style.menu, dark ? $style.menu_dark : $style.menu_light]")
 import { useStore } from '@/store/mainStore'
 import { useHeaderStore } from '@/store/headerStore'
 import { useTheme } from '@/hooks/useTheme'
+import { useRouter } from 'vue-router'
 import AuthController from '@/api/controllers/AuthController'
 
 const emit = defineEmits<{ (e: 'loading', value: boolean): void }>();
 const store = useStore();
 const headerStore = useHeaderStore();
 const { dark } = useTheme();
+const router = useRouter();
 
 async function logout(): Promise<void> {
    emit('loading', true);
    await AuthController.logout();
    headerStore.isUserMenuVisible = false;
    emit('loading', false);
+   router.push('/');
 }
 </script>
 
