@@ -30,7 +30,7 @@ button(:class="$style.button")
    }
 
    &:disabled {
-      background: rgba(19, 24, 114, 0.481);
+      background: rgba(28, 5, 141, 0.514);
    }
 }
 </style>

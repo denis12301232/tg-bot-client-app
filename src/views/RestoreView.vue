@@ -1,112 +1,79 @@
 <template lang="pug">
-v-button(class="home_button", @click="$router.push('/')") На главную
+v-btn(class="home_button", @click="$router.push('/')") На главную
 div(class="container")
-   h1 Восстановление пароля
-   form(class="form", v-if="!link", @submit.prevent="sendMail")
-      div(class="form_title") Адрес электронной почты
+   h1(class="title") Восстановление пароля
+   v-form(v-if="!link", @submit.prevent="sendRestoreMail", ref="emailFormRef")
       div(class="form_block")
-         input(
-            type="text",
-            class="form_input", 
-            placeholder="Ваш е-мэйл", 
-            :value="restore.email.value", 
-            @input="restore.email.setEmail.call(restore.email, $event)"
+         v-text-field(
+            type="email", 
+            label="Ваш е-мэйл", 
+            v-model="email", 
+            variant="solo", 
+            class="form_input",
+            :error-messages="emailError"
+            :rules="emailRules"
             )
          div(class="form_buttons")
-            LoadingWheel(v-if="restore.email.isLoading")
-            ButtonImage(
-               image="images/confirm.png"
-               v-if="!restore.email.errorMessage && restore.email.value", 
-               type="submit", 
-               :disabled="restore.email.isLoading"
-               )
-      div(class="form_message")
-         small(class="message_error") {{ restore.email.errorMessage }}
-         div(class="message_success") {{ restore.email.successMessage }} 
-   form(class="form", v-else-if="link", @submit.prevent="restorePassword")
-      div(class="form_title") Введите новый пароль
+            LoadingWheel(v-if="isEmailLoading")
+      v-btn(type="submit", :disabled="isEmailLoading") Восстановить
+      div(class="message_success") {{ emailSuccess }}
+   v-form(v-else-if="link", @submit.prevent="restorePass", ref="passwordFormRef")
       div(class="form_block")
-         input(
-            type="password",
-            class="form_input", 
-            placeholder="Новый пароль", 
-            :value="restore.password.value",
-            @input="restore.password.setPassword.call(restore.password, $event)"
+         v-text-field(
+            label="Введите новый пароль", 
+            v-model="password", 
+            autocomplete="new-password", 
+            :type="showPassword ? 'text' : 'password'",
+            :append-inner-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'",
+            @click:append-inner="showPassword = !showPassword",
+            :rules="passwordRules",
+            variant="solo",
+            :error-messages="passwordError"
             )
          div(class="form_buttons")
-            LoadingWheel(v-if="restore.password.isLoading")
-            ButtonImage(
-               image="images/confirm.png",
-               v-if="!restore.password.errorMessage && restore.password.value", 
-               type="submit",
-               :disabled="restore.password.isLoading"
-               )
-      div(class="form_message")
-         small(class="message_error") {{ restore.password.errorMessage }}
-         div(class="message_success") {{ restore.password.successMessage }}
+            LoadingWheel(v-if="isPasswordLoading")
+      v-btn(type="submit") Изменить
+      div(class="message_success") {{ passwordSuccess }}
 </template>
    
 <script setup lang="ts">
-import { reactive, computed } from 'vue'
+import { computed, ref } from 'vue'
 import { useRoute } from 'vue-router'
+import { useFetching } from '@/hooks/useFetching'
 import Validate from "@/libs/Validate"
 import AuthService from '@/api/services/AuthService'
 
-
+const email = ref('');
+const password = ref('');
 const link = computed(() => useRoute().query.link);
-const restore = reactive({
-   email: {
-      value: '',
-      errorMessage: '',
-      successMessage: '',
-      isLoading: false,
-      setEmail(event: Event): void {
-         const target = event.target as HTMLInputElement;
-         this.value = target.value;
-         !Validate.isEmail(this.value) ? this.errorMessage = 'Введите корректный е-мэйл.' : this.errorMessage = '';
-      }
-   },
-   password: {
-      value: '',
-      errorMessage: '',
-      successMessage: '',
-      isLoading: false,
-      setPassword(event: Event): void {
-         const target = event.target as HTMLInputElement;
-         this.value = target.value;
-         (this.value.length < 6) ? this.errorMessage = 'От 6 до 20 символов.' : this.errorMessage = '';
-      }
-   }
-});
+const showPassword = ref(false);
+const emailFormRef = ref<any>(null);
+const passwordFormRef = ref<any>(null);
 
-async function sendMail(): Promise<void> {
-   try {
-      restore.email.isLoading = true;
-      const response = await AuthService.sendMail(restore.email.value);
-      restore.email.successMessage = response.data.message;
-      restore.email.errorMessage = '';
-      restore.email.value = '';
-   } catch (e: any) {
-      restore.email.errorMessage = e?.response.data.message;
-      restore.email.successMessage = '';
-   } finally {
-      restore.email.isLoading = false;
-   }
+const emailRules = [
+   (v: string) => Validate.isEmail(v) || 'Введите корректный е-мэйл'
+];
+const passwordRules = [
+   (v: string) => Validate.lengthInterval(6, 20)(v) || "Пароль должен содержать 6-20 символов"
+];
+
+const { fetchFunc: sendRestoreMail, isLoading: isEmailLoading, success: emailSuccess, error: emailError } =
+   useFetching({
+      callback: sendMail, alert: false, successMessage: 'Письмо отправлено на указанную почту', errorMessage: 'Ошибка отправки сообщения',
+   });
+const { fetchFunc: restorePass, isLoading: isPasswordLoading, success: passwordSuccess, error: passwordError } =
+   useFetching({ callback: restorePassword, successMessage: 'Пароль изменен', errorMessage: 'Истек срок действия ссылки' });
+
+async function sendMail() {
+   emailSuccess.value = '';
+   await AuthService.sendMail(email.value);
+   emailFormRef.value?.reset();
 };
 
-async function restorePassword(): Promise<void> {
-   try {
-      restore.password.isLoading = true;
-      const response = await AuthService.restorePassword(restore.password.value, link.value as string);
-      restore.password.successMessage = response.data.message;
-      restore.password.errorMessage = '';
-      restore.password.value = '';
-   } catch (e: any) {
-      restore.password.successMessage = '';
-      restore.password.errorMessage = e?.response.data.message;
-   } finally {
-      restore.password.isLoading = false;
-   }
+async function restorePassword() {
+   passwordSuccess.value = '';
+   await AuthService.restorePassword(password.value, link.value as string);
+   passwordFormRef.value?.reset();
 };
 </script>
    
@@ -120,77 +87,32 @@ async function restorePassword(): Promise<void> {
    margin: 0 auto;
 }
 
-.form {
+.title {
+   padding: 20px 0px;
+}
 
-   &>* {
-      margin-top: 5px;
+.form_block {
+   display: flex;
+   place-items: center;
+   width: 50%;
+
+   & .form_input {
+      flex-basis: 90%;
    }
 
-   & .form_title {
-      color: #475366;
-      font-weight: 700;
-   }
-
-   & .form_block {
-      display: flex;
-      align-items: center;
-      flex-wrap: wrap;
-
-      & .form_buttons {
-         display: flex;
-         align-items: center;
-         padding: 3px;
-         // width: 70px;
-
-         &>*:not(:first-child) {
-            margin-left: 3px;
-         }
-      }
-
-      & .form_input {
-         -webkit-appearance: none;
-         -moz-appearance: none;
-         appearance: none;
-         outline: 0;
-         border-radius: 4px;
-         padding: 5px 10px;
-         font-size: 13px;
-         background: #fff;
-         border: 2px solid #cfd7e6;
-         box-shadow: inset 0 1px 2px 0 rgb(207 215 230 / 40%);
-         letter-spacing: 1px;
-         font-size: 1em;
-         transition: all .1s ease;
-         width: 30%;
-         height: 42px;
-         min-width: 215px;
-
-         &:focus {
-            border: 2px solid var(--water-color);
-         }
-
-      }
-   }
-
-   & .form_message {
-      font-weight: bold;
-
-      & .message_error {
-         color: var(--error-message-color);
-      }
-
-      & .message_success {
-         color: green;
-      }
+   & .form_buttons {
+      flex-basis: 10%;
    }
 }
 
-@media(max-width: 768px) {
+.message_success {
+   padding: 10px 0;
+   color: green;
+}
 
-   .container {
-      & h1 {
-         text-align: center;
-      }
+@media (max-width:768px) {
+   .form_block {
+      width: 100%;
    }
 }
 </style>

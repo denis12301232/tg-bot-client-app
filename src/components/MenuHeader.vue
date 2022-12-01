@@ -35,13 +35,13 @@ import { useHeaderStore } from '@/store/headerStore'
 import { useTheme } from '@/hooks/useTheme'
 import { useStore } from '@/store/mainStore'
 
-
-const router = useRouter();
 const store = useStore();
+const router = useRouter();
+const route = useRoute();
 const headerStore = useHeaderStore();
 const { dark, light } = useTheme();
 const currentRoute = computed(() => {
-   return useRoute().name;
+   return route.name;
 });
 
 function changeRoute(route: string): void {

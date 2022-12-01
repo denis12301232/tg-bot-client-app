@@ -1,4 +1,4 @@
-import { AssistanceFormValidators } from '@/intefaces/interfaces'
+import { AssistanceFormValidators } from '@/interfaces/interfaces'
 import Constants from '@/libs/Constants'
 
 export function useDefaultValues(form: AssistanceFormValidators) {

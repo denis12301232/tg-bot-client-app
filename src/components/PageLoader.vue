@@ -18,7 +18,7 @@ defineProps({
    width: 100%;
    height: 2px;
    animation-duration: 5s;
-   z-index: 100;
+   z-index: 10000;
    position: fixed;
 
    & .loader_indicator {

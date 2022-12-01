@@ -4,7 +4,7 @@ div(class="filter_container")
    div(class="filter_content")
       div(class="filter_item", v-for="filter in filters", :key="filter.name")
          header(class="item_title") {{filter.name}}
-         VCheckbox(v-model="filterValue", :value="filter.value")
+         CCheckbox(v-model="filterValue", :value="filter.value")
 </template> 
    
 <script setup lang="ts">
@@ -49,7 +49,5 @@ watch(filterValue, (current) => {
          }
       }
    }
-
-
 }
 </style>

@@ -8,11 +8,13 @@
     "start": "serve -s dist"
   },
   "dependencies": {
+    "@mdi/font": "^7.0.96",
     "axios": "^0.27.2",
     "pinia": "^2.0.14",
-    "serve": "^14.0.0",
+    "serve": "^14.1.2",
     "vue": "^3.2.13",
-    "vue-router": "^4.0.3"
+    "vue-router": "^4.0.3",
+    "vuetify": "^3.0.1"
   },
   "devDependencies": {
     "@types/node": "^18.7.23",

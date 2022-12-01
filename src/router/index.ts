@@ -3,7 +3,7 @@ import HomeView from '@/views/HomeView.vue'
 import { useStore } from '@/store/mainStore'
 
 
-const routes: Array<RouteRecordRaw> = [
+const routes: RouteRecordRaw[] = [
   {
     path: '/',
     name: 'home',
@@ -37,7 +37,12 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/images',
     name: 'images',
-    component: () => import('@/views/ImagesView.vue')
+    component: () => import('@/views/ImagesView.vue'),
+  },
+  {
+    path: '/list/:id',
+    name: 'list_by_id',
+    component: () => import('@/views/ListByIdView.vue'),
   },
   {
     path: '/:pathMatch(.*)*',
@@ -50,7 +55,7 @@ const routes: Array<RouteRecordRaw> = [
     name: 'test',
     component: () => import('@/views/TestView.vue')
   }
-]
+];
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
@@ -60,6 +65,7 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   const store = useStore();
   store.isPageLoading = true;
+  store.showAlert(false);
   next();
 });
 

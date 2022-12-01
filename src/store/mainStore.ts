@@ -1,4 +1,4 @@
-import { IUser, AlertType } from '@/intefaces/interfaces'
+import { IUser, AlertType } from '@/interfaces/interfaces'
 import { defineStore } from 'pinia'
 
 
@@ -6,6 +6,7 @@ export const useStore = defineStore('main', {
     state: () => ({
         user: <IUser>{},
         isPageLoading: false,
+        isMenuVisible: false,
         theme: 'system',
         alert: {
             type: <AlertType>'success',
@@ -37,6 +38,18 @@ export const useStore = defineStore('main', {
         }
     },
     actions: {
+        setTheme() {
+            switch (this.theme) {
+               case 'light':
+                  this.theme = 'dark';
+                  localStorage.setItem('theme', 'dark');
+                  break;
+               case 'dark':
+                  this.theme = 'light';
+                  localStorage.setItem('theme', 'light');
+                  break;
+            }
+         },
         ifThemeSaved(): void {
             const theme = localStorage.getItem('theme');
             if (theme) {
@@ -47,10 +60,13 @@ export const useStore = defineStore('main', {
                 localStorage.setItem('theme', this.theme);
             }
         },
-        showAlert() {
-            this.alert.isVisible = !this.alert.isVisible;
+        setMenuVisible() {
+            this.isMenuVisible = !this.isMenuVisible;
+         },
+        showAlert(value: boolean): void {
+            this.alert.isVisible = value;
         },
-        setAlert(type: AlertType, message: string) {
+        setAlert(type: AlertType, message: string): void {
             this.alert.type = type;
             this.alert.message = message || 'Неизвестная ошибка!';
         }

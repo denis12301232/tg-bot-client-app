@@ -12,8 +12,8 @@ label(:class="[$style.checkbox, dark ? $style.checkbox_dark: $style.checkbox_lig
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
 import { useTheme } from '@/hooks/useTheme'
-import { computed } from 'vue';
 
 const props = defineProps({
    modelValue: {
@@ -66,10 +66,14 @@ const onChange = (event: Event, value: string | boolean) => {
       position: absolute;
 
       &:checked+.checkbox_img {
-         background-color: rgb(50, 11, 101);
+         background-color: rgb(48, 10, 151);
          background-image: url('@/assets/images/checkbox.png');
          background-position: center;
          background-size: 20px 20px;
+      }
+
+      &:disabled+.checkbox_img{
+         background-color: rgba(197, 199, 218, 0.429);     
       }
    }
 

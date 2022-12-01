@@ -6,7 +6,7 @@ export interface ImagesResponse {
 }
 
 export interface HumansListResponse {
-   humansList: Array<HumansList>;
+   humansList:HumansList[];
 }
 
 export interface HumansList {
@@ -15,7 +15,7 @@ export interface HumansList {
 }
 
 export interface FormsListResponse {
-   humansFormList: Array<FormsList>;
+   humansFormList: FormsList[];
 }
 
 export interface FormsList {

@@ -1,4 +1,4 @@
-import { IUser } from '@/intefaces/interfaces'
+import { IUser } from '@/interfaces/interfaces'
 import { AxiosResponse } from 'axios'
 import $api from '../index'
 
@@ -30,9 +30,7 @@ export default class ToolsService {
    }
 
    static getUsers(_id: string): Promise<AxiosResponse<IUser[]>> {
-      return $api.get<IUser[]>('/tools/users', {
-         params: { _id }
-      });
+      return $api.get<IUser[]>('/tools/users', { params: { _id } });
    }
 
    static updateRoles(_id: string, roles: string[]): Promise<AxiosResponse<{ message: string }>> {

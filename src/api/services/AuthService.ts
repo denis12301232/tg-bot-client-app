@@ -1,6 +1,6 @@
 import $api from '../index'
 import axios, { AxiosResponse } from 'axios'
-import { AuthResponse } from '@/intefaces/http'
+import { AuthResponse } from '@/interfaces/http'
 import Constants from '@/libs/Constants'
 
 export default class AuthService {

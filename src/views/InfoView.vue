@@ -1,7 +1,8 @@
 <template lang="pug">
 TheError(v-if="!store.isAdmin", :code="403", message="Forbidden")
 div(v-else)
-   TheHeader
+   the-header(@show="store.setMenuVisible", @theme="store.setTheme")
+   the-header-menu
    div(class="content")
       HumanInfo
 </template>
@@ -11,13 +12,11 @@ import TheHeader from '@/components/TheHeader.vue'
 import HumanInfo from '@/components/HumanInfo.vue'
 import TheError from '@/components/TheError.vue'
 import { useStore } from '@/store/mainStore'
+import TheHeaderMenu from '@/components/TheHeaderMenu.vue';
 
 const store = useStore();
 </script>
 
 <style lang="scss" scoped>
-.content {
-   top: 50px;
-   position: relative;
-}
+
 </style>

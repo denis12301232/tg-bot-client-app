@@ -3,7 +3,7 @@ div(:class="$style.error")
    div(:class="$style.error_info")
       div(:class="$style.error_code") {{ code }}
       div(:class="$style.error_text") {{ message }}
-      v-button(:class="$style.error_button", @click="$router.push('/')") На главную
+      CButton(:class="$style.error_button", @click="$router.push('/')") На главную
 </template>
 
 <script setup lang="ts">
@@ -16,7 +16,7 @@ defineProps({
       type: String,
       required: true,
    }
-})
+});
 </script>
 
 <style lang="scss" module>

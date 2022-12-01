@@ -80,7 +80,7 @@ const emit = defineEmits(['update:modelValue', 'touch']);
    & .form_phone {
       position: absolute;
       height: 1.5rem;
-      top: 1px;
+      top: 0px;
    }
 }
 </style>

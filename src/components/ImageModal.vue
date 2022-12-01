@@ -9,7 +9,7 @@ div(class="image-modal", @keyup.esc="emit('close')", tabindex="0", @keydown="cha
       img(:src="link", v-show="!isImageLoading", @load="setLoading")
       div(class="image-description") {{ description }}
 </template>
-//
+
 <script setup lang="ts">
 import { inject, Ref } from 'vue'
 

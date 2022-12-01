@@ -1,9 +1,9 @@
 import { reactive, computed } from 'vue'
 import { useFormField } from './useFormField'
-import { AnyObject } from '@/intefaces/interfaces'
+import { AnyObject } from '@/interfaces/interfaces'
 
 export function useForm<T>(init: AnyObject = {}): T {
-   const form = reactive<any>({});
+   const form = reactive<T | any>({});
 
    for (const [key, value] of Object.entries(init)) {
       form[key] = useFormField(value);

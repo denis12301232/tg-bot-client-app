@@ -6,10 +6,6 @@ export default class Constants {
       'Индустриальный', 'Киевский', 'Московский', 'Немышлянский', 'Новобаварский',
       'Основянский', 'Слободской', 'Холодногорский', 'Шевченковский'
    ];
-   static readonly districtOptions = this.districts.reduce((box, item) => {      
-      box.push({ name: item, value: item });
-      return box;
-   }, [] as any);
 
    static readonly assistance = {
       surname: {
@@ -40,12 +36,12 @@ export default class Constants {
          display: 'Дата рождения',
          default: '',
          value: '',
-         validators: { required: Validate.required, isDDMMYYYY: Validate.isDDMMYYYY },
+         validators: { required: Validate.required, isDDMMYYYY: Validate.isYYYYMMDD },
       },
       district: {
          display: 'Район',
          default: '',
-         value: '',
+         value: null,
          validators: { required: Validate.required },
       },
       street: {

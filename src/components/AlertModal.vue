@@ -2,7 +2,7 @@
 div(
    :class="[$style.alert, $style[type]]", 
    v-show="isVisible", 
-   @click="emit('show')", 
+   @click="emit('show', false)", 
    @pointerenter="clearTimer",
    @pointerleave="debounceTimer"
    )
@@ -15,7 +15,7 @@ div(
 
 <script setup lang="ts">
 import { ref, watch } from 'vue'
-import { AlertType } from '@/intefaces/interfaces'
+import { AlertType } from '@/interfaces/interfaces'
 import Util from '@/libs/Util'
 
 interface Props {
@@ -25,7 +25,7 @@ interface Props {
 }
 
 const props = defineProps<Props>();
-const emit = defineEmits(['show']);
+const emit = defineEmits<{ (e: 'show', value: boolean): void }>();
 const timeout = ref(0);
 const debounceTimer = Util.debounceDecorator(setTimer, 1000);
 
@@ -35,7 +35,7 @@ function clearTimer() {
 
 function setTimer() {
    if (!props.isVisible) return;
-   timeout.value = setTimeout(() => emit('show'), 3000);
+   timeout.value = setTimeout(() => emit('show', false), 3000);
 }
 
 watch(() => props.isVisible, () => {
@@ -51,7 +51,7 @@ watch(() => props.isVisible, () => {
 .alert {
    border: thin solid shadow;
    color: white;
-   min-width: 200px;
+   min-width: 250px;
    transition: .3s cubic-bezier(.25, .8, .5, 1);
    line-height: 1.5;
    border-radius: 3px;
@@ -65,6 +65,8 @@ watch(() => props.isVisible, () => {
       place-items: center;
 
       & .img {
+         min-width: 20px;
+         min-height: 20px;
          width: 20px;
          height: 20px;
          filter: invert(1);

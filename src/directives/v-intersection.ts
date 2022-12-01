@@ -6,8 +6,8 @@ interface Binding {
 }
 
 class Observer {
-   name = 'intersection';
-   observer: null | IntersectionObserver = null;
+   public name = 'intersection';
+   private observer: null | IntersectionObserver = null;
 
    constructor() {
       this.mounted = this.mounted.bind(this);
@@ -15,7 +15,6 @@ class Observer {
    }
 
    mounted(el: HTMLElement, binding: Binding) {
-
       const options = {
          rootMargin: '0px',
          threshold: 1.0,

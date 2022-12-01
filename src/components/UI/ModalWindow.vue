@@ -62,7 +62,7 @@ const hideWindow = (): void => {
 
 .window_dark {
    & .window_content {
-      background-color: var(--background-color-dark);
+      background-color: #131314;
    }
 }
 

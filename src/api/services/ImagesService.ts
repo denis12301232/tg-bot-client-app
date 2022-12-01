@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from 'axios'
 import Constants from '@/libs/Constants'
-import { ImagesResponse } from '@/intefaces/http'
+import { ImagesResponse } from '@/interfaces/http'
 
 export default class ImagesService {
    static getImages(pageToken?: string): Promise<AxiosResponse<ImagesResponse>> {

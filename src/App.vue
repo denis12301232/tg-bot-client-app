@@ -1,13 +1,25 @@
 <template lang="pug">
-PageLoader(:is-loading="store.isPageLoading")
-router-view
+page-loader(:is-loading="store.isPageLoading") 
+v-app(:theme="store.currentTheme")
+  div(class="alert", v-if="store.alert.isVisible")
+  v-main
+    router-view 
+AlertModal(
+   class="alert", 
+   :message="store.alert.message",  
+   :is-visible="store.alert.isVisible", 
+   :type="store.alert.type",
+   @show="store.showAlert"
+   )
 </template>
 
 <script setup lang="ts">
 import { onBeforeMount } from 'vue'
 import { useStore } from '@/store/mainStore'
-import AuthController from '@/api/controllers/AuthController'
 import PageLoader from '@/components/PageLoader.vue'
+import AlertModal from '@/components/AlertModal.vue'
+import AuthController from '@/api/controllers/AuthController'
+
 
 const store = useStore();
 
@@ -30,7 +42,7 @@ onBeforeMount(() => {
   width: 100vw;
   overflow-x: hidden;
   scrollbar-width: thin;
-  font: 16px/1.4 Avenir, Helvetica, Arial, sans-serif;
+  font: 16px/1.4 Arial, sans-serif;
   letter-spacing: 0.5px;
   transition: background-color 0.1s ease-in;
   -webkit-font-smoothing: antialiased;
@@ -97,5 +109,12 @@ button,
 textarea,
 select {
   font: inherit;
+}
+
+.alert {
+   position: fixed;
+   right: 5px;
+   top: 65px;
+   z-index: 9999;
 }
 </style>

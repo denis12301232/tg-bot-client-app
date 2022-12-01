@@ -12,4 +12,5 @@ const store = useStore();
 </script>
 
 <style lang="scss" module>
+
 </style>

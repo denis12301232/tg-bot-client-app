@@ -1,5 +1,5 @@
 import Constants from "@/libs/Constants";
-import { AssistanceFormValidators } from "@/intefaces/interfaces";
+import { AssistanceFormValidators } from "@/interfaces/interfaces";
 
 export default class AssistanseFormDto {
 

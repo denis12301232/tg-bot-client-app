@@ -3,7 +3,7 @@ div(class="loader", v-if="isLoading")
    LoadingWheel
    span 
 div(class="content", v-else)
-   CInput(class="search", placeholder="Поиск", v-model="searchQuery")
+   v-text-field(label="Поиск", v-model="searchQuery", variant="outlined")
    table(class="user_list")
       tbody
          tr(class="list_header")
@@ -11,64 +11,62 @@ div(class="content", v-else)
             th Е-мэйл
             th Роль
          tr(class="list_row", v-for="user in searchedUsers")
-            td(class="row_item")  {{user.name}}
-            td(class="row_item")  {{user.email}}
-            td(class="row_item") 
+            td(class="row_item")  
+               span {{user.name}}
+                  v-tooltip(activator="parent", location="bottom") {{user.name}}
+            td(class="row_item")  
+               span {{user.email}}
+                  v-tooltip(activator="parent", location="bottom") {{user.email}}
+            td(class="") 
                div(class="roles")
                   CCheckbox(class="role_set",value="user", v-model="user.roles", :disabled="true")
                   label(class="role_name") Пользователь
                div(class="roles")
-                  CCheckbox(class="role_set",value="admin", v-model="user.roles", @change="updateRoles(user._id, user.roles)")
-                  label(class="role_name") Админ            
-</template>
-   
+                  CCheckbox(class="role_set",value="admin", v-model="user.roles", @change="updateUserRoles(user._id, user.roles)")
+                  label(class="role_name") Админ                  
+   </template>
+      
 <script setup lang="ts">
 import { onMounted, ref, computed } from 'vue'
-import { IUser } from '@/interfaces/interfaces'
-import ToolsService from '@/api/services/ToolsService'
 import { useStore } from '@/store/mainStore'
+import { useFetching } from '@/hooks/useFetching'
+import LoadingWheel from './UI/LoadingWheel.vue'
+import ToolsService from '@/api/services/ToolsService'
+import { IUser } from '@/interfaces/interfaces'
 
 const store = useStore();
-const users = ref<IUser[]>([]);
-const isLoading = ref(false);
-const errorMessage = ref('');
+const { fetchFunc: getUsers, data: users, isLoading } =
+   useFetching<IUser[]>({ callback: async () => ToolsService.getUsers(store.user._id), alert: false });
+const { fetchFunc: updateUserRoles } =
+   useFetching({ callback: updateRoles, successMessage: 'Обновлено' });
 const searchQuery = ref('');
 const searchedUsers = computed(() => {
-   return users.value.filter((item) => {
+   return users.value?.filter((item: any) => {
       return item.email.toLowerCase().includes(searchQuery.value.toLowerCase())
          || item.name.toLowerCase().includes(searchQuery.value.toLowerCase());
    });
-})
-
-onMounted(() => {
-   isLoading.value = true;
-   ToolsService.getUsers(store.user._id)
-      .then((response) => {
-         users.value = response.data;
-      })
-      .catch(e => errorMessage.value = e?.response?.data?.message)
-      .finally(() => isLoading.value = false);
 });
 
-function updateRoles(_id: string, roles: string[]) {
+onMounted(getUsers);
+
+async function updateRoles(_id: string, roles: string[]) {
    if (store.alert.isVisible) store.showAlert(false);
-   ToolsService.updateRoles(_id, roles)
-      .then(() => store.setAlert('success', 'Обновлено'))
-      .catch((e) => store.setAlert('error', e?.response?.data?.message))
-      .finally(() => store.showAlert(true));
+   return ToolsService.updateRoles(_id, roles)
 }
 </script>
-   
+      
 <style lang="scss" scoped>
 .loader {
    display: flex;
    flex-direction: column;
    align-items: center;
-   width: 50%;
+   width: 100%;
+   padding-top: 10px;
 }
 
 .content {
-   width: 50%;
+   width: 100%;
+   padding-top: 10px;
    padding-bottom: 5px;
 
    & .search {
@@ -99,28 +97,36 @@ function updateRoles(_id: string, roles: string[]) {
       & .list_row {
          & .row_item {
             vertical-align: middle;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
 
-            & .roles {
-               display: flex;
-               place-items: center;
-
-               &>.role_name {
-                  flex-basis: 90%;
-                  display: block;
-                  min-width: 50px;
-               }
-
-               &>.role_set {
-                  flex-basis: 10%;
-                  min-width: 30px;
-               }
-            }
          }
       }
    }
 }
 
+.roles {
+   display: flex;
+   place-items: center;
+
+   &>.role_name {
+      flex-basis: 90%;
+      display: block;
+      min-width: 50px;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+   }
+
+   &>.role_set {
+      flex-basis: 10%;
+      min-width: 30px;
+   }
+}
+
 @media (max-width: 768px) {
+
    .content,
    .loader {
       width: 100%;

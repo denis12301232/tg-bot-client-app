@@ -1,213 +1,59 @@
 <template lang="pug">
-ModalWindow(:show="headerStore.isModalVisible", @hide="headerStore.hideWindow")
-   FormLog(v-show="headerStore.isLogVisible", @swap="swapForms", @restore="restore")
-   FormReg(v-show="headerStore.isRegVisible", @swap="swapForms")
-div(:class="[$style.container, dark ? $style.container_dark: $style.container_light]")
-   ul(:class="$style.menu")
-      li
-         VBurger(:class="$style.burger_hide", @click.stop="setMenu('isHeaderMenuVisible')", :is-selected="headerStore.isHeaderMenuVisible")
-      li(v-if="!store.isAdmin")
-         a(:class="$style.title", href="/", @click.prevent="$router.push('/')") Kharkov Volonteer
-      li(v-if="store.isAdmin")
-         a(
-            :class="[$style.menu_link, currentRoute === 'home' ? $style.selected : '']", 
-            @click.prevent="$router.push('/')", 
-            href="/"
-         ) Внести данные
-      li(v-if="store.isAdmin")
-         a(
-            :class="[$style.menu_link, currentRoute === 'list' ? $style.selected : '']",
-            @click.prevent="$router.push('/list')", 
-            href="/list"
-         ) Полный список
-      li(v-if="store.isAdmin")
-         a(
-            :class="[$style.menu_link, currentRoute === 'info' ? $style.selected : '']", 
-            @click.prevent="$router.push('/info')", 
-            href="/info"
-         ) Информация по человеку
-      li
-         a(
-            :class="[$style.menu_link, currentRoute === 'images' ? $style.selected : '']", 
-            @click.prevent="$router.push('/images')", 
-            href="/images"
-         ) Галерея
-   div(:class="$style.sign")
-      ThemeSwitch(:class="$style.theme")
-      LoadingWheel(width="30px", height="30px", v-if="isLoading")
-      v-button(@click="setLogVisible", v-if="!store.isAuth") Вход
-      ButtonImage(
-         @click.stop="setMenu('isUserMenuVisible')", 
-         v-else,
-         image="images/user.png",
-         width="30px",
-         height="30px"
-         )
-   Transition(name="fade")
-      MenuHeader(:class="$style.header_menu", v-show="headerStore.isHeaderMenuVisible")
-   Transition(name="fade")
-      MenuUser(:class="$style.user_menu", v-show="headerStore.isUserMenuVisible", @loading="setLoading")
+ModalWindow(@hide="show", :show="isVisible")
+   FormLog(v-if="isFormVisible", @swap="swap", @visible="hideWindow", @restore="$router.push('/restore')")
+   FormReg(v-else, @swap="swap")
+v-app-bar
+   v-app-bar-nav-icon(@click="emit('show')")
+      v-icon mdi-menu
+   v-app-bar-title
+      span(class="title") Kharkov Volontier
+   v-app-bar-nav-icon(@click="emit('theme')")
+      v-icon mdi-brightness-6
+   v-btn(v-if="!store.isAuth", @click="show") Вход
+   v-menu(offset-y)
+      template(#activator="{ props }")
+         v-app-bar-nav-icon(v-if="store.isAuth" v-bind="props")
+            v-icon mdi-account-circle
+      MenuUser
 </template>
 
+
 <script setup lang="ts">
-import { computed, ref, onMounted, onBeforeUnmount } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { ref } from 'vue'
 import { useStore } from '@/store/mainStore'
-import { useHeaderStore } from '@/store/headerStore'
-import { useTheme } from '@/hooks/useTheme'
-import MenuHeader from './MenuHeader.vue'
-import FormLog from './FormLog.vue'
 import FormReg from './FormReg.vue'
-import MenuUser from './MenuUser.vue'
-import ThemeSwitch from './ThemeSwitch.vue'
+import FormLog from './FormLog.vue'
+import ModalWindow from './UI/ModalWindow.vue'
+import MenuUser from '@/components/MenuUser.vue'
 
-onMounted(() => document.addEventListener('click', closeAllMenu));
-onBeforeUnmount(() => document.removeEventListener('click', closeAllMenu));
-
-
+const emit = defineEmits(['show', 'theme']);
 const store = useStore();
-const router = useRouter();
-const headerStore = useHeaderStore();
-const { dark } = useTheme();
-const currentRoute = computed(() => useRoute().name);
-const isLoading = ref(false);
+const isVisible = ref(false);
+const isFormVisible = ref(true);
 
-function closeAllMenu() {
-   headerStore.isHeaderMenuVisible = false;
-   headerStore.isUserMenuVisible = false;
+function hideWindow(value: boolean) {
+   isVisible.value = value;
 }
 
-function setLoading(value: boolean): void {
-   isLoading.value = value;
+function swap() {
+   isFormVisible.value = !isFormVisible.value;
 }
 
-function setMenu(value: keyof typeof headerStore.$state): void {
-   headerStore[value] = !headerStore[value];
-}
-
-function setLogVisible(): void {
-   setMenu('isModalVisible');
-   setMenu('isLogVisible');
-}
-
-function swapForms(): void {
-   setMenu('isRegVisible');
-   setMenu('isLogVisible');
-}
-
-function restore(): void {
-   setLogVisible();
-   router.push('/restore');
+function show() {
+   isVisible.value = !isVisible.value;
+   isFormVisible.value = true;
 }
 </script>
-
-<style lang="scss" module>
-.title {
-   text-align: center;
-   color: var(--water-color);
-   position: relative;
-   font-weight: 700;
-   font-size: 1.3em;
-   text-decoration: none;
-   margin-right: 5px;
-
-   &:hover {
-      cursor: pointer;
-   }
+   
+<style scoped lang="scss">
+.router-link-active {
+   color: teal !important;
 }
 
-.container {
-   height: 50px;
-   position: relative;
-   display: flex;
-   justify-content: space-between;
-   align-items: center;
-   position: fixed;
-   width: 100%;
-   z-index: 10;
-   top: 0;
-
-   &>.menu {
-      display: flex;
-      place-items: center;
-      margin: 0 5px;
-
-      & .menu_link {
-         cursor: pointer;
-         text-align: center;
-         text-decoration: none;
-         padding: 5px;
-         object-fit: cover;
-         display: inline-block;
-         color: inherit;
-
-         &.selected,
-         &:hover {
-            color: #C4433A
-         }
-      }
-
-   }
-
-   & .sign {
-      margin: 0 5px;
-      display: flex;
-      place-items: center;
-
-      & .theme {
-         margin-right: 2px;
-      }
-   }
-
-   & .header_menu {
-      position: absolute;
-      left: 0px;
-      top: 50px;
-   }
-
-   & .user_menu {
-      position: absolute;
-      right: 0px;
-      top: 50px;
-   }
-}
-
-.container_light {
-   background-color: var(--background-color-light);
-   box-shadow: 0px 4px 8px #E9E6E4;
-}
-
-.container_dark {
-   background-color: var(--background-color-dark);
-   box-shadow: 0px 4px 8px #e9e6e41a;
-}
-
-.burger_hide {
-   display: none !important;
-}
-
-@media(max-width:768px) {
-
+@media (max-width:768px) {
    .title{
       display: none;
    }
-
-   .burger_hide {
-      display: block !important;
-   }
-
-   .menu_link {
-      display: none !important;
-   }
-}
-
-.fade-enter-active,
-.fade-leave-active {
-   transition: opacity 0.5s ease;
-}
-
-.fade-enter-from,
-.fade-leave-to {
-   opacity: 0;
 }
 </style>
+   

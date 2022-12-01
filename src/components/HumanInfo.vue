@@ -1,218 +1,132 @@
 <template lang="pug">
-AlertModal(
-   :class="$style.alert", 
-   :message="store.alert.message", 
-   @show="store.showAlert", :is-visible="store.alert.isVisible", :type="store.alert.type"
-   )
-div(:class="$style.container")
-   div(:class="$style.search")
-      div(:class="$style.search_title") Введите ФИО для поиска
-      v-input-find(
-         :class="$style.search_input", 
-         type="text", 
-         placeholder="ФИО", 
+div(class="container")
+   h1(class="title") Поиск
+   div(class="search")
+      v-text-field(
+         class="search_input", 
+         label="ФИО", 
          v-model="humanStore.info.fio", 
-         @keyup.enter="humanStore.findHuman"
+         variant="solo",
+         :error-messages="humanStore.info.error"
          )
-      VButton(@click="humanStore.findHuman") Найти
-      LoadingWheel(v-if="humanStore.info.isLoading")
-      div(:class="$style.search_error") {{ humanStore.info.error }}
-   div(:class="$style.info", v-show="humanStore.info.finded.length", v-if="!humanStore.info.isEditable") 
-      div(:class="$style.info_finded") Всего найдено: {{ humanStore.info.finded.length  }}
-      div(:class="$style.info_item", v-for="(item, index) in humanStore.info.finded", :key="item._id")
-         div(:class="$style.item_about")
-            div(:class="$style.item_title") Найдено: {{ humanStore.info.currentQuery }}
-            ButtonImage(@click="setEditable(index, item._id)", image="images/edit.png") Редактировать
-         table(:class="$style.info_table", :data-id="item._id")
-            tbody
-               tr(v-for="(key, value) in item.form")
-                  td {{ Constants.assistance[value].display }}
-                  td {{ useBeautifyValue(key) }}
-div(:class="$style.form", v-show="humanStore.info.isEditable")
-   FormAssistance(@save="submit", :form="form", :is-loading="isLoading", title="Редактировать")
-      template(v-slot:submit="slotProps")
-         VButton(type="submit", :disabled="!slotProps.form.valid")
-            img(src="@/assets/images/confirm.png", :style="{width: '20px', height:'20px'}")
-      template(v-slot:cancel)
-         VButton(@click.prevent="setEditable")
-            img(src="@/assets/images/cancel.png", :style="{width: '20px', height:'20px'}")
+      v-btn(class="search_button", @click="humanStore.findHuman", @keydown.enter="onClick") Найти
+      div(v-if="humanStore.info.isLoading", style="display: flex; justify-content: center; margin-top: 5px;")
+         LoadingWheel
+   div(class="info", v-if="humanStore.info.finded.length") 
+      div(class="info_finded") Всего найдено: {{ humanStore.info.finded.length  }}
+      div(class="info_item", v-for="(item, index) in humanStore.info.finded", :key="item._id")
+         div(class="item_about")
+            div(class="item_title") Найдено: {{ humanStore.info.currentQuery }}
+            v-icon(tag="button", @click="setEditable(item._id)", class="button") mdi-pencil
+         TableAssistance(:form="item.form", style="margin-bottom: 5px !important;")
 </template>
-
-
+   
+   
 <script setup lang="ts">
-import { ref } from 'vue'
-import Constants from '@/libs/Constants'
-import { useForm } from '@/hooks/useForm'
-import { onBeforeRouteLeave } from 'vue-router'
+import { onBeforeRouteLeave, useRouter } from 'vue-router'
 import { useHumanStore } from '@/store/humanStore'
-import { useBeautifyValue } from '@/hooks/useBeautifyValue'
-import { AssistanceFormValidators } from '@/intefaces/interfaces'
-import FormAssistance from './FormAssistance.vue'
-import AssistanseFormDto from '@/api/dtos/AssistanseFormDto'
-import AssistanceService from '@/api/services/AssistanceService'
-import AlertModal from "@/components/AlertModal.vue"
-import { useStore } from '@/store/mainStore'
+import TableAssistance from './TableAssistance.vue'
 
-const store = useStore();
-const form = ref(useForm<AssistanceFormValidators>(Constants.assistance));
-const isLoading = ref(false);
 const humanStore = useHumanStore();
-const currentId = ref('');
-const currentScrollY = ref(0);
+const router = useRouter();
 
 onBeforeRouteLeave((to, from, next) => {
    humanStore.info.isEditable = false;
    next();
 });
 
-
-function setEditable(index?: number, id?: string): void {
-   if (index === undefined || !id) {
-      humanStore.info.isEditable = !humanStore.info.isEditable;
-      return window.scrollTo(0, currentScrollY.value);
-   }
-   currentScrollY.value = window.scrollY;
-   humanStore.info.isEditable = !humanStore.info.isEditable;
-   window.scrollTo(0, 0);
-   currentId.value = id;
-   (Object.keys(Constants.assistance) as Array<keyof typeof Constants.assistance>)
-      .forEach((key: keyof typeof Constants.assistance) => {
-         if (key === "phone") {
-            form.value[key].value = humanStore.info.finded[index].form[key]!.slice(4);
-         } else {
-            form.value[key].value = humanStore.info.finded[index].form[key]!
-         };
-      });
+function onClick(event: KeyboardEvent) {
+   if (event.key === 'Enter') humanStore.findHuman();
 }
 
-async function submit(): Promise<void> {
-   try {
-      isLoading.value = true;
-      const formToSend = new AssistanseFormDto(form.value);
-      await AssistanceService.modifyAssistanceForm(formToSend, currentId.value);
-      store.setAlert('success', 'Обновлено!');
-   } catch (e: any) {
-      store.setAlert('error', e?.response?.data?.message);
-   } finally {
-      isLoading.value = false;
-      store.showAlert();
-   }
+function setEditable(id: string): void {
+   router.push({ path: `/list/${id}`, query: { edit: 'true' } });
 }
 </script>
-
-<style lang="scss" module>
-.alert {
-   position: fixed;
-   right: 5px;
-   top: 55px;
-   z-index: 9999;
-}
-
+   
+<style lang="scss" scoped>
 .container {
-   padding: 10px;
+   width: 50%;
+   margin: 0 auto;
 
-   & .search {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+   & .title {
+      text-align: center;
+      padding: 20px 0;
+   }
+}
 
-      &>*:not(:first-child) {
-         margin-top: 10px;
-      }
+.search {
+   display: flex;
+   flex-direction: column;
 
-      & .search_title {
-         text-align: center;
-         font-size: 1.5em;
-      }
+   & .search_button {
+      align-self: center;
+   }
+}
 
-      & .search_input {
-         width: 50%;
-         display: block;
-         min-width: 300px;
-      }
+.info {
+   display: flex;
+   flex-direction: column;
+   align-items: center;
 
-      & .search_error {
-         color: var(--error-message-color);
-         text-align: center;
-         font-weight: bolder;
+   &>*:not(:first-child) {
+      margin-top: 10px;
+   }
+
+   & .info_finded {
+      padding: 10px;
+      text-align: center;
+   }
+
+   & .info_item {
+      .item_about {
+         display: flex;
+         justify-content: space-between;
+         align-items: center;
       }
    }
 
-   & .info {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+   & .info_table {
+      border-spacing: 3px;
+      margin-top: 5px;
+      background-color: inherit;
+      border-collapse: collapse;
+      border-radius: 10px;
+      border-style: hidden;
+      box-shadow: 0 0 0 1px #ccc;
+      width: 100%;
+      table-layout: fixed;
 
-      &>*:not(:first-child) {
-         margin-top: 10px;
-      }
-
-      & .info_finded {
-         text-align: center;
-      }
-
-      & .info_item {
-         width: 50%;
-
-         .item_about {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-         }
-      }
-
-      & .info_table {
-         border-spacing: 3px;
-         margin-top: 5px;
-         background-color: inherit;
-         border-collapse: collapse;
+      & td,
+      th {
+         border: solid 1px #ccc;
+         padding: 10px;
          border-radius: 10px;
-         border-style: hidden;
-         box-shadow: 0 0 0 1px #ccc;
-         width: 100%;
-         table-layout: fixed;
-
-         & td,
-         th {
-            border: solid 1px #ccc;
-            padding: 10px;
-            border-radius: 10px;
-            overflow: auto;
-            word-wrap: break-word;
-         }
+         overflow: auto;
+         word-wrap: break-word;
       }
    }
 }
 
-.form {
-   display: flex;
-   justify-content: center;
-
-   &>form {
-      width: 50%;
+.button {
+   &:hover {
+      transform: scale(1.1);
    }
 }
 
 @media(max-width: 768px) {
    .container {
-      & .search {
-         & .search_input {
-            width: 95%;
-         }
-      }
-
-      & .info {
-         & .info_item {
-            width: 95%;
-         }
-      }
+      width: 100%;
    }
 
-   .form {
-      &>form {
-         width: 95%;
-         padding: 0;
-      }
+   .info {
+      width: 90%;
+      margin: 0 auto;
+   }
+
+   .search_input {
+      width: 90%;
+      margin: 0 auto;
    }
 }
 </style>

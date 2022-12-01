@@ -1,10 +1,5 @@
 <template lang="pug">
-VButton(class="home", @click="$router.push('/')") На главную
-AlertModal(
-   class="alert", 
-   :message="store.alert.message", 
-   @show="store.showAlert", :is-visible="store.alert.isVisible", :type="store.alert.type"
-   )
+v-btn(class="home", @click="$router.push('/')") На главную
 ImageModal(
    v-if="isVisible",
    :link="link", 
@@ -22,43 +17,34 @@ div(class="images")
 div(class="loading")
    LoadingWheel(v-if="isLoading")
 div(class="observer")
-   div(v-intersection="{ f: getImages, canLoad: () => canLoad }")
+   div(v-intersection="{ f: catchImages, canLoad: () => canLoad }")
 </template> 
 
 <script setup lang="ts">
 import { ref, onMounted, provide, computed } from 'vue'
+import { useFetching } from '@/hooks/useFetching';
 import ImagesService from '@/api/services/ImagesService'
 import ImageModal from '@/components/ImageModal.vue'
-import { useStore } from '@/store/mainStore'
-import AlertModal from '@/components/AlertModal.vue'
 
-const store = useStore();
 const images = ref<{ link: string }[]>([]);
 const isVisible = ref(false);
 const link = ref('');
 const isImageLoading = ref(false);
 const total = ref(0);
 const current = ref(0);
-const isLoading = ref(false);
-const pageToken = ref<string | undefined>(undefined);
+const pageToken = ref<string>();
 const canLoad = computed(() => typeof pageToken.value === 'string' && !isLoading.value);
+const { fetchFunc: catchImages, isLoading } =
+   useFetching({ callback: getImages, alert: false });
 
 provide('isImageLoading', isImageLoading);
-onMounted(getImages);
+onMounted(catchImages);
 
 async function getImages() {
-   try {
-      isLoading.value = true;
-      const response = await ImagesService.getImages(pageToken.value);
-      images.value = [...images.value, ...response.data.images];
-      pageToken.value = response.data.pageToken;
-      total.value += response.data.images.length;
-   } catch (e: any) {
-      store.setAlert('error', e.message);
-      store.showAlert();
-   } finally {
-      isLoading.value = false;
-   }
+   const response = await ImagesService.getImages(pageToken.value);
+   images.value = [...images.value, ...response.data.images];
+   pageToken.value = response.data.pageToken;
+   total.value += response.data.images.length;
 }
 
 function close() {
@@ -99,13 +85,6 @@ function prevImage() {
    margin-top: 10px;
 }
 
-.alert {
-   position: fixed;
-   right: 5px;
-   top: 65px;
-   z-index: 9999;
-}
-
 .observer {
    padding: 1px;
    bottom: 0px;
@@ -117,8 +96,7 @@ function prevImage() {
    font-size: 3rem;
    text-transform: uppercase;
    letter-spacing: 0.01em;
-   color: var(--water-color);
-   padding: 0 0 10px 0;
+   padding: 20px 0;
    margin: 0;
 }
 

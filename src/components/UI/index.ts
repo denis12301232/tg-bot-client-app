@@ -1,45 +1,42 @@
-import VButton from '@/components/UI/VButton.vue'
-import VBurger from '@/components/UI/VBurger.vue'
+import CButton from '@/components/UI/CButton.vue'
+import CBurger from '@/components/UI/CBurger.vue'
 import LoadingWheel from '@/components/UI/LoadingWheel.vue'
-import VInputFind from '@/components/UI/VInputFind.vue'
-import VCheckbox from '@/components/UI/VCheckbox.vue'
-import VRadio from '@/components/UI/VRadio.vue'
-import VSelectDistrict from '@/components/UI/VSelectDistrict.vue'
-import VInput from '@/components/UI/VInput.vue'
-import VSelect from '@/components/UI/VSelect.vue'
+import CInputFind from '@/components/UI/CInputFind.vue'
+import CCheckbox from '@/components/UI/CCheckbox.vue'
+import CRadio from '@/components/UI/CRadio.vue'
+import CInput from '@/components/UI/CInput.vue'
+import CSelect from '@/components/UI/CSelect.vue'
 import ButtonImage from '@/components/UI/ButtonImage.vue'
 import ModalWindow from '@/components/UI/ModalWindow.vue'
 
-VButton.name = 'VButton';
-VBurger.name = 'VBurger';
+CButton.name = 'CButton';
+CBurger.name = 'CBurger';
 LoadingWheel.name = 'LoadingWheel';
-VInputFind.name = 'VInputFind';
-VCheckbox.name = 'VCheckbox';
-VRadio.name = 'VRadio';
-VSelectDistrict.name = 'VSelectDistrict';
-VInput.name = 'VInput';
-VSelect.name = 'VSelect';
+CInputFind.name = 'CInputFind';
+CCheckbox.name = 'CCheckbox';
+CRadio.name = 'CRadio';
+CInput.name = 'CInput';
+CSelect.name = 'CSelect';
 ButtonImage.name = 'ButtonImage';
 ModalWindow.name = 'ModalWindow';
 
 declare module '@vue/runtime-core' {
    export interface GlobalComponents {
-      VButton: typeof VButton;
-      VBurger: typeof VBurger;
+      CButton: typeof CButton;
+      CBurger: typeof CBurger;
       LoadingWheel: typeof LoadingWheel;
       ModalWindow: typeof ModalWindow;
-      VInputFind: typeof VInputFind;
-      VCheckbox: typeof VCheckbox;
-      VRadio: typeof VRadio;
-      VSelectDistrict: typeof VSelectDistrict;
-      VInput: typeof VInput;
-      VSelect: typeof VSelect;
+      CInputFind: typeof CInputFind;
+      CCheckbox: typeof CCheckbox;
+      CRadio: typeof CRadio;
+      CInput: typeof CInput;
+      CSelect: typeof CSelect;
       ButtonImage: typeof ButtonImage;
    }
 }
 
 export default [
-   VButton, VBurger, LoadingWheel, ModalWindow,
-   VInputFind, VCheckbox, VRadio,
-   VSelectDistrict, VInput, VSelect, ButtonImage
+   CButton, CBurger, LoadingWheel, ModalWindow,
+   CInputFind, CCheckbox, CRadio,
+   CInput, CSelect, ButtonImage
 ];

@@ -1,62 +1,43 @@
 <template lang="pug">
-TheHeader
-AlertModal(
-   class="alert", 
-   :message="store.alert.message", 
-   @show="store.showAlert", 
-   :is-visible="store.alert.isVisible", :type="store.alert.type"
-   )
+the-header(@show="store.setMenuVisible", @theme="store.setTheme")
+the-header-menu
 div(class="content")
-   FormAssistance(@save="submit", :form="form", :is-loading="isLoading")
+   FormAssistance(@save="sendForm", :form="form", :is-loading="isLoading")
       template(v-slot:submit="slotProps")
-         v-button(type="submit" :disabled="!slotProps.form.valid") Отправить
+         v-btn(type="submit" :disabled="!slotProps.form.valid") Отправить
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue"
-import { useForm } from '@/hooks/useForm'
-import Constants from '@/libs/Constants'
-import TheHeader from '@/components/TheHeader.vue'
-import FormAssistance from '@/components/FormAssistance.vue'
-import AssistanceFormDto from '@/api/dtos/AssistanseFormDto'
-import { useDefaultValues } from '@/hooks/useDefaultValues'
-import { AssistanceFormValidators } from '@/intefaces/interfaces'
-import AssistanceService from '@/api/services/AssistanceService'
-import AlertModal from "@/components/AlertModal.vue"
 import { useStore } from "@/store/mainStore"
+import { useFetching } from "@/hooks/useFetching"
+import { useDefaultValues } from '@/hooks/useDefaultValues'
+import TheHeader from '@/components/TheHeader.vue'
+import TheHeaderMenu from "@/components/TheHeaderMenu.vue"
+import FormAssistance from '@/components/FormAssistance.vue'
+import { useForm } from "@/hooks/useForm"
+import { AssistanceFormValidators } from "@/interfaces/interfaces"
+import AssistanceFormDto from '@/api/dtos/AssistanseFormDto'
+import AssistanceService from '@/api/services/AssistanceService'
+import Constants from "@/libs/Constants"
+
 
 const store = useStore();
-const form = ref(useForm<AssistanceFormValidators>(Constants.assistance));
-const isLoading = ref(false);
+const form = useForm<AssistanceFormValidators>(Constants.assistance);
 
-async function submit(): Promise<void> {
-   try {
-      isLoading.value = true;
-      const formToSend = new AssistanceFormDto(form.value);
-      await AssistanceService.sendForm(formToSend);
-      useDefaultValues(form.value);
-      store.setAlert('success', 'Отправлено!');
-   } catch (e: any) {
-      store.setAlert('error', e?.response?.data?.message);
-   } finally {
-      isLoading.value = false;
-      store.showAlert();
-   }
+const { fetchFunc: sendForm, isLoading } =
+   useFetching({ callback: submit, successMessage: 'Отправлено' });
+
+async function submit(form: AssistanceFormValidators) {
+   const formToSend = new AssistanceFormDto(form);
+   await AssistanceService.sendForm(formToSend);
+   useDefaultValues(form);
 }
 </script>
 
 <style lang="scss" scoped>
 .content {
-   top: 50px;
    position: relative;
    display: flex;
    justify-content: center;
-}
-
-.alert {
-   position: fixed;
-   right: 5px;
-   top: 55px;
-   z-index: 9999;
 }
 </style>

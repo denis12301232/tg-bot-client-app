@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import AssistanceService from '@/api/services/AssistanceService'
-import { FormsList, HumansList } from '@/intefaces/http'
-import { StringObject } from '@/intefaces/interfaces'
+import { FormsList, HumansList } from '@/interfaces/http'
+import { StringObject } from '@/interfaces/interfaces'
 
 
 export const useHumanStore = defineStore('human', {
@@ -21,6 +21,7 @@ export const useHumanStore = defineStore('human', {
          isLoading: false,
          humansList: [] as HumansList[],
          selectedSort: '',
+         searchQuery: '',
       }
    }),
    actions: {
@@ -34,7 +35,7 @@ export const useHumanStore = defineStore('human', {
                throw new Error('Введите ФИО через пробел!');
             }
             this.$patch({
-               info: { isLoading: true, isEditable: false, currentQuery: this.info.fio, error: '' }
+               info: { isLoading: true, isEditable: false, currentQuery: this.info.fio, error: '', finded: [] }
             });
             const response = await AssistanceService.findHuman(query[0], query[1], query[2]);
             this.info.finded = response.data.humansFormList;
@@ -49,6 +50,11 @@ export const useHumanStore = defineStore('human', {
       sortedHumansList(state) {
          return [...state.list.humansList].sort((a: StringObject, b: StringObject) => {
             return a[state.list.selectedSort]?.localeCompare(b[state.list.selectedSort]);
+         });
+      },
+      sortedAndSearchedHumansList(): HumansList[] {
+         return [...this.sortedHumansList].filter(item => {
+            return item.fio.includes(this.list.searchQuery);
          });
       }
    }

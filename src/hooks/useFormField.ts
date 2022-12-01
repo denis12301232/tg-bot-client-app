@@ -3,7 +3,7 @@ import { ref, reactive, watch } from 'vue'
 interface Field {
    value: string;
    validators: {
-      [name: string]: (value: string) => boolean
+      [name: string]: (value: string) => boolean;
    };
 }
 

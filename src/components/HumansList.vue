@@ -1,125 +1,99 @@
 <template lang="pug">
-AlertModal(
-   class="alert", 
-   :message="store.alert.message", 
-   @show="store.showAlert", 
-   :is-visible="store.alert.isVisible", 
-   :type="store.alert.type"
-   )
-ModalWindow(:show="deleteOptions.isModalVisible", @hide="showModal")
-   div(class="title") Вы уверены?
+ModalWindow(:show="isDelModalVisible", @hide="showModal")
+   h2(style="text-align: center;") Вы уверены?
    div(class="buttons")
       div(class="buttons_load")
-         v-button(class="confirm", @click="deleteHuman") Да
-         LoadingWheel(class="wheel", v-if="deleteOptions.isLoading")
+         v-btn(class="confirm", @click="delHuman") Да
+         LoadingWheel(class="wheel", v-if="isDelLoading")
       div(class="buttons_load")
-         v-button(class="confirm", @click="showModal") Нет
+         v-btn(class="confirm", @click="showModal") Нет
 div(class="container")
-   div(class="header")
-      div(class="title") Список
-      HumansListSelect(v-model="humanStore.list.selectedSort", :options="sortOptions")
-   div(class="error", v-if="error") {{ error }}
-   TransitionGroup(name="list")
-      div(
-         :class="['list', {'list_dark': dark, 'list_light': light}]", 
-         v-for="(human, index) in humanStore.sortedHumansList", 
-         :key="human._id"
-         )
-         div(class="list_item")
-            div(class="item_number")
-               div {{ index + 1 }}.
-            div(class="item_name") {{ human.fio }}
-            ButtonImage(
-               class="item_button", 
-               @click="aboutHuman(human.fio)", 
-               image="images/info.png", 
-               width="20px", 
-               height="20px"
-               )
-            ButtonImage(
-               class="item_button", 
-               @click="showModal(human._id)", 
-               image="images/delete-light.png", 
-               width="20px", 
-               height="20px"
-               )
-div(class="loading")
-   LoadingWheel(v-if="humanStore.list.isLoading")
+   h1(class="title" style="margin-bottom: 10px") Полный список
+   div(style="padding: 5px 0;")
+      v-select(label="Сортировать", :items="sortOptions", v-model="humanStore.list.selectedSort", variant="solo")
+      v-text-field(label="Поиск", v-model="humanStore.list.searchQuery", variant="solo")  
+   v-list(v-if="humanStore.sortedAndSearchedHumansList.length", class="list")
+      TransitionGroup(name="list") 
+         v-list-item(
+            v-for="(human, index) in humanStore.sortedAndSearchedHumansList", 
+            :key="human._id",
+            class="list_item"
+            )
+            template(#prepend)
+               div(style="padding: 0 10px", class="list_number") {{index + 1 + '.'}}
+            template(#append)
+               div(class="list_buttons")
+                  v-icon(tag="button", class="item_button", 
+                     @click="aboutHuman(human.fio)", 
+                     image="images/info.png", 
+                     width="20px", 
+                     height="20px"
+                     ) mdi-magnify
+                  v-icon(
+                     tag="button"
+                     class="item_button", 
+                     @click="showModal(human._id)", 
+                     width="20px", 
+                     height="20px"
+                     ) mdi-delete-forever
+            v-list-item-title(class="list_title", @click="$router.push(`/list/${human._id}`)") 
+               v-tooltip(:text="human.fio", location="bottom") 
+                  template(#activator="{ props }")
+                     span(:="props") {{ human.fio }}
+div(class="loading", v-if="isHumansLoading")
+   LoadingWheel
 div(class="observer")
-   div(v-intersection="{ f: catchHumans, canLoad: () => canLoad }")
+   div(v-intersection="{ f: catchAllHumans, canLoad: () => canLoad }")
 </template>
 
 
 <script setup lang="ts">
-import { onMounted, ref, reactive, computed } from 'vue'
+import { onMounted, ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useHumanStore } from '@/store/humanStore'
+import { useFetching } from '@/hooks/useFetching'
 import AssistanceService from '@/api/services/AssistanceService'
-import HumansListSelect from './HumansListSelect.vue'
-import { useTheme } from '@/hooks/useTheme'
-import AlertModal from "@/components/AlertModal.vue"
-import { useStore } from '@/store/mainStore'
 
-
-const store = useStore();
-const { light, dark } = useTheme();
 const router = useRouter();
 const humanStore = useHumanStore();
-const canLoad = computed(() => humanStore.list.page < humanStore.list.total && !humanStore.list.isLoading);
-const error = ref('');
+const canLoad = computed(() => humanStore.list.page < humanStore.list.total && !isHumansLoading.value);
+const isDelModalVisible = ref(false);
+const humanId = ref('');
 const sortOptions = ref([
-   { value: '_id', name: 'По умолчанию' },
-   { value: 'fio', name: 'По фамилии' },
+   { value: '_id', title: 'По умолчанию' },
+   { value: 'fio', title: 'По фамилии' },
 ]);
-const deleteOptions = reactive({
-   isModalVisible: false,
-   isLoading: false,
-   id: '',
-});
 
 onMounted((): void => {
    if (!humanStore.list.humansList.length) {
-      catchHumans();
+      catchAllHumans();
    }
 });
 
+const { fetchFunc: catchAllHumans, isLoading: isHumansLoading, error } =
+   useFetching({ callback: catchHumans, alert: false });
+const { fetchFunc: delHuman, isLoading: isDelLoading } =
+   useFetching({ callback: deleteHuman, successMessage: 'Удалено' });
+
 async function catchHumans(): Promise<void> {
-   try {
-      error.value = '';
-      humanStore.list.page++;
-      humanStore.list.isLoading = true;
-      const response = await AssistanceService.catchHumansList({ limit: humanStore.list.limit, page: humanStore.list.page });
-      humanStore.list.total = Math.ceil(+response.headers['x-total-count'] / humanStore.list.limit);
-      humanStore.list.humansList = [...humanStore.list.humansList, ...response.data.humansList];
-      if (!humanStore.list.humansList.length) throw new Error('Список пуст');
-   } catch (e: any) {
-      error.value = e.message;
-   } finally {
-      humanStore.list.isLoading = false;
-   }
+   error.value = '';
+   humanStore.list.page++;
+   const response = await AssistanceService.catchHumansList({ limit: humanStore.list.limit, page: humanStore.list.page });
+   humanStore.list.total = Math.ceil(+response.headers['x-total-count']! / humanStore.list.limit);
+   humanStore.list.humansList = [...humanStore.list.humansList, ...response.data.humansList];
+   if (!humanStore.list.humansList.length) throw new Error('Список пуст');
+}
+
+async function deleteHuman() {
+   await AssistanceService.deleteHuman(humanId.value);
+   showModal();
+   humanStore.list.humansList = humanStore.list.humansList.filter(item => item._id !== humanId.value);
 }
 
 function showModal(id?: string): void {
-   deleteOptions.isModalVisible = !deleteOptions.isModalVisible;
+   isDelModalVisible.value = !isDelModalVisible.value;
    if (!id) return;
-   deleteOptions.id = id;
-}
-
-function deleteHuman(): void {
-   deleteOptions.isLoading = true;
-   AssistanceService.deleteHuman(deleteOptions.id)
-      .then(() => {
-         humanStore.list.humansList = humanStore.list.humansList.filter(item => item._id !== deleteOptions.id)
-         store.setAlert('success', 'Удалено!');
-      })
-      .catch((e) => {
-         store.setAlert('error', e?.response?.data?.message);
-      })
-      .finally(() => {
-         deleteOptions.isLoading = false;
-         showModal();
-         store.showAlert();
-      });
+   humanId.value = id;
 }
 
 async function aboutHuman(fio: string): Promise<void> {
@@ -133,67 +107,49 @@ async function aboutHuman(fio: string): Promise<void> {
 
 
 <style lang="scss" scoped>
-.alert {
-   position: fixed;
-   right: 5px;
-   top: 55px;
-   z-index: 9999;
-}
-
-.title {
-   text-align: center;
-   font-size: 1.5em;
-}
-
 .container {
-   padding: 10px;
-   display: flex;
-   flex-direction: column;
-   align-items: center;
+   padding: 0 30px;
+   width: 50%;
+   margin: 0 auto;
 
-   & .header {
-      display: flex;
-      align-items: baseline;
-      justify-content: space-between;
-      width: 50%;
-   }
-
-   & .error {
-      margin-top: 10px;
-      color: var(--error-message-color);
+   & .title {
+      padding: 20px 0;
       text-align: center;
-      font-weight: bolder;
+   }
+}
+
+.list_title {
+   padding: 10px 10px;
+
+   &:hover {
+      color: teal;
+      cursor: pointer;
+   }
+}
+
+.list {
+   overflow: hidden;
+   padding: 0 0 0 0;
+
+   &>*:not(:first-child) {
+      margin-top: 5px;
    }
 
-   & .list {
-      width: 50%;
+   & .list_item {
       border: 1px solid #dadce0;
-      margin-top: 10px;
       border-radius: 5px;
+   }
 
-      & .list_item {
-         display: flex;
-         place-items: center;
+   & .list_number {
+      border-right: 1px solid #dadce0;
+      padding: 10px 10px 10px 0px !important;
+      display: flex;
+      align-items: center;
+   }
 
-         & .item_number {
-            flex-basis: 3%;
-            border-right: 1px solid #dadce0;
-            padding: 5px 10px;
-            align-self: stretch;
-            display: flex;
-            align-items: center;
-         }
-
-         & .item_name {
-            flex-basis: 97%;
-            padding: 10px 10px;
-            word-break: break-word;
-         }
-
-         & .item_button {
-            margin-right: 5px;
-         }
-      }
+   & .list_buttons {
+      border-left: 1px solid #dadce0;
+      padding: 10px 0px 10px 10px !important;
    }
 }
 
@@ -217,6 +173,12 @@ async function aboutHuman(fio: string): Promise<void> {
    }
 }
 
+.item_button {
+   &:hover {
+      transform: scale(1.1);
+   }
+}
+
 .observer {
    padding: 1px;
    bottom: 0px;
@@ -227,21 +189,10 @@ async function aboutHuman(fio: string): Promise<void> {
    justify-content: center;
 }
 
-.list_light {
-   background-color: var(--background-color-light);
-}
-
-.list_dark {
-   background-color: var(--background-color-dark);
-}
 
 @media(max-width: 768px) {
    .container {
-
-      & .list,
-      & .header {
-         width: 90%;
-      }
+      width: 100%;
    }
 }
 

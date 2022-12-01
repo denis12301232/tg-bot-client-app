@@ -1,5 +1,5 @@
 import { useStore } from '@/store/mainStore'
-import { IUser } from '@/intefaces/interfaces'
+import { IUser } from '@/interfaces/interfaces'
 import AuthService from '../services/AuthService'
 
 export default class AuthController {
