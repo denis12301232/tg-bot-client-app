@@ -9,6 +9,14 @@ export default class Util {
          setTimeout(() => isCooldown = false, ms);
       };
    }
+
+   static fillArrayWithNumbers(from: number, to: number) {
+      const arr: number[] = [];
+      for (let i = 0; i <= to - from; i++) {
+         arr.push(i);
+      }
+      return arr;
+   }
 }
 
 

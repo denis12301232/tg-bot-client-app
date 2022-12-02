@@ -8,7 +8,7 @@ form(:class="[$style.form, dark ? $style.form_dark: $style.form_light]", @submit
    FormAssistanceGroup(title="Телефон", :error="['Это обязательное поле', 'Неверный номер']", :invalid="validPhone")
       FormAssistanceInput(:class="$style.form_group", placeholder="+380", :mask="true", offset="45px", type="tel", v-model="form.phone.value", @touch="form.phone.blur", maxlength="9", @paste="filterPhone")
    FormAssistanceGroup(title="Дата рождения", :error="['Это обязательное поле', 'Неверный формат даты']", :invalid="validBirth")
-      FormAssistanceInput(:class="$style.form_group", placeholder="Ваша дата рождения", min="1920-01-01", max="2022-01-01", v-model="form.birth.value", @touch="form.birth.blur", onfocus="(this.type='date')", onblur="if(this.value==''){this.type='text'}")
+      DatePicker(:class="$style.form_group", label="Ваша дата рождения", v-model="form.birth.value", @touch="form.birth.blur")
    FormAssistanceGroup(title="Адрес", error="Заполните все поля", :invalid="validAddress")
       div(:class="$style.form_group")
          CSelect(label="Район", :items="Constants.districts", v-model="form.district.value", @touch="form.district.blur") 
@@ -115,6 +115,7 @@ import FormAssistanceInput from "@/components/FormAssistanceInput.vue"
 import FormAssistanceGroup from "@/components/FormAssistanceGroup.vue"
 import { reactive } from 'vue'
 import Constants from "@/libs/Constants"
+import DatePicker from "./DatePicker.vue"
 
 
 const props = defineProps({
