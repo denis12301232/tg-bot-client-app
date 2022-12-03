@@ -1,6 +1,13 @@
 <template lang="pug">
 div(:class="['wrapper', isActive ? 'active': '']")
-   div(class="select-btn", @click.stop="onClick", tabindex="0", ref="select", @blur="emit('touch')")
+   div(
+      class="select-btn", 
+      tabindex="0", 
+      ref="select",
+      @click.stop="onClick",
+      @focus="onFocus",
+      @blur="[emit('touch'), onBlur]",
+      )
       span(class="value") {{modelValue}}
       v-icon(class="icon") mdi-triangle-small-down
    label(:class="['label', checked || modelValue  ? 'selected': '']") {{ label }}
@@ -51,6 +58,14 @@ function onScroll() {
    const top = coords.top;
    const bottom = document.documentElement.clientHeight - coords.bottom;
    top >= bottom ? position.value = 'top' : position.value = 'bottom';
+}
+
+function onFocus() {
+   checked.value = true;
+}
+
+function onBlur() {
+   checked.value = false;
 }
 
 function updateModel(event: Event) {
@@ -122,7 +137,7 @@ function onClose() {
          }
 
          &::-webkit-scrollbar-thumb {
-            background: rgba(204, 204, 204, 0.599);
+            background: rgb(108, 113, 114);
             border-radius: 25px;
          }
 

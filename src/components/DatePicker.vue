@@ -1,6 +1,13 @@
 <template lang="pug">
 div(:class="[$style.container, isActive ? $style.active: '']")
-   div(:class="$style['select-btn']", tabindex="0", @click.stop="onClick", ref="select", @blur="emit('touch')")
+   div(
+      :class="$style['select-btn']", 
+      tabindex="0", 
+      ref="select",
+      @click.stop="onClick", 
+      @blur="[emit('touch'), onBlur]",
+      @focus="onFocus",
+      )
       span(:class="$style.value") {{modelValue}}
    label(:class="[$style.label, checked || modelValue  ? $style.selected: '']") {{ label }}
    div(:class="[$style.content, position === 'top' ? $style.top: '']")
@@ -8,7 +15,7 @@ div(:class="[$style.container, isActive ? $style.active: '']")
          div(:class="$style.nav")
             div
                v-icon(:class="$style.icon", @click.stop="changeMonth('back')") mdi-arrow-left
-            div(@click.stop="setMenu()", :class="$style.title") {{Constants.monthes[currentMonth] + ' ' + currentYear }}
+            h4(@click.stop="setMenu()", :class="$style.title") {{Constants.monthes[currentMonth] + ' ' + currentYear }}
             div
                v-icon(:class="$style.icon", @click.stop="changeMonth('forward')") mdi-arrow-right
          div(:class="$style.day_numbers")
@@ -19,7 +26,7 @@ div(:class="[$style.container, isActive ? $style.active: '']")
             div(:class="$style.nav")
                div
                   v-icon(:class="$style.icon", @click.stop="changeIndex('back')", v-if="isYearsVisible") mdi-arrow-left
-               div(@click.stop="openYears()", :class="$style.title") {{ currentYear }}
+               h4(@click.stop="openYears()", :class="$style.title") {{ currentYear }}
                div
                   v-icon(:class="$style.icon", @click.stop="changeIndex('forward')", v-if="isYearsVisible") mdi-arrow-right
             div(:class="$style.monthes", v-if="isYearsVisible")
@@ -123,6 +130,14 @@ function onScroll() {
    top >= bottom ? position.value = 'top' : position.value = 'bottom';
 }
 
+function onFocus() {
+   checked.value = true;
+}
+
+function onBlur() {
+   checked.value = false;
+}
+
 function onClose() {
    isActive.value = false;
    checked.value = false;
@@ -218,15 +233,9 @@ function onClick() {
       cursor: pointer;
       position: relative;
       z-index: 2;
+
       &:focus {
          border-bottom: 1px solid #1a73a8;
-      }
-
-      & .icon {
-         font-size: 31px;
-         transition: transform 0.3s linear;
-         position: absolute;
-         right: 0;
       }
    }
 
@@ -256,27 +265,30 @@ function onClick() {
 }
 
 .calendar {
-   width: 200px;
+   width: 230px;
    border-radius: 5px;
    position: relative;
-   padding: 5px;
+   left: -5px;
+   top: -5px;
+   padding: 8px;
    background-color: #CCCCCC;
 
    & .nav {
       display: flex;
       justify-content: space-between;
+      align-items: center;
       width: 100%;
 
       & .title {
          border-radius: 5px;
-         padding: 2px;
+         padding: 5px 10px;
 
          &:hover {
             cursor: pointer;
-            background-color: rgb(136, 138, 149);
+            background-color: #3d3e42;
+            color: #f1f1f1;
          }
       }
-
    }
 
    & .day_numbers {
@@ -298,17 +310,22 @@ function onClick() {
       & .day_number {
          text-align: center;
          border-radius: 50%;
-         width: 25px;
-         height: 25px;
+         width: 30px;
+         height: 30px;
+         display: flex;
+         justify-content: center;
+         align-items: center;
 
          &:hover {
-            background-color: rgb(136, 138, 149);
+            background-color: #3d3e42;
+            color: #f1f1f1;
             cursor: pointer;
          }
 
          &[data-month=now] {
             color: rgb(12, 126, 43);
-            background-color: rgb(136, 138, 149);
+            background-color: #494b53;
+            font-weight: bold;
          }
       }
    }
@@ -316,23 +333,38 @@ function onClick() {
 
 .calendar_dark {
    background-color: #302E33;
-   & .menu{
+
+   & .menu {
       background-color: rgb(25, 23, 23);
    }
 }
 
 .menu {
    position: absolute;
-   top: 30px;
+   top: 43px;
    z-index: 200;
-   width: 165px;
-   height: 140px;
+   width: 185px;
+   height: 170px;
    background-color: white;
    border-radius: 5px;
    padding: 2px;
    margin: 0;
    position: absolute;
    transform: translate(8%, 0);
+
+   &::before {
+      content: "";
+      position: absolute;
+      margin-left: -5px;
+      top: -7px;
+      right: 84px;
+      width: 12px;
+      height: 12px;
+      border: solid rgb(103, 108, 115);
+      border-width: 1px 0 0 1px;
+      -webkit-transform: rotate(45deg);
+      transform: rotate(45deg);
+   }
 
    & .monthes {
       display: grid;
@@ -342,18 +374,19 @@ function onClick() {
          max-width: 55px;
          overflow: hidden;
          text-overflow: ellipsis;
-         padding: 2px;
+         padding: 5px 3px;
          border-radius: 5px;
 
          &:hover {
-            background-color: rgb(136, 138, 149);
+            background-color: #3d3e42;
+            color: #f1f1f1;
             cursor: pointer;
          }
       }
 
       & .current_month {
-         background-color: rgb(136, 138, 149);
-         color: rgb(12, 126, 43);
+         background-color: #3d3e42;
+         color: #f1f1f1;
       }
    }
 }
@@ -376,6 +409,6 @@ function onClick() {
 }
 
 .top {
-   top: -220px;
+   top: -257px;
 }
 </style>
