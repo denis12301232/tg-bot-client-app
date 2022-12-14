@@ -12,9 +12,9 @@ div(:class="$style.account")
 </template>
 
 <script setup lang="ts">
-import TheAccountSetName from './TheAccountSetName.vue'
-import TheAccountSetEmail from './TheAccountSetEmail.vue'
-import TheAccountSetPassword from './TheAccountSetPassword.vue'
+import TheAccountSetName from '@/components/TheAccountSetName.vue'
+import TheAccountSetEmail from '@/components/TheAccountSetEmail.vue'
+import TheAccountSetPassword from '@/components/TheAccountSetPassword.vue'
 </script>
 
 <style lang="scss" module>

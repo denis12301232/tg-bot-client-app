@@ -21,9 +21,8 @@ v-app-bar
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useStore } from '@/store/mainStore'
-import FormReg from './FormReg.vue'
-import FormLog from './FormLog.vue'
-import ModalWindow from './UI/ModalWindow.vue'
+import FormReg from '@/components/FormReg.vue'
+import FormLog from '@/components/FormLog.vue'
 import MenuUser from '@/components/MenuUser.vue'
 
 const emit = defineEmits(['show', 'theme']);

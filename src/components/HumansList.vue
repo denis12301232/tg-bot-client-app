@@ -23,23 +23,14 @@ div(class="container")
                div(style="padding: 0 10px", class="list_number") {{index + 1 + '.'}}
             template(#append)
                div(class="list_buttons")
-                  v-icon(tag="button", class="item_button", 
-                     @click="aboutHuman(human.fio)", 
-                     image="images/info.png", 
-                     width="20px", 
-                     height="20px"
-                     ) mdi-magnify
-                  v-icon(
-                     tag="button"
-                     class="item_button", 
-                     @click="showModal(human._id)", 
-                     width="20px", 
-                     height="20px"
-                     ) mdi-delete-forever
+                  v-icon(tag="button", class="item_button", @click="copyFio(human.fio)") mdi-content-copy
+                  v-icon(tag="button", class="item_button", @click="aboutHuman(human.fio)") mdi-magnify
+                  v-icon(tag="button", class="item_button", @click="showModal(human._id)") mdi-delete-forever
             v-list-item-title(class="list_title", @click="$router.push(`/list/${human._id}`)") 
                v-tooltip(:text="human.fio", location="bottom") 
                   template(#activator="{ props }")
                      span(:="props") {{ human.fio }}
+h3(class="error_message", v-if="isEmptyList") Список пуст
 div(class="loading", v-if="isHumansLoading")
    LoadingWheel
 div(class="observer")
@@ -49,14 +40,19 @@ div(class="observer")
 
 <script setup lang="ts">
 import { onMounted, ref, computed } from 'vue'
+import { useStore } from '@/store/mainStore'
 import { useRouter } from 'vue-router'
 import { useHumanStore } from '@/store/humanStore'
 import { useFetching } from '@/hooks/useFetching'
 import AssistanceService from '@/api/services/AssistanceService'
+import Util from '@/libs/Util'
 
+
+const store = useStore();
 const router = useRouter();
 const humanStore = useHumanStore();
 const canLoad = computed(() => humanStore.list.page < humanStore.list.total && !isHumansLoading.value);
+const isEmptyList = computed(() => !humanStore.list.humansList.length ? true : false);
 const isDelModalVisible = ref(false);
 const humanId = ref('');
 const sortOptions = ref([
@@ -70,21 +66,21 @@ onMounted((): void => {
    }
 });
 
-const { fetchFunc: catchAllHumans, isLoading: isHumansLoading, error } =
+const { fetchFunc: catchAllHumans, isLoading: isHumansLoading } =
    useFetching({ callback: catchHumans, alert: false });
 const { fetchFunc: delHuman, isLoading: isDelLoading } =
    useFetching({ callback: deleteHuman, successMessage: 'Удалено' });
 
+
 async function catchHumans(): Promise<void> {
-   error.value = '';
    humanStore.list.page++;
    const response = await AssistanceService.catchHumansList({ limit: humanStore.list.limit, page: humanStore.list.page });
    humanStore.list.total = Math.ceil(+response.headers['x-total-count']! / humanStore.list.limit);
    humanStore.list.humansList = [...humanStore.list.humansList, ...response.data.humansList];
-   if (!humanStore.list.humansList.length) throw new Error('Список пуст');
 }
 
 async function deleteHuman() {
+   if (store.alert.isVisible) store.showAlert(false);
    await AssistanceService.deleteHuman(humanId.value);
    showModal();
    humanStore.list.humansList = humanStore.list.humansList.filter(item => item._id !== humanId.value);
@@ -96,12 +92,20 @@ function showModal(id?: string): void {
    humanId.value = id;
 }
 
-async function aboutHuman(fio: string): Promise<void> {
-   humanStore.info.finded = [];
-   humanStore.info.fio = fio;
-   await router.push('/info');
-   await humanStore.findHuman();
-   window.scrollTo(0, 0);
+async function copyFio(fio: string) {
+   try {
+      if (store.alert.isVisible) store.showAlert(false);
+      const message = await Util.copyToClipboard(fio);
+      store.setAlert('success', message);
+   } catch (e) {
+      store.setAlert('error', e as string);
+   } finally {
+      store.showAlert(true);
+   }
+}
+
+function aboutHuman(fio: string) {
+   router.push({ path: '/info', query: { search: fio } });
 }
 </script>
 
@@ -174,6 +178,7 @@ async function aboutHuman(fio: string): Promise<void> {
 }
 
 .item_button {
+
    &:hover {
       transform: scale(1.1);
    }
@@ -187,6 +192,11 @@ async function aboutHuman(fio: string): Promise<void> {
 .loading {
    display: flex;
    justify-content: center;
+}
+
+.error_message{
+   color: var(--error-message-color);
+   text-align: center;
 }
 
 

@@ -5,38 +5,73 @@ div(class="container")
       v-text-field(
          class="search_input", 
          label="ФИО", 
-         v-model="humanStore.info.fio", 
+         v-model="fio", 
          variant="solo",
-         :error-messages="humanStore.info.error"
+         :error-messages="error"
          )
-      v-btn(class="search_button", @click="humanStore.findHuman", @keydown.enter="onClick") Найти
-      div(v-if="humanStore.info.isLoading", style="display: flex; justify-content: center; margin-top: 5px;")
+      v-btn(class="search_button", @click="setQuery", @keydown="onEnter") Найти
+      div(v-if="isLoading", style="display: flex; justify-content: center; margin-top: 5px;")
          LoadingWheel
-   div(class="info", v-if="humanStore.info.finded.length") 
-      div(class="info_finded") Всего найдено: {{ humanStore.info.finded.length  }}
-      div(class="info_item", v-for="(item, index) in humanStore.info.finded", :key="item._id")
+   div(class="info", v-if="finded?.humansFormList.length") 
+      div(class="info_finded") Всего найдено: {{ finded?.humansFormList.length }}
+      div(class="info_item", v-for="item in finded.humansFormList", :key="item._id")
          div(class="item_about")
-            div(class="item_title") Найдено: {{ humanStore.info.currentQuery }}
+            div(class="item_title") Найдено: {{ currentQuery }}
             v-icon(tag="button", @click="setEditable(item._id)", class="button") mdi-pencil
          TableAssistance(:form="item.form", style="margin-bottom: 5px !important;")
 </template>
    
    
 <script setup lang="ts">
-import { onBeforeRouteLeave, useRouter } from 'vue-router'
-import { useHumanStore } from '@/store/humanStore'
-import TableAssistance from './TableAssistance.vue'
+import { watch, onMounted, computed, ref } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
+import { useFetching } from '@/hooks/useFetching'
+import TableAssistance from '@/components/TableAssistance.vue'
+import AssistanceService from '@/api/services/AssistanceService'
+import type { FormsListResponse } from '@/interfaces/http'
 
-const humanStore = useHumanStore();
+
 const router = useRouter();
+const route = useRoute();
+const { fetchFunc: searchHuman, isLoading, error, data: finded } =
+   useFetching<FormsListResponse>({ callback: findHuman, alert: false });
+const currentSearch = computed(() => route.query.search);
+const fio = ref('');
+const currentQuery = ref('');
 
-onBeforeRouteLeave((to, from, next) => {
-   humanStore.info.isEditable = false;
-   next();
+
+onMounted(() => {
+   if (currentSearch.value && typeof currentSearch.value === 'string') {
+      fio.value = route.query.search as string;
+      searchHuman().then(() => currentQuery.value = fio.value);;
+   }
 });
 
-function onClick(event: KeyboardEvent) {
-   if (event.key === 'Enter') humanStore.findHuman();
+watch(currentSearch, () => {
+   if (currentSearch.value && typeof currentSearch.value === 'string') {
+      searchHuman().then(() => currentQuery.value = fio.value);
+   }
+});
+
+async function findHuman() {
+   if (!fio.value) {
+      return;
+   }
+   error.value = '';
+   if (finded.value?.humansFormList)
+      finded.value.humansFormList = [];
+   const query = fio.value.trim().split(' ');
+   if (query.length !== 3)
+      throw new Error('Введите ФИО через пробел!');
+   return AssistanceService.findHuman(query[0], query[1], query[2]);
+}
+
+function setQuery() {
+   router.push({ query: { search: fio.value } });
+}
+
+function onEnter(event: KeyboardEvent) {
+   if (event.key === 'Enter') setQuery();
 }
 
 function setEditable(id: string): void {

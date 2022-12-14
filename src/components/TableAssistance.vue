@@ -8,8 +8,8 @@ table(class="table")
 
 
 <script setup lang="ts">
-import Constants from '@/libs/Constants'
 import { useBeautifyValue } from '@/hooks/useBeautifyValue'
+import Constants from '@/libs/Constants'
 import type { AssistanceForm } from '@/interfaces/interfaces'
 
 defineProps({

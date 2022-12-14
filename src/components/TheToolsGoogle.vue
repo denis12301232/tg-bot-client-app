@@ -14,7 +14,6 @@ form(class="google", @submit.prevent="setGoogle")
 import { reactive, computed } from 'vue'
 import { useFetching } from '@/hooks/useFetching'
 import ToolsService from '@/api/services/ToolsService'
-import LoadingWheel from './UI/LoadingWheel.vue'
 
 const googleApi = reactive({
    serviceUser: '',

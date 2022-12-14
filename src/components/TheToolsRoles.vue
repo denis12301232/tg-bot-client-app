@@ -30,7 +30,6 @@ div(class="content", v-else)
 import { onMounted, ref, computed } from 'vue'
 import { useStore } from '@/store/mainStore'
 import { useFetching } from '@/hooks/useFetching'
-import LoadingWheel from './UI/LoadingWheel.vue'
 import ToolsService from '@/api/services/ToolsService'
 import type { IUser } from '@/interfaces/interfaces'
 

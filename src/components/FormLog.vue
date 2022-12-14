@@ -31,11 +31,10 @@ form(class="form", action="submit", @submit.prevent="login", autocomplete="off")
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useForm } from '@/hooks/useForm'
-import type { LogForm } from '@/interfaces/interfaces'
 import { useStore } from '@/store/mainStore'
 import Constants from '@/libs/Constants'
 import AuthService from '@/api/services/AuthService'
-import LoadingWheel from './UI/LoadingWheel.vue'
+import type { LogForm } from '@/interfaces/interfaces'
 
 
 const emit = defineEmits(['swap', 'restore', 'show', 'visible']);

@@ -6,7 +6,7 @@ export interface ImagesResponse {
 }
 
 export interface HumansListResponse {
-   humansList:HumansList[];
+   humansList: HumansList[];
 }
 
 export interface HumansList {

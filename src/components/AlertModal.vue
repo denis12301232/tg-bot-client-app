@@ -15,8 +15,8 @@ div(
 
 <script setup lang="ts">
 import { ref, watch } from 'vue'
-import type { AlertType } from '@/interfaces/interfaces'
 import Util from '@/libs/Util'
+import type { AlertType } from '@/interfaces/interfaces'
 
 interface Props {
    isVisible: boolean,
@@ -35,7 +35,7 @@ function clearTimer() {
 
 function setTimer() {
    if (!props.isVisible) return;
-   (timeout.value as any) = setTimeout(() => emit('show', false), 3000);
+   timeout.value = setTimeout(() => emit('show', false), 3000);
 }
 
 watch(() => props.isVisible, () => {

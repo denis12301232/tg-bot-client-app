@@ -4,7 +4,9 @@ div(:class="[$style.container, isActive ? $style.active: '']")
       :class="$style['select-btn']", 
       tabindex="0", 
       ref="select",
-      @click.stop="onClick", 
+      @click.stop="onClick",
+      @keydown.enter="onClick",
+      @keydown.esc="onClose",
       @blur="[emit('touch'), onBlur]",
       @focus="onFocus",
       )
@@ -236,6 +238,7 @@ function setMenu(value?: boolean) {
 
       &:focus {
          border-bottom: 1px solid #1a73a8;
+         outline: none;
       }
    }
 

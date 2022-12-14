@@ -8,7 +8,7 @@ div(class="filter_container")
 </template> 
    
 <script setup lang="ts">
-import { ref, watch } from 'vue';
+import { ref, watch } from 'vue'
 
 defineProps({
    filters: {

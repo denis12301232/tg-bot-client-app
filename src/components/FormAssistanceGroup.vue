@@ -6,7 +6,7 @@ div(:class="[$style.group, isNotValid ? $style.error : '']")
 </template>
     
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed, ref } from 'vue'
 
 const props = defineProps({
    title: {

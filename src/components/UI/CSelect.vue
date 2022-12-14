@@ -5,10 +5,12 @@ div(:class="['wrapper', isActive ? 'active': '']")
       tabindex="0", 
       ref="select",
       @click.stop="onClick",
+      @keydown.enter="onClick",
+      @keydown.esc="onClose",
       @focus="onFocus",
       @blur="[emit('touch'), onBlur]",
       )
-      span(class="value") {{modelValue}}
+      span(class="value") {{ modelValue }}
       v-icon(class="icon") mdi-triangle-small-down
    label(:class="['label', checked || modelValue  ? 'selected': '']") {{ label }}
    div(:class="['content', position === 'top' ? 'top': '', {'content_dark':dark}]")
@@ -103,6 +105,7 @@ function onClose() {
 
       &:focus {
          border-bottom: 1px solid #1a73a8;
+         outline: none;
       }
 
       & .icon {

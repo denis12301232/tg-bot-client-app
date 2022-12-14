@@ -1,5 +1,4 @@
-import Time from '@/libs/Time';
-
+import Time from '@/libs/Time'
 
 type CalendarParams = {
    elem: HTMLElement;

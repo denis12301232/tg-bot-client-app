@@ -35,14 +35,12 @@ form(class="form", action="submit", @submit.prevent="registration")
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import type { RegForm } from '@/interfaces/interfaces'
 import { useForm } from '@/hooks/useForm'
 import { useStore } from '@/store/mainStore'
 import Constants from '@/libs/Constants'
 import AuthService from '@/api/services/AuthService'
-import LoadingWheel from './UI/LoadingWheel.vue'
 import Validate from '@/libs/Validate'
-
+import type { RegForm } from '@/interfaces/interfaces'
 
 const emit = defineEmits(['show', 'swap']);
 

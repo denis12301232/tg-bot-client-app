@@ -16,9 +16,9 @@ div(class="tools")
    
 <script setup lang="ts">
 import { reactive } from 'vue'
-import TheToolsGoogle from './TheToolsGoogle.vue'
-import TheToolsSheetsVue from './TheToolsSheets.vue'
-import TheToolsRoles from './TheToolsRoles.vue'
+import TheToolsGoogle from '@/components/TheToolsGoogle.vue'
+import TheToolsSheetsVue from '@/components/TheToolsSheets.vue'
+import TheToolsRoles from '@/components/TheToolsRoles.vue'
 
 const tools = reactive({
    integrate: false,

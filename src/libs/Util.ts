@@ -17,6 +17,30 @@ export default class Util {
       }
       return arr;
    }
+
+   static async copyToClipboard(text: string): Promise<string> {
+      if (navigator.clipboard && window.isSecureContext) {
+         await navigator.clipboard.writeText(text)
+            .catch(e => { throw e });
+         return 'Скопировано в буфер обмена';
+      }
+      else {
+         const textArea = document.createElement('textarea');
+         textArea.value = text;
+         textArea.style.cssText = 'position:fixed; left: -999999px; top: -999999px';
+         document.body.appendChild(textArea);
+         textArea.focus();
+         textArea.select();
+         return new Promise((resolve, reject) => {
+            if (document.execCommand('copy')) {
+               resolve('Скопировано в буфер обмена')
+            } else {
+               reject('Ошибка! Значение не скопировано');
+               textArea.remove();
+            }
+         });
+      }
+   }
 }
 
 

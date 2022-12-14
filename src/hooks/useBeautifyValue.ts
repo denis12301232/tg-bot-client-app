@@ -1,6 +1,6 @@
 export function useBeautifyValue(value: string | number | boolean | string[] | undefined) {
    if (Array.isArray(value)) {
-      return value.join(",");
+      return value.join(", ");
    }
    else if (value === true) {
       return "Да";

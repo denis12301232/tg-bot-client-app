@@ -40,7 +40,6 @@ div(class="filter_container")
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
 import { useFetching } from '@/hooks/useFetching'
-import LoadingWheel from './UI/LoadingWheel.vue'
 import AssistanceService from '@/api/services/AssistanceService'
 import Constants from '@/libs/Constants'
 

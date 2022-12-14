@@ -22,30 +22,31 @@ template(v-else)
 </template>
 
 <script setup lang="ts">
-import { onMounted, watch, ref } from 'vue'
+import { onMounted, watch, ref, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useStore } from '@/store/mainStore'
 import { useForm } from '@/hooks/useForm'
 import { useFetching } from '@/hooks/useFetching'
 import AssistanceService from '@/api/services/AssistanceService'
-import type { AssistanceForm, AssistanceFormValidators } from '@/interfaces/interfaces'
 import Constants from '@/libs/Constants'
 import AssistanseFormDto from '@/api/dtos/AssistanseFormDto'
 import TheError from '@/components/TheError.vue'
 import TableAssistance from '@/components/TableAssistance.vue'
 import FormAssistance from '@/components/FormAssistance.vue'
+import type { AssistanceForm, AssistanceFormValidators } from '@/interfaces/interfaces'
 
-const voidForm = {} as AssistanceForm;
+
 const store = useStore();
-const id = useRoute().params.id as string;
 const router = useRouter();
 const route = useRoute();
+const id = computed(() => route.params.id as string);
 const formWithValidators = useForm<AssistanceFormValidators>(Constants.assistance);
 const isEditable = ref(route.query.edit === 'true' ? true : false);
 const { fetchFunc: getForm, isLoading: isFormLoading, data: form } =
-   useFetching<AssistanceForm & { _id: string; }>({ callback: async () => AssistanceService.getFormById(id), alert: false });
+   useFetching<AssistanceForm & { _id: string; }>({ callback: async () => AssistanceService.getFormById(id.value), alert: false });
 const { fetchFunc: updateForm, isLoading } =
    useFetching({ callback: submit, successMessage: 'Обновлено' });
+const voidForm = {} as AssistanceForm;
 
 onMounted(() => {
    getForm().then(() => { if (route.query.edit === 'true') fillForm() });
@@ -57,7 +58,7 @@ watch(route, () => {
 }, { deep: true });
 
 function fillForm() {
-   (Object.keys(Constants.assistance) as Array<keyof typeof Constants.assistance>)
+   (Object.keys(Constants.assistance) as Array<keyof AssistanceForm>)
       .forEach((key) => {
          if (key === "phone") {
             formWithValidators[key].value = form.value![key].slice(4);
@@ -77,7 +78,7 @@ function unsetEditable() {
 
 async function submit() {
    const formToSend = new AssistanseFormDto(formWithValidators);
-   await AssistanceService.modifyAssistanceForm(formToSend, id);
+   await AssistanceService.modifyAssistanceForm(formToSend, id.value);
    await getForm();
    setEditable();
 }
