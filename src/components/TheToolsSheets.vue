@@ -46,7 +46,7 @@ import Constants from '@/libs/Constants'
 const filterValue = ref<string[]>([]);
 const yearInterval = ref([1920, 2022]);
 const link = ref('');
-const district = ref('');
+const district = ref<string | null>(null);
 const isDisabled = computed(() => {
    if (!filterValue.value.length) return true;
    if (filterValue.value.includes('district') && filterValue.value.includes('birth')) {
