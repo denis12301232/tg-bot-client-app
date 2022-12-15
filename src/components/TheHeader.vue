@@ -43,7 +43,7 @@ function show() {
    isFormVisible.value = true;
 }
 
-function changeTheme() {
+function changeTheme() { 
    emit('theme');
 }
 </script>
