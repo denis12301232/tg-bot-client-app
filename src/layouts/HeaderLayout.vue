@@ -1,11 +1,18 @@
 <template lang="pug">
 q-layout(:class="store.currentTheme === 'dark' ? 'dark' : 'light'" view="hhh lpR fFf")
-   q-header(class="header" reveal elevated)
+   q-header(v-if="!openFromTg" class="header" reveal elevated)
       q-toolbar
          q-btn(dense flat round icon="menu" @click="toggleLeftDrawer")
          q-toolbar-title Kharkov Volonteer
-         q-btn(round @click="store.setTheme" dense flat :icon="store.currentTheme === 'dark' ? 'light_mode':  'dark_mode'")
-         q-btn(v-if="!store.isAuth" @click="emit('openLogin')") Вход 
+         q-btn(
+            dense
+            flat
+            round
+            @click="store.setTheme" 
+            :icon="store.currentTheme === 'dark' ? 'light_mode':  'dark_mode'" 
+            style="margin-right: 5px;"
+            )
+         q-btn(v-if="!store.isAuth" color="primary" @click="emit('openLogin')") Вход 
          q-btn(v-else dense flat round icon="account_circle" @click="toggleRightDrawer")
    q-drawer(v-model="leftDrawerOpen" side="left" overlay bordered)
       QList(class="list")
@@ -13,14 +20,18 @@ q-layout(:class="store.currentTheme === 'dark' ? 'dark' : 'light'" view="hhh lpR
             q-item-section(avatar)
                QIcon(name="note_add")
             q-item-section Внести данные
-         q-item(class="list_item" clickable v-ripple tag="a" to="/list" active-class="active")
+         q-item(v-if="store.isAdmin" class="list_item" clickable v-ripple tag="a" to="/list" active-class="active")
             q-item-section(avatar)
                QIcon(name="format_list_numbered")
             q-item-section Полный список
-         q-item(class="list_item" clickable v-ripple tag="a" to="/info" active-class="active")
+         q-item(v-if="store.isAdmin" class="list_item" clickable v-ripple tag="a" to="/info" active-class="active")
             q-item-section(avatar)
                QIcon(name="question_mark")
             q-item-section Информация по человеку   
+         q-item(class="list_item" clickable v-ripple tag="a" to="/gallery" active-class="active")
+            q-item-section(avatar)
+               QIcon(name="collections")
+            q-item-section Галлерея  
    q-drawer(v-if="store.isAuth" v-model="rightDrawerOpen" side="right" overlay bordered)
       QCard(class="user_info")
          q-card-section
@@ -32,7 +43,7 @@ q-layout(:class="store.currentTheme === 'dark' ? 'dark' : 'light'" view="hhh lpR
             q-item-section(avatar)
                QIcon(name="manage_accounts")
             q-item-section Аккаунт
-         q-item(class="list_item" clickable v-ripple tag="a" to="/tools" active-class="active")
+         q-item(v-if="store.isAdmin" class="list_item" clickable v-ripple tag="a" to="/tools" active-class="active")
             q-item-section(avatar)
                QIcon(name="admin_panel_settings")
             q-item-section Настройки
@@ -51,6 +62,9 @@ import { useStore } from '@/stores'
 import { Constants } from '@/util'
 
 
+withDefaults(defineProps<{
+   openFromTg?: boolean;
+}>(), { openFromTg: false });
 const emit = defineEmits<{
    (event: 'openLogin'): void;
 }>();

@@ -27,8 +27,8 @@ export default class ToolsService {
       return $api.post<{ message: string }>('/tools/takerights', { email });
    }
 
-   static getUsers() {
-      return $api.get<IUser[]>('/tools/users');
+   static getUsers(limit: number, page: number) {
+      return $api.get<IUser[]>('/tools/users', { params: { limit, page } });
    }
 
    static updateRoles(_id: string, roles: string[]) {

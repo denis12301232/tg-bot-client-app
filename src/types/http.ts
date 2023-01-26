@@ -11,3 +11,8 @@ export interface HumansList {
    _id: string;
    fio: string;
 }
+
+export interface ImagesResponse {
+   images: { link: string }[];
+   pageToken?: string;
+}

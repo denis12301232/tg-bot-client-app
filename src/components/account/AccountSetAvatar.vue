@@ -3,7 +3,7 @@ form(class="form" @submit.prevent="onUpdateAvatar")
    QFile(v-model="avatar" class="form_input" label="Аватар" outlined accept="image/jpeg, image/png" use-chips)
       template(#append)
          QIcon(name="attach_file")
-   QBtn(class="form_button" type="submit" color="primary" :loading="isAvatarLoading") Изменить
+   QBtn(class="form_button" type="submit" color="primary" :loading="isAvatarLoading" :disable="!avatar") Изменить
 </template>
 
 <script setup lang="ts">

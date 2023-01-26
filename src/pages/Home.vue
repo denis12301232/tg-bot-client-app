@@ -1,5 +1,5 @@
 <template lang="pug">
-HeaderLayout(@open-login="onOpenLogin")
+HeaderLayout(@open-login="onOpenLogin" :open-from-tg="isOpenedFromTg")
    template(#form)
       QDialog(v-model="loginOpen")
          QCard
@@ -17,7 +17,7 @@ import FormAssistance from '~/FormAssistance.vue'
 import FormReg from '~/FormReg.vue'
 import FormLog from '~/FormLog.vue'
 import { reactive, ref, shallowRef } from 'vue'
-import { useFetch } from '@/hooks'
+import { useFetch, useTelegram } from '@/hooks'
 import { AssistanceService } from '@/api/services'
 
 
@@ -50,8 +50,14 @@ const form = reactive({
    pers_data_agreement: false,
    photo_agreement: false,
 });
+const { tg, isOpenedFromTg } = useTelegram();
 const { f: onSubmit, loading } = useFetch({
-   fn: (form) => AssistanceService.sendForm(form),
+   fn: (form) => AssistanceService.sendForm(form)
+      .then(() => {
+         if (isOpenedFromTg) {
+            tg.sendData(JSON.stringify('Сохранено'));
+         }
+      }),
    alert: true,
    successMsg: 'Сохранено'
 });

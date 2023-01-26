@@ -59,7 +59,7 @@ QForm(class="form" @submit.prevent="submit" ref="formRef" no-error-focus)
       QInput(v-model="form.hygiene_info" label="Укажите какие" lazy-rules maxlength="30")
    FormAssistanceGroup(title="Памперсы?")
       QOptionGroup(v-model="form.pampers" :options="Constants.yesNoOptions" style="margin-left: -16px;")
-   FormAssistanceGroup(v-if="form.pampers_info === 'Да'" title="Укажите какие")
+   FormAssistanceGroup(v-if="form.pampers === 'Да'" title="Укажите какие")
       QInput(v-model="form.pampers_info" label="Укажите какие" lazy-rules maxlength="30")
    FormAssistanceGroup(title="Особенности диеты")
       QInput(v-model="form.diet" label="Особенности диеты" lazy-rules maxlength="30")
@@ -166,6 +166,7 @@ function submit() {
    & .title {
       text-align: center;
       margin-top: 10px;
+      margin-bottom: 20px;
    }
 
    & .buttons {

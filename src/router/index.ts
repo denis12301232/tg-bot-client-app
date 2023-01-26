@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthGuard, useRoleGuard } from '@/hooks'
+import { useStore } from '@/stores'
 
 
 const router = createRouter({
@@ -40,7 +41,7 @@ const router = createRouter({
       name: 'tools',
       component: () => import('@/pages/Tools.vue'),
       redirect: '/tools/google',
-      beforeEnter: [useAuthGuard, useRoleGuard(['admin'])],
+      //beforeEnter: [useAuthGuard, useRoleGuard(['admin'])],
       children: [
         { path: 'google', component: () => import('~/tools/ToolsGoogle.vue') },
         { path: 'sheets', component: () => import('~/tools/ToolsSheets.vue') },
@@ -48,11 +49,33 @@ const router = createRouter({
       ]
     },
     {
+      path: '/restore',
+      name: 'restore',
+      component: () => import('@/pages/Restore.vue')
+    },
+    {
+      path: '/gallery',
+      name: 'gallery',
+      component: () => import('@/pages/Gallery.vue')
+    },
+    {
       path: '/test',
       name: 'test',
       component: () => import('@/pages/Test.vue')
     }
   ]
+});
+
+router.beforeEach((to, from, next) => {
+  const store = useStore();
+  store.isPageLoading = true;
+  next();
+});
+
+router.beforeResolve((to, from, next) => {
+  const store = useStore();
+  store.isPageLoading = false;
+  next();
 });
 
 export default router

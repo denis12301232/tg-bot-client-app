@@ -3,8 +3,9 @@
   "include": [
     "env.d.ts",
     "src/**/*",
-    "src/**/*.vue"
-, "tg.js"  ],
+    "src/**/*.vue",
+    "tg.js"
+  ],
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {

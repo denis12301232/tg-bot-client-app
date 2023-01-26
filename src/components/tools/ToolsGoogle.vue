@@ -39,12 +39,20 @@ const { f: onSetSettings, loading } = useFetch({
 
 <style scoped lang="scss">
 .form {
+   padding: 0 20px;
    & .title {
-      margin: 20px 0 10px 0;
+      margin: 20px 0 20px 0;
+      text-align: center;
    }
 
    & .input {
       margin-bottom: 10px;
+   }
+}
+
+@media (max-width:480px) {
+   .form{
+      padding: 0;
    }
 }
 </style>

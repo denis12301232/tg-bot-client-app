@@ -11,16 +11,20 @@ HeaderLayout
             :error="!!error"
             :error-message="error"
             )
-         QBtn(color="primary" type="submit" :loading="loading") Найти
+         QBtn(color="primary" type="submit" :loading="loading" :disable="!search") Найти
+      div(style="display: flex; justify-content: center; margin-top: 20px;")
+         QPagination(v-if="forms" v-model="page" :max="total" direction-links flat color="grey" active-color="primary")
       div(v-for="item in forms" style="margin-bottom: 10px;")
          div(class="finded")
             div(class="text-h6") Найдено: {{ item.form.surname }}
             QIcon(name="edit" size="20px", @click="$router.push({path: `/list/${item._id}`, query: {edit: 'true'}})")
-         QMarkupTable
+         QMarkupTable()
             tbody
                tr(v-for="(key, value) in item.form")
-                  td {{ value }}
-                  td {{ key }}
+                  td {{ Constants.assistance[value] }}
+                  td {{ useBeautifyAssistance(key) }}
+      div(style="display: flex; justify-content: center; margin-top: 20px;")
+         QPagination(v-if="forms" v-model="page" :max="total" direction-links flat color="grey" active-color="primary")
 </template>
 
 
@@ -29,15 +33,23 @@ import type { AssistanceForm } from '@/types/interfaces'
 import HeaderLayout from '@/layouts/HeaderLayout.vue'
 import { ref, watch, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { useFetch } from '@/hooks';
+import { useFetch, useBeautifyAssistance } from '@/hooks'
 import { AssistanceService } from '@/api/services'
+import { Constants } from '@/util'
 
 
+const limit = 1;
 const router = useRouter();
 const route = useRoute();
+const total = ref(0);
+const page = ref(1);
 const search = ref(route.query.search?.toString() || '');
 const { f: onFetchForms, error, loading, data: forms } = useFetch<{ _id: string, form: AssistanceForm }[]>({
-   fn: () => AssistanceService.getForms(search.value),
+   fn: () => AssistanceService.getForms(search.value, limit, page.value)
+      .then((response) => {
+         total.value = total.value = Math.ceil(+response.headers['x-total-count']! / limit);
+         return response;
+      }),
    errorMsg: 'Ничего не найдено',
 });
 
@@ -47,9 +59,19 @@ onMounted(() => {
    }
 });
 
-watch(search, () => {
+watch([search, page], (n, o) => {
    error.value = '';
-   router.push({ query: { search: search.value } });
+   if (n[0] !== o[0]) {
+      router.push({ query: { search: search.value } });
+   }
+   if (n[1] !== o[1]) {
+      onFetchForms().then(() => {
+         window.scrollTo(0, 0);
+      });
+   }
+   if (!n[0]) {
+      router.push({ query: undefined });
+   }
 });
 </script>
 
@@ -87,6 +109,24 @@ watch(search, () => {
             transform: scale(1.1);
          }
       }
+   }
+}
+
+@media (max-width:1024px) {
+   .container {
+      width: 60%;
+   }
+}
+
+@media (max-width:768px) {
+   .container {
+      width: 70%;
+   }
+}
+
+@media (max-width:560px) {
+   .container {
+      width: 95%;
    }
 }
 </style>

@@ -52,8 +52,11 @@ const criteriasOptions = [
 
 <style scoped lang="scss">
 .form {
+   padding: 0 20px;
+
    & .title {
-      margin: 20px 0 10px 0;
+      margin: 20px 0 20px 0;
+      text-align: center;
    }
 
    & .criterias {
@@ -69,7 +72,7 @@ const criteriasOptions = [
    }
 
    & .button {
-      margin-top: 5px;
+      margin-top: 15px;
    }
 
    & .link {
@@ -83,6 +86,12 @@ const criteriasOptions = [
       &:hover {
          color: $orange;
       }
+   }
+}
+
+@media (max-width:480px) {
+   .form {
+      padding: 0;
    }
 }
 </style>

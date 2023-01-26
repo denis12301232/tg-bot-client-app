@@ -21,5 +21,32 @@ export default class Constants {
       { label: 'Да', value: 'Да' },
       { label: 'Нет', value: 'Нет' }
    ];
+   static readonly assistance = {
+      surname: 'Фамилия',
+      name: 'Имя',
+      patronymic: 'Отчество',
+      phone: 'Телефон',
+      birth: 'Дата рождения',
+      district: 'Район',
+      street: 'Улица/Проспект/Переулок',
+      house: 'Дом',
+      flat: 'Квартира',
+      people_num: 'Число проживающих',
+      people_fio: 'ФИО и возраст проживающих',
+      invalids: 'Есть ли среди проживающих инвалиды?',
+      kids: 'Есть ли дети?',
+      kids_age: 'Возраст детей',
+      food: 'Нужны ли продукты питания?',
+      water: 'Нужна ли вода?',
+      medicines: 'Лекарства?',
+      medicines_info: 'Укажите какие?',
+      hygiene: 'Средства личной гигиены',
+      hygiene_info: 'Укажите какие?',
+      pampers: 'Памперсы?',
+      pampers_info: 'Укажите какие?',
+      diet: 'Особенности диеты и т.п.',
+      pers_data_agreement: 'Согласие на обработку персональных данных',
+      photo_agreement: 'Согласие на фото',
+   };
 
 }

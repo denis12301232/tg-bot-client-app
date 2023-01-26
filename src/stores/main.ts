@@ -9,6 +9,7 @@ export const useStore = defineStore('main', () => {
   const $q = useQuasar();
   const user = ref<IUser>({} as IUser);
   const theme = ref(localStorage.getItem('theme') || 'light');
+  const isPageLoading = ref(false);
   const alert = reactive<{ type: 'success' | 'info' | 'warning' | 'error', message: string, visible: boolean }>({ type: 'success', message: '', visible: false });
 
   const isAuth = computed(() => !!Object.keys(user.value).length);
@@ -64,26 +65,5 @@ export const useStore = defineStore('main', () => {
     }
   }
 
-  return { user, alert, isAuth, isAdmin, currentTheme, setTheme, setAlert, refresh, logout };
+  return { user, theme, isPageLoading, alert, isAuth, isAdmin, currentTheme, setTheme, setAlert, refresh, logout };
 });
-
-
-// static async refresh(): Promise<void> {
-//   await AuthService.refresh()
-//      .then((response) => {
-//         const store = useStore();
-//         localStorage.setItem('token', response.data.accessToken);
-//         store.user = response.data.user;
-//      })
-//      .catch((e: any) => console.log(e?.response?.data?.message));
-// }
-
-// static async logout(): Promise<void> {
-//   await AuthService.logout()
-//      .then(() => {
-//         const store = useStore();
-//         localStorage.removeItem('token');
-//         store.user = <IUser>{};
-//      })
-//      .catch((e: any) => console.log(e?.response?.data?.message));
-// }

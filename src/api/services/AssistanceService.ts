@@ -8,8 +8,9 @@ export default class AssistanceService {
       return $api.get<HumansList[]>('/assistance/list', { params: { limit, page } });
    }
 
-   static async getForms(nameOrSurname: string) {
-      return $api.get<{ form: AssistanceForm, _id: string }[]>('/assistance', { params: { nameOrSurname } });
+   static async getForms(nameOrSurname: string, limit: number, page: number) {
+      return $api.get<{ form: AssistanceForm, _id: string }[]>('/assistance',
+         { params: { nameOrSurname, limit, page } });
    }
 
    static async getFormById(form_id: string) {

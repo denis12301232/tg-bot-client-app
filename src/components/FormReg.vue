@@ -22,7 +22,13 @@ QForm(class="form" ref="formRef" @submit.prevent="onSubmit" no-error-focus)
       )
       template(#append)
          QIcon(name="email")
-   QInput(v-model="form.password" class="input" outlined label="Пароль" :rules="formRules.password")
+   QInput(
+      v-model="form.password" 
+      class="input" 
+      outlined label="Пароль" 
+      :rules="formRules.password"
+      :type="isPasswordVisible ? 'text' : 'password'"
+      )
       template(#append)
          QIcon(:name="isPasswordVisible ? 'visibility' : 'visibility_off'" @click="isPasswordVisible = !isPasswordVisible")
    div(class="buttons")
@@ -110,7 +116,7 @@ async function onSubmit() {
    min-width: 300px;
 
    & .title {
-      margin-top: 10px;
+      padding: 20px 0 30px 0;
    }
 
    & .buttons {

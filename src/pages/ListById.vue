@@ -8,8 +8,8 @@ ToolsLayout(title="Информация о заявке")
          QMarkupTable
             tbody
                tr(v-for="(key, value) in form")
-                  td {{ value }}
-                  td {{ key }}
+                  td {{ Constants.assistance[value] }}
+                  td {{ useBeautifyAssistance(key) }}
       FormAssistance(
          v-else-if="form && isEditable"
          :form="form"
@@ -19,20 +19,21 @@ ToolsLayout(title="Информация о заявке")
          :reset="false"
          )
          template(#submit="{type, valid}")
-            QBtn(:type="type" :loading="isUpdateLoading" :disable="!valid") Изменить
+            QBtn(:type="type" :loading="isUpdateLoading" :disable="!valid" color="primary") Изменить
          template(#cancel)
-            QBtn(@click="$router.push({query: undefined})") Отмена
+            QBtn(@click="$router.push({query: undefined})" color="primary") Отмена
 </template>
 
 
 <script setup lang="ts">
 import type { AssistanceForm } from '@/types/interfaces'
 import ToolsLayout from '@/layouts/ToolsLayout.vue'
+import FormAssistance from '~/FormAssistance.vue'
 import { onMounted, watch, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { useFetch } from '@/hooks'
+import { useFetch, useBeautifyAssistance } from '@/hooks'
 import { AssistanceService } from '@/api/services'
-import FormAssistance from '@/components/FormAssistance.vue'
+import { Constants } from '@/util'
 
 
 const props = defineProps<{
@@ -82,6 +83,23 @@ watch(route, () => {
          }
       }
    }
+}
 
+@media (max-width:1024px) {
+   .container {
+      width: 60%;
+   }
+}
+
+@media (max-width:768px) {
+   .container {
+      width: 70%;
+   }
+}
+
+@media (max-width:560px) {
+   .container {
+      width: 95%;
+   }
 }
 </style>

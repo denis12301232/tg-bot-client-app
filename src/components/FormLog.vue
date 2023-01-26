@@ -19,6 +19,7 @@ QForm(class="form" @submit.prevent="onSubmit" ref="formRef" no-error-focus)
       :error="!!formErrors.password"
       :error-message="formErrors.password"
       lazy-rules
+      :type="isPasswordVisible ? 'text' : 'password'"
       )
       template(#append)
          QIcon(:name="isPasswordVisible ? 'visibility' : 'visibility_off'" @click="isPasswordVisible = !isPasswordVisible")
@@ -27,7 +28,7 @@ QForm(class="form" @submit.prevent="onSubmit" ref="formRef" no-error-focus)
    div(class="swap") Еще не зарегестрировны? 
       span(@click="emit('swap', 'reg')") Регистрация
    div(class="swap") Забыли пароль? 
-      span() Восстановить
+      span(@click="$router.push('/restore')") Восстановить
 </template>
 
 
@@ -95,7 +96,7 @@ async function onSubmit() {
    min-width: 300px;
 
    & .title {
-      margin-top: 10px;
+      padding: 20px 0 30px 0;
    }
 
    & .buttons {
@@ -119,11 +120,12 @@ async function onSubmit() {
    & .swap {
       margin-top: 10px;
       font-size: 1.1em;
-      font-weight: bolder;
+
 
       &>span {
          cursor: pointer;
          color: $primary;
+         font-weight: bolder;
 
          &:hover {
             color: $secondary;

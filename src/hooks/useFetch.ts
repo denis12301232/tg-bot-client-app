@@ -19,7 +19,7 @@ export function useFetch<T>({ fn, successMsg, errorMsg, alert = false }: FetchAr
    async function f(...args: any) {
       try {
          if (alert) {
-            setAlert({ message: '', visible: true });
+            setAlert({ message: '', visible: false });
          }
          loading.value = true;
          const response = await fn(...args);
