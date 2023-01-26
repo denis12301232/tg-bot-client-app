@@ -41,7 +41,7 @@ const router = createRouter({
       name: 'tools',
       component: () => import('@/pages/Tools.vue'),
       redirect: '/tools/google',
-      //beforeEnter: [useAuthGuard, useRoleGuard(['admin'])],
+      beforeEnter: [useAuthGuard, useRoleGuard(['admin'])],
       children: [
         { path: 'google', component: () => import('~/tools/ToolsGoogle.vue') },
         { path: 'sheets', component: () => import('~/tools/ToolsSheets.vue') },
@@ -58,11 +58,11 @@ const router = createRouter({
       name: 'gallery',
       component: () => import('@/pages/Gallery.vue')
     },
-    {
-      path: '/test',
-      name: 'test',
-      component: () => import('@/pages/Test.vue')
-    }
+    // {
+    //   path: '/test',
+    //   name: 'test',
+    //   component: () => import('@/pages/Test.vue')
+    // }
   ]
 });
 
