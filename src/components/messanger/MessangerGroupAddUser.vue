@@ -1,0 +1,85 @@
+<template lang="pug">
+QCard(class="add")
+   QCardSection
+      div(class="title text-h6 text-center") Добавить в группу
+      QInput(v-model="search" debounce="300" label="Имя или логин" outlined clearable :loading="isUsersLoading")
+   QCardSection(style="padding: 0;")
+      QList
+         QItem(v-for="user in users" v-ripple clickable @click="select(user)")
+            QItemSection(top avatar)
+               UserAvatar(:name="user.name", :avatar="user.avatar")
+            QItemSection
+               QItemLabel {{ user.name }}
+               QItemLabel(caption lines="2") {{ user.login }}
+            QItemSection(v-if="userToAdd" side top style="display: flex; align-items: center; justify-content: center;")
+               QIcon(name="check_circle_outline")
+      div(v-if="!users?.length && search" class="text-center") Не найдено ни одного человека
+   QCardActions(align="center")
+      QBtn(v-close-popup color="primary" :disable="!userToAdd" :loading="isAddUserLoading" @click="onAddUser") Добавить
+</template>
+
+
+<script setup lang="ts">
+import type { IUser } from '@/types/interfaces'
+import UserAvatar from '~/UserAvatar.vue'
+import { ref, watch } from 'vue'
+import { storeToRefs } from 'pinia'
+import { useSocketStore } from '@/stores'
+import { useFetch } from '@/hooks'
+import { MessangerService } from '@/api/services'
+
+
+const props = defineProps<{
+   chat_id: string;
+}>();
+
+const { chatsList } = storeToRefs(useSocketStore());
+const search = ref('');
+const userToAdd = ref<IUser | null>(null);
+const { f: onFindUsers, data: users, loading: isUsersLoading } = useFetch<IUser[]>({
+   fn: MessangerService.findUsers
+});
+
+const { f: onAddUser, loading: isAddUserLoading, } = useFetch({
+   fn: addUserToGroup,
+   successMsg: 'Пользователь добавлен в чат',
+   errorMsg: 'Пользователь уже в чате',
+   alert: true,
+});
+
+watch(search, (n, o) => {
+   if (n) {
+      onFindUsers(search.value);
+      userToAdd.value = null;
+   } else {
+      users.value = [];
+   }
+});
+
+function select(user: IUser) {
+   userToAdd.value ? userToAdd.value = null : userToAdd.value = user;
+}
+
+async function addUserToGroup() {
+   if (userToAdd.value) {
+      await MessangerService.addUserToGroup(props.chat_id, userToAdd.value._id);
+      const chat = chatsList.value.find(chat => chat._id === props.chat_id);
+      if (chat) {
+         !chat.users.find(user => user._id === userToAdd.value?._id) ? chat.users.push(userToAdd.value) : '';
+         chat.members_count++;
+      }
+   }
+}
+</script>
+
+
+<style scoped lang="scss">
+.add {
+   min-width: 300px;
+   padding: 5px;
+
+   & .title {
+      padding: 10px 0 20px 0;
+   }
+}
+</style>
