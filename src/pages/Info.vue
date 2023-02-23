@@ -1,36 +1,34 @@
 <template lang="pug">
-HeaderLayout
-   div(class="container")
-      h4(class="title") Полный
-      form(class="form" @submit.prevent="onFetchForms")
-         QInput(
-            v-model="search" 
-            class="form_input" 
-            outlined 
-            label="Имя или фамилия"
-            :error="!!error"
-            :error-message="error"
-            )
-         QBtn(color="primary" type="submit" :loading="loading" :disable="!search") Найти
-      div(style="display: flex; justify-content: center; margin-top: 20px;")
-         QPagination(v-if="forms" v-model="page" :max="total" direction-links flat color="grey" active-color="primary")
-      div(v-for="item in forms" style="margin-bottom: 10px;")
-         div(class="finded")
-            div(class="text-h6 q-mb-sm") Найдено: {{ item.form.surname }}
-            QBtn(icon="edit" dense flat round @click="$router.push({path: `/list/${item._id}`, query: {edit: 'true'}})")
-         QMarkupTable
-            tbody
-               tr(v-for="(key, value) in item.form")
-                  td {{ Constants.assistance[value] }}
-                  td {{ useBeautifyAssistance(key) }}
-      div(style="display: flex; justify-content: center; margin-top: 20px;")
-         QPagination(v-if="forms" v-model="page" :max="total" direction-links flat color="grey" active-color="primary")
+div(class="container")
+   h4(class="title") Полный
+   form(class="form" @submit.prevent="onFetchForms")
+      QInput(
+         v-model="search" 
+         class="form_input" 
+         outlined 
+         label="Имя или фамилия"
+         :error="!!error"
+         :error-message="error"
+         )
+      QBtn(color="primary" type="submit" :loading="loading" :disable="!search") Найти
+   div(style="display: flex; justify-content: center; margin-top: 20px;")
+      QPagination(v-if="forms" v-model="page" :max="total" direction-links flat color="grey" active-color="primary")
+   div(v-for="item in forms" style="margin-bottom: 10px;")
+      div(class="finded")
+         div(class="text-h6 q-mb-sm") Найдено: {{ item.form.surname }}
+         QBtn(icon="edit" dense flat round @click="$router.push({path: `/list/${item._id}`, query: {edit: 'true'}})")
+      QMarkupTable
+         tbody
+            tr(v-for="(key, value) in item.form")
+               td {{ Constants.assistance[value] }}
+               td {{ useBeautifyAssistance(key) }}
+   div(style="display: flex; justify-content: center; margin-top: 20px;")
+      QPagination(v-if="forms" v-model="page" :max="total" direction-links flat color="grey" active-color="primary")
 </template>
 
 
 <script setup lang="ts">
 import type { AssistanceForm } from '@/types/interfaces'
-import HeaderLayout from '@/layouts/HeaderLayout.vue'
 import { ref, watch, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useFetch, useBeautifyAssistance } from '@/hooks'

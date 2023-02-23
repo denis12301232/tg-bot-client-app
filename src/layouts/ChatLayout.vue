@@ -16,21 +16,21 @@ QLayout(:class="store.currentTheme === 'dark' ? 'dark' : 'light'" view="hHh lpR 
                      QItemLabel(caption) {{ store.user.status }}
          QItem(class="list_item" v-ripple clickable tag="a" to="/" active-class="active")
             QItemSection(avatar)
-               QIcon(name="home")
+               QIcon(name="home" color="indigo")
             QItemSection На главную
          QItem(class="list_item" v-ripple clickable tag="a" to="/account" active-class="active")
             QItemSection(avatar)
-               QIcon(name="account_circle")
+               QIcon(name="account_circle" color="indigo")
             QItemSection Аккаунт
          QItem(
             class="list_item"
             v-ripple 
             clickable 
             active-class="active" 
-            @click="[emit('openCreateGroup'), toggleLeftDrawer()]"
+            @click="openModal"
             )
             QItemSection(avatar)
-               QIcon(name="note_add")
+               QIcon(name="note_add" color="indigo")
             QItemSection Создать группу
    QPageContainer(style="height: 100vh;")
       slot
@@ -39,17 +39,20 @@ QLayout(:class="store.currentTheme === 'dark' ? 'dark' : 'light'" view="hHh lpR 
 <script setup lang="ts">
 import UserAvatar from '~/UserAvatar.vue'
 import { ref } from 'vue'
-import { useStore } from '@/stores'
+import { useStore, useLayoutStore } from '@/stores'
 
 
-const emit = defineEmits<{
-   (event: 'openCreateGroup'): void;
-}>();
 const store = useStore();
+const layoutStore = useLayoutStore();
 const leftDrawerOpen = ref(false);
 
 function toggleLeftDrawer() {
    leftDrawerOpen.value = !leftDrawerOpen.value
+}
+
+function openModal() {
+   layoutStore.chat.openModal = true;
+   toggleLeftDrawer();
 }
 </script>
 
@@ -91,7 +94,7 @@ function toggleLeftDrawer() {
       font-size: 1.2em;
 
       &:hover {
-         color: $secondary !important;
+         color: $indigo !important;
       }
 
       &:visited {

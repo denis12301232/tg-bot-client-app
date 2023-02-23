@@ -1,51 +1,49 @@
 <template lang="pug">
-ToolsLayout(title="Аккаунт")
-   div(class="container")
-      h5(class="title") Настройки аккаунта
-      AccountSetAvatar
-      AccountSetName(:name="store.user.name")
-      AccountSetEmail(:email="store.user.email")
-      AccountSetPassword
+div(class="container")
+   h5(class="title") Настройки аккаунта
+   QTabPanels(v-model="layoutStore.account.tab" class="tab_panel" animated swipeable transition-prev="jump-up" transition-next="jump-up")
+      QTabPanel(name="avatar" class="tab")
+         AccountSetAvatar
+      QTabPanel(name="name" class="tab")
+         AccountSetName(:name="store.user.name")
+      QTabPanel(name="email" class="tab")
+         AccountSetEmail(:email="store.user.email")
+      QTabPanel(name="password" class="tab")
+         AccountSetPassword
 </template>
 
 <script setup lang="ts">
-import ToolsLayout from '@/layouts/ToolsLayout.vue'
 import AccountSetAvatar from '~/account/AccountSetAvatar.vue'
 import AccountSetName from '~/account/AccountSetName.vue'
 import AccountSetEmail from '~/account/AccountSetEmail.vue'
 import AccountSetPassword from '~/account/AccountSetPassword.vue'
-import { useStore } from '@/stores'
+import { useStore, useLayoutStore } from '@/stores'
 
 
 const store = useStore();
+const layoutStore = useLayoutStore();
 </script>
 
 <style scoped lang="scss">
 .container {
-   padding: 0 30px 30px 30px;
-   width: 50%;
+   display: flex;
+   flex-direction: column;
+   align-items: center;
 
    & .title {
       margin: 20px 0 10px 0;
    }
-}
 
-@media (max-width:1024px) {
-   .container {
-      width: 60%;
+   & .tab_panel {
+      width: calc(100% - 10px);
+      background-color: transparent;
    }
-}
 
-@media (max-width:768px) {
-   .container {
-      width: 70%;
-   }
-}
-
-@media (max-width:480px) {
-   .container {
-      width: 100%;
-      padding: 0 10px 30px 10px;
+   & .tab {
+      max-width: 500px;
+      min-width: 280px;
+      margin: 0 auto;
+      overflow: hidden;
    }
 }
 </style>

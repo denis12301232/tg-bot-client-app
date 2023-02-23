@@ -1,43 +1,41 @@
 <template lang="pug">
-ToolsLayout(title="Восстановление пароля")
-   div(class="container")
-      h5(class="title text-primary") Адрес электронной почты
-      QForm(v-if="!link" class="form" ref="emailForm" @submit.prevent="onSendMail")
-         QInput(
-            v-model="email" 
-            outlined 
-            label="Адрес электронной почты" 
-            :rules="emailRules" 
-            lazy-rules
-            :error="!!errorSend"
-            :error-message="errorSend"
-            )
-            template(#append)
-               QIcon(name="email")
-         QBtn(class="button" color="primary" type="submit" :loading="isSendLoading" :disable="!emailValid") Восстановить
-         div(class="message") {{ successSend }}
-      QForm(v-else class="form" ref="passwordForm" @submit.prevent="onRestorePassword")
-         QInput(
-            v-model="password" 
-            outlined 
-            label="Новый пароль" 
-            :rules="passwordRules"
-            :error="!!passwordError"
-            :error-message="passwordError"
-            lazy-rules,
-            :type="isPasswordVisible ? 'text' : 'password'"
+div(class="container")
+   h5(class="title text-primary") Адрес электронной почты
+   QForm(v-if="!link" class="form" ref="emailForm" @submit.prevent="onSendMail")
+      QInput(
+         v-model="email" 
+         outlined 
+         label="Адрес электронной почты" 
+         :rules="emailRules" 
+         lazy-rules
+         :error="!!errorSend"
+         :error-message="errorSend"
          )
-            template(#append)
-               QIcon(
-                  :name="isPasswordVisible ? 'visibility' : 'visibility_off'"
-                  @click="isPasswordVisible = !isPasswordVisible"
-                  )
-         QBtn(class="button" type="submit" color="primary" :loading="isRestorePasswordLoading" :disable="!passwordValid") Изменить
+         template(#append)
+            QIcon(name="email")
+      QBtn(class="button" color="primary" type="submit" :loading="isSendLoading" :disable="!emailValid") Восстановить
+      div(class="message") {{ successSend }}
+   QForm(v-else class="form" ref="passwordForm" @submit.prevent="onRestorePassword")
+      QInput(
+         v-model="password" 
+         outlined 
+         label="Новый пароль" 
+         :rules="passwordRules"
+         :error="!!passwordError"
+         :error-message="passwordError"
+         lazy-rules,
+         :type="isPasswordVisible ? 'text' : 'password'"
+      )
+         template(#append)
+            QIcon(
+               :name="isPasswordVisible ? 'visibility' : 'visibility_off'"
+               @click="isPasswordVisible = !isPasswordVisible"
+               )
+      QBtn(class="button" type="submit" color="primary" :loading="isRestorePasswordLoading" :disable="!passwordValid") Изменить
 </template>
 
 <script setup lang="ts">
 import type { QForm } from 'quasar'
-import ToolsLayout from '@/layouts/ToolsLayout.vue'
 import { ref, watch, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { useFetch } from '@/hooks'

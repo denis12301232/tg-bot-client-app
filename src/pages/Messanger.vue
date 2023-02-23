@@ -1,24 +1,22 @@
 <template lang="pug">
-ChatLayout(@open-create-group="setComponent('create_group')")
-   div(class="container")
-      QDialog(v-model="modal" :maximized="modalContent == 'open_image'")
-         component(:is="modalComponent.component" :="modalComponent.props" @close="modal = false")
-      MessangerChatsList(:class="currentChatId ? 'hide' : 'not_hide'")
-      div(
-         v-if="!currentChatId" 
-         :class="['dialog_not_selected', currentChatId ? 'not_hide' : 'hide' ]"
-         ) Выберите, кому вы бы хотели написать
-      component(
-         v-else :is="dialog" 
-         :class="currentChatId ? 'not_hide' : 'hide'" 
-         @openModal="setComponent" 
-         @openImage="onOpenImage"
-         )
+div(class="container")
+   QDialog(v-model="layoutStore.chat.openModal" :maximized="modalContent == 'open_image'")
+      component(:is="modalComponent.component" :="modalComponent.props" @close="onClose")
+   MessangerChatsList(:class="currentChatId ? 'hide' : 'not_hide'")
+   div(
+      v-if="!currentChatId" 
+      :class="['dialog_not_selected', currentChatId ? 'not_hide' : 'hide' ]"
+      ) Выберите, кому вы бы хотели написать
+   component(
+      v-else :is="dialog" 
+      :class="currentChatId ? 'not_hide' : 'hide'" 
+      @openModal="setComponent" 
+      @openImage="onOpenImage"
+      )
 </template>
 
 
 <script setup lang="ts">
-import ChatLayout from '@/layouts/ChatLayout.vue'
 import MessangerChatsList from '~/messanger/MessangerChatsList.vue'
 import MessangerDialog from '~/messanger/MessangerDialog.vue'
 import MessangerGroup from '~/messanger/MessangerGroup.vue'
@@ -29,12 +27,12 @@ import MessangerGroupRoles from '~/messanger/MessangerGroupRoles.vue'
 import MessangerImage from '~/messanger/MessangerImage.vue'
 import { ref, computed, markRaw } from 'vue'
 import { storeToRefs } from 'pinia'
-import { useSocketStore } from '@/stores'
+import { useSocketStore, useLayoutStore } from '@/stores'
 
 type ModalContent = 'create_group' | 'group_info' | 'add_user' | 'open_image' | 'users_rights';
 
 const { currentChat, currentChatId } = storeToRefs(useSocketStore());
-const modal = ref(false);
+const layoutStore = useLayoutStore();
 const modalContent = ref<ModalContent>('create_group');
 const openedImage = ref('');
 const dialog = computed(() => {
@@ -48,8 +46,8 @@ const dialog = computed(() => {
 const modalComponent = computed(() => {
    switch (modalContent.value) {
       case 'create_group':
-         return { 
-            component: markRaw(MessangerFormCreateGroup) 
+         return {
+            component: markRaw(MessangerFormCreateGroup)
          };
       case 'group_info':
          return {
@@ -80,12 +78,16 @@ const modalComponent = computed(() => {
 });
 
 function setComponent(name: ModalContent) {
-   modal.value = !modal.value;
+   layoutStore.chat.openModal = true;
    modalContent.value = name;
 }
 
 function onOpenImage(link: string) {
    openedImage.value = link;
+}
+
+function onClose() {
+   layoutStore.chat.openModal = false;
 }
 </script>
 

@@ -1,33 +1,31 @@
 <template lang="pug">
-ToolsLayout(title="Информация о заявке")
-   div(class="container")
-      div(v-if="!isEditable")
-         h4(class="title") Заявка
-         div(class="edit")
-            QBtn(icon="edit" round dense flat @click="$router.push({ query: { edit: 'true' } })")
-         QMarkupTable()
-            tbody
-               tr(v-for="(key, value) in form")
-                  td {{ Constants.assistance[value] }}
-                  td {{ useBeautifyAssistance(key) }}
-      FormAssistance(
-         v-else-if="form && isEditable"
-         :form="form"
-         :loading="isUpdateLoading"
-         :reset="false"
-         title="Редактировать заявку"
-         @submit="onUpdateForm"
-         )
-         template(#submit="{type, valid}")
-            QBtn(:type="type" :loading="isUpdateLoading" :disable="!valid" color="primary") Изменить
-         template(#cancel)
-            QBtn(@click="$router.push({query: undefined})" color="primary") Отмена
+div(class="container")
+   div(v-if="!isEditable")
+      h4(class="title") Заявка
+      div(class="edit")
+         QBtn(icon="edit" round dense flat @click="$router.push({ query: { edit: 'true' } })")
+      QMarkupTable()
+         tbody
+            tr(v-for="(key, value) in form")
+               td {{ Constants.assistance[value] }}
+               td {{ useBeautifyAssistance(key) }}
+   FormAssistance(
+      v-else-if="form && isEditable"
+      :form="form"
+      :loading="isUpdateLoading"
+      :reset="false"
+      title="Редактировать заявку"
+      @submit="onUpdateForm"
+      )
+      template(#submit="{type, valid}")
+         QBtn(:type="type" :loading="isUpdateLoading" :disable="!valid" color="primary") Изменить
+      template(#cancel)
+         QBtn(@click="$router.push({query: undefined})" color="primary") Отмена
 </template>
 
 
 <script setup lang="ts">
 import type { AssistanceForm } from '@/types/interfaces'
-import ToolsLayout from '@/layouts/ToolsLayout.vue'
 import FormAssistance from '~/FormAssistance.vue'
 import { onMounted, watch, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'

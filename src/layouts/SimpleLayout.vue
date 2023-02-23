@@ -3,21 +3,22 @@ QLayout(:class="store.currentTheme === 'dark' ? 'dark' : 'light'" view="hHh lpR 
    QHeader(class="header" reveal elevated height-hint="98")
       QToolbar
          QBtn(dense flat round icon="arrow_back" color="indigo" @click="$router.push('/')")
-         QToolbarTitle Настройки
-      QTabs(align="left")
-         QRouteTab(to="/tools/google" label="Интегрция с Google" active-class="active")
-         QRouteTab(to="/tools/sheets" label="Выгрузить заявки" active-class="active")
-         QRouteTab(to="/tools/roles" label="Настроить роли" active-class="active")
+         QToolbarTitle {{ title }}
    QPageContainer
       slot
-</template>
-
+   </template>
+   
 <script setup lang="ts">
 import { useStore } from '@/stores'
 
+
+defineProps<{
+   title: string;
+}>();
+
 const store = useStore();
 </script>
-
+   
 <style lang="scss" scoped>
 .light {
    & .header {
@@ -30,9 +31,5 @@ const store = useStore();
    & .header {
       background-color: #121212;
    }
-}
-
-.active {
-   color: $secondary;
 }
 </style>

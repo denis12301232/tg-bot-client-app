@@ -3,21 +3,20 @@ QLayout(:class="store.currentTheme === 'dark' ? 'dark' : 'light'" view="hHh lpR 
    QHeader(class="header" reveal elevated height-hint="98")
       QToolbar
          QBtn(dense flat round icon="arrow_back" color="indigo" @click="$router.push('/')")
-         QToolbarTitle Настройки
+         QToolbarTitle Задачи
       QTabs(align="left")
-         QRouteTab(to="/tools/google" label="Интегрция с Google" active-class="active")
-         QRouteTab(to="/tools/sheets" label="Выгрузить заявки" active-class="active")
-         QRouteTab(to="/tools/roles" label="Настроить роли" active-class="active")
+         QRouteTab(to="/task/list" label="Список задач" active-class="active")
+         QRouteTab(v-if="store.isAdmin" to="/task/create" label="Создать задачу" active-class="active")
    QPageContainer
       slot
 </template>
-
+   
 <script setup lang="ts">
 import { useStore } from '@/stores'
 
 const store = useStore();
 </script>
-
+   
 <style lang="scss" scoped>
 .light {
    & .header {

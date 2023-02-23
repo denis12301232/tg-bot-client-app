@@ -1,13 +1,14 @@
 <template lang="pug">
-LoaderPage(:loading="store.isPageLoading")
-ModalAlert(
-   class="alert" 
-   :type="store.alert.type" 
-   :message="store.alert.message" 
-   :visible="store.alert.visible"
-   @show="store.alert.visible = !store.alert.visible"
-   )
-RouterView
+component(:is="$route.meta.layoutComponent" :="$route.meta.layoutProps")
+   ModalAlert(
+      class="alert" 
+      :type="store.alert.type" 
+      :message="store.alert.message" 
+      :visible="store.alert.visible"
+      @show="store.alert.visible = !store.alert.visible"
+      )
+   LoaderPage(:loading="store.isPageLoading")
+   RouterView
 </template>
 
 <script setup lang="ts">

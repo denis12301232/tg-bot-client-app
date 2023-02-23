@@ -33,7 +33,7 @@ QInput(
          @click="formData, voiceMessage = null"
       )
       QBtn(
-         v-if="!message"
+         v-if="!message && !voiceMessage"
          dense
          round
          flat
@@ -41,7 +41,7 @@ QInput(
          @click="!isRecording ? startRecording() : stopRecording()"
       )
       QBtn(
-         v-if="message"
+         v-if="message || formData"
          dense
          round
          flat
@@ -56,38 +56,35 @@ input(v-show="false" type="file" ref="fileInput" accept="image/*" @change="onMed
 import type { QInput } from 'quasar'
 import type { IMessage } from '@/types/interfaces'
 import { ref, watch } from 'vue'
+import { storeToRefs } from 'pinia'
 import { useSocketStore } from '@/stores'
 import { useVoice, useFetch } from '@/hooks'
 import { MessangerService } from '@/api/services'
 
 
-const socketStore = useSocketStore();
+const { currentChatId, currentChat } = storeToRefs(useSocketStore());
 const message = ref('');
 const inputRef = ref<QInput | null>(null);
 const fileInput = ref<HTMLInputElement | null>(null);
 const formData = ref<FormData | null>(null);
 const { voiceMessage, isRecording, startRecording, stopRecording } = useVoice();
 const { f: onSaveMessage, data: textMsg, loading: isTextMsgLoading } = useFetch<IMessage>({
-   fn: () => MessangerService.saveMessage(socketStore.currentChatId, message.value),
+   fn: () => MessangerService.saveMessage(currentChatId.value, message.value),
 });
 const { f: onSaveMediaMessage, data: mediaMsg, loading: isMediaMsgLoading } = useFetch<IMessage>({
-   fn: (type: 'audio' | 'image') => MessangerService.saveMediaMessage(formData.value!, socketStore.currentChatId, type)
-      .finally(() => formData.value = null)
+   fn: saveMediaMessage
 });
 
-function onMedia(event: Event) {
+async function onMedia(event: Event) {
    const target = event.target as HTMLInputElement;
    const files = target.files;
 
    if (files) {
       formData.value = new FormData();
       Array.from(files).forEach(file => formData.value?.append(file.name, file));
-      onSaveMediaMessage('image')
-         .catch(e => console.log(e))
-         .finally(() => {
-            target.value = '';
-            formData.value = null;
-         });
+      await onSaveMediaMessage('image')
+      target.value = '';
+      formData.value = null;
    }
 }
 
@@ -100,19 +97,28 @@ watch(voiceMessage, () => {
 
 watch([textMsg, mediaMsg], ([newText, newMedia], [oldText, oldMedia]) => {
    if (newText && newText !== oldText) {
-      socketStore.currentChat.messages.push(newText);
-      socketStore.currentChat.updatedAt = newText.createdAt;
+      currentChat.value.messages.push(newText);
+      currentChat.value.updatedAt = newText.createdAt;
       message.value = '';
    }
    if (newMedia && newMedia !== oldMedia) {
-      socketStore.currentChat.messages.push(newMedia);
-      socketStore.currentChat.updatedAt = newMedia.createdAt;
+      currentChat.value.messages.push(newMedia);
+      currentChat.value.updatedAt = newMedia.createdAt;
    }
 });
 
 watch(isRecording, () => {
    inputRef.value?.blur();
 });
+
+async function saveMediaMessage(type: 'audio' | 'image') {
+   if (formData.value) {
+      const msg = await MessangerService.saveMediaMessage(formData.value, currentChatId.value, type);
+      formData.value = null;
+      voiceMessage.value = null;
+      return msg;
+   }
+}
 </script>
 
 <style scoped lang="scss">

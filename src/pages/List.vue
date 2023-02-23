@@ -1,49 +1,47 @@
 <template lang="pug">
-HeaderLayout
-   div(class="container")
-      QDialog(v-model="isDeleteModalVisible")
-         QCard(style="padding: 10px; min-width: 250px;")
-            QCardSection(class="text-h6 text-center") Вы уверены?
-            QCardActions(align="between")
-               QBtn(@click="onDeleteForm" :loading="isDeleteLoading" color="primary") Да
-               QBtn(v-close-popup color="primary") Нет
-      h4(class="title") Полный список
-      QTable(
-         class="table"
-         :columns="columns"
-         :rows="list"
-         :loading="isLoading"
-         :pagination-label="(f, l, t) => `${f}-${l} из ${t}`"
-         :filter="filter"
-         :rows-per-page-options="[5, 10, 20, 50]"
-         binary-state-sort
-         loading-label="Загрузка..."
-         no-data-label="Ничего не найдено"
-         rows-per-page-label="Отображать:"
-         no-results-label="Ничего не найдено"
-         row-key="index"
-         separator="cell"
-         v-model:pagination="pagination"
-         @request="onRequest"
-         )
-         template(#body="{ row, rowIndex }")
-            QTr
-               QTd(key="name" class="text-center" auto-width) {{ rowIndex + 1 }}
-               QTd(key="fio" class="item_fio" @click="$router.push(`/list/${row._id}`)") {{ row.fio }}
-               QTd(key="buttons" class="item_btns" auto-width)
-                  QIcon(name="content_copy" size="20px" @click="Util.copyTextToClipboard(row.fio)")
-                  QIcon(name="search" size="20px" @click="findHuman(row.fio.split(' ')[0])")
-                  QIcon(name="delete" size="20px" @click="[showDeleteModal(row._id)]")
-         template(#top)
-            QInput(borderless dense clearable debounce="300" v-model="filter" placeholder="Поиск" style="width: 100%;")
-               template(#append)
-                  QIcon(name="search")
+div(class="container")
+   QDialog(v-model="isDeleteModalVisible")
+      QCard(style="padding: 10px; min-width: 250px;")
+         QCardSection(class="text-h6 text-center") Вы уверены?
+         QCardActions(align="between")
+            QBtn(@click="onDeleteForm" :loading="isDeleteLoading" color="primary") Да
+            QBtn(v-close-popup color="primary") Нет
+   h4(class="title") Полный список
+   QTable(
+      class="table"
+      :columns="columns"
+      :rows="list"
+      :loading="isLoading"
+      :pagination-label="(f, l, t) => `${f}-${l} из ${t}`"
+      :filter="filter"
+      :rows-per-page-options="[5, 10, 20, 50]"
+      binary-state-sort
+      loading-label="Загрузка..."
+      no-data-label="Ничего не найдено"
+      rows-per-page-label="Отображать:"
+      no-results-label="Ничего не найдено"
+      row-key="index"
+      separator="cell"
+      v-model:pagination="pagination"
+      @request="onRequest"
+      )
+      template(#body="{ row, rowIndex }")
+         QTr
+            QTd(key="name" class="text-center" auto-width) {{ rowIndex + 1 }}
+            QTd(key="fio" class="item_fio" @click="$router.push(`/list/${row._id}`)") {{ row.fio }}
+            QTd(key="buttons" class="item_btns" auto-width)
+               QIcon(name="content_copy" size="20px" @click="Util.copyTextToClipboard(row.fio)")
+               QIcon(name="search" size="20px" @click="findHuman(row.fio.split(' ')[0])")
+               QIcon(name="delete" size="20px" @click="[showDeleteModal(row._id)]")
+      template(#top)
+         QInput(borderless dense clearable debounce="300" v-model="filter" placeholder="Поиск" style="width: 100%;")
+            template(#append)
+               QIcon(name="search")
 </template>
    
 <script setup lang="ts">
 import type { QTable } from 'quasar'
 import type { HumansList } from '@/types/http'
-import HeaderLayout from '@/layouts/HeaderLayout.vue'
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useFetch } from '@/hooks'

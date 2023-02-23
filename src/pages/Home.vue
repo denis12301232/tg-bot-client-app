@@ -1,27 +1,25 @@
 <template lang="pug">
-HeaderLayout(@open-login="onOpenLogin" :open-from-tg="isOpenedFromTg")
-   template(#form)
-      QDialog(v-model="loginOpen")
-         QCard
-            component(:is="component" @swap="onSwap" @submit="onOpenLogin")
-   div(class="container")
-      FormAssistance(:form="form" title="Заявка на получение гуманитарной помощи" @submit="onSubmit" :loading="loading" reset)
-         template(#submit="{type, valid}")
-            QBtn(:type="type" :loading="loading" :disable="!valid" color="primary") Отправить
+div(class="container")
+   QDialog(v-model="layoutStore.header.openLogin")
+      QCard
+         component(:is="component" @swap="onSwap" @submit="onOpenLogin")
+   FormAssistance(:form="form" title="Заявка на получение гуманитарной помощи" :loading="loading" reset @submit="onSubmit")
+      template(#submit="{ type, valid }")
+         QBtn(:type="type" :loading="loading" :disable="!valid" color="primary") Отправить
 </template>
 
 
 <script setup lang="ts">
-import HeaderLayout from '@/layouts/HeaderLayout.vue'
 import FormAssistance from '~/FormAssistance.vue'
 import FormReg from '~/FormReg.vue'
 import FormLog from '~/FormLog.vue'
-import { reactive, ref, shallowRef } from 'vue'
+import { reactive, shallowRef } from 'vue'
+import { useLayoutStore } from '@/stores'
 import { useFetch, useTelegram } from '@/hooks'
 import { AssistanceService } from '@/api/services'
 
 
-const loginOpen = ref(false);
+const layoutStore = useLayoutStore();
 const component = shallowRef(FormLog);
 const form = reactive({
    name: '',
@@ -52,18 +50,20 @@ const form = reactive({
 });
 const { tg, isOpenedFromTg } = useTelegram();
 const { f: onSubmit, loading } = useFetch({
-   fn: (form) => AssistanceService.sendForm(form)
-      .then(() => {
-         if (isOpenedFromTg) {
-            tg.sendData(JSON.stringify('Сохранено'));
-         }
-      }),
+   fn: submit,
    alert: true,
    successMsg: 'Сохранено'
 });
 
+async function submit(form: any) {
+   await AssistanceService.sendForm(form);
+   if (isOpenedFromTg) {
+      tg.sendData(JSON.stringify('Сохранено'));
+   }
+}
+
 function onOpenLogin() {
-   loginOpen.value = !loginOpen.value;
+   layoutStore.header.openLogin = !layoutStore.header.openLogin
 }
 
 function onSwap(value: 'reg' | 'log') {

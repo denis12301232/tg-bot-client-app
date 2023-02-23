@@ -16,7 +16,7 @@ div(class="chats")
          clickable
          :active-class="store.currentTheme === 'dark' ? 'active_dark' : 'active_light'"
          :active="currentChatId === chat._id"
-         @click="socketStore.onOpenChat(chat._id)"
+         @click="onOpenChat(chat._id)"
          )
          QItemSection(avatar)
             UserAvatar(
@@ -50,8 +50,7 @@ import { Time } from '@/util'
 
 
 const store = useStore();
-const socketStore = useSocketStore();
-const { chatsList, currentChatId } = storeToRefs(socketStore);
+const { chatsList, currentChatId } = storeToRefs(useSocketStore());
 const search = ref('');
 const { f: onFindUsers, data: users, loading: isUsersLoading } = useFetch<IUser[]>({
    fn: MessangerService.findUsers,
@@ -71,7 +70,7 @@ async function onCreateChat(user_id: string) {
 
    if (find) {
       currentChatId.value = find._id;
-      socketStore.onOpenChat(find._id);
+      onOpenChat(find._id);
    } else {
       currentChatId.value = response.data._id;
       chatsList.value.push(response.data);
@@ -79,13 +78,18 @@ async function onCreateChat(user_id: string) {
    search.value = '';
 }
 
-function showLastMessageText(msg: IMessage | undefined){
-   if(msg?.text)
+function showLastMessageText(msg: IMessage | undefined) {
+   if (msg?.text)
       return msg.text;
-   if(msg?.attachments[0].type === 'audio')
+   if (msg?.attachments[0].type === 'audio')
       return 'Аудиосообщение';
-   if(msg?.attachments[0].type === 'image')
+   if (msg?.attachments[0].type === 'image')
       return 'Фотография';
+}
+
+function onOpenChat(chat_id: string) {
+   currentChatId.value = chat_id;
+   MessangerService.updateRead(chat_id);
 }
 </script>
 

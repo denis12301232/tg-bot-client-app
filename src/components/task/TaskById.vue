@@ -11,7 +11,8 @@ div(:class="$style.container")
             td {{ task?.title }}
          tr 
             td Описание
-            td {{ task?.description }}
+            td
+               div(:class="$style.description") {{ task?.description }}
          tr
             td Теги
             td
@@ -60,6 +61,11 @@ function setStatus(status: 'Не выбрана' | 'В работе' | 'Отме
    width: 50%;
    margin: 0 auto;
    padding: 0 10px;
+
+   & .description {
+      white-space: break-spaces;
+      word-break: break-all;
+   }
 }
 
 .status_completed {

@@ -1,27 +1,25 @@
 <template lang="pug">
-ToolsLayout(title="Галерея")
-   div(class="container")
-      QDialog(v-model="isModalVisible" class="modal" maximized no-refocus @keydown="changeImage")
-         div(class="modal_content")
-            div(class="total") {{ currentIndex + 1 +'/' + total }}
-            QIcon(class="left" name="chevron_left" size="45px" color="white" @click="onPrev")
-            QIcon(class="right" name="chevron_right" size="45px" color="white" @click="onNext")
-            QIcon(class="close" name="close" size="40px" color="white" v-close-popup)
-            QImg(:src="images[currentIndex].link" class="img" spinner-color="secondary" fit="contain")
-      h3(class="title") Галерея
-      h4(v-if="!images.length && !loading" class="text-center text-red") Ничего не найдено
-      QInfiniteScroll(@load="onFetchImages")
-         div(class="images")
-            div(v-for="(img, index) in images" class="image-block" @click="onOpenImage(index)")
-               QImg(class="image_item" :src="img.link" spinner-color="secondary")
-               div(class="image_hover")
-         template(#loading)
-            div(class="row justify-center q-my-md")
-               QSpinnerDots(color="primary" size="40px")
+div(class="container")
+   QDialog(v-model="isModalVisible" class="modal" maximized no-refocus @keydown="changeImage")
+      div(class="modal_content")
+         div(class="total") {{ currentIndex + 1 +'/' + total }}
+         QIcon(class="left" name="chevron_left" size="45px" color="white" @click="onPrev")
+         QIcon(class="right" name="chevron_right" size="45px" color="white" @click="onNext")
+         QIcon(class="close" name="close" size="40px" color="white" v-close-popup)
+         QImg(:src="images[currentIndex].link" class="img" spinner-color="secondary" fit="contain")
+   h3(class="title") Галерея
+   h4(v-if="!images.length && !loading" class="text-center text-red") Ничего не найдено
+   QInfiniteScroll(@load="onFetchImages")
+      div(class="images")
+         div(v-for="(img, index) in images" class="image-block" @click="onOpenImage(index)")
+            QImg(class="image_item" :src="img.link" spinner-color="secondary")
+            div(class="image_hover")
+      template(#loading)
+         div(class="row justify-center q-my-md")
+            QSpinnerDots(color="primary" size="40px")
 </template>
 
 <script setup lang="ts">
-import ToolsLayout from '@/layouts/ToolsLayout.vue'
 import { ref, computed } from 'vue'
 import { ImageService } from '@/api/services'
 

@@ -6,7 +6,7 @@ import { MessangerService } from '@/api/services'
 
 export function useMessanger() {
    const chatsList = ref<ChatResponse[]>([]);
-   const currentChatId = ref<string | null>(null);
+   const currentChatId = ref<string>('');
    const currentChat = computed(() => {
       return chatsList.value.filter(chat => chat._id === currentChatId.value)[0] || {};
    });
@@ -34,6 +34,8 @@ export function useMessanger() {
          if (chat._id === message.chat_id) {
             chat.messages.push(message);
             chat.updatedAt = message.createdAt;
+            console.log(currentChatId.value, message.chat_id);
+            
             if (currentChatId.value !== message.chat_id) {
                chat.unread++;
             } else {
@@ -45,16 +47,17 @@ export function useMessanger() {
       }
    }
 
-   async function onOpenChat(chat_id: string) {
+   async function onOpenChat(chat_id: string, page: number = 1, limit: number = 5) {
       currentChatId.value = chat_id;
-      const response = await MessangerService.openChat(chat_id, currentChat.value.messages.length);
+      const length = currentChat.value.messages.length;
+      const slice = currentChat.value.total > length && length < limit ? length : 0;
+      const response = await MessangerService.openChat(chat_id, page, limit);
+      const chat = chatsList.value.find(chat => chat._id === response.data.chat_id);
 
-      for (const chat of chatsList.value) {
-         if (chat._id === response.data.chat_id) {
-            chat.unread = 0;
-            chat.messages.splice(0, 0, ...response.data.messages);
-            return;
-         }
+      if (chat) {
+         chat.unread = 0;
+         chat.messages.splice(0, slice, ...response.data.messages);
+         return;
       }
    }
 
@@ -90,7 +93,7 @@ export function useMessanger() {
       const { chat_id } = msg.payload;
       chatsList.value = chatsList.value.filter(chat => chat._id !== chat_id);
       if (currentChatId.value === chat_id) {
-         currentChatId.value = null;
+         currentChatId.value = '';
       }
    }
 

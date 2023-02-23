@@ -36,9 +36,9 @@ export default class MessangerService {
       return $api.get<ChatResponse[]>('/messanger/get_user_chats');
    }
 
-   static openChat(chat_id: string, skip: number) {
+   static openChat(chat_id: string, page: number, limit: number = 10) {
       return $api.get<{ messages: IMessage[], chat_id: string }>('/messanger/open_chat', {
-         params: { chat_id, skip }
+         params: { chat_id, page, limit }
       });
    }
 

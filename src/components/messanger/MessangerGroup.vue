@@ -2,7 +2,9 @@
 div(:class="['group', currentTheme === 'dark' ? 'group_dark' : 'group_light']")
    QItem(class="group_title")
       QItemSection(avatar)
-         QBtn(icon="arrow_back" dense round flat @click="currentChatId = ''")
+         QBtn(icon="arrow_back" color="grey-7" dense round flat @click="currentChatId = ''")
+      QItemSection(avatar)
+         UserAvatar(:name="currentChat.group.title" :avatar="currentChat.group.avatar" color="indigo")
       QItemSection
          QItemLabel(class="text-h6") {{ currentChat.group?.title }}
          QItemLabel(caption) {{ currentChat.members_count }} участников 
@@ -24,39 +26,43 @@ div(:class="['group', currentTheme === 'dark' ? 'group_dark' : 'group_light']")
                         QIcon(name="logout" color="red")
                      QItemSection Покинуть группу
    div(v-if="!messages.length" class="void") Здесь пусто...
-   QScrollArea(v-else class="group_content" delay="1200" ref="dialogRef")
-      QChatMessage(
-         v-for="msg in messages" 
-         class="msg"
-         :text="[msg.text]" 
-         :sent="msg.author === user._id",
-         :key="msg._id"
-         :bg-color="msg.author === user._id ? 'indigo': 'seconary'"
-         text-color="white"
-         )
-         template(#name)
-            div(class="msg_name") {{ msg.author === user._id ? 'Я':  getAuthor(msg)?.name }}
-         template(#avatar)
-            UserAvatar(
-               :name="getAuthor(msg)?.name" 
-               :avatar="getAuthor(msg)?.avatar" 
-               :class="['q-message-avatar', msg.author === user._id ?  'q-message-avatar--sent': 'q-message-avatar--received']"
-               size="30px"
-               )
-         template(#stamp)
-            div(class="msg_stamp")
-               div(class="msg_time") {{ Time.showFilteredDate(new Date(msg.createdAt)) }}
-               QIcon(v-if="msg.author === user._id" :name="msg.read.length > 1 ? 'mdi-check-all' : 'mdi-check'")
-         template(#default v-if="msg.attachments.length")
-            MessangerVoiceMessage(
-               v-if="msg.attachments[0]?.type === 'audio'" 
-               :src="`${Constants.SERVER_URL}/audio/${msg.attachments[0]?.name}`"
-               )
-            MessangerImageMessage(
-               v-else-if="msg.attachments[0]?.type === 'image'" 
-               :images="msg.attachments.map(msg => `${Constants.SERVER_URL}/media/${msg?.name}`)"
-               @open="onOpenImage"
-               )
+   QScrollArea(v-else class="group_content" delay="1200" ref="dialogRef" :thumb-style="{width: '7px'}")
+      QInfiniteScroll(@load="onLoad" reverse :offset="50" :initial-index="initialIndex")
+         template(#loading)
+            div(class="row justify-center q-my-md")
+               QSpinnerDots(color="primary" name="dots" size="40px")
+         QChatMessage(
+            v-for="msg in messages" 
+            class="msg"
+            :text="[msg.text]" 
+            :sent="msg.author === user._id",
+            :key="msg._id"
+            :bg-color="msg.author === user._id ? 'indigo': 'seconary'"
+            text-color="white"
+            )
+            template(#name)
+               div(class="msg_name") {{ msg.author === user._id ? 'Я':  getAuthor(msg)?.name }}
+            template(#avatar)
+               UserAvatar(
+                  :name="getAuthor(msg)?.name" 
+                  :avatar="getAuthor(msg)?.avatar" 
+                  :class="['q-message-avatar', msg.author === user._id ?  'q-message-avatar--sent': 'q-message-avatar--received']"
+                  size="30px"
+                  )
+            template(#stamp)
+               div(class="msg_stamp")
+                  div(class="msg_time") {{ Time.showFilteredDate(new Date(msg.createdAt)) }}
+                  QIcon(v-if="msg.author === user._id" :name="msg.read.length > 1 ? 'mdi-check-all' : 'mdi-check'")
+            template(#default v-if="msg.attachments.length")
+               MessangerVoiceMessage(
+                  v-if="msg.attachments[0]?.type === 'audio'" 
+                  :src="`${Constants.SERVER_URL}/audio/${msg.attachments[0]?.name}`"
+                  )
+               MessangerImageMessage(
+                  v-else-if="msg.attachments[0]?.type === 'image'" 
+                  :images="msg.attachments.map(msg => `${Constants.SERVER_URL}/media/${msg?.name}`)"
+                  @open="onOpenImage"
+                  )
    MessangerInput(v-if="currentChatId" style="margin: 5px;")
 </template>
 
@@ -80,21 +86,29 @@ const emit = defineEmits<{
    (event: 'openImage', link: string): void;
 }>();
 
+const limit = 10;
 const { user, currentTheme } = storeToRefs(useStore());
-const { currentChatId, currentChat, chatsList } = storeToRefs(useSocketStore());
+const socketStore = useSocketStore();
+const { currentChatId, currentChat, chatsList } = storeToRefs(socketStore);
 const dialogRef = ref<QScrollArea | null>(null);
-const messages = computed(() => currentChat.value.messages);
+const loading = ref(false);
+const messages = computed(() => currentChat.value.messages || []);
+const initialIndex = computed(() => messages.value.length > limit
+   ? Math.ceil(messages.value.length / limit)
+   : 0);
 const hasAdminRights = computed(() => {
    return currentChat.value.group?.roles.creator?.includes(user.value._id)
       || currentChat.value.group?.roles.admin?.includes(user.value._id);
 });
 
-watch(messages, () => {
+watch(() => messages.value.length, (n, o) => {
    setTimeout(() => {
-      const scroll = dialogRef.value?.getScroll();
-      dialogRef.value?.setScrollPosition('vertical', scroll?.verticalSize || 0);
+      if (o + 1 === n) {
+         const scroll = dialogRef.value?.getScroll();
+         dialogRef.value?.setScrollPosition('vertical', scroll?.verticalSize || 0);
+      }
    }, 0);
-}, { deep: true, immediate: true });
+}, { deep: true });
 
 
 async function leaveGroup() {
@@ -114,6 +128,16 @@ function getAuthor(msg: IMessage) {
 function onOpenImage(link: string) {
    emit('openModal', 'open_image');
    emit('openImage', link);
+}
+
+async function onLoad(index: number, done: (stop?: boolean | undefined) => void) {
+   if (currentChat.value.total > messages.value.length) {
+      loading.value = true;
+      await socketStore.onOpenChat(currentChatId.value, index, limit);
+      loading.value = false;
+      return done();
+   }
+   done(true);
 }
 </script>
 

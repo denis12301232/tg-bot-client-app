@@ -2,7 +2,9 @@
 div(:class="['dialog', currentTheme === 'dark' ? 'dialog_dark' : 'dialog_light']")
    QItem(class="dialog_name")
       QItemSection(avatar)
-         QBtn(icon="arrow_back" dense round flat @click="currentChatId = ''")
+         QBtn(icon="arrow_back" color="grey-7" dense round flat @click="currentChatId = ''")
+      QItemSection(avatar)
+         UserAvatar(:name="currentChat.companion.name" :avatar="currentChat.companion.avatar" color="indigo")
       QItemSection
          QItemLabel(class="text-h6") {{ currentChat.companion.name }}
          QItemLabel(caption) {{ currentChat.companion.status }}
@@ -15,33 +17,37 @@ div(:class="['dialog', currentTheme === 'dark' ? 'dialog_dark' : 'dialog_light']
                         QIcon(name="delete" color="red")
                      QItemSection Удалить чат
    div(v-if="!messages.length" class="void") Здесь пусто...
-   QScrollArea(v-else class="dialog_content" delay="1200" ref="dialogRef")
-      QChatMessage(
-         v-for="msg in messages" 
-         :text="[msg.text]" 
-         :sent="msg.author === user._id"
-         :key="msg._id",
-         :bg-color="msg.author === user._id ? 'indigo': 'teal'"
-         text-color="white"
-         class="msg"
-         )
-         template(#stamp)
-            div(class="msg_stamp")
-               div(class="msg_time") {{ Time.showFilteredDate(new Date(msg.createdAt)) }}
-               QIcon(
-                  v-if="msg.author === user._id" 
-                  :name="msg.read.includes(currentChat.companion._id) ? 'mdi-check-all' : 'mdi-check'"
+   QScrollArea(v-else class="dialog_content" delay="1200" ref="dialogRef" :thumb-style="{width: '7px'}")
+      QInfiniteScroll(@load="onLoad" reverse :offset="50" :initial-index="initialIndex")
+         template(#loading v-if="loading")
+            div(class="row justify-center q-my-md")
+               QSpinnerDots(color="primary" name="dots" size="40px")
+         QChatMessage(
+            v-for="msg in messages" 
+            :text="[msg.text]" 
+            :sent="msg.author === user._id"
+            :key="msg._id",
+            :bg-color="msg.author === user._id ? 'indigo': 'teal'"
+            text-color="white"
+            class="msg"
+            )
+            template(#stamp)
+               div(class="msg_stamp")
+                  div(class="msg_time") {{ Time.showFilteredDate(new Date(msg.createdAt)) }}
+                  QIcon(
+                     v-if="msg.author === user._id" 
+                     :name="msg.read.includes(currentChat.companion._id) ? 'mdi-check-all' : 'mdi-check'"
+                     )
+            template(#default v-if="msg.attachments.length")
+               MessangerVoiceMessage(
+                  v-if="msg.attachments[0]?.type === 'audio'" 
+                  :src="`${Constants.SERVER_URL}/audio/${msg.attachments[0]?.name}`"
                   )
-         template(#default v-if="msg.attachments.length")
-            MessangerVoiceMessage(
-               v-if="msg.attachments[0]?.type === 'audio'" 
-               :src="`${Constants.SERVER_URL}/audio/${msg.attachments[0]?.name}`"
-               )
-            MessangerImageMessage(
-               v-else-if="msg.attachments[0]?.type === 'image'" 
-               :images="msg.attachments.map(msg => `${Constants.SERVER_URL}/media/${msg?.name}`)"
-               @open="onOpenImage"
-               )
+               MessangerImageMessage(
+                  v-else-if="msg.attachments[0]?.type === 'image'" 
+                  :images="msg.attachments.map(msg => `${Constants.SERVER_URL}/media/${msg?.name}`)"
+                  @open="onOpenImage"
+                  )
    MessangerInput(v-if="currentChatId" style="margin: 5px;")
 </template>
 
@@ -51,6 +57,7 @@ import type { QScrollArea } from 'quasar'
 import MessangerInput from '~/messanger/MessangerInput.vue'
 import MessangerVoiceMessage from '~/messanger/MessangerVoiceMessage.vue'
 import MessangerImageMessage from '~/messanger/MessangerImageMessage.vue'
+import UserAvatar from '~/UserAvatar.vue'
 import { computed, ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useStore, useSocketStore } from '@/stores'
@@ -63,17 +70,25 @@ const emit = defineEmits<{
    (event: 'openImage', link: string): void;
 }>();
 
+const limit = 10;
 const { user, currentTheme } = storeToRefs(useStore());
-const { currentChat, currentChatId, chatsList } = storeToRefs(useSocketStore());
+const socketStore = useSocketStore();
+const { currentChat, currentChatId, chatsList } = storeToRefs(socketStore);
 const dialogRef = ref<QScrollArea | null>(null);
-const messages = computed(() => currentChat.value.messages);
+const loading = ref(false);
+const messages = computed(() => currentChat.value.messages || []);
+const initialIndex = computed(() => messages.value.length > limit
+   ? Math.ceil(messages.value.length / limit)
+   : 0);
 
-watch(messages, () => {
+watch(() => messages.value.length, (n, o) => {
    setTimeout(() => {
-      const scroll = dialogRef.value?.getScroll();
-      dialogRef.value?.setScrollPosition('vertical', scroll?.verticalSize || 0);
+      if (o + 1 === n) {
+         const scroll = dialogRef.value?.getScroll();
+         dialogRef.value?.setScrollPosition('vertical', scroll?.verticalSize || 0);
+      }
    }, 0);
-}, { deep: true, immediate: true });
+}, { deep: true });
 
 async function deleteChat() {
    await MessangerService.deleteChat(currentChatId.value!);
@@ -86,6 +101,16 @@ async function deleteChat() {
 function onOpenImage(link: string) {
    emit('openModal', 'open_image');
    emit('openImage', link);
+}
+
+async function onLoad(index: number, done: (stop?: boolean | undefined) => void) {
+   if (currentChat.value.total > messages.value.length) {
+      loading.value = true;
+      await socketStore.onOpenChat(currentChatId.value, index, limit);
+      loading.value = false;
+      return done();
+   }
+   done(true);
 }
 </script>
 

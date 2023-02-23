@@ -1,14 +1,24 @@
 <template lang="pug">
-QForm(:class="$style.container" @submit="onSubmit" ref="formRef" no-error-focus)
+QForm(:class="$style.container" ref="formRef" no-error-focus @submit="onSubmit")
    h4(class="text-center q-mt-lg q-mb-lg") Новая задача
-   QInput(v-model="task.title" :class="$style.field" filled label="Название" maxlength="30" counter :rules="rules.title" lazy-rules)
+   QInput(
+      v-model="task.title" 
+      :class="$style.field" 
+      filled 
+      label="Название" 
+      counter 
+      lazy-rules
+      :rules="rules.title"
+      :maxlength="30"
+      )
    QInput(
       v-model="tag" 
       :class="$style.field" 
       filled 
-      label="Теги" 
-      :readonly="task.tags.length >= 3"
+      label="Теги"
       lazy-rules
+      :rules="rules.tags"
+      :readonly="task.tags.length >= 3"
       @keyup.enter="onAddTag" 
       @blur="onAddTag"
       )
@@ -30,8 +40,8 @@ QForm(:class="$style.container" @submit="onSubmit" ref="formRef" no-error-focus)
       type="textarea" 
       counter 
       lazy-rules
-      :maxlength="2048"
       :rules="rules.description"
+      :maxlength="2048"
       )
    QInput(v-model="task.date" :class="$style.field" filled label="Дата" mask="date" :rules="rules.date" lazy-rules)
       template(#append)
@@ -45,7 +55,7 @@ QForm(:class="$style.container" @submit="onSubmit" ref="formRef" no-error-focus)
 
 <script setup lang="ts">
 import type { QForm } from 'quasar'
-import { ref, reactive, computed, watch } from 'vue'
+import { ref, reactive, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useFetch } from '@/hooks'
 import { TaskService } from '@/api/services'
@@ -70,6 +80,9 @@ const rules = {
    title: [
       (v: string) => Validate.required(v) || 'Заполните поле',
    ],
+   tags: [
+      () => Validate.lengthInterval(1, 3)(task.tags) || 'Введите хотя бы один тег'
+   ],
    description: [
       (v: string) => Validate.required(v) || 'Заполните поле'
    ],
@@ -78,9 +91,7 @@ const rules = {
    ]
 };
 watch(task, () => {
-   formRef.value?.validate().then((v) => {
-      valid.value = v && Validate.lengthInterval(1, 3)(task.tags) && !loading.value;
-   });
+   formRef.value?.validate().then((v) => { valid.value = v && !loading.value });
 });
 
 function onAddTag() {
