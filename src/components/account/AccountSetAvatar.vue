@@ -1,64 +1,72 @@
-<template lang="pug">
-form(class="form" @submit.prevent="onUpdateAvatar")
-   QFile(
-      v-model="avatar" 
-      class="form_input" 
-      label="Аватар" 
-      outlined 
-      accept="image/jpeg, image/png" 
-      use-chips
-      ref="inputRef"
-      )
-      template(#append)
-         QIcon(name="attach_file" @click="inputRef?.$el.click()")
-   QBtn(class="form_button" type="submit" color="primary" :loading="isAvatarLoading" :disable="!avatar") Изменить
+<template>
+  <form class="form" @submit.prevent="onUpdateAvatar">
+    <ChangeAvatar
+      v-model="avatar"
+      size="200px"
+      :src="store.user.avatar && `${Constants.SERVER_URL}/avatars/${store.user.avatar}`"
+    />
+    <QBtn
+      class="q-mt-lg"
+      type="submit"
+      color="primary"
+      :loading="isAvatarLoading"
+      :disable="disable"
+      label="Изменить"
+    />
+  </form>
 </template>
 
 <script setup lang="ts">
-import type { QInput } from 'quasar'
-import { ref, watchEffect } from 'vue'
-import { useFetch } from '@/hooks'
-import { ToolsService } from '@/api/services'
+import ChangeAvatar from '~/ChangeAvatar.vue';
+import { ref, watchEffect } from 'vue';
+import { useStore } from '@/stores';
+import { useFetch, useWatchPause } from '@/hooks';
+import { ToolsService } from '@/api/services';
+import { Constants } from '@/util';
 
-
-const formData = ref<FormData | null>(null);
+const store = useStore();
 const avatar = ref<File | null>(null);
-const inputRef = ref<QInput | null>(null);
+const disable = ref(true);
+const formData = new FormData();
+const { f: onUpdateAvatar, loading: isAvatarLoading } = useFetch({
+  fn: setAvatar,
+  successMsg: 'Изменено',
+  alert: true,
+});
+const { stop, resume } = useWatchPause(avatar, () => {
+  disable.value = false;
+  stop();
+});
 
 watchEffect(() => {
-   if (avatar.value) {
-      formData.value = new FormData();
-      formData.value.append('avatar', avatar.value);
-   }
+  if (avatar.value) {
+    formData.append('avatar', avatar.value);
+  }
 });
 
-const { f: onUpdateAvatar, loading: isAvatarLoading } = useFetch({
-   fn: () => ToolsService.setAvatar(formData.value!).then(() => avatar.value = null),
-   successMsg: 'Изменено',
-   alert: true
-});
+async function setAvatar() {
+  const response = await ToolsService.setAvatar(formData);
+  avatar.value = null;
+  store.user.avatar = response.data.avatar;
+  formData.delete('avatar');
+  disable.value = true;
+  resume();
+}
 </script>
 
 <style scoped lang="scss">
 .form {
-   margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 250px;
+  & i {
+    cursor: pointer;
+    color: $primary;
 
-   & .form_input {
-      margin-top: 5px;
-
-      & i {
-         cursor: pointer;
-         color: $primary;
-
-         &:hover {
-            color: $secondary;
-         }
-      }
-   }
-
-   & .form_button {
-      margin-top: 5px;
-   }
-
+    &:hover {
+      color: $secondary;
+    }
+  }
 }
 </style>

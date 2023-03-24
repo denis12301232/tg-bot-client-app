@@ -1,94 +1,109 @@
-<template lang="pug">
-div(class="container")
-   QDialog(v-model="layoutStore.header.openLogin")
-      QCard
-         component(:is="component" @swap="onSwap" @submit="onOpenLogin")
-   FormAssistance(:form="form" title="Заявка на получение гуманитарной помощи" :loading="loading" reset @submit="onSubmit")
-      template(#submit="{ type, valid }")
-         QBtn(:type="type" :loading="loading" :disable="!valid" color="primary") Отправить
+<template>
+  <div class="container">
+    <QDialog v-model="layoutStore.header.openLogin">
+      <QCard class="card">
+        <component :is="component" @swap="onSwap" @submit="onOpenLogin" />
+      </QCard>
+    </QDialog>
+    <FormAssistance
+      title="Заявка на получение гуманитарной помощи"
+      :form="form"
+      :loading="loading"
+      reset
+      @submit="onSubmit"
+    >
+      <template #submit="{ type, valid }">
+        <QBtn :type="type" :loading="loading" :disable="!valid" color="primary" label="Отправить" />
+      </template>
+    </FormAssistance>
+  </div>
 </template>
 
-
 <script setup lang="ts">
-import FormAssistance from '~/FormAssistance.vue'
-import FormReg from '~/FormReg.vue'
-import FormLog from '~/FormLog.vue'
-import { reactive, shallowRef } from 'vue'
-import { useLayoutStore } from '@/stores'
-import { useFetch, useTelegram } from '@/hooks'
-import { AssistanceService } from '@/api/services'
-
+import FormAssistance from '~/FormAssistance.vue';
+import FormReg from '~/FormReg.vue';
+import FormLog from '~/FormLog.vue';
+import { reactive, shallowRef } from 'vue';
+import { useLayoutStore } from '@/stores';
+import { useFetch, useTelegram } from '@/hooks';
+import { AssistanceService } from '@/api/services';
 
 const layoutStore = useLayoutStore();
 const component = shallowRef(FormLog);
 const form = reactive({
-   name: '',
-   surname: '',
-   patronymic: '',
-   phone: '',
-   birth: '',
-   district: '',
-   street: '',
-   house: '',
-   flat: '',
-   people_num: '',
-   people_fio: [],
-   invalids: 'Нет',
-   kids: 'Нет',
-   kids_age: [],
-   food: 'Нет',
-   water: 'Нет',
-   medicines: 'Нет',
-   medicines_info: '',
-   hygiene: 'Нет',
-   hygiene_info: '',
-   pampers: 'Нет',
-   pampers_info: '',
-   diet: '',
-   pers_data_agreement: false,
-   photo_agreement: false,
+  name: '',
+  surname: '',
+  patronymic: '',
+  phone: '',
+  birth: '',
+  district: '',
+  street: '',
+  house: '',
+  flat: '',
+  people_num: 1,
+  people_fio: [],
+  invalids: false,
+  kids: false,
+  kids_age: [],
+  food: false,
+  water: false,
+  medicines: false,
+  medicines_info: '',
+  hygiene: false,
+  hygiene_info: '',
+  pampers: false,
+  pampers_info: '',
+  diet: '',
+  pers_data_agreement: false,
+  photo_agreement: false,
 });
 const { tg, isOpenedFromTg } = useTelegram();
 const { f: onSubmit, loading } = useFetch({
-   fn: submit,
-   alert: true,
-   successMsg: 'Сохранено'
+  fn: submit,
+  alert: true,
+  successMsg: 'Сохранено',
 });
 
 async function submit(form: any) {
-   await AssistanceService.sendForm(form);
-   if (isOpenedFromTg) {
-      tg.sendData(JSON.stringify('Сохранено'));
-   }
+  await AssistanceService.sendForm(form);
+  if (isOpenedFromTg) {
+    tg.sendData(JSON.stringify('Сохранено'));
+  }
 }
 
 function onOpenLogin() {
-   layoutStore.header.openLogin = !layoutStore.header.openLogin
+  layoutStore.header.openLogin = !layoutStore.header.openLogin;
 }
 
 function onSwap(value: 'reg' | 'log') {
-   switch (value) {
-      case 'log':
-         component.value = FormLog;
-         break;
-      case 'reg':
-         component.value = FormReg;
-         break;
-   }
+  switch (value) {
+    case 'log':
+      component.value = FormLog;
+      break;
+    case 'reg':
+      component.value = FormReg;
+      break;
+  }
 }
 </script>
 
-
 <style lang="scss" scoped>
 .container {
-   display: flex;
-   justify-content: center;
-   padding: 20px;
+  display: flex;
+  justify-content: center;
+  padding: 0 20px 10px 20px;
 }
 
-@media (max-width:480px) {
-   .container {
-      padding: 20px 5px;
-   }
+.card {
+  padding: 10px 20px 25px 20px;
+  min-width: 300px;
+  max-width: 400px;
+  width: 100%;
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 0 5px 5px 5px;
+  }
 }
 </style>

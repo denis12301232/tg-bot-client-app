@@ -1,66 +1,69 @@
-<template lang="pug">
-QCard(:class="$style.container")
-   QCardSection
-      div(class="text-h4 q-mb-lg text-center") Настроить роли
-      QTable(
-         :columns="columns"
-         :rows="chat.users"
-         :loading="loading"
-         hide-pagination
-         binary-state-sort
-         separator="cell"
-         no-data-label="Ничего не найдено"
-         flat
-         bordered
-      )
-         template(#body="{ row }")
-            QTr
-               QTd(key="name") {{ row.name }}
-               QTd(key="login") {{ row.login }}
-               QTd(key="roles" auto-width)
-                  div
-                     QCheckbox(
-                        v-model="hasAdminRights" 
-                        style="padding-right: 10px;" 
-                        :val="row._id" 
-                        label="Админ" 
-                        @update:model-value="onUpdateRoles"
-                        )  
+<template>
+  <QCard :class="$style.container">
+    <QCardSection>
+      <div class="text-h4 q-mb-lg text-center">Настроить роли</div>
+      <QTable
+        :columns="columns"
+        :rows="currentChat?.users"
+        :loading="loading"
+        :rows-per-page-options="[5, 10]"
+        binary-state-sort
+        separator="cell"
+        no-data-label="Ничего не найдено"
+        flat
+        bordered
+      >
+        <template #body="{ row }: { row: IUser }">
+          <QTr>
+            <QTd key="name">{{ row.name }}</QTd>
+            <QTd key="login">{{ row.login }}</QTd>
+            <QTd key="roles" auto-width>
+              <div>
+                <QCheckbox
+                  v-model="hasAdminRights"
+                  class="q-pr-sm"
+                  :val="row._id"
+                  label="Админ"
+                  @update:model-value="onUpdateRoles"
+                />
+              </div>
+            </QTd>
+          </QTr>
+        </template>
+      </QTable>
+    </QCardSection>
+  </QCard>
 </template>
 
-
 <script setup lang="ts">
-import type { QTable } from 'quasar'
-import type { ChatResponse } from '@/types/http'
-import { ref } from 'vue'
-import { useFetch } from '@/hooks'
-import { MessangerService } from '@/api/services'
+import type { QTable } from 'quasar';
+import type { IUser } from '@/types';
+import { ref } from 'vue';
+import { useFetch } from '@/hooks';
+import { MessangerService } from '@/api/services';
+import { storeToRefs } from 'pinia';
+import {  useChatStore } from '@/stores';
 
-
-const props = defineProps<{
-   chat: ChatResponse;
-}>();
-
-const hasAdminRights = ref(props.chat.group.roles?.admin || []);
+const { currentChat } = storeToRefs(useChatStore());
+const hasAdminRights = ref(currentChat.value?.group.roles.admin || []);
 const { f: onUpdateRoles, loading } = useFetch({
-   fn: () => MessangerService.updateRolesInGroup(props.chat.group._id, 'admin', hasAdminRights.value),
-   alert: true,
-   successMsg: 'Обновлено'
+  fn: () => MessangerService.updateRolesInGroup(currentChat.value!.group._id, 'admin', hasAdminRights.value),
+  alert: true,
+  successMsg: 'Обновлено',
 });
 
 const columns: QTable['columns'] = [
-   { name: 'name', label: 'Имя', align: 'left', field: 'name', sortable: true, sort: (a, b) => a.localeCompare(b) },
-   { name: 'login', label: 'Логин', align: 'left', field: 'login', sortable: true, sort: (a, b) => a.localeCompare(b) },
-   { name: 'roles', label: 'Роль', align: 'center', field: 'roles' },
+  { name: 'name', label: 'Имя', align: 'center', field: 'name', headerStyle: 'font-size: 1.1em;', sortable: true, sort: (a, b) => a.localeCompare(b) },
+  { name: 'login', label: 'Логин', align: 'center', field: 'login', headerStyle: 'font-size: 1.1em;', sortable: true, sort: (a, b) => a.localeCompare(b) },
+  { name: 'roles', label: 'Роль', align: 'center', field: 'roles', headerStyle: 'font-size: 1.1em;' },
 ];
 </script>
 
-
 <style module lang="scss">
 .container {
-   min-width: 300px;
-   max-width: 500px;
-   width: 500px;
-   padding: 10px 10px 10px 10px;
+  min-width: 300px;
+  max-width: 500px;
+  width: 500px;
+  padding: 10px 10px 10px 10px;
 }
 </style>

@@ -1,95 +1,113 @@
-<template lang="pug">
-QCard(class="info")
-   QCardSection
-      div(class="text-center text-h5") Информация о группе
-   QCardSection(class="info_group")
-      QItem
-         QItemSection(avatar)
-            UserAvatar(:avatar="avatar" :name="name")
-         QItemSection
-            QItemLabel(class="text-h6") {{ name }}
-            QItemLabel(caption) {{ currentChat.members_count }} участников
-   QCardSection
-      QItem
-         QItemSection(class="text-center text-h6 q-mb-sm") Список участников
-      QInput(v-model="filter" label="Найти" class="q-mb-sm" outlined dense hide-bottom-space)
-      QItem(v-if="loading")
-         QInnerLoading(:showing="loading")
-            QSpinnerGears(size="50px" color="primary")
-      QList
-         QItem(v-for="user in filteredUsers" :key="user._id")
-            QItemSection(avatar)
-               UserAvatar(:name="user.name", :avatar="user.avatar")
-            QItemSection
-               QItemLabel {{ user.name }}
-               QItemLabel(caption) {{ user.login }}
-            QItemSection(v-if="canRemove && user._id !== store.user._id" side)
-               QBtn(dense flat round icon="delete" :loading="isRemoveUserLoading" @click="onRemoveUser(user._id)")
-         QItem(v-if="!loading && !filteredUsers?.length")
-            QItemSection(class="text-center not_found") Ничего не найдено
+<template>
+  <QCard class="info">
+    <QCardSection class="row justify-end">
+      <QBtn v-close-popup icon="close" round dense flat color="negative" />
+    </QCardSection>
+    <QCardSection>
+      <h5 class="text-center">Информация о группе</h5>
+    </QCardSection>
+    <QCardSection class="row justify-center q-pa-none">
+      <QItem>
+        <QItemSection avatar>
+          <UserAvatar :avatar="avatar" :name="name" size="55px" />
+        </QItemSection>
+        <QItemSection>
+          <QItemLabel class="text-h6">{{ name }}</QItemLabel>
+          <QItemLabel caption>{{ currentChat?.members_count }} участников</QItemLabel>
+        </QItemSection>
+      </QItem>
+    </QCardSection>
+    <QCardSection class="column items-center">
+      <div class="users">
+        <h6 class="text-center">Список участников</h6>
+        <QInput v-model="filter" class="q-mb-sm full-width" label="Найти" clearable />
+        <div v-if="loading" class="row justify-center q-mt-md">
+          <QSpinner size="50px" color="primary" />
+        </div>
+        <QVirtualScroll
+          class="full-width"
+          style="max-height: 500px"
+          :items="filteredUsers"
+          separator
+          #="{ item }: { item: IUser }"
+        >
+          <QItem :key="item._id">
+            <QItemSection avatar>
+              <UserAvatar :name="item.name" :avatar="item.avatar" />
+            </QItemSection>
+            <QItemSection>
+              <QItemLabel>{{ item.name }}</QItemLabel>
+              <QItemLabel caption>{{ item.login }}</QItemLabel>
+            </QItemSection>
+            <QItemSection v-if="canRemove && item._id !== store.user._id" side>
+              <QBtn dense flat round icon="delete" :loading="isRemoveUserLoading" @click="onRemoveUser(item._id)" />
+            </QItemSection>
+          </QItem>
+        </QVirtualScroll>
+        <QItem v-if="!loading && !filteredUsers?.length">
+          <QItemSection class="text-center text-subtitle2 text-negative">Ничего не найдено</QItemSection>
+        </QItem>
+      </div>
+    </QCardSection>
+  </QCard>
 </template>
 
-
 <script setup lang="ts">
-import type { IUser } from '@/types/interfaces'
-import UserAvatar from '~/UserAvatar.vue'
-import { ref, onMounted, computed } from 'vue'
-import { storeToRefs } from 'pinia'
-import { useStore, useSocketStore } from '@/stores'
-import { useFetch } from '@/hooks'
-import { MessangerService } from '@/api/services'
-
+import type { IUser } from '@/types';
+import UserAvatar from '~/UserAvatar.vue';
+import { ref, onMounted, computed } from 'vue';
+import { storeToRefs } from 'pinia';
+import { useStore,  useChatStore } from '@/stores';
+import { useFetch } from '@/hooks';
+import { MessangerService } from '@/api/services';
 
 const props = defineProps<{
-   avatar: string;
-   name: string;
-   chat_id: string;
-   roles: { [name: string]: string }
+  avatar: string;
+  name: string;
+  chat_id: string;
+  roles: { [name: string]: string };
 }>();
 
 const store = useStore();
-const { currentChat } = storeToRefs(useSocketStore())
+const { currentChat } = storeToRefs(useChatStore());
 const filter = ref('');
 const { f: onGetUsersListInChat, loading, data: users } = useFetch<IUser[]>({
-   fn: MessangerService.getUsersListInChat,
+  fn: MessangerService.getUsersListInChat,
 });
 const { f: onRemoveUser, loading: isRemoveUserLoading } = useFetch({
-   fn: (user_id: string) => {
-      MessangerService.removeUserFromGroup(props.chat_id, user_id)
-         .then(() => {
-            users.value = users.value?.filter((user) => user._id !== user_id);
-            currentChat.value.members_count--;
-         });
-   },
+  fn: (user_id: string) => {
+    MessangerService.removeUserFromGroup(props.chat_id, user_id).then(() => {
+      users.value = users.value?.filter((user) => user._id !== user_id);
+      currentChat.value && currentChat.value.members_count--;
+    });
+  },
 });
 const filteredUsers = computed(() => {
-   return users.value?.filter(user => user.name.includes(filter.value) || user.login.includes(filter.value));
+  return filter.value
+    ? users.value?.filter((user) => user.name.includes(filter.value) || user.login.includes(filter.value))
+    : users.value;
 });
 const canRemove = computed(() => {
-   if (props.roles.creator?.includes(store.user._id) || props.roles.admin?.includes(store.user._id)) {
-      return true;
-   }
-   return false;
+  if (props.roles.creator?.includes(store.user._id) || props.roles.admin?.includes(store.user._id)) {
+    return true;
+  }
+  return false;
 });
 
 onMounted(() => onGetUsersListInChat(props.chat_id));
 </script>
 
-
 <style scoped lang="scss">
-.info {
-   min-width: 300px;
-   max-width: 500px;
-   width: 500px;
-
-   & .info_group {
-      display: flex;
-      justify-content: center;
-      padding: 0;
-   }
+.users {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 500px;
+  width: 50%;
+  min-width: 250px;
 }
 
 .not_found {
-   font-size: 1.2em;
+  font-size: 1.2em;
 }
 </style>

@@ -2,49 +2,39 @@ import { ref } from 'vue'
 import { useStore } from '@/stores'
 
 
-interface FetchArgs {
-   fn: (...args: any) => any;
+interface FetchArgs<T extends (...args: any[]) => any> {
+   fn: T;
    successMsg?: string;
    errorMsg?: string;
    alert?: boolean;
-}
+ }
 
-export function useFetch<T>({ fn, successMsg, errorMsg, alert = false }: FetchArgs) {
+export default function useFetch<D, T extends (...args: any[]) => any = (...args: any[]) => any>({ fn, successMsg, errorMsg, alert = false }: FetchArgs<T>) {
    const { setAlert } = useStore();
-   const data = ref<T>();
+   const data = ref<D>();
    const loading = ref(false);
    const success = ref('');
    const error = ref('');
-
-   async function f(...args: any) {
-      try {
-         if (alert) {
-            setAlert({ message: '', visible: false });
-         }
-         loading.value = true;
-         const response = await fn(...args);
-         data.value = response?.data;
-         successMsg ? success.value = successMsg : 'Success';
-
-         if (alert) {
-            setAlert({ type: 'success', message: success.value, visible: true });
-         }
-      } catch (e) {
-         if (errorMsg) {
-            error.value = errorMsg;
-         } else {
-            if (e instanceof Error) {
-               error.value = e.message;
-            }
-         }
-
-         if (alert) {
-            setAlert({ type: 'error', message: error.value, visible: true });
-         }
-      } finally {
-         loading.value = false;
-      }
+ 
+   async function f(...args: Parameters<T>) {
+     try {
+       alert && setAlert({ message: '', visible: false });
+       loading.value = true;
+       const response = await fn(...args);
+       data.value = response?.data || response;
+       successMsg ? (success.value = successMsg) : 'Success';
+       alert && setAlert({ type: 'success', message: success.value, visible: true });
+     } catch (e) {
+       if (errorMsg) {
+         error.value = errorMsg;
+       } else {
+         e instanceof Error && (error.value = e.message);
+       }
+       alert && setAlert({ type: 'error', message: error.value, visible: true });
+     } finally {
+       loading.value = false;
+     }
    }
-
-   return { data, loading, success, error, f }
-}
+ 
+   return { data, loading, success, error, f };
+ }

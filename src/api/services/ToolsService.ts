@@ -1,4 +1,4 @@
-import type { IUser } from '@/types/interfaces'
+import type { IUser } from '@/types'
 import $api from '@/api'
 
 
@@ -27,8 +27,8 @@ export default class ToolsService {
       return $api.post<{ message: string }>('/tools/takerights', { email });
    }
 
-   static getUsers(limit: number, page: number) {
-      return $api.get<IUser[]>('/tools/users', { params: { limit, page } });
+   static getUsers({ page, limit, filter }: { page: number, limit: number, filter: string }) {
+      return $api.get<IUser[]>('/tools/users', { params: { limit, page, filter } });
    }
 
    static updateRoles(_id: string, roles: string[]) {
@@ -36,7 +36,7 @@ export default class ToolsService {
    }
 
    static setAvatar(formData: FormData) {
-      return $api.post('/tools/avatar', formData, {
+      return $api.post<{ avatar: string }>('/tools/avatar', formData, {
          headers: { 'Content-Type': 'multipart/form-data' },
       });
    }

@@ -1,4 +1,4 @@
-import type { IUser } from '@/types/interfaces'
+import type { IUser, AlertType } from '@/types'
 import { defineStore } from 'pinia'
 import { ref, reactive, computed, watch } from 'vue'
 import { useQuasar } from 'quasar'
@@ -10,7 +10,8 @@ export const useStore = defineStore('main', () => {
   const user = ref<IUser>({} as IUser);
   const theme = ref(localStorage.getItem('theme') || 'light');
   const isPageLoading = ref(false);
-  const alert = reactive<{ type: 'success' | 'info' | 'warning' | 'error', message: string, visible: boolean }>({ type: 'success', message: '', visible: false });
+  const modal = ref(false);
+  const alert = reactive<{ type: AlertType, message: string, visible: boolean }>({ type: 'success', message: '', visible: false });
 
   const isAuth = computed(() => !!Object.keys(user.value).length);
   const isAdmin = computed(() => user.value?.roles?.includes('admin'));
@@ -39,7 +40,7 @@ export const useStore = defineStore('main', () => {
     currentTheme.value === 'dark' ? theme.value = 'light' : theme.value = 'dark'
   }
 
-  function setAlert({ type = 'success', message, visible }: { type?: 'success' | 'info' | 'warning' | 'error', message: string, visible: boolean }) {
+  function setAlert({ type = 'success', message, visible }: { type?: AlertType, message: string, visible: boolean }) {
     alert.message = message;
     alert.type = type;
     alert.visible = visible;
@@ -51,7 +52,7 @@ export const useStore = defineStore('main', () => {
       localStorage.setItem('token', response.data.accessToken);
       user.value = response.data.user;
     } catch (e: any) {
-      console.log(e);
+      console.log(e.message);
     }
   }
 
@@ -65,5 +66,5 @@ export const useStore = defineStore('main', () => {
     }
   }
 
-  return { user, theme, isPageLoading, alert, isAuth, isAdmin, currentTheme, setTheme, setAlert, refresh, logout };
+  return { user, theme, isPageLoading, modal, alert, isAuth, isAdmin, currentTheme, setTheme, setAlert, refresh, logout };
 });

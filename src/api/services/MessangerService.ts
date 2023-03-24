@@ -1,5 +1,4 @@
-import type { IUser, IMessage, } from '@/types/interfaces'
-import type { ChatResponse } from '@/types/http'
+import type { IUser, IMessage, ChatResponse } from '@/types'
 import $api from '@/api'
 
 
@@ -12,8 +11,10 @@ export default class MessangerService {
       return $api.post<ChatResponse>('/messanger/create_chat', { users });
    }
 
-   static createGroup(users: string[], title: string) {
-      return $api.post<ChatResponse>('/messanger/create_group', { users, title });
+   static createGroup(title: string, about: string, users: string[], formData?: FormData) {
+      return $api.post<ChatResponse>('/messanger/create_group', formData, {
+         headers: { 'Content-Type': 'multipart/form-data' }, params: { title, about, users }
+      });
    }
 
    static addUserToGroup(chat_id: string, user_id: string) {
@@ -61,4 +62,14 @@ export default class MessangerService {
       return $api.patch('/messanger/update_roles_in_group', { group_id, role, users });
    }
 
+   static updateGroup({ formData, params }: { formData?: FormData, params: { group_id: string, title: string, about: string } }) {
+      return $api.patch('/messanger/update_group', formData, {
+         headers: { 'Content-Type': 'multipart/form-data' },
+         params
+      });
+   }
+
+   static getUserChatById(chat_id: string) {
+      return $api.get<ChatResponse>('/messanger/get_user_chat_by_id', { params: { chat_id } })
+   }
 }

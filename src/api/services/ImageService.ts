@@ -1,4 +1,4 @@
-import type { ImagesResponse } from '@/types/http'
+import type { ImagesResponse } from '@/types'
 import axios from 'axios'
 import { Constants } from '@/util'
 

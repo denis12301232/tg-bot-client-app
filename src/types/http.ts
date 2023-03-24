@@ -1,4 +1,4 @@
-import type { IUser, IChat } from '@/types/interfaces'
+import type { IUser, IChat } from '@/types'
 
 export interface ChatResponse extends IChat {
    companion: IUser;
@@ -6,6 +6,7 @@ export interface ChatResponse extends IChat {
    total: number;
    type: 'dialog' | 'group';
    members_count: number;
+   typing: {[name: string]: string};
    group: {
       _id: string;
       title: string;

@@ -1,3 +1,5 @@
-<template lang="pug">
-slot
+<template>
+  <div class="window-height">
+    <slot />
+  </div>
 </template>

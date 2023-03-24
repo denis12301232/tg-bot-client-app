@@ -1,16 +1,22 @@
-<template lang="pug">
-UserAvatar(name="tt" avatar="" color="primary")
-QBtnGroup(flat)
-   QBtn(round flat icon="check_circle" color="positive")
-   QBtn(round flat icon="add_circle_outline" color="yellow")
-   QBtn(round flat icon="info" color="indigo")
-   QBtn(round flat icon="cancel" color="negative")
+<template>
+  <QCard>
+    <QCardSection class="text-center text-h6"> Набрать </QCardSection>
+    <QCardActions align="between">
+      <QBtn dense round flat color="positive" icon="call" @click="call" />
+      <QSpinnerDots v-if="calling" size="2em" />
+      <QBtn v-close-popup dense round flat color="negative" icon="call_end" />
+    </QCardActions>
+  </QCard>
 </template>
-   
-<script setup lang="ts">
-import UserAvatar from '~/UserAvatar.vue'
-</script>
-   
-<style scoped lang="scss">
 
-</style>
+<script setup lang="ts">
+import { ref } from 'vue';
+
+const calling = ref(false);
+
+function call() {
+  calling.value = true;
+}
+</script>
+
+<style module lang="scss"></style>

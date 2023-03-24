@@ -37,6 +37,20 @@ export default class Time {
       if (nowT.year === dateT.year && nowT.month === dateT.month && nowT.day === dateT.day) {
          return `${this.convertHours(dateT.hours)}:${this.convertMinutes(dateT.minutes)}`
       } else if (nowT.year === dateT.year) {
+         return `${this.convertDay(dateT.day)}.${this.convertMonth(dateT.month)}, в ${this.convertHours(dateT.hours)}:${this.convertMinutes(dateT.minutes)}`
+      } else {
+         return `${this.convertDay(dateT.day)}.${this.convertMonth(dateT.month)}.${this.convertYear(dateT.year)}, в ${this.convertHours(dateT.hours)}:${this.convertMinutes(dateT.minutes)} `
+      }
+   }
+
+   static showDialogListDate(date: Date) {
+      const now = new Date;
+      const nowT = this.timeStruct(now);
+      const dateT = this.timeStruct(date);
+
+      if (nowT.year === dateT.year && nowT.month === dateT.month && nowT.day === dateT.day) {
+         return `${this.convertHours(dateT.hours)}:${this.convertMinutes(dateT.minutes)}`
+      } else if (nowT.year === dateT.year) {
          return `${this.convertDay(dateT.day)}.${this.convertMonth(dateT.month)}`
       } else {
          return `${this.convertDay(dateT.day)}.${this.convertMonth(dateT.month)}.${this.convertYear(dateT.year)}`

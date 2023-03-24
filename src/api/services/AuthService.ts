@@ -1,4 +1,4 @@
-import type { AuthResponse } from '@/types/http'
+import type { AuthResponse } from '@/types'
 import $api from '@/api'
 import axios from 'axios'
 import { Constants } from '@/util'

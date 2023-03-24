@@ -36,4 +36,13 @@ export default class Validate {
       }
    }
 
+   static isNumber(v: any) {
+      return typeof Number(v) === 'number' && !Number.isNaN(Number(v));
+   }
+
+   static minMax(min: number, max: number) {
+      return function (v: string | number) {
+         return Number(v) >= min && Number(v) <= max;
+      }
+   }
 }

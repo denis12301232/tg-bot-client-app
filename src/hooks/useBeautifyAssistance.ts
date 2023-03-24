@@ -1,4 +1,4 @@
-export function useBeautifyAssistance(value: any) {
+export default function useBeautifyAssistance(value: any) {
    if (Array.isArray(value)) {
       return value.length ? value.join(',') : '-';
    }

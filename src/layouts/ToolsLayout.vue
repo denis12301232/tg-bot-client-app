@@ -1,38 +1,39 @@
-<template lang="pug">
-QLayout(:class="store.currentTheme === 'dark' ? 'dark' : 'light'" view="hHh lpR fFf")
-   QHeader(class="header" reveal elevated height-hint="98")
-      QToolbar
-         QBtn(dense flat round icon="arrow_back" color="indigo" @click="$router.push('/')")
-         QToolbarTitle Настройки
-      QTabs(align="left")
-         QRouteTab(to="/tools/google" label="Интегрция с Google" active-class="active")
-         QRouteTab(to="/tools/sheets" label="Выгрузить заявки" active-class="active")
-         QRouteTab(to="/tools/roles" label="Настроить роли" active-class="active")
-   QPageContainer
-      slot
+<template>
+  <QLayout :class="store.currentTheme === 'dark' ? 'dark' : 'light'" view="hHh lpR fFf">
+    <QHeader class="header" reveal elevated height-hint="98">
+      <QToolbar>
+        <QBtn dense flat round icon="arrow_back" color="indigo" @click="$router.push('/')" />
+        <QToolbarTitle>Настройки</QToolbarTitle>
+      </QToolbar>
+      <QTabs align="left" active-color="secondary">
+        <QRouteTab to="/tools/google" label="Интегрция с Google" />
+        <QRouteTab to="/tools/sheets" label="Выгрузить заявки" />
+        <QRouteTab to="/tools/roles" label="Настроить роли" />
+      </QTabs>
+    </QHeader>
+    <QPageContainer class="window-height">
+      <slot />
+    </QPageContainer>
+  </QLayout>
 </template>
 
 <script setup lang="ts">
-import { useStore } from '@/stores'
+import { useStore } from '@/stores';
 
 const store = useStore();
 </script>
 
 <style lang="scss" scoped>
 .light {
-   & .header {
-      background-color: white;
-      color: black;
-   }
+  & .header {
+    background-color: white;
+    color: black;
+  }
 }
 
 .dark {
-   & .header {
-      background-color: #121212;
-   }
-}
-
-.active {
-   color: $secondary;
+  & .header {
+    background-color: #121212;
+  }
 }
 </style>

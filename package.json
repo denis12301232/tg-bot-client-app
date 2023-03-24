@@ -12,8 +12,10 @@
   "dependencies": {
     "@quasar/extras": "^1.15.10",
     "axios": "^1.2.3",
+    "peerjs": "^1.4.7",
     "pinia": "^2.0.28",
     "quasar": "^2.11.5",
+    "socket.io-client": "^4.6.1",
     "vue": "^3.2.45",
     "vue-router": "^4.1.6"
   },
@@ -22,6 +24,7 @@
     "@types/node": "^18.11.12",
     "@vitejs/plugin-vue": "^4.0.0",
     "@vitejs/plugin-vue-jsx": "^3.0.0",
+    "@volar/vue-language-core": "^1.2.0-patch.2",
     "@volar/vue-language-plugin-pug": "^1.0.24",
     "@vue/tsconfig": "^0.1.3",
     "npm-run-all": "^4.1.5",

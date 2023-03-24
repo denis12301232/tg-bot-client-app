@@ -12,7 +12,7 @@ export const routes: RouteRecordRaw[] = [
       path: '/list',
       name: 'list',
       component: () => import('@/pages/List.vue'),
-      beforeEnter: [useAuthGuard, useRoleGuard(['admin'])]
+      beforeEnter: [useAuthGuard, useRoleGuard(['admin'])],
    },
    {
       path: '/list/:id',
@@ -65,7 +65,7 @@ export const routes: RouteRecordRaw[] = [
       name: 'messanger',
       component: () => import('@/pages/Messanger.vue'),
       beforeEnter: [useAuthGuard],
-      meta: { layout: 'ChatLayout' }
+      meta: { layout: 'VoidLayout' }
    },
    {
       path: '/task',
@@ -91,5 +91,6 @@ export const routes: RouteRecordRaw[] = [
       path: '/test',
       name: 'test',
       component: () => import('@/pages/Test.vue'),
+      meta: { layout: 'VoidLayout' }
    }
 ];

@@ -1,7 +1,7 @@
 import { useRouter } from 'vue-router'
 
 
-export function useNavigation() {
+export default function useNavigation() {
    const router = useRouter();
 
    function goBack() {

@@ -13,8 +13,7 @@ dist
 dist-ssr
 coverage
 *.local
-.env
-.env.production
+.env*
 1.js
 
 /cypress/videos/

@@ -1,16 +1,15 @@
-import type { HumansList } from '@/types/http'
-import type { AssistanceForm } from '@/types/interfaces'
+import type { AssistanceForm, HumansList } from '@/types'
 import $api from '@/api'
 
 
 export default class AssistanceService {
-   static async catchHumansList({ limit, page, filter }: { limit: number, page: number, filter: string }) {
-      return $api.get<HumansList[]>('/assistance/list', { params: { limit, page, filter } });
+   static async catchHumansList({ limit, page, filter, sort, descending }: { limit: number, page: number, filter: string, sort: string, descending: boolean }) {
+      return $api.get<HumansList[]>('/assistance/list', { params: { limit, page, filter, sort, descending } });
    }
 
    static async getForms(nameOrSurname: string, limit: number, page: number) {
       return $api.get<{ form: AssistanceForm, _id: string }[]>('/assistance',
-         { params: { nameOrSurname, limit, page } });
+         { params: { nameOrSurname, limit, page },  });
    }
 
    static async getFormById(form_id: string) {
@@ -18,7 +17,7 @@ export default class AssistanceService {
    }
 
    static async sendForm(form: any) {
-      return $api.post<{ message: string }>('/assistance', { form });
+      return $api.post<{ message: string }>('/assistance', form);
    }
 
    static async deleteFormById(id: string) {

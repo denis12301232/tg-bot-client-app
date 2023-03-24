@@ -1,146 +1,153 @@
-<template lang="pug">
-QInput(
-   v-model="message" 
-   class="input"
-   ref="inputRef"
-   outlined 
-   label-slot
-   :loading="isTextMsgLoading || isMediaMsgLoading" 
-   :readonly="isRecording"
-   :="$attrs"
-   @keyup.enter="formData ? onSaveMediaMessage() : onSaveMessage()"
-   )
-   template(#label)
-      div(v-if="voiceMessage") Записано голосовое сообщение
-      div(v-else-if="!isRecording") Написать сообщение
-      div(v-else class="recording") Идет запись... 
-   template(#append)
-      QBtn(
-         v-if="!message"
-         dense
-         round
-         flat
-         icon="photo_camera"
-         @click="fileInput?.click()"
-      )
-      QBtn(
-         v-if="voiceMessage"
-         dense
-         round
-         flat
-         icon="stop_circle"
-         color="red"
-         @click="formData, voiceMessage = null"
-      )
-      QBtn(
-         v-if="!message && !voiceMessage"
-         dense
-         round
-         flat
-         :icon="!isRecording ? 'mic' : 'mic_off'" 
-         @click="!isRecording ? startRecording() : stopRecording()"
-      )
-      QBtn(
-         v-if="message || formData"
-         dense
-         round
-         flat
-         icon="send"
-         :disable="isTextMsgLoading || isMediaMsgLoading"
-         @click="formData ? onSaveMediaMessage('audio') : onSaveMessage()"
-         )
-input(v-show="false" type="file" ref="fileInput" accept="image/*" @change="onMedia")
+<template>
+  <QInput
+    v-model="message"
+    ref="inputRef"
+    class="input"
+    filled
+    label-slot
+    :loading="isMsgLoading"
+    :readonly="isRecording || !!voiceMessage"
+    :="$attrs"
+    @keyup.enter="onSaveMsg(formData ? 'audio' : 'text')"
+  >
+    <template #label>
+      <div v-if="voiceMessage">Записано голосовое сообщение</div>
+      <div v-else-if="!isRecording">Написать сообщение</div>
+      <div class="recording" v-else>Идет запись...</div>
+    </template>
+    <template #prepend>
+      <EmojiPicker @pick="onPickEmoji" @hide="inputRef?.$el.focus()" />
+    </template>
+    <template #append>
+      <QBtn v-if="!message" dense round flat icon="photo_camera" @click="fileInput?.click()" />
+      <QBtn
+        v-if="voiceMessage"
+        dense
+        round
+        flat
+        icon="stop_circle"
+        color="red"
+        @click="formData, (voiceMessage = null)"
+      />
+      <QBtn
+        v-if="!message && !voiceMessage"
+        dense
+        round
+        flat
+        :icon="!isRecording ? 'mic' : 'mic_off'"
+        @click="!isRecording ? startRecording() : stopRecording()"
+      />
+      <QBtn
+        v-if="message || formData"
+        dense
+        round
+        flat
+        icon="send"
+        :disable="isMsgLoading"
+        @click="onSaveMsg(formData ? 'audio' : 'text')"
+      />
+    </template>
+  </QInput>
+  <input v-show="false" ref="fileInput" type="file" multiple accept="image/*" @change="onMedia" />
 </template>
 
 <script setup lang="ts">
-import type { QInput } from 'quasar'
-import type { IMessage } from '@/types/interfaces'
-import { ref, watch } from 'vue'
-import { storeToRefs } from 'pinia'
-import { useSocketStore } from '@/stores'
-import { useVoice, useFetch } from '@/hooks'
-import { MessangerService } from '@/api/services'
+import type { QInput } from 'quasar';
+import type { IMessage } from '@/types';
+import EmojiPicker from '~/EmojiPicker.vue';
+import { ref, watch } from 'vue';
+import { storeToRefs } from 'pinia';
+import { useStore, useChatStore } from '@/stores';
+import { useVoice, useFetch } from '@/hooks';
+import { MessangerService } from '@/api/services';
+import { Util } from '@/util';
 
-
-const { currentChatId, currentChat } = storeToRefs(useSocketStore());
-const message = ref('');
+const { user } = storeToRefs(useStore());
+const { currentChatId, currentChat, chats , socket} = storeToRefs(useChatStore());
+const message = ref<string | null>(null);
 const inputRef = ref<QInput | null>(null);
 const fileInput = ref<HTMLInputElement | null>(null);
 const formData = ref<FormData | null>(null);
 const { voiceMessage, isRecording, startRecording, stopRecording } = useVoice();
-const { f: onSaveMessage, data: textMsg, loading: isTextMsgLoading } = useFetch<IMessage>({
-   fn: () => MessangerService.saveMessage(currentChatId.value, message.value),
-});
-const { f: onSaveMediaMessage, data: mediaMsg, loading: isMediaMsgLoading } = useFetch<IMessage>({
-   fn: saveMediaMessage
+const { f: onSaveMsg, data: msg, loading: isMsgLoading } = useFetch<IMessage, typeof saveMsg>({ fn: saveMsg });
+const onTypingDebounce = Util.debounceDecorator(onTyping, 1000);
+
+watch(msg, (newMsg, oldMsg) => {
+  if (newMsg && newMsg !== oldMsg) {
+    formData.value = null;
+    voiceMessage.value = null;
+    message.value = null;
+  }
 });
 
-async function onMedia(event: Event) {
-   const target = event.target as HTMLInputElement;
-   const files = target.files;
-
-   if (files) {
-      formData.value = new FormData();
-      Array.from(files).forEach(file => formData.value?.append(file.name, file));
-      await onSaveMediaMessage('image')
-      target.value = '';
-      formData.value = null;
-   }
-}
+watch(message, () => {
+  onTypingDebounce();
+});
 
 watch(voiceMessage, () => {
-   if (voiceMessage.value) {
-      formData.value = new FormData();
-      formData.value.append('audio', voiceMessage.value);
-   }
-});
-
-watch([textMsg, mediaMsg], ([newText, newMedia], [oldText, oldMedia]) => {
-   if (newText && newText !== oldText) {
-      currentChat.value.messages.push(newText);
-      currentChat.value.updatedAt = newText.createdAt;
-      message.value = '';
-   }
-   if (newMedia && newMedia !== oldMedia) {
-      currentChat.value.messages.push(newMedia);
-      currentChat.value.updatedAt = newMedia.createdAt;
-   }
+  if (voiceMessage.value) {
+    formData.value = new FormData();
+    formData.value.append('audio', voiceMessage.value);
+  }
 });
 
 watch(isRecording, () => {
-   inputRef.value?.blur();
+  inputRef.value?.blur();
 });
 
-async function saveMediaMessage(type: 'audio' | 'image') {
-   if (formData.value) {
-      const msg = await MessangerService.saveMediaMessage(formData.value, currentChatId.value, type);
-      formData.value = null;
-      voiceMessage.value = null;
-      return msg;
-   }
+async function saveMsg(type: 'text' | 'audio' | 'image') {
+  if (type === 'text') {
+    if (message.value && currentChatId.value) {
+      return await MessangerService.saveMessage(currentChatId.value, message.value);
+    }
+  } else {
+    if (formData.value && currentChatId.value) {
+      return await MessangerService.saveMediaMessage(formData.value, currentChatId.value, type);
+    }
+  }
+}
+
+async function onMedia(event: Event) {
+  const target = event.target as HTMLInputElement;
+  const files = target.files;
+
+  if (files) {
+    formData.value = new FormData();
+    Array.from(files).forEach((file) => formData.value?.append('images', file));
+    await onSaveMsg('image');
+  }
+}
+
+function onTyping() {
+  socket.value.emit('typing', currentChatId.value, user.value.name, user.value._id);
+  //ws.value?.emit('typing', { chatId: currentChatId.value, name: user.value.name, _id: user.value._id });
+}
+
+function onPickEmoji(emoji: string) {
+  message.value = message.value + emoji;
 }
 </script>
 
 <style scoped lang="scss">
 .input {
+  & div.q-field__label {
+    width: 100% !important;
+  }
+  font-size: 1.2em;
 
-   & div.q-field__label {
-      width: 100% !important;
-   }
+  & .recording {
+    display: flex;
+    justify-content: center;
+    transition: none !important;
+  }
 
-   & .recording {
-      display: flex;
-      justify-content: center;
-      transition: none !important;
-   }
+  & .send {
+    cursor: pointer;
+    color: $primary;
 
-   & .send {
-      cursor: pointer;
-      color: $primary;
-
-      &:hover {
-         color: $secondary;
-      }
-   }
+    &:hover {
+      color: $secondary;
+    }
+  }
 }
 </style>

@@ -14,17 +14,15 @@ $api.interceptors.request.use(config => {
 });
 
 $api.interceptors.response.use(
-   (config) => {
-      return config;
-   },
+   (config) => config,
    async (error) => {
-      const { refresh } = useStore();
+      const store = useStore();
       const originalRequest = error.config;
-
-      if (error.response.status == 401 && error.config && !error.config._isRetry) {
+      
+      if (error.response?.status == 401 && error.config && !error.config._isRetry) {
          originalRequest._isRetry = true;
          try {
-            await refresh();
+            await store.refresh();
             return $api.request(originalRequest);
          } catch (e) {
             if (e) console.log(e);

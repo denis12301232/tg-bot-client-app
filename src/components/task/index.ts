@@ -1,0 +1,9 @@
+export { default as TaskById } from './TaskById.vue';
+export { default as TaskByIdModalDelete } from './TaskByIdModalDelete.vue';
+export { default as TaskByIdModalMove } from './TaskByIdModalMove.vue';
+export { default as TaskByIdSubtasks } from './TaskByIdSubtasks.vue';
+export { default as TaskByIdTask } from './TaskByIdTask.vue';
+export { default as TaskCreate } from './TaskCreate.vue';
+export { default as TaskCreateFirstStep } from './TaskCreateFirstStep.vue';
+export { default as TaskCreateSecondStep } from './TaskCreateSecondStep.vue';
+export { default as TaskList } from './TaskList.vue';
