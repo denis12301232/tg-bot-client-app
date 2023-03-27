@@ -2,7 +2,7 @@
   <QForm class="text-center" ref="formRef" no-error-focus @submit.prevent="onSubmit">
     <h4 class="q-py-lg">Регистрация</h4>
     <QInput
-      v-model="form.name"
+      v-model.trim="form.name"
       class="q-mb-sm"
       outlined
       label="Имя"
@@ -10,7 +10,7 @@
       autocomplete="new-password"
     />
     <QInput
-      v-model="form.login"
+      v-model.trim="form.login"
       class="q-mb-sm"
       outlined
       label="Логин"
@@ -20,7 +20,7 @@
       autocomplete="new-password"
     />
     <QInput
-      v-model="form.email"
+      v-model.trim="form.email"
       class="q-mb-sm"
       outlined
       label="Адрес электронной почты"
@@ -34,7 +34,7 @@
       </template>
     </QInput>
     <QInput
-      v-model="form.password"
+      v-model.trim="form.password"
       class="q-mb-sm"
       outlined
       label="Пароль"
@@ -89,8 +89,14 @@ const formErrors = reactive({
 });
 
 const formRules = {
-  name: [(v: string) => Validate.required(v) || 'Это обязательное поле'],
-  login: [(v: string) => Validate.required(v) || 'Это обязательное поле'],
+  name: [
+    (v: string) => Validate.required(v) || 'Это обязательное поле',
+    (v: string) => Validate.noManySpaces(v) || 'Слишком много пробелов',
+  ],
+  login: [
+    (v: string) => Validate.required(v) || 'Это обязательное поле',
+    (v: string) => Validate.isLatinOrUnderscore(v) || 'Только латиница или нижнее подчеркивание',
+  ],
   email: [
     (v: string) => Validate.required(v) || 'Это обязательное поле',
     (v: string) => Validate.isEmail(v) || 'Введите корректный е-мэйл',

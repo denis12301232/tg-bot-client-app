@@ -2,7 +2,7 @@
   <QForm class="text-center" ref="formRef" no-error-focus @submit.prevent="onSubmit">
     <h4 class="q-py-lg">Вход</h4>
     <QInput
-      v-model="form.loginOrEmail"
+      v-model.trim="form.loginOrEmail"
       class="q-mb-sm"
       outlined
       label="Логин или е-мэйл"
@@ -60,14 +60,8 @@ const formRef = ref<QForm | null>(null);
 const isLoading = ref(false);
 const valid = ref(false);
 const isPasswordVisible = ref(false);
-const form = reactive({
-  loginOrEmail: '',
-  password: '',
-});
-const formErrors = reactive({
-  loginOrEmail: '',
-  password: '',
-});
+const form = reactive({ loginOrEmail: '', password: '' });
+const formErrors = reactive({ loginOrEmail: '', password: '' });
 const formRules = {
   loginOrEmail: [(v: string) => Validate.required(v) || 'Это обязательное поле'],
   password: [(v: string) => Validate.required(v) || 'Это обязательное поле'],

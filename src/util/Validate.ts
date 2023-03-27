@@ -45,4 +45,12 @@ export default class Validate {
          return Number(v) >= min && Number(v) <= max;
       }
    }
+
+   static isLatinOrUnderscore(str: string) {
+      return /\w/.test(str);
+   }
+
+   static noManySpaces(str: string) {
+      return /^((?!\s{2}).)*$/.test(str);
+   }
 }

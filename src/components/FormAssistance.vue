@@ -2,9 +2,9 @@
   <QForm ref="formRef" no-error-focus @submit.prevent="submit">
     <h4 class="q-py-lg text-center">{{ title }}</h4>
     <FormAssistanceGroup class="q-mt-sm" title="ФИО">
-      <QInput v-model="form.surname" label="Фамилия" :rules="formRules.surname" lazy-rules maxlength="50" />
-      <QInput v-model="form.name" label="Имя" :rules="formRules.name" lazy-rules maxlength="50" />
-      <QInput v-model="form.patronymic" label="Отчество" :rules="formRules.patronymic" lazy-rules maxlength="50" />
+      <QInput v-model.trim="form.surname" label="Фамилия" :rules="formRules.surname" lazy-rules maxlength="50" />
+      <QInput v-model.trim="form.name" label="Имя" :rules="formRules.name" lazy-rules maxlength="50" />
+      <QInput v-model.trim="form.patronymic" label="Отчество" :rules="formRules.patronymic" lazy-rules maxlength="50" />
     </FormAssistanceGroup>
     <FormAssistanceGroup title="Телефон">
       <QInput
@@ -41,18 +41,18 @@
         lazy-rules
       />
       <QInput
-        v-model="form.street"
+        v-model.trim="form.street"
         label="Улица/проспект/переулок"
         :rules="formRules.street"
         lazy-rules
         maxlength="50"
       />
-      <QInput v-model="form.house" label="Дом" :rules="formRules.house" lazy-rules maxlength="50" />
-      <QInput v-model="form.flat" label="Квартира" :rules="formRules.flat" lazy-rules maxlength="50" />
+      <QInput v-model.trim="form.house" label="Дом" :rules="formRules.house" lazy-rules maxlength="50" />
+      <QInput v-model.trim="form.flat" label="Квартира" :rules="formRules.flat" lazy-rules maxlength="50" />
     </FormAssistanceGroup>
     <FormAssistanceGroup title="Число проживающих">
       <QInput
-        v-model="form.people_num"
+        v-model.trim="form.people_num"
         label="Число проживающих"
         :rules="formRules.people_num"
         lazy-rules
@@ -62,7 +62,7 @@
     <FormAssistanceGroup v-if="Number(form.people_num) > 1" title="ФИО и возраст проживающих">
       <QInput
         v-for="i in Number(form.people_num) - 1 > 10 ? 10 : Number(form.people_num)"
-        v-model="form.people_fio[i]"
+        v-model.trim="form.people_fio[i]"
         :label="`ФИО и возраст ${i}-го`"
         :rules="formRules.people_num"
         lazy-rules
@@ -88,22 +88,22 @@
       <QOptionGroup v-model="form.medicines" :options="Constants.yesNoOptions" style="margin-left: -16px" />
     </FormAssistanceGroup>
     <FormAssistanceGroup v-if="form.medicines" title="Укажите какие">
-      <QInput v-model="form.medicines_info" label="Укажите какие" lazy-rules maxlength="50" />
+      <QInput v-model.trim="form.medicines_info" label="Укажите какие" lazy-rules maxlength="50" />
     </FormAssistanceGroup>
     <FormAssistanceGroup title="Средства личной гигиены">
       <QOptionGroup v-model="form.hygiene" :options="Constants.yesNoOptions" style="margin-left: -16px" />
     </FormAssistanceGroup>
     <FormAssistanceGroup v-if="form.hygiene" title="Укажите какие">
-      <QInput v-model="form.hygiene_info" label="Укажите какие" lazy-rules maxlength="50" />
+      <QInput v-model.trim="form.hygiene_info" label="Укажите какие" lazy-rules maxlength="50" />
     </FormAssistanceGroup>
     <FormAssistanceGroup title="Памперсы?">
       <QOptionGroup v-model="form.pampers" :options="Constants.yesNoOptions" style="margin-left: -16px" />
     </FormAssistanceGroup>
     <FormAssistanceGroup v-if="form.pampers" title="Укажите какие">
-      <QInput v-model="form.pampers_info" label="Укажите какие" lazy-rules maxlength="50" />
+      <QInput v-model.trim="form.pampers_info" label="Укажите какие" lazy-rules maxlength="50" />
     </FormAssistanceGroup>
     <FormAssistanceGroup title="Особенности диеты">
-      <QInput v-model="form.diet" label="Особенности диеты" lazy-rules maxlength="50" />
+      <QInput v-model.trim="form.diet" label="Особенности диеты" lazy-rules maxlength="50" />
     </FormAssistanceGroup>
     <FormAssistanceGroup title="Согласие на обработку персональных данных">
       <QCheckbox v-model="form.pers_data_agreement" label="Согласен/Согласна" style="margin-left: -8px" />
