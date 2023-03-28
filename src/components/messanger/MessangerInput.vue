@@ -63,7 +63,7 @@ import { MessangerService } from '@/api/services';
 import { Util } from '@/util';
 
 const { user } = storeToRefs(useStore());
-const { currentChatId, currentChat, chats , socket} = storeToRefs(useChatStore());
+const chatStore = useChatStore();
 const message = ref<string | null>(null);
 const inputRef = ref<QInput | null>(null);
 const fileInput = ref<HTMLInputElement | null>(null);
@@ -97,12 +97,12 @@ watch(isRecording, () => {
 
 async function saveMsg(type: 'text' | 'audio' | 'image') {
   if (type === 'text') {
-    if (message.value && currentChatId.value) {
-      return await MessangerService.saveMessage(currentChatId.value, message.value);
+    if (message.value && chatStore.currentChatId) {
+      return await MessangerService.saveMessage(chatStore.currentChatId, message.value);
     }
   } else {
-    if (formData.value && currentChatId.value) {
-      return await MessangerService.saveMediaMessage(formData.value, currentChatId.value, type);
+    if (formData.value && chatStore.currentChatId) {
+      return await MessangerService.saveMediaMessage(formData.value, chatStore.currentChatId, type);
     }
   }
 }
@@ -119,7 +119,7 @@ async function onMedia(event: Event) {
 }
 
 function onTyping() {
-  socket.value.emit('typing', currentChatId.value, user.value.name, user.value._id);
+  chatStore.socket.emit('typing', chatStore.currentChatId, user.value.name, user.value._id);
   //ws.value?.emit('typing', { chatId: currentChatId.value, name: user.value.name, _id: user.value._id });
 }
 

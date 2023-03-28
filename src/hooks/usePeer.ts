@@ -18,7 +18,7 @@ export default function useWebRTC() {
 
    function onClose() {
       console.log('CLOSE');
-      peer.value = new Peer(config.value.id, config.value.options);
+      //peer.value = new Peer(config.value.id, config.value.options);
    }
 
    function onOpen(id: string) {

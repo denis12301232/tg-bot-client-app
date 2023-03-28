@@ -13,7 +13,7 @@
   />
   <LoaderPage :loading="store.isPageLoading" />
   <QDialog v-model="store.modal">
-    <component :is="MessangerCall" :user_id="userId" />
+    <component :is="MessangerCall" :user_id="userId" :room-id="socketStore.currentChatId" />
   </QDialog>
 </template>
 

@@ -17,10 +17,10 @@
       <video :class="$style.video" ref="userVideo"></video>
       <QBtn dense flat round :icon="muted ? 'volume_up' : 'volume_off'" @click="minimizeUserVoice" />
       <QBtn @click="disableMicrophone">TEST</QBtn>
-      <!-- <div class="video-grid">
-        <video ref="myVideo" muted></video>
+      <div class="video-grid">
+        <!-- <video ref="myVideo" muted></video> -->
         <video ref="userVideo"></video>
-      </div> -->
+      </div> 
     </QCardSection>
   </QCard>
 </template>
@@ -70,6 +70,11 @@ async function disableMicrophone() {
 </script>
 
 <style module lang="scss">
+// .container {
+//   max-width: 350px;
+//   min-width: 250px;
+//   width: 350px;
+// }
 .video-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, 300px);

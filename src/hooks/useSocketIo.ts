@@ -3,14 +3,14 @@ import { io } from 'socket.io-client'
 
 
 export default function useSocketIo() {
-   const socket = ref(io(import.meta.env.VITE_SOCKET_URL, {
+   const socket = io(import.meta.env.VITE_SOCKET_URL, {
       auth: (cb) => cb({ token: localStorage.getItem('token') }),
       autoConnect: false,
       reconnectionAttempts: Infinity,
       timeout: 10000,
       transports: ['websocket'],
       forceNew: true
-   }));
+   });
    const isConnected = ref(false);
 
    function onConnect() {
@@ -22,11 +22,11 @@ export default function useSocketIo() {
    }
 
    function connect() {
-      socket.value.connect();
+      socket.connect();
    }
 
-   socket.value.on('connect', onConnect);
-   socket.value.on('disconnect', onDisconnect);
+   socket.on('connect', onConnect);
+   socket.on('disconnect', onDisconnect);
 
    return { socket, isConnected, connect }
 }
