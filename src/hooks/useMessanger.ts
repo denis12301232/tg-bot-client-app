@@ -1,16 +1,16 @@
-import type { IMessage, ChatResponse } from '@/types'
+import type { IMessage, ChatResponse, SocketTyped } from '@/types'
 import { ref, computed, type Ref } from 'vue'
 import { MessangerService } from '@/api/services'
 import { ACTIONS } from '@/util';
 
 
-export default function useMessanger() {
+export default function useMessanger(socket: SocketTyped) {
    const chats = ref<Map<string, ChatResponse>>(new Map);
    const currentChatId = ref<string | null>(null);
    const currentChat = computed(() => currentChatId.value ? chats.value.get(currentChatId.value) || null : null);
    const sortedChats = computed(() => new Map([...chats.value.entries()]
       .sort((a, b) => (new Date(a[1].updatedAt) > new Date(b[1].updatedAt)) ? - 1 : 1)));
-   const events = useMessangerEvents({ chats, currentChatId });
+   useMessangerEvents({ chats, currentChatId }).forEach((func, event) => socket.on(event, func));
 
    async function onOpenChat(chat_id: string, page: number = 1, limit: number = 5) {
       currentChatId.value = chat_id;
@@ -31,19 +31,19 @@ export default function useMessanger() {
       chats.value = response.data.reduce((map, chat) => map.set(chat._id, chat), new Map<string, ChatResponse>);
    }
 
-   return { chats, currentChatId, currentChat, sortedChats, onGetUserChats, onOpenChat, events }
+   return { chats, currentChatId, currentChat, sortedChats, onGetUserChats, onOpenChat }
 }
 
 
 function useMessangerEvents({ chats, currentChatId }: { chats: Ref<Map<string, ChatResponse>>, currentChatId: Ref<string | null> }) {
    const timers = new Map<string, number>();
    const list = {
-      [ACTIONS.NEW_MESSAGE]: onNewMessage,
-      [ACTIONS.READ_MESSAGE]: onReadMessage,
-      [ACTIONS.UPDATE_STATUS]: onUpdateStatus,
-      [ACTIONS.INVITE_TO_GROUP]: onInviteToGroup,
-      [ACTIONS.KICK_FROM_GROUP]: onKickFromGroup,
-      [ACTIONS.TYPING]: onTyping,
+      [ACTIONS.CHAT_MESSAGE]: onNewMessage,
+      [ACTIONS.CHAT_READ_MESSAGE]: onReadMessage,
+      [ACTIONS.CHAT_USER_STATUS]: onUpdateStatus,
+      [ACTIONS.CHAT_INVITE_TO_GROUP]: onInviteToGroup,
+      [ACTIONS.CHAT_KICK_FROM_GROUP]: onKickFromGroup,
+      [ACTIONS.CHAT_TYPING]: onTyping,
    }
 
    async function onNewMessage(message: IMessage) {
@@ -94,5 +94,5 @@ function useMessangerEvents({ chats, currentChatId }: { chats: Ref<Map<string, C
       }
    }
 
-   return new Map(Object.entries(list));
+   return new Map<keyof typeof list, typeof list[keyof typeof list]>(Object.entries(list) as any);
 }

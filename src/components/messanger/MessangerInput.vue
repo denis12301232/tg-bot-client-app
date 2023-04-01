@@ -119,8 +119,7 @@ async function onMedia(event: Event) {
 }
 
 function onTyping() {
-  chatStore.socket.emit('typing', chatStore.currentChatId, user.value.name, user.value._id);
-  //ws.value?.emit('typing', { chatId: currentChatId.value, name: user.value.name, _id: user.value._id });
+  chatStore.socket.emit('chat:typing', chatStore.currentChatId!, user.value.name, user.value._id);
 }
 
 function onPickEmoji(emoji: string) {

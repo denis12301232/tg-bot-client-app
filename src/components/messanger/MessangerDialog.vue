@@ -19,7 +19,7 @@
       </QItemSection>
       <QItemSection side>
         <div class="row">
-          <QBtn dense flat round icon="phone" @click="modal = true" />
+          <QBtn dense flat round icon="phone" @click="openCallModal" />
           <QBtnDropdown dropdown-icon="more_vert" rounded dense flat>
             <QList bordered>
               <QItem v-ripple v-close-popup clickable @click="deleteChat">
@@ -95,7 +95,7 @@ const emit = defineEmits<{
 }>();
 
 const limit = 10;
-const { user, currentTheme, modal } = storeToRefs(useStore());
+const { user, currentTheme, modalCall } = storeToRefs(useStore());
 const chatStore = useChatStore();
 const { currentChat, currentChatId, chats } = storeToRefs(chatStore);
 const dialogRef = ref<QScrollArea | null>(null);
@@ -103,10 +103,13 @@ const loading = ref(false);
 const messages = computed(() => currentChat.value?.messages || []);
 const initialIndex = computed(() => (messages.value.length > limit ? Math.ceil(messages.value.length / limit) : 0));
 
-watch(() => currentChat.value?.total, () => {
-  const scroll = dialogRef.value?.getScroll();
-  setTimeout(() => dialogRef.value?.setScrollPosition('vertical', scroll?.verticalSize || 0), 0);
-});
+watch(
+  () => currentChat.value?.total,
+  () => {
+    const scroll = dialogRef.value?.getScroll();
+    setTimeout(() => dialogRef.value?.setScrollPosition('vertical', scroll?.verticalSize || 0), 0);
+  }
+);
 
 async function deleteChat() {
   await MessangerService.deleteChat(currentChatId.value!);
@@ -127,6 +130,12 @@ async function onLoad(index: number, done: (stop?: boolean | undefined) => void)
     return done();
   }
   done(true);
+}
+
+function openCallModal() {
+  modalCall.value.visible = true;
+  modalCall.value.props.call = 'outgoing';
+  modalCall.value.props.chat_id = currentChatId.value!;
 }
 </script>
 

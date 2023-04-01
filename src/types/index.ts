@@ -1,4 +1,5 @@
 export * from './http'
+export * from './io'
 
 export type AlertType = 'success' | 'info' | 'warning' | 'error';
 

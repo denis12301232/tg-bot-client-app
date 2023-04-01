@@ -10,7 +10,6 @@ import messangerInput from './MessangerInput.vue'
 import messangerVoiceMessage from './MessangerVoiceMessage.vue'
 import messangerGroupSettings from './MessangerGroupSettings.vue'
 import messangerGroupUpdate from './MessangerGroupUpdate.vue'
-import messangerCall from './MessangerCall.vue'
 import messangerChatsList from './MessangerChatsList.vue'
 
 export const MessangerChatsList = messangerChatsList;
@@ -26,4 +25,3 @@ export const MessangerInput = messangerInput;
 export const MessangerVoiceMessage = messangerVoiceMessage;
 export const MessangerGroupSettings = messangerGroupSettings;
 export const MessangerGroupUpdate = messangerGroupUpdate;
-export const MessangerCall = messangerCall;

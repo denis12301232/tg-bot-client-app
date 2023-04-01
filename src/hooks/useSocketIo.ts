@@ -1,9 +1,10 @@
+import type { SocketTyped } from '@/types'
 import { ref } from 'vue'
 import { io } from 'socket.io-client'
 
 
 export default function useSocketIo() {
-   const socket = io(import.meta.env.VITE_SOCKET_URL, {
+   const socket: SocketTyped = io(import.meta.env.VITE_SOCKET_URL, {
       auth: (cb) => cb({ token: localStorage.getItem('token') }),
       autoConnect: false,
       reconnectionAttempts: Infinity,

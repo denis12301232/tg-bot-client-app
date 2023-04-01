@@ -12,49 +12,47 @@
     @show="store.alert.visible = !store.alert.visible"
   />
   <LoaderPage :loading="store.isPageLoading" />
-  <QDialog v-model="store.modal">
-    <component :is="MessangerCall" :user_id="userId" :room-id="socketStore.currentChatId" />
+  <QDialog v-model="store.modalCall.visible">
+    <ModalCall :="store.modalCall.props" @close-popup="store.modalCall.visible = false" />
   </QDialog>
 </template>
 
 <script setup lang="ts">
 import ModalAlert from '~/ModalAlert.vue';
 import LoaderPage from '~/LoaderPage.vue';
-import { MessangerCall } from '~/messanger';
-import { onMounted, watch, onBeforeMount, computed } from 'vue';
-import { useStore, useChatStore, } from '@/stores';
+import ModalCall from '~/ModalCall.vue';
+import { onMounted, watch, onBeforeMount } from 'vue';
+import { useStore, useChatStore } from '@/stores';
 import { useTelegram } from '@/hooks';
 
 const store = useStore();
 const socketStore = useChatStore();
 const { tg, isOpenedFromTg, theme } = useTelegram();
-const userId = computed(() => socketStore.currentChat?.companion._id);
 
 onBeforeMount(() => {
   const el = document.getElementById('loader');
   el && (el.style.cssText = 'display: none');
 });
-
 onMounted(() => {
   tg.ready();
-  if (isOpenedFromTg) {
-    store.theme = theme;
-  }
-  if (localStorage.getItem('token')) {
-    store.refresh();
-  }
+  isOpenedFromTg && (store.theme = theme);
+  localStorage.getItem('token') && store.refresh();
 });
 watch(() => store.isAuth, () => {
-  if (store.isAuth){
+  if (store.isAuth) {
     socketStore.connect();
-    socketStore.connectPeer(store.user._id, { host: '/', port: 9000 });
+    socketStore.socket.on('rtc:call', async (peer_id, chat_id) => {
+      store.modalCall.props.chat_id = chat_id;
+      store.modalCall.visible = true;
+      store.modalCall.props.call = 'incoming'
+    });
+    socketStore.socket.on('rtc:call-cancel', () => {
+      store.modalCall.visible = false;
+    });
   } else {
     socketStore.socket.close();
-    socketStore.peer?.destroy();
-    socketStore.peer?.disconnect();
   }
 });
-
 </script>
 
 <style module lang="scss">

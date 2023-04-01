@@ -4,14 +4,21 @@ import { ref, reactive, computed, watch } from 'vue'
 import { useQuasar } from 'quasar'
 import { AuthService } from '@/api/services'
 
+interface Alert {
+  type: AlertType; message: string; visible: boolean;
+}
+
+interface ModalCall {
+  visible: boolean, props: { chat_id: string, call: 'incoming' | 'outgoing' }
+}
 
 export const useStore = defineStore('main', () => {
   const $q = useQuasar();
   const user = ref<IUser>({} as IUser);
   const theme = ref(localStorage.getItem('theme') || 'light');
   const isPageLoading = ref(false);
-  const modal = ref(false);
-  const alert = reactive<{ type: AlertType, message: string, visible: boolean }>({ type: 'success', message: '', visible: false });
+  const modalCall = reactive<ModalCall>({ visible: false, props: { chat_id: '', call: 'incoming' } });
+  const alert = reactive<Alert>({ type: 'success', message: '', visible: false });
 
   const isAuth = computed(() => !!Object.keys(user.value).length);
   const isAdmin = computed(() => user.value?.roles?.includes('admin'));
@@ -66,5 +73,6 @@ export const useStore = defineStore('main', () => {
     }
   }
 
-  return { user, theme, isPageLoading, modal, alert, isAuth, isAdmin, currentTheme, setTheme, setAlert, refresh, logout };
+  return { user, theme, isPageLoading, alert, isAuth, isAdmin, currentTheme, setTheme, setAlert, refresh, logout,
+  modalCall };
 });
