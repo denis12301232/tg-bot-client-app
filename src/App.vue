@@ -1,6 +1,6 @@
 <template>
   <component :is="$route.meta.layoutComponent" :="$route.meta.layoutProps">
-    <QScrollArea class="full-height" :thumb-style="{ width: '7px' }">
+    <QScrollArea class="full-height" :thumb-style="{ width: '7px' }" :content-style="{ height: '100%' }">
       <RouterView />
     </QScrollArea>
   </component>
@@ -12,7 +12,7 @@
     @show="store.alert.visible = !store.alert.visible"
   />
   <LoaderPage :loading="store.isPageLoading" />
-  <QDialog v-model="store.modalCall.visible">
+  <QDialog v-model="store.modalCall.visible" >
     <ModalCall :="store.modalCall.props" @close-popup="store.modalCall.visible = false" />
   </QDialog>
 </template>
@@ -37,6 +37,8 @@ onMounted(() => {
   tg.ready();
   isOpenedFromTg && (store.theme = theme);
   localStorage.getItem('token') && store.refresh();
+  window.addEventListener('online',  () => 'online');
+  window.addEventListener('offline', () => 'offline');
 });
 watch(() => store.isAuth, () => {
   if (store.isAuth) {

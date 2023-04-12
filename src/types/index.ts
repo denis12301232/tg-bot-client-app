@@ -2,7 +2,6 @@ export * from './http'
 export * from './io'
 
 export type AlertType = 'success' | 'info' | 'warning' | 'error';
-
 export type ModalContent = 'create-group' | 'group-info' | 'add-user' | 'open-image' | 'group-settings';
 export type TaskStatus = 'Не выбрана' | 'В работе' | 'Отменена' | 'Выполнена';
 export interface Pagination {
@@ -12,6 +11,12 @@ export interface Pagination {
    rowsPerPage: number;
 }
 
+export interface CallInfo {
+   peer: RTCPeerConnection | null;
+   stream: MediaStream | null;
+   channel?: RTCDataChannel | null
+ }
+ 
 export interface ITask {
    _id: string;
    title: string;

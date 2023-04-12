@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <QDialog v-model="layoutStore.header.openLogin">
+    <QDialog v-model="loginModal">
       <QCard class="card">
         <component :is="component" @swap="onSwap" @submit="onOpenLogin" />
       </QCard>
@@ -23,12 +23,11 @@
 import FormAssistance from '~/FormAssistance.vue';
 import FormReg from '~/FormReg.vue';
 import FormLog from '~/FormLog.vue';
-import { reactive, shallowRef } from 'vue';
-import { useLayoutStore } from '@/stores';
+import { reactive, shallowRef, inject, type Ref } from 'vue';
 import { useFetch, useTelegram } from '@/hooks';
 import { AssistanceService } from '@/api/services';
 
-const layoutStore = useLayoutStore();
+const loginModal = inject<Ref<boolean>>('loginModal')!;
 const component = shallowRef(FormLog);
 const form = reactive({
   name: '',
@@ -58,11 +57,7 @@ const form = reactive({
   photo_agreement: false,
 });
 const { tg, isOpenedFromTg } = useTelegram();
-const { f: onSubmit, loading } = useFetch({
-  fn: submit,
-  alert: true,
-  successMsg: 'Сохранено',
-});
+const { f: onSubmit, loading } = useFetch({ fn: submit, alert: true, successMsg: 'Сохранено' });
 
 async function submit(form: any) {
   await AssistanceService.sendForm(form);
@@ -72,7 +67,7 @@ async function submit(form: any) {
 }
 
 function onOpenLogin() {
-  layoutStore.header.openLogin = !layoutStore.header.openLogin;
+  loginModal.value = !loginModal.value;
 }
 
 function onSwap(value: 'reg' | 'log') {

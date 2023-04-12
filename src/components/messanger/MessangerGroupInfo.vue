@@ -57,7 +57,7 @@ import type { IUser } from '@/types';
 import UserAvatar from '~/UserAvatar.vue';
 import { ref, onMounted, computed } from 'vue';
 import { storeToRefs } from 'pinia';
-import { useStore,  useChatStore } from '@/stores';
+import { useStore, useChatStore } from '@/stores';
 import { useFetch } from '@/hooks';
 import { MessangerService } from '@/api/services';
 
@@ -77,22 +77,17 @@ const { f: onGetUsersListInChat, loading, data: users } = useFetch<IUser[]>({
 const { f: onRemoveUser, loading: isRemoveUserLoading } = useFetch({
   fn: (user_id: string) => {
     MessangerService.removeUserFromGroup(props.chat_id, user_id).then(() => {
-      users.value = users.value?.filter((user) => user._id !== user_id);
+      users.value = users.value?.filter(user => user._id !== user_id);
       currentChat.value && currentChat.value.members_count--;
     });
   },
 });
 const filteredUsers = computed(() => {
   return filter.value
-    ? users.value?.filter((user) => user.name.includes(filter.value) || user.login.includes(filter.value))
+    ? users.value?.filter(user => user.name.includes(filter.value) || user.login.includes(filter.value))
     : users.value;
 });
-const canRemove = computed(() => {
-  if (props.roles.creator?.includes(store.user._id) || props.roles.admin?.includes(store.user._id)) {
-    return true;
-  }
-  return false;
-});
+const canRemove = computed(() => (props.roles.admin?.includes(store.user._id) ? true : false));
 
 onMounted(() => onGetUsersListInChat(props.chat_id));
 </script>

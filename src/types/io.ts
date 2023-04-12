@@ -17,6 +17,7 @@ interface ServerToClientEvents {
    'rtc:ice-candidate': (peer_id: string, iceCandidate: RTCIceCandidate) => void;
    'rtc:remove-peer': (peer_id: string) => void;
    'rtc:call-cancel': () => void;
+   'meet:create': (meetId: string) => void;
 }
 
 interface ClientToServerEvents {
@@ -27,4 +28,7 @@ interface ClientToServerEvents {
    'rtc:relay-sdp': (peer_id: string, sessionDescription: RTCSessionDescriptionInit) => void;
    'rtc:remove-peer': (chat_id: string) => void;
    'rtc:call-cancel': (chat_id: string) => void;
+   'meet:create': (title: string) => void;
+   'meet:leave': (meetId: string) => void;
+   'meet:join': (meetId: string) => void;
 }

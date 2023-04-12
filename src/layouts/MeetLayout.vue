@@ -3,13 +3,11 @@
     <QHeader class="header" reveal elevated height-hint="98">
       <QToolbar>
         <QBtn dense flat round icon="arrow_back" color="indigo" @click="goBack" />
-        <QToolbarTitle>Настройки аккаунта</QToolbarTitle>
+        <QToolbarTitle>Встреча</QToolbarTitle>
       </QToolbar>
       <QTabs v-model="tab" align="left" active-color="secondary">
-        <QTab name="avatar" label="Аватар" />
-        <QTab name="name" label="Имя" />
-        <QTab name="email" label="Е-мэйл" />
-        <QTab name="password" label="Пароль" />
+        <QTab name="meet" label="Встреча" />
+        <QTab name="chat" label="Чат" />
       </QTabs>
     </QHeader>
     <QPageContainer class="window-height">
@@ -23,7 +21,7 @@ import { ref, provide } from 'vue';
 import { useStore } from '@/stores';
 import { useNavigation } from '@/hooks';
 
-const tab = ref('avatar');
+const tab = ref('meet');
 const store = useStore();
 const { goBack } = useNavigation();
 

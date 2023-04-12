@@ -1,14 +1,16 @@
 <template>
-  <div
-    v-if="visible"
-    :class="[$style.message, $style[type]]"
-    @click="emit('show')"
-    @pointerenter="clearTimer"
-    @pointerleave="debounceTimer"
-  >
-    <QIcon :name="icon" size="20px" />
-    <div :class="$style.message_content">{{ message }}</div>
-  </div>
+  <Transition :name="$style.animate">
+    <div
+      v-if="visible"
+      :class="[$style.message, $style[type]]"
+      @click="emit('show')"
+      @pointerenter="clearTimer"
+      @pointerleave="debounceTimer"
+    >
+      <QIcon :name="icon" size="20px" />
+      <div :class="$style.message_content">{{ message }}</div>
+    </div>
+  </Transition>
 </template>
 
 <script setup lang="ts">
@@ -48,15 +50,10 @@ function setTimer() {
   if (!props.visible) return;
   timeout.value = setTimeout(() => emit('show'), 3000);
 }
-watch(
-  () => props.visible,
-  () => {
-    clearTimer();
-    if (props.visible) {
-      setTimer();
-    }
-  }
-);
+watch(() => props.visible, () => {
+  clearTimer();
+  props.visible && setTimer();
+});
 </script>
 
 <style lang="scss" module>
@@ -108,6 +105,21 @@ watch(
 
   &:hover {
     background-color: $blue-4;
+  }
+}
+
+.animate {
+  &:global(-enter-active) {
+    transition: all 0.3s ease-in-out;
+  }
+
+  &:global(-leave-active) {
+    transition: all 0.3s cubic-bezier(1, 0.5, 0.8, 1);
+  }
+  &:global(-enter-from),
+  &:global(-leave-to) {
+    transform: translateX(30px);
+    opacity: 0;
   }
 }
 </style>

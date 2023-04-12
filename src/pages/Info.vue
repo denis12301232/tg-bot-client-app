@@ -18,7 +18,7 @@
     </div>
     <div class="row justify-center">
       <QPagination
-        v-if="forms"
+        v-if="forms?.length && forms.length > 1"
         v-model="page"
         color="grey"
         direction-links
@@ -36,7 +36,7 @@
               <span>Найдено</span>
             </div>
             <div>
-              <QBtn icon="edit" dense flat round @click="onEdit(form._id)" />
+              <QBtn icon="edit" dense flat round @click="onEdit(form._id as string)" />
             </div>
           </div>
         </th>
@@ -50,7 +50,7 @@
     </QMarkupTable>
     <div class="row justify-center">
       <QPagination
-        v-if="forms"
+        v-if="forms?.length && forms.length > 1"
         v-model="page"
         color="grey"
         direction-links
@@ -114,7 +114,6 @@ async function fetchForms() {
   if (!search.value) {
     return;
   }
-
   const response = await AssistanceService.getForms(search.value, limit, page.value);
   total.value = Math.ceil(Number(response.headers['x-total-count']) / limit);
   window.scrollTo(0, 0);

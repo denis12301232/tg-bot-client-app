@@ -1,7 +1,7 @@
 import type { IMessage, ChatResponse, SocketTyped } from '@/types'
 import { ref, computed, type Ref } from 'vue'
 import { MessangerService } from '@/api/services'
-import { ACTIONS } from '@/util';
+import { ACTIONS } from '@/util'
 
 
 export default function useMessanger(socket: SocketTyped) {

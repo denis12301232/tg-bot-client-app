@@ -30,6 +30,7 @@ export default function useRequest<T>({ f, limit = 10, page = 1, sort = '', desc
          const response = await f({ page: page, limit: rowsPerPage, filter: props.filter, sort: sortBy, descending });
          data.value.splice(0, data.value.length, ...response.data);
          pagination.value = { ...props.pagination, rowsNumber: Number(response.headers['x-total-count']) };
+         pagination.value.rowsNumber = Number(response.headers['x-total-count']);
       } catch (e: any) {
          error.value = e.message
       } finally {

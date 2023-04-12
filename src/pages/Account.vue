@@ -1,14 +1,7 @@
 <template>
   <div class="container">
     <h4 class="q-mt-lg q-mb-md text-center">Настройки аккаунта</h4>
-    <QTabPanels
-      v-model="layoutStore.account.tab"
-      class="tab_panel"
-      animated
-      swipeable
-      transition-prev="jump-up"
-      transition-next="jump-up"
-    >
+    <QTabPanels v-model="tab" class="tab_panel" animated swipeable transition-prev="jump-up" transition-next="jump-up">
       <QTabPanel class="tab" name="avatar">
         <AccountSetAvatar />
       </QTabPanel>
@@ -26,11 +19,12 @@
 </template>
 
 <script setup lang="ts">
+import { inject, type Ref } from 'vue'
 import { AccountSetAvatar, AccountSetName, AccountSetEmail, AccountSetPassword } from '~/account';
-import { useStore, useLayoutStore } from '@/stores';
+import { useStore } from '@/stores';
 
+const tab = inject<Ref<string>>('tab');
 const store = useStore();
-const layoutStore = useLayoutStore();
 </script>
 
 <style scoped lang="scss">

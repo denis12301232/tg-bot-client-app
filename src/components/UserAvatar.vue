@@ -1,18 +1,20 @@
 <template>
-  <QSkeleton v-if="loading" type="QAvatar" :size="size" />
-  <QAvatar v-show="!loading" class="text-white" :size="size" :color="color" :="$attrs">
-    <span :class="$style.user_name">{{ avatar ? '' : name?.slice(0, 1) }}</span>
-    <QImg
-      v-if="avatar"
-      :src="`${Constants.SERVER_URL}/avatars/${avatar}`"
-      fit="cover"
-      width="100%"
-      height="100%"
-      no-spinner
-      loading="eager"
-      @load="onLoad"
-    />
-  </QAvatar>
+  <div>
+    <QSkeleton v-if="loading" type="QAvatar" :size="size" />
+    <QAvatar v-show="!loading" class="text-white" :size="size" :color="color" :="$attrs">
+      <span :class="$style.user_name">{{ avatar ? '' : name?.slice(0, 1) }}</span>
+      <QImg
+        v-if="avatar"
+        :src="`${Constants.SERVER_URL}/avatars/${avatar}`"
+        fit="cover"
+        width="100%"
+        height="100%"
+        no-spinner
+        loading="eager"
+        @load="onLoad"
+      />
+    </QAvatar>
+  </div>
 </template>
 
 <script setup lang="ts">

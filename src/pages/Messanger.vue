@@ -8,6 +8,7 @@
     :before-class="[$style.splitter_before, currentChatId && $style.hide]"
     :after-class="['overflow-hidden', !currentChatId && $style.hide]"
     :separator-class="$style.splitter_separator"
+    disable
   >
     <template #before>
       <Messanger.MessangerChatsList @open-modal="setComponent" />

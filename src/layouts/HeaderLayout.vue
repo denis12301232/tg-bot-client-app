@@ -53,7 +53,13 @@
           <QItemSection avatar>
             <QIcon name="fact_check" color="primary" />
           </QItemSection>
-          <QItemSection>Задачи </QItemSection>
+          <QItemSection>Задачи</QItemSection>
+        </QItem>
+        <QItem class="list_item" v-if="store.isAuth" v-ripple clickable tag="a" to="/meet" active-class="active">
+          <QItemSection avatar>
+            <QIcon name="groups" color="primary" />
+          </QItemSection>
+          <QItemSection>Встречи</QItemSection>
         </QItem>
       </QList>
     </QDrawer>
@@ -106,15 +112,17 @@
 
 <script setup lang="ts">
 import UserAvatar from '~/UserAvatar.vue';
-import { ref } from 'vue';
-import { useStore, useLayoutStore } from '@/stores';
+import { ref, provide } from 'vue';
+import { useStore } from '@/stores';
 import { useTelegram } from '@/hooks';
 
 const store = useStore();
-const layoutStore = useLayoutStore();
 const { isOpenedFromTg } = useTelegram();
 const leftDrawerOpen = ref(false);
 const rightDrawerOpen = ref(false);
+const loginModal = ref(false);
+
+provide('loginModal', loginModal);
 
 function toggleLeftDrawer() {
   leftDrawerOpen.value = !leftDrawerOpen.value;
@@ -125,7 +133,7 @@ function toggleRightDrawer() {
 }
 
 function openLogin() {
-  layoutStore.header.openLogin = true;
+  loginModal.value = true;
 }
 </script>
 

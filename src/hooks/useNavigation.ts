@@ -8,5 +8,5 @@ export default function useNavigation() {
       window.history.length > 2 ? router.go(-1) : router.push('/');
    }
 
-   return { goBack }
+   return { router, goBack }
 }

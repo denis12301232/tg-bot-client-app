@@ -15,4 +15,3 @@ app.use(Quasar, { lang: langRu })
    .use(createPinia())
    .use(router)
    .mount('#app');
-

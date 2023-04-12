@@ -11,7 +11,6 @@
       binary-state-sort
       separator="cell"
       row-key="_id"
-      no-data-label="Список пуст"
       @request="onRequest"
     >
       <template #top>

@@ -1,5 +1,5 @@
 import type { RouteRecordRaw } from 'vue-router'
-import { useAuthGuard, useRoleGuard } from '@/router/middlewares'
+import { useAuthGuard, useRoleGuard, useUUIDV4Guard } from '@/router/middlewares'
 
 
 export const routes: RouteRecordRaw[] = [
@@ -79,6 +79,19 @@ export const routes: RouteRecordRaw[] = [
       ],
       beforeEnter: [useAuthGuard],
       meta: { layout: 'TaskLayout' }
+   },
+   {
+      path: '/meet',
+      name: 'meet',
+      component: () => import('@/pages/Meet.vue'),
+      beforeEnter: [useAuthGuard],
+      meta: { layout: 'SimpleLayout', layoutProps: {title: 'Meet'} }
+   },
+   {
+      path: '/meet/:id',
+      component: () => import('@/pages/MeetId.vue'),
+      beforeEnter: [useAuthGuard, useUUIDV4Guard],
+      meta: { layout: 'SimpleLayout', layoutProps: {title: 'Meet'} }
    },
    {
       path: '/:pathMatch(.*)*',

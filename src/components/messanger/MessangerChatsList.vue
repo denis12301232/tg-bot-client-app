@@ -14,13 +14,6 @@
         <QBtn round dense flat icon="menu">
           <QMenu :offset="[50, 10]">
             <QList style="min-width: 250px;">
-              <QItem v-ripple v-close-popup class="list_item" clickable active-class="active" @click="openModal">
-                <QItemSection avatar>
-                  <QIcon name="note_add" color="primary" />
-                </QItemSection>
-                <QItemSection>Создать группу</QItemSection>
-              </QItem>
-              <QSeparator />
               <QItem v-ripple class="list_item" clickable tag="a" to="/" active-class="active">
                 <QItemSection avatar>
                   <QIcon name="home" color="primary" />
@@ -32,6 +25,12 @@
                   <QIcon name="account_circle" color="primary" />
                 </QItemSection>
                 <QItemSection>Аккаунт</QItemSection>
+              </QItem>
+              <QItem v-ripple v-close-popup class="list_item" clickable active-class="active" @click="openModal">
+                <QItemSection avatar>
+                  <QIcon name="note_add" color="primary" />
+                </QItemSection>
+                <QItemSection>Создать группу</QItemSection>
               </QItem>
             </QList>
           </QMenu>
@@ -68,8 +67,7 @@
             <UserAvatar
               :name="chat.type === 'dialog' ? chat.companion.name : chat.group?.title"
               :avatar="chat.type === 'dialog' ? chat.companion.avatar : chat.group?.avatar"
-            >
-            </UserAvatar>
+            />
           </QItemSection>
           <QItemSection>
             <QItemLabel>{{ chat.type === 'dialog' ? chat.companion.name : chat.group?.title }}</QItemLabel>

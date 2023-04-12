@@ -53,4 +53,8 @@ export default class Validate {
    static noManySpaces(str: string) {
       return /^((?!\s{2}).)*$/.test(str);
    }
+
+   static isUUIDV4(str: string) {
+      return /^[0-9A-F]{8}-[0-9A-F]{4}-[4][0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i.test(str);
+   }
 }
