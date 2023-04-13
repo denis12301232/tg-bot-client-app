@@ -1,5 +1,6 @@
-import type { CallInfo, SocketTyped } from '@/types';
+import type { CallInfo, SocketTyped, IUser } from '@/types';
 import { ref, onMounted, onUnmounted, onBeforeUnmount, type Ref } from 'vue';
+import { useStore } from '@/stores';
 import { ENV } from '@/util';
 
 interface EventsConfig {
@@ -14,8 +15,9 @@ interface WebRtcOpts {
 }
 
 export default function useWebRtc(socket: SocketTyped, opts?: WebRtcOpts) {
+   const store = useStore();
    const abonents = ref<Map<string, CallInfo>>(new Map());
-   const MY_VIDEO = 'MY_VIDEO';
+   const MY_VIDEO = store.user._id;
    const events = useEvents({ abonents, socket, MY_VIDEO, setChannelEvents: opts?.setChannelEvents });
 
    onMounted(() => events.forEach((func, event) => socket.on(event, func)));
@@ -33,8 +35,8 @@ function useEvents({ abonents, MY_VIDEO, socket, setChannelEvents }: EventsConfi
       'rtc:remove-peer': onRemovePeer
    }
 
-   async function onAddPeer(peer_id: string, offer: boolean) {
-      const newAbonent = abonents.value.set(peer_id, { peer: null, stream: null }).get(peer_id)!;
+   async function onAddPeer(peer_id: string, offer: boolean, user?: IUser) {
+      const newAbonent = abonents.value.set(peer_id, { peer: null, stream: null, user }).get(peer_id)!;
       newAbonent.peer = new RTCPeerConnection({ iceServers: [{ urls: ENV.STUN_SERVERS }] });
       newAbonent.peer.onicecandidate = (e) => e.candidate && socket.emit('rtc:relay-ice', peer_id, e.candidate);
       newAbonent.peer.ontrack = ({ streams: [stream] }) => (newAbonent.stream = stream);

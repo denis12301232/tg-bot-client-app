@@ -7,12 +7,14 @@ export const routes: RouteRecordRaw[] = [
       path: '/',
       name: 'home',
       component: () => import('@/pages/Home.vue'),
+      meta: { layout: 'HeaderLayout' }
    },
    {
       path: '/list',
       name: 'list',
       component: () => import('@/pages/List.vue'),
       beforeEnter: [useAuthGuard, useRoleGuard(['admin'])],
+      meta: { layout: 'HeaderLayout' }
    },
    {
       path: '/list/:id',
@@ -26,7 +28,8 @@ export const routes: RouteRecordRaw[] = [
       path: '/info',
       name: 'info',
       component: () => import('@/pages/Info.vue'),
-      beforeEnter: [useAuthGuard, useRoleGuard(['admin'])]
+      beforeEnter: [useAuthGuard, useRoleGuard(['admin'])],
+      meta: { layout: 'HeaderLayout' }
    },
    {
       path: '/account',
@@ -85,13 +88,14 @@ export const routes: RouteRecordRaw[] = [
       name: 'meet',
       component: () => import('@/pages/Meet.vue'),
       beforeEnter: [useAuthGuard],
-      meta: { layout: 'SimpleLayout', layoutProps: {title: 'Meet'} }
+      meta: { layout: 'SimpleLayout', layoutProps: { title: 'Meet' } }
    },
    {
       path: '/meet/:id',
       component: () => import('@/pages/MeetId.vue'),
       beforeEnter: [useAuthGuard, useUUIDV4Guard],
-      meta: { layout: 'SimpleLayout', layoutProps: {title: 'Meet'} }
+      meta: { layout: 'MeetLayout' }
+      
    },
    {
       path: '/:pathMatch(.*)*',
@@ -104,6 +108,6 @@ export const routes: RouteRecordRaw[] = [
       path: '/test',
       name: 'test',
       component: () => import('@/pages/Test.vue'),
-      meta: { layout: 'VoidLayout' }
+      meta: {layout: 'MeetLayout'}
    }
 ];

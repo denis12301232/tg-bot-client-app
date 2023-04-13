@@ -1,8 +1,11 @@
 <template>
-  <QCard>
-    <QCardSection><h5 class="text-center">Чат</h5></QCardSection>
-    <QCardSection :class="[$style.list, 'q-px-none']">
-      <QScrollArea ref="scrollRef" :class="$style.list">
+  <div :class="$style.content">
+    <div>
+      <h5 class="text-center q-py-md text-uppercase">Чат</h5>
+      <QSeparator />
+    </div>
+    <div>
+      <QScrollArea ref="scrollRef" class="fit">
         <QChatMessage
           class="q-px-md"
           v-for="msg in messages"
@@ -12,12 +15,14 @@
           :text="[msg.msg]"
         >
           <template #name>
-            <div class="text-bold text-deep-orange">{{ msg.user_id === store.user._id ? 'Я' : msg.user_id }}</div>
+            <div class="text-bold text-deep-orange">
+              {{ msg.user_id === store.user._id ? 'Я' : abonents.get(msg.user_id)?.user?.name }}
+            </div>
           </template>
         </QChatMessage>
       </QScrollArea>
-    </QCardSection>
-    <QCardActions class="q-pa-none q-pt-lg">
+    </div>
+    <div>
       <QInput
         v-model="msg"
         class="full-width"
@@ -30,8 +35,8 @@
           <QBtn dense round flat icon="send" :disable="!msg" @click="sendMessage" />
         </template>
       </QInput>
-    </QCardActions>
-  </QCard>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -68,12 +73,9 @@ function sendMessage() {
 </script>
 
 <style module lang="scss">
-.list {
-  max-height: 700px;
-  min-height: 500px;
-  height: 500px;
-  min-width: 300px;
-  max-width: 400px;
-  width: 100%;
+.content {
+  min-height: 100%;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
 }
 </style>

@@ -1,5 +1,5 @@
 import type { Socket } from 'socket.io-client'
-import type { ChatResponse, IMessage } from '@/types'
+import type { ChatResponse, IMessage, IUser } from '@/types'
 
 
 export type SocketTyped = Socket<ServerToClientEvents, ClientToServerEvents>
@@ -12,7 +12,7 @@ interface ServerToClientEvents {
    'chat:kick-from-group': (chat_id: string) => void;
    'chat:user-status': (user_id: string, status: 'online' | 'offline') => void;
    'rtc:call': (peer_id: string, chat_id: string) => void;
-   'rtc:add-peer': (peer_id: string, offer: boolean) => void;
+   'rtc:add-peer': (peer_id: string, offer: boolean, user?: IUser) => void;
    'rtc:session-description': (peer_id: string, sessionDescription: RTCSessionDescriptionInit) => void;
    'rtc:ice-candidate': (peer_id: string, iceCandidate: RTCIceCandidate) => void;
    'rtc:remove-peer': (peer_id: string) => void;

@@ -14,7 +14,8 @@ export interface Pagination {
 export interface CallInfo {
    peer: RTCPeerConnection | null;
    stream: MediaStream | null;
-   channel?: RTCDataChannel | null
+   channel?: RTCDataChannel | null;
+   user?: IUser;
  }
  
 export interface ITask {
