@@ -15,8 +15,10 @@
         <QBtnGroup flat rounded>
           <QBtn :icon="myVideo?.mute.audio ? 'mic' : 'mic_off'" @click="toggleTrackMuteAndRelay('audio')" />
           <QBtn :icon="myVideo?.mute.video ? 'videocam' : 'videocam_off'" @click="toggleTrackMuteAndRelay('video')" />
-          <QBtn icon="chat_bubble" @click="[setComponent('chat'), toggleDrawer('right')]" />
-          <QBtn icon="call_end" @click="goBack" />
+          <QBtn icon="chat_bubble" @click="[setComponent('chat'), toggleDrawer('right')]">
+            <QBadge v-if="unreadMessages" color="red" floating rounded>{{ unreadMessages }}</QBadge>
+          </QBtn>
+          <QBtn icon="call_end" color="negative" flat @click="goBack" />
         </QBtnGroup>
         <div class="row">
           <QBtn dense flat round icon="groups" @click="[setComponent('user-list'), toggleDrawer('right')]" />
@@ -32,7 +34,7 @@ import type CallVideo from '~/CallVideo.vue';
 import MeetChat from '~/meet/MeetChat.vue';
 import MeetInfo from '~/meet/MeetInfo.vue';
 import MeetUserList from '~/meet/MeetUserList.vue';
-import { ref, reactive, provide, computed, onMounted, onBeforeUnmount } from 'vue';
+import { ref, reactive, provide, computed, onMounted, onBeforeUnmount, shallowRef, watch } from 'vue';
 import { useStore, useChatStore } from '@/stores';
 import { useNavigation, useWebRtc } from '@/hooks';
 import { useRoute } from 'vue-router';
@@ -49,6 +51,7 @@ const myVideo = computed(() => videos.value.get(MY_VIDEO));
 const meetId = route.params.id?.toString();
 const messages = ref<{ user_id: string; msg: string }[]>([]);
 const component = ref<'chat' | 'info' | 'user-list'>('chat');
+const unreadMessages = ref(0);
 const rightDrawer = computed(() => {
   switch (component.value) {
     case 'info':
@@ -57,6 +60,12 @@ const rightDrawer = computed(() => {
       return { component: MeetUserList, props: { abonents: abonents.value } };
     default:
       return { component: MeetChat, props: { abonents: abonents.value, messages: messages.value } };
+  }
+});
+
+watch(() => open.right, () =>{ 
+  if(open.right && component.value === 'chat') {
+    unreadMessages.value = 0;
   }
 });
 
@@ -102,9 +111,16 @@ function onMessage(this: RTCDataChannel, e: MessageEvent) {
   const msg = JSON.parse(e.data) as WebRtcDto;
   switch (msg.event) {
     case 'meet:msg':
-      return messages.value.push(msg.data);
+      return onMeetMsg(msg.data);
     case 'toggle-track':
       return onToggleTrack(msg.data);
+  }
+}
+
+function onMeetMsg(msg: any) {
+  messages.value.push(msg);
+  if (!open.right || (open.right && component.value !== 'chat')) {
+    unreadMessages.value++;
   }
 }
 
@@ -128,5 +144,4 @@ function onToggleTrack({ track, value, peerId }: { track: 'audio' | 'video'; val
     background-color: #121212;
   }
 }
-
 </style>

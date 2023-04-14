@@ -27,7 +27,7 @@
         v-model="msg"
         class="full-width"
         hide-bottom-space
-        label="Сообщение участникам чата"
+        label="Сообщение участникам встречи"
         filled
         @keyup.enter="sendMessage"
       >

@@ -1,7 +1,8 @@
 <template>
   <QCard class="full-height">
-    <QCardSection>
+    <QCardSection class="q-pb-none">
       <h5 class="text-center">Список участников</h5>
+      <QSeparator class="q-mt-sm" />
     </QCardSection>
     <QCardSection>
       <QList>
@@ -9,7 +10,10 @@
           <QItemSection avatar>
             <UserAvatar :name="user?.name" :avatar="user?.avatar" />
           </QItemSection>
-          <QItemSection>{{ user?.name }}</QItemSection>
+          <QItemSection>
+            <QItemLabel> {{ user?.name }}</QItemLabel>
+            <QItemLabel caption> @{{ user?.login }}</QItemLabel>
+          </QItemSection>
         </QItem>
       </QList>
     </QCardSection>
