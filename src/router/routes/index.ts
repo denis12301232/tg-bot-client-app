@@ -66,7 +66,7 @@ export const routes: RouteRecordRaw[] = [
    {
       path: '/messanger',
       name: 'messanger',
-      component: () => import('@/pages/Messanger.vue'),
+      component: () => import('@/pages/Chat.vue'),
       beforeEnter: [useAuthGuard],
       meta: { layout: 'VoidLayout' }
    },
@@ -108,6 +108,6 @@ export const routes: RouteRecordRaw[] = [
       path: '/test',
       name: 'test',
       component: () => import('@/pages/Test.vue'),
-      meta: {layout: 'MeetLayout'}
+      meta: {layout: 'VoidLayout'}
    }
 ];

@@ -39,15 +39,11 @@ import type { IUser } from '@/types';
 import UserAvatar from '~/UserAvatar.vue';
 import { ref, watch } from 'vue';
 import { storeToRefs } from 'pinia';
-import {  useChatStore } from '@/stores';
+import { useChatStore } from '@/stores';
 import { useFetch } from '@/hooks';
 import { MessangerService } from '@/api/services';
 
-const props = defineProps<{
-  chat_id: string;
-}>();
-
-const { chats } = storeToRefs(useChatStore());
+const { chats, currentChatId } = storeToRefs(useChatStore());
 const search = ref('');
 const userToAdd = ref<IUser | null>(null);
 const { f: onFindUsers, data: users, loading: isUsersLoading } = useFetch<IUser[]>({
@@ -76,8 +72,8 @@ function select(user: IUser) {
 
 async function addUserToGroup() {
   if (userToAdd.value) {
-    await MessangerService.addUserToGroup(props.chat_id, userToAdd.value._id);
-    const chat = chats.value.get(props.chat_id);
+    await MessangerService.addUserToGroup(currentChatId.value!, userToAdd.value._id);
+    const chat = chats.value.get(currentChatId.value!);
     if (chat) {
       !chat.users.find((user) => user._id === userToAdd.value?._id) ? chat.users.push(userToAdd.value) : '';
       chat.members_count++;

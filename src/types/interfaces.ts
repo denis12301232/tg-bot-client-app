@@ -3,6 +3,7 @@ export interface WsMessage<T = any> {
    payload: T;
 }
 
+
 export type ModalContent = 'create_group' | 'group_info' | 'add_user' | 'open_image' | 'group_settings';
 export type WsEvent = 'message' | 'chats_list' | 'open_chat' | 'read'
    | 'update_status' | 'invite_to_group' | 'kick_from_group';

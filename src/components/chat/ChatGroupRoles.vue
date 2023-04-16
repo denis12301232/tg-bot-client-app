@@ -42,7 +42,7 @@ import { ref } from 'vue';
 import { useFetch } from '@/hooks';
 import { MessangerService } from '@/api/services';
 import { storeToRefs } from 'pinia';
-import {  useChatStore } from '@/stores';
+import { useChatStore } from '@/stores';
 
 const { currentChat } = storeToRefs(useChatStore());
 const hasAdminRights = ref(currentChat.value?.group.roles.admin || []);
@@ -53,8 +53,24 @@ const { f: onUpdateRoles, loading } = useFetch({
 });
 
 const columns: QTable['columns'] = [
-  { name: 'name', label: 'Имя', align: 'center', field: 'name', headerStyle: 'font-size: 1.1em;', sortable: true, sort: (a, b) => a.localeCompare(b) },
-  { name: 'login', label: 'Логин', align: 'center', field: 'login', headerStyle: 'font-size: 1.1em;', sortable: true, sort: (a, b) => a.localeCompare(b) },
+  {
+    name: 'name',
+    label: 'Имя',
+    align: 'center',
+    field: 'name',
+    headerStyle: 'font-size: 1.1em;',
+    sortable: true,
+    sort: (a, b) => a.localeCompare(b),
+  },
+  {
+    name: 'login',
+    label: 'Логин',
+    align: 'center',
+    field: 'login',
+    headerStyle: 'font-size: 1.1em;',
+    sortable: true,
+    sort: (a, b) => a.localeCompare(b),
+  },
   { name: 'roles', label: 'Роль', align: 'center', field: 'roles', headerStyle: 'font-size: 1.1em;' },
 ];
 </script>

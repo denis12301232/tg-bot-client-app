@@ -39,7 +39,9 @@ export const useStore = defineStore('main', () => {
   });
 
   watch(currentTheme, (n, o) => {
+    const html = document.querySelector('html');
     n === 'dark' ? $q.dark.set(true) : $q.dark.set(false);
+    html?.setAttribute( 'class', n);
     localStorage.setItem('theme', n);
   }, { immediate: true });
 

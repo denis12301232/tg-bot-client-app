@@ -7,12 +7,12 @@
       <h5 class="text-center">Информация о группе</h5>
     </QCardSection>
     <QCardSection class="row justify-center q-pa-none">
-      <QItem>
+      <QItem style="max-width: 500px; min-width: 150px; width: 100%">
         <QItemSection avatar>
           <UserAvatar :avatar="avatar" :name="name" size="55px" />
         </QItemSection>
         <QItemSection>
-          <QItemLabel class="text-h6">{{ name }}</QItemLabel>
+          <QItemLabel class="text-h6 text-cut">{{ name }}</QItemLabel>
           <QItemLabel caption>{{ currentChat?.members_count }} участников</QItemLabel>
         </QItemSection>
       </QItem>
@@ -61,35 +61,29 @@ import { useStore, useChatStore } from '@/stores';
 import { useFetch } from '@/hooks';
 import { MessangerService } from '@/api/services';
 
-const props = defineProps<{
-  avatar: string;
-  name: string;
-  chat_id: string;
-  roles: { [name: string]: string };
-}>();
-
 const store = useStore();
-const { currentChat } = storeToRefs(useChatStore());
+const { currentChat, currentChatId } = storeToRefs(useChatStore());
 const filter = ref('');
+const avatar = computed(() => currentChat.value?.group?.avatar);
+const name = computed(() => currentChat.value?.group?.title);
 const { f: onGetUsersListInChat, loading, data: users } = useFetch<IUser[]>({
   fn: MessangerService.getUsersListInChat,
 });
-const { f: onRemoveUser, loading: isRemoveUserLoading } = useFetch({
-  fn: (user_id: string) => {
-    MessangerService.removeUserFromGroup(props.chat_id, user_id).then(() => {
-      users.value = users.value?.filter(user => user._id !== user_id);
-      currentChat.value && currentChat.value.members_count--;
-    });
-  },
-});
+const { f: onRemoveUser, loading: isRemoveUserLoading } = useFetch({ fn: removeUserFromGroup });
 const filteredUsers = computed(() => {
   return filter.value
-    ? users.value?.filter(user => user.name.includes(filter.value) || user.login.includes(filter.value))
+    ? users.value?.filter((user) => user.name.includes(filter.value) || user.login.includes(filter.value))
     : users.value;
 });
-const canRemove = computed(() => (props.roles.admin?.includes(store.user._id) ? true : false));
+const canRemove = computed(() => (currentChat.value?.group.roles.admin?.includes(store.user._id) ? true : false));
 
-onMounted(() => onGetUsersListInChat(props.chat_id));
+onMounted(() => onGetUsersListInChat(currentChatId.value));
+
+async function removeUserFromGroup(userId: string) {
+  await MessangerService.removeUserFromGroup(currentChatId.value!, userId);
+  users.value = users.value?.filter((user) => user._id !== userId);
+  currentChat.value && currentChat.value.members_count--;
+}
 </script>
 
 <style scoped lang="scss">

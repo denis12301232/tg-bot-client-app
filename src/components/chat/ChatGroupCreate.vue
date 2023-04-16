@@ -1,14 +1,12 @@
 <template>
-  <QCard class="content">
-    <QCardSection>
-      <div class="text-h5 text-center q-pb-lg">Создать группу</div>
-    </QCardSection>
+  <QCard :class="$style.content">
+    <QCardSection class="text-h5 text-center">Создать группу</QCardSection>
     <QCardSection>
       <QStepper v-model="step" color="primary" animated flat>
         <QStep class="overflow-hidden" :name="1" title="Название и описание" icon="settings" :done="step > 1">
-          <QInput v-model="newGroup.title" filled label="Название" counter maxlength="30" />
+          <QInput v-model="group.title" filled label="Название" counter maxlength="30" />
           <QInput
-            v-model="newGroup.about"
+            v-model="group.about"
             class="q-mt-sm"
             filled
             label="Описание"
@@ -18,7 +16,7 @@
             maxlength="100"
           />
           <QStepperNavigation>
-            <QBtn @click="step = 2" color="primary" label="Продолжить" :disable="!newGroup.title" />
+            <QBtn color="primary" label="Продолжить" :disable="!group.title" @click="setStep(2)" />
           </QStepperNavigation>
         </QStep>
         <QStep
@@ -30,11 +28,11 @@
           :done="step > 2"
         >
           <div class="row justify-center">
-            <ChangeAvatar v-model="newGroup.avatar" size="120px" />
+            <ChangeAvatar v-model="group.avatar" size="120px" />
           </div>
           <QStepperNavigation>
             <QBtn color="primary" label="Создать" :loading="loading" @click="onCreateGroup" />
-            <QBtn flat @click="step = 1" color="primary" label="Назад" class="q-ml-sm" />
+            <QBtn flat color="primary" label="Назад" class="q-ml-sm" @click="setStep(1)" />
           </QStepperNavigation>
         </QStep>
       </QStepper>
@@ -45,47 +43,38 @@
 <script setup lang="ts">
 import type { ChatResponse } from '@/types';
 import ChangeAvatar from '~/ChangeAvatar.vue';
-import { ref, watch, reactive } from 'vue';
+import { ref, reactive, watch } from 'vue';
 import { useStore, useChatStore } from '@/stores';
-import { MessangerService } from '@/api/services';
 import { useFetch } from '@/hooks';
+import { MessangerService } from '@/api/services';
 
-const emit = defineEmits<{
-  (event: 'close'): void;
-}>();
 
-const newGroup = reactive({
-  title: '',
-  about: '',
-  avatar: null as null | File,
-});
-
+const props = defineProps<{
+  onCloseModal: () => void;
+}>()
 const store = useStore();
-const socketStore = useChatStore();
+const chatStore = useChatStore();
 const step = ref(1);
-const { f: onCreateGroup, loading, data: group } = useFetch<ChatResponse>({
-  fn: createGroup,
+const group = reactive({ title: '', about: '', avatar: null });
+const { f: onCreateGroup, loading, data: chat } = useFetch<ChatResponse>({ fn: createGroup });
+
+watch(chat, () => {
+  chat.value && chatStore.chats.set(chat.value._id, chat.value);
+  props.onCloseModal();
 });
 
-watch(group, () => {
-  group.value && socketStore.chats.set(group.value._id, group.value);
-  emit('close');
-});
+function setStep(value: number) {
+  step.value = value;
+}
 
 async function createGroup() {
   const formData = new FormData();
-  if (newGroup.avatar) formData.append('avatar', newGroup.avatar);
-  const response = await MessangerService.createGroup(
-    newGroup.title,
-    newGroup.about,
-    [store.user._id],
-    formData
-  );
-  return response;
+  group.avatar && formData.append('avatar', group.avatar);
+  return MessangerService.createGroup(group.title, group.about, [store.user._id], formData);
 }
 </script>
 
-<style scoped lang="scss">
+<style lang="scss" module>
 .content {
   min-width: 300px;
   width: 100%;

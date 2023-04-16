@@ -34,21 +34,18 @@ const progress = ref(0);
 const currentTime = ref<string | number>('0:00');
 const durationString = ref<string | number>(0);
 
-
 const unwatch = watch(duration, () => {
   durationString.value = (duration.value / 100).toFixed(2).replace('.', ':');
   unwatch();
 });
 
 onMounted(() => {
-    audio.addEventListener('play', onPlay);
-    audio.addEventListener('pause', onPause);
-    audio.addEventListener('loadedmetadata', onLoadedMetadata);
-    audio.addEventListener('timeupdate', onTimeUpdate);
-    audio.addEventListener('ended', onEnded);
+  audio.addEventListener('play', onPlay);
+  audio.addEventListener('pause', onPause);
+  audio.addEventListener('loadedmetadata', onLoadedMetadata);
+  audio.addEventListener('timeupdate', onTimeUpdate);
+  audio.addEventListener('ended', onEnded);
 });
-
-
 
 function playOrStop() {
   isPlaying.value ? audio.pause() : audio.play();
