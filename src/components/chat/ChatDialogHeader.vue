@@ -1,5 +1,5 @@
 <template>
-  <QItem class="header" style="flex-wrap: wrap;">
+  <QItem class="header" style="flex-wrap: wrap">
     <QItemSection avatar>
       <QBtn dense flat round icon="arrow_back" @click="resetCurrentChat" />
     </QItemSection>
@@ -24,7 +24,15 @@
       </QItemLabel>
     </QItemSection>
     <QItemSection side style="display: flex; flex-direction: row; align-items: center">
-      <QBtn dense flat round icon="person_add" @click="emit('open-modal', 'modal:group-add-user')" />
+      <QBtn v-if="type === 'dialog'" dense flat round icon="call" @click="callToUser" />
+      <QBtn
+        v-if="isGroupAdmin"
+        dense
+        flat
+        round
+        icon="person_add"
+        @click="emit('open-modal', 'modal:group-add-user')"
+      />
       <QBtnDropdown dropdown-icon="more_vert" rounded dense flat>
         <QList separator>
           <QItem v-if="type === 'dialog'" v-ripple v-close-popup class="q-pa-sm" clickable @click="deleteChat">
@@ -84,11 +92,11 @@ const emit = defineEmits<{
   (event: 'open-modal', component: ChatModal): void;
 }>();
 
-const { user } = storeToRefs(useStore());
+const { user, modalCall } = storeToRefs(useStore());
 const { chats, currentChatId, currentChat } = storeToRefs(useChatStore());
 const companion = computed(() => currentChat.value?.companion);
 const typing = computed(() => currentChat.value?.typing);
-const isGroupAdmin = computed(() => currentChat.value?.group.roles.admin.includes(user.value._id));
+const isGroupAdmin = computed(() => currentChat.value?.group?.roles?.admin?.includes(user.value._id));
 
 function resetCurrentChat() {
   currentChatId.value = null;
@@ -106,6 +114,12 @@ async function leaveGroup() {
     chats.value.delete(currentChatId.value);
     currentChatId.value = null;
   }
+}
+
+function callToUser() {
+  modalCall.value.visible = true;
+  modalCall.value.props.call = 'outgoing';
+  modalCall.value.props.chat_id = currentChatId.value!;
 }
 </script>
 

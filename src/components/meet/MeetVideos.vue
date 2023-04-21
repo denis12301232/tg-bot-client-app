@@ -4,13 +4,20 @@
       <QScrollArea class="full-height">
         <div class="videos">
           <CallVideo
-            v-for="[client, info] of Array.from(abonents.entries())"
-            :ref="(ref) => setRefs(ref, client)"
-            :key="client"
-            :stream="(info.stream as MediaStream)"
-            :fullscreen-btn="client === myId ? false: true"
-            :avatar="info.user?.avatar"
-            :name="info.user?.name"
+            v-for="[id, stream] of streams.screen.entries()"
+            :key="id + 1"
+            :stream="stream"
+            fullscreen-btn
+            enable-video
+          />
+          <CallVideo
+            v-for="[id, stream] of streams.camera.entries()"
+            :key="id"
+            :stream="stream"
+            :ref="(ref) => setRefs(ref, id)"
+            :fullscreen-btn="id === myId ? false : true"
+            :avatar="id === myId ? store.user.avatar : abonents.get(id)?.info?.avatar"
+            :name="id === myId ? store.user.name : abonents.get(id)?.info?.name"
           />
         </div>
       </QScrollArea>
@@ -19,18 +26,20 @@
 </template>
 
 <script setup lang="ts">
-import type { CallInfo } from '@/types';
+import type { Abonent, Streams } from '@/types';
 import CallVideo from '~/CallVideo.vue';
-import {  type Ref, inject, computed } from 'vue';
+import { type Ref, inject, computed, ref, onMounted, watch } from 'vue';
 import { useStore } from '@/stores';
 
 const store = useStore();
 const myId = computed(() => store.user._id)
 const videos = inject<Ref<Map<string, InstanceType<typeof CallVideo> | null>>>('videos')!;
-const abonents = inject<Ref<Map<string, CallInfo>>>('abonents')!;
+const abonents = inject<Ref<Map<string, Abonent>>>('abonents')!;
+const streams = inject<Streams>('streams')!;
 
-function setRefs(ref: any, client: string) {
-  videos.value.set(client, ref);
+
+function setRefs(ref: any, id: string) {
+  videos.value.set(id, ref);
 }
 </script>
 

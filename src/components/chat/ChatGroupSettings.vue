@@ -20,7 +20,6 @@
 <script setup lang="ts">
 import ChatGroupUpdate from '~/chat/ChatGroupUpdate.vue'
 import ChatGroupRoles from '~/chat/ChatGroupRoles.vue'
-import { MessangerGroupUpdate, MessangerGroupRoles } from '~/messanger';
 import { ref } from 'vue';
 
 const modal = ref(false);

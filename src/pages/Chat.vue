@@ -26,10 +26,10 @@ import { storeToRefs } from 'pinia';
 import { useChatStore } from '@/stores';
 
 const { currentChatId } = storeToRefs(useChatStore());
+const imgSrc = ref('');
+const modal = ref(false);
 const component = ref<ChatModal | null>(null);
 const content = shallowRef<{ component: ReturnType<typeof defineAsyncComponent>; props?: any } | null>(null);
-const modal = ref(false);
-const imgSrc = ref('');
 const maximized = ['modal:group-info', 'modal:group-settings', 'modal:open-image'];
 
 function onOpenModal(c: ChatModal) {

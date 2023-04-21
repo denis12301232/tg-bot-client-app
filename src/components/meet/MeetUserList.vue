@@ -1,9 +1,9 @@
 <template>
   <QCard class="full-height">
-    <QCardSection class="q-pb-none">
+    <QCardSection>
       <h5 class="text-center">Список участников</h5>
-      <QSeparator class="q-mt-sm" />
     </QCardSection>
+    <QSeparator />
     <QCardSection>
       <QList>
         <QItem v-for="user of users" clickable>
@@ -21,13 +21,15 @@
 </template>
 
 <script setup lang="ts">
-import type { CallInfo } from '@/types';
+import type { Abonent } from '@/types';
 import UserAvatar from '~/UserAvatar.vue';
 import { computed } from 'vue';
+import { useStore } from '@/stores';
 
 const props = defineProps<{
-  abonents: Map<string, CallInfo>;
+  abonents: Map<string, Abonent>;
 }>();
 
-const users = computed(() => Array.from(props.abonents.values()).map((a) => a.user));
+const store = useStore();
+const users = computed(() => [store.user, ...Array.from(props.abonents.values()).map((a) => a.info)]);
 </script>

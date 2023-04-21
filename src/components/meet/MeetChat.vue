@@ -16,7 +16,7 @@
         >
           <template #name>
             <div class="text-bold text-deep-orange">
-              {{ msg.user_id === store.user._id ? 'Я' : abonents.get(msg.user_id)?.user?.name }}
+              {{ msg.user_id === store.user._id ? 'Я' : abonents.get(msg.user_id)?.info?.name }}
             </div>
           </template>
         </QChatMessage>
@@ -40,14 +40,14 @@
 </template>
 
 <script setup lang="ts">
-import type { CallInfo } from '@/types';
+import type { Abonent } from '@/types';
 import type { QScrollArea } from 'quasar';
 import { ref, watch } from 'vue';
 import { useStore } from '@/stores';
 import { WebRtcDto } from '@/api/dto';
 
 const props = defineProps<{
-  abonents: Map<string, CallInfo>;
+  abonents: Map<string, Abonent>;
   messages: { user_id: string; msg: string }[];
 }>();
 const emit = defineEmits<{

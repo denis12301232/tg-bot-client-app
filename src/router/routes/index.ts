@@ -109,5 +109,5 @@ export const routes: RouteRecordRaw[] = [
       name: 'test',
       component: () => import('@/pages/Test.vue'),
       meta: {layout: 'VoidLayout'}
-   }
+   },
 ];

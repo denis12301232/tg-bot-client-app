@@ -1,17 +1,17 @@
 import type { SocketTyped } from '@/types'
-import { ref } from 'vue'
+import { ref, markRaw } from 'vue'
 import { io } from 'socket.io-client'
 
 
 export default function useSocketIo() {
-   const socket: SocketTyped = io(import.meta.env.VITE_SOCKET_URL, {
+   const socket: SocketTyped = markRaw(io(import.meta.env.VITE_SOCKET_URL, {
       auth: (cb) => cb({ token: localStorage.getItem('token') }),
       autoConnect: false,
       reconnectionAttempts: Infinity,
       timeout: 10000,
       transports: ['websocket'],
       forceNew: true
-   });
+   }));
    const isConnected = ref(false);
 
    function onConnect() {

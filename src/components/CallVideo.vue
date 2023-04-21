@@ -37,7 +37,7 @@ const sets = reactive({ fullscreen: false });
 const mute = reactive({ video: props.enableVideo, audio: props.enableAudio });
 
 defineExpose({ $el, mute, toggleTrackMute });
-watchEffect(() => $el.value && props.stream && ($el.value.srcObject = props.stream));
+watchEffect(() => ($el.value && props.stream) && ($el.value.srcObject = props.stream));
 watch([mute, () => props.stream], () => {
   if (props.stream) {
     props.stream.getTracks().forEach((t) => (t.enabled = mute[t.kind as keyof typeof mute]));

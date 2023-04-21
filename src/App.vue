@@ -13,7 +13,7 @@
   />
   <LoaderPage :loading="store.isPageLoading" />
   <QDialog v-model="store.modalCall.visible" >
-    <ModalCall :="store.modalCall.props" @close-popup="store.modalCall.visible = false" />
+    <ModalCall :="store.modalCall.props"/>
   </QDialog>
 </template>
 
@@ -43,12 +43,12 @@ onMounted(() => {
 watch(() => store.isAuth, () => {
   if (store.isAuth) {
     socketStore.connect();
-    socketStore.socket.on('rtc:call', async (peer_id, chat_id) => {
-      store.modalCall.props.chat_id = chat_id;
+    socketStore.socket.on('chat:call', (chatId) => {
+      store.modalCall.props.chat_id = chatId;
       store.modalCall.visible = true;
       store.modalCall.props.call = 'incoming'
     });
-    socketStore.socket.on('rtc:call-cancel', () => {
+    socketStore.socket.on('chat:call-cancel', () => {
       store.modalCall.visible = false;
     });
   } else {

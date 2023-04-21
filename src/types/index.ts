@@ -13,12 +13,17 @@ export interface Pagination {
    rowsPerPage: number;
 }
 
-export interface CallInfo {
-   peer: RTCPeerConnection | null;
-   stream: MediaStream | null;
-   channel?: RTCDataChannel | null;
-   user?: IUser;
- }
+export interface Abonent {
+   peer?: RTCPeerConnection;
+   channel?: RTCDataChannel;
+   info?: IUser;
+   polite?: boolean;
+}
+
+export interface Streams {
+   screen: Map<string, MediaStream>;
+   camera: Map<string, MediaStream>;
+}
  
 export interface ITask {
    _id: string;

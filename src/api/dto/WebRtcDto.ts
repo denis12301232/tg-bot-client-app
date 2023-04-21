@@ -1,4 +1,4 @@
-type WebRtcEvents = 'meet:msg' | 'toggle-track';
+type WebRtcEvents = 'meet:msg' | 'set-toggle' | 'identify-stream' | 'track:end' | 'track:toggle' | 'track:toggle-init';
 
 
 export default class WebRtcDto {
