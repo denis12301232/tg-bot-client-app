@@ -27,6 +27,9 @@ export interface HumansList {
 }
 
 export interface ImagesResponse {
-   images: { link: string }[];
+   images: { link: string, fileId: string }[];
    pageToken?: string;
 }
+
+export type UploadImagesResponse = { link: string, fileId: string }[]; 
+

@@ -61,7 +61,7 @@ export const routes: RouteRecordRaw[] = [
       path: '/gallery',
       name: 'gallery',
       component: () => import('@/pages/Gallery.vue'),
-      meta: { layout: 'SimpleLayout', layoutProps: { title: 'Галерея' } }
+      meta: { layout: 'GalleryLayout', layoutProps: { title: 'Галерея' } }
    },
    {
       path: '/messanger',

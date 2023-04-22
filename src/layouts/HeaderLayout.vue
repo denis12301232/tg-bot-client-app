@@ -1,5 +1,5 @@
 <template>
-  <QLayout :class="store.currentTheme === 'dark' ? 'dark' : 'light'" view="hhh lpR fFf">
+  <QLayout view="hhh lpR fFf">
     <QHeader class="header" v-if="!isOpenedFromTg" reveal elevated>
       <QToolbar>
         <QBtn dense flat round icon="menu" @click="toggleLeftDrawer" />
@@ -138,18 +138,7 @@ function openLogin() {
 </script>
 
 <style lang="scss" scoped>
-.light {
-  & .header {
-    background-color: white;
-    color: black;
-  }
-}
 
-.dark {
-  & .header {
-    background-color: #121212;
-  }
-}
 
 .list {
   padding: 5px;

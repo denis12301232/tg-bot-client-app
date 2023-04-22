@@ -1,5 +1,5 @@
 <template>
-  <QLayout :class="store.currentTheme === 'dark' ? 'dark' : 'light'" view="hHh lpR fFf">
+  <QLayout view="hHh lpR fFf">
     <QHeader class="header" reveal elevated height-hint="98">
       <QToolbar>
         <QBtn dense flat round icon="arrow_back" color="indigo" @click="$router.push('/')" />
@@ -18,22 +18,9 @@
 </template>
 
 <script setup lang="ts">
-import { useStore } from '@/stores';
 
-const store = useStore();
 </script>
 
 <style lang="scss" scoped>
-.light {
-  & .header {
-    background-color: white;
-    color: black;
-  }
-}
 
-.dark {
-  & .header {
-    background-color: #121212;
-  }
-}
 </style>

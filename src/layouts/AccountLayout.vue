@@ -31,16 +31,5 @@ provide('tab', tab);
 </script>
 
 <style lang="scss" scoped>
-.light {
-  & .header {
-    background-color: white;
-    color: black;
-  }
-}
 
-.dark {
-  & .header {
-    background-color: #121212;
-  }
-}
 </style>

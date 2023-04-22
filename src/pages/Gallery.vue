@@ -16,6 +16,9 @@
         <div class="image-block" v-for="(img, index) in images" @click="onOpenImage(index)">
           <QImg class="image_item" fit="cover" :src="img.link" spinner-color="secondary" />
           <div class="image_hover"></div>
+          <div :class="['image_controls row justify-end', { show: selection.includes(img.fileId) }]">
+            <QCheckbox v-model="selection" :val="img.fileId" dark />
+          </div>
         </div>
       </div>
       <template #loading>
@@ -28,11 +31,16 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { type Ref, ref, computed, inject } from 'vue';
 import { ImageService } from '@/api/services';
 
+interface Injected {
+  images: Ref<{ link: string, fileId: string }[]>;
+  selection: Ref<string[]>;
+}
+
+const { images, selection } = inject<Injected>('images')!;
 const pageToken = ref<string>();
-const images = ref<{ link: string }[]>([]);
 const currentIndex = ref(0);
 const isModalVisible = ref(false);
 const loading = ref(false);
@@ -141,9 +149,19 @@ function changeImage(event: KeyboardEvent) {
       }
 
       &:hover {
-        .image_hover {
+        .image_hover,
+        .image_controls {
           opacity: 1;
         }
+      }
+
+      & .image_controls {
+        position: absolute;
+        top: 0;
+        right: 0;
+        left: 0;
+        z-index: 1000;
+        opacity: 0;
       }
     }
   }
@@ -159,5 +177,9 @@ function changeImage(event: KeyboardEvent) {
 
 .test {
   background-color: rgba(0, 0, 0, 0.337);
+}
+
+.show {
+  opacity: 1 !important;
 }
 </style>

@@ -18,14 +18,6 @@ interface ServerToClientEvents {
    'webrtc:remove-peer': (peerId: string) => void;
    'webrtc:sdp': (peerId: string, sdp: RTCSessionDescriptionInit) => void;
    'webrtc:ice': (peerId: string, ice: RTCIceCandidate) => void;
-   'webrtc:identify-stream': (type: 'screen' | 'camera', id: string) => void;
-   'webrtc:negotiate': (peerId: string) => void;
-   'rtc:call': (peer_id: string, chat_id: string) => void;
-   'rtc:add-peer': (peer_id: string, offer: boolean, user?: IUser) => void;
-   'rtc:session-description': (peer_id: string, sessionDescription: RTCSessionDescriptionInit) => void;
-   'rtc:ice-candidate': (peer_id: string, iceCandidate: RTCIceCandidate) => void;
-   'rtc:remove-peer': (peer_id: string) => void;
-   'rtc:call-cancel': () => void;
    'meet:create': (meetId: string) => void;
 }
 
@@ -38,14 +30,6 @@ interface ClientToServerEvents {
    'webrtc:remove-peer': (chatId: string) => void;
    'webrtc:sdp': (peerId: string, sdp: RTCSessionDescriptionInit) => void;
    'webrtc:ice': (peerId: string, ice: RTCIceCandidate) => void;
-   'webrtc:identify-stream': (chatId: string, type: 'screen' | 'camera', id: string) => void;
-   'webrtc:negotiate': (peerId: string) => void;
-   'rtc:call': (chat_id: string) => void;
-   'rtc:answer': (answer: boolean, chat_id: string) => void;
-   'rtc:relay-ice': (peer_id: string, iceCandidate: RTCIceCandidate) => void;
-   'rtc:relay-sdp': (peer_id: string, sessionDescription: RTCSessionDescriptionInit) => void;
-   'rtc:remove-peer': (chat_id: string) => void;
-   'rtc:call-cancel': (chat_id: string) => void;
    'meet:create': (title: string) => void;
    'meet:leave': (meetId: string) => void;
    'meet:join': (meetId: string) => void;

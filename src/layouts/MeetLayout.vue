@@ -1,5 +1,5 @@
 <template>
-  <QLayout :class="store.currentTheme === 'dark' ? 'dark' : 'light'" view="hhh lpR fff">
+  <QLayout view="hhh lpR fff">
     <QDrawer v-model="open.left" side="left" bordered>
       <!-- drawer content -->
     </QDrawer>
@@ -41,7 +41,7 @@ import type CallVideo from '~/CallVideo.vue';
 import MeetChat from '~/meet/MeetChat.vue';
 import MeetInfo from '~/meet/MeetInfo.vue';
 import MeetUserList from '~/meet/MeetUserList.vue';
-import { ref, reactive, provide, computed, onMounted, onBeforeUnmount, shallowRef, watch, type DefineComponent } from 'vue';
+import { ref, reactive, provide, onMounted, onBeforeUnmount, shallowRef, watch, type DefineComponent } from 'vue';
 import { useStore, useChatStore } from '@/stores';
 import { useNavigation, useWebRtc } from '@/hooks';
 import { useRoute } from 'vue-router';
@@ -185,14 +185,14 @@ function onIdentifyStream({ type, id }: { type: 'camera' | 'screen'; id: string 
 </script>
 
 <style lang="scss" scoped>
-.light {
+html.light {
   & .footer {
     background-color: white;
     color: black;
   }
 }
 
-.dark {
+html.dark {
   & .footer {
     background-color: #121212;
   }

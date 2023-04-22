@@ -63,3 +63,18 @@ watch(() => store.isAuth, () => {
   right: 5px;
 }
 </style>
+
+<style lang="scss">
+html.light {
+  & .header {
+    background-color: white;
+    color: black;
+  }
+}
+
+html.dark {
+  & .header {
+    background-color: #121212;
+  }
+}
+</style>
