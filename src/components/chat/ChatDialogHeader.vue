@@ -1,7 +1,7 @@
 <template>
   <QItem class="header" style="flex-wrap: wrap">
     <QItemSection avatar>
-      <QBtn dense flat round icon="arrow_back" @click="resetCurrentChat" />
+      <QBtn dense flat round icon="arrow_back" color="indigo" @click="resetCurrentChat" />
     </QItemSection>
     <QItemSection avatar>
       <UserAvatar

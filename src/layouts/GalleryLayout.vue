@@ -2,7 +2,7 @@
   <QLayout view="hHh lpR fFf">
     <QHeader class="header" reveal elevated height-hint="98">
       <QToolbar>
-        <QBtn dense flat round icon="arrow_back" color="indigo" @click="$router.push('/')"></QBtn>
+        <QBtn dense flat round icon="arrow_back" color="indigo" @click="$router.push('/')" />
         <QToolbarTitle>{{ title }}</QToolbarTitle>
         <QBtnGroup v-if="store.isAdmin" flat>
           <QBtn
@@ -33,7 +33,7 @@
       <slot />
     </QPageContainer>
   </QLayout>
-  <input ref="imagesRef" class="hidden" type="file" multiple @change="onMedia" />
+  <input ref="imagesRef" class="hidden" type="file" accept="image/*" multiple @change="onMedia" />
 </template>
 
 <script setup lang="ts">
@@ -51,18 +51,20 @@ const store = useStore();
 const images = ref<{ link: string; fileId: string }[]>([]);
 const selection = ref<string[]>([]);
 const imagesRef = ref<HTMLInputElement | null>(null);
-const { f: uploadImages, data, loading } = useFetch<UploadImagesResponse, typeof ImageService.uploadImages>({
+const { f: uploadImages, data: uploadResult, loading } = useFetch<UploadImagesResponse>({
   fn: ImageService.uploadImages,
 });
 const { f: deleteImages, data: deleteResult, loading: isDeleteLoading } = useFetch<string[]>({ fn: onDeleteImages });
 
 provide('images', { images, selection });
-watch(data, () => data.value && (images.value = [...images.value, ...data.value]));
-watch(deleteResult, () => {
-   images.value = images.value.filter((img) => !deleteResult.value?.includes(img.fileId));
-   selection.value = [];
+watch([uploadResult, deleteResult], ([newUpload, newDelete], [oldUpload, oldDelete]) => {
+  if (newUpload !== oldUpload) {
+    uploadResult.value && (images.value = [...images.value, ...uploadResult.value]);
+  } else if (newDelete !== oldDelete) {
+    images.value = images.value.filter((img) => !deleteResult.value?.includes(img.fileId));
+    selection.value = [];
+  }
 });
-
 async function onMedia(event: Event) {
   const target = event.target as HTMLInputElement;
   const files = target.files;
@@ -79,6 +81,4 @@ async function onDeleteImages() {
 }
 </script>
 
-<style lang="scss" scoped>
-
-</style>
+<style lang="scss" scoped></style>

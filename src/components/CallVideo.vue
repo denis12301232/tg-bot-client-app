@@ -66,9 +66,7 @@ function toggleTrackMute(type: 'video' | 'audio') {
 <style lang="scss" module>
 .container {
   max-width: 500px;
-  min-width: 300px;
   width: 100%;
-  max-height: 300px;
   min-height: 250px;
   height: 100%;
   position: relative;

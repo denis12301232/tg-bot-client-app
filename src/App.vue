@@ -1,6 +1,6 @@
 <template>
   <component :is="$route.meta.layoutComponent" :="$route.meta.layoutProps">
-    <QScrollArea class="full-height" :thumb-style="{ width: '7px' }" :content-style="{ height: '100%' }">
+    <QScrollArea class="full-height" :thumb-style="{ width: '7px' }" >
       <RouterView />
     </QScrollArea>
   </component>
@@ -21,7 +21,7 @@
 import ModalAlert from '~/ModalAlert.vue';
 import LoaderPage from '~/LoaderPage.vue';
 import ModalCall from '~/ModalCall.vue';
-import { onMounted, watch, onBeforeMount } from 'vue';
+import { onMounted, watch } from 'vue';
 import { useStore, useChatStore } from '@/stores';
 import { useTelegram } from '@/hooks';
 
@@ -29,16 +29,12 @@ const store = useStore();
 const socketStore = useChatStore();
 const { tg, isOpenedFromTg, theme } = useTelegram();
 
-onBeforeMount(() => {
-  const el = document.getElementById('loader');
-  el && (el.style.cssText = 'display: none');
-});
 onMounted(() => {
   tg.ready();
   isOpenedFromTg && (store.theme = theme);
   localStorage.getItem('token') && store.refresh();
-  window.addEventListener('online',  () => 'online');
-  window.addEventListener('offline', () => 'offline');
+  window.addEventListener('online',  () => console.log('online'));
+  window.addEventListener('offline', () => console.log('offline'));
 });
 watch(() => store.isAuth, () => {
   if (store.isAuth) {

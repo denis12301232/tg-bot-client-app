@@ -1,52 +1,41 @@
 <template>
-  <div class="column items-center q-pa-sm">
-    <form class="meet q-mt-lg column items-center" @submit.prevent="createNewMeet">
-      <h5 class="text-center">Создать встречу</h5>
-      <QInput v-model="meetTitle" class="q-my-md full-width" label="Название" filled />
-      <QBtn :disable="!meetTitle" color="primary" label="Создать" type="submit" />
-    </form>
-    <form class="meet q-mt-lg column items-center" @submit.prevent="joinMeet">
-      <h5 class="text-center">Присоедениться</h5>
-      <QInput v-model="meetId" class="q-my-md full-width" label="ID встречи" filled />
-      <QBtn :disable="!meetId" color="primary" label="Присоедениться" type="submit" />
-    </form>
+  <div ref="slider" class="line" tabindex="1" @pointerenter="onPointerenter" >
+    <div class="row overflow-auto no-wrap" @scroll="onScroll">
+      <div v-for="i in 10" class="img_block">
+        <QImg fit="cover" height="50px" width="100px" src="https://cdn.quasar.dev/img/mountains.jpg"></QImg>
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue';
-import { useRouter } from 'vue-router';
-import { useChatStore } from '@/stores';
+import { ref } from 'vue';
 
-const router = useRouter();
-const { socket } = useChatStore();
-const meetTitle = ref('');
-const meetId = ref('');
+const slide = ref(1);
+const slider = ref<HTMLDivElement | null>(null);
 
-onMounted(() => {
-  socket.on('meet:create', onMeetCreate);
-});
-
-onUnmounted(() => {
-  socket.removeListener('meet:create', onMeetCreate);
-});
-
-function createNewMeet() {
-  socket.emit('meet:create', meetTitle.value);
+function onPointerenter(){
+  console.log('enter');
+  slider.value?.focus();
+  
 }
 
-function joinMeet() {
-  router.push({ path: `/test/${meetId.value}` });
+function onScroll(){
+  console.log('scroll');
+  
 }
 
-function onMeetCreate(meetId: string) {
-  router.push({ path: `/test/${meetId}` });
-}
 </script>
 
 <style lang="scss" scoped>
-.meet {
-  max-width: 500px;
-  width: 100%;
+.line {
+  width: 500px;
+  &:focus{
+    border: 1px solid red;
+  }
+}
+.img_block{
+  width: 100px;
+  height: 50px;
 }
 </style>

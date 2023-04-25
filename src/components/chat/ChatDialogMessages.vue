@@ -1,6 +1,6 @@
 <template>
   <div v-if="!messages.length" class="row justify-center items-center text-indigo chat_void">Здесь пусто...</div>
-  <QScrollArea v-else class="fit">
+  <QScrollArea v-else ref="scroll" class="fit" :thumb-style="{ width: '7px' }">
     <QInfiniteScroll reverse :key="String(currentChatId)" :offset="10" :initial-index="initialIndex" @load="onLoad">
       <template #loading>
         <div v-if="currentChat?.total || 0 > messages.length" class="row justify-center q-my-md">
@@ -56,10 +56,11 @@
 
 <script setup lang="ts">
 import type { IMessage, ChatModal } from '@/types';
+import type { QScrollArea } from 'quasar';
 import UserAvatar from '~/UserAvatar.vue';
 import ChatMessageVoice from '~/chat/ChatMessageVoice.vue';
 import ChatMessageImage from '~/chat/ChatMessageImage.vue';
-import { ref, computed } from 'vue';
+import { ref, computed, watch, nextTick } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useStore, useChatStore } from '@/stores';
 import { Time, ENV } from '@/util';
@@ -75,10 +76,15 @@ const emit = defineEmits<{
 const chatStore = useChatStore();
 const { user } = storeToRefs(useStore());
 const { currentChatId, currentChat } = storeToRefs(chatStore);
+const scroll = ref<QScrollArea | null>(null);
 const loading = ref(false);
 const messages = computed(() => currentChat.value?.messages || []);
 const initialIndex = computed(() => (messages.value.length > limit ? Math.ceil(messages.value.length / limit) : 0));
 const limit = 10;
+
+watch(() => currentChat.value?.total, () => {
+  nextTick().then(() => setTimeout(() => scroll.value?.setScrollPercentage('vertical', 1), 0));
+});
 
 async function onLoad(index: number, done: (stop?: boolean | undefined) => void) {
   if (currentChat.value && currentChat.value.total > messages.value.length) {

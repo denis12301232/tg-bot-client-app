@@ -1,16 +1,20 @@
 <template>
   <div class="container">
-    <QDialog class="modal" v-model="isModalVisible" maximized no-refocus @keydown="changeImage">
-      <QCard class="row justify-center items-center test">
-        <div class="total">{{ currentIndex + 1 + '/' + total }}</div>
-        <QBtn class="left" dense flat round icon="chevron_left" color="white" @click="onPrev" />
-        <QBtn class="right" dense flat round icon="chevron_right" color="white" @click="onNext" />
-        <QBtn v-close-popup class="close" icon="close" dense flat round color="negative" />
-        <QImg class="img" :src="images[currentIndex].link" spinner-color="secondary" fit="scale-down" />
+    <QDialog v-model="isModalVisible" maximized no-refocus @keydown="changeImage">
+      <QCard class="fit column">
+        <div class="row justify-between items-center">
+          <div class="text-primary total">{{ currentIndex + 1 + ' / ' + total }}</div>
+          <QBtn v-close-popup icon="close" dense flat round color="negative" size="15px" />
+        </div>
+        <div class="row justify-center" style="flex: 1 1 auto">
+          <QImg class="img" :src="images[currentIndex].link" spinner-color="secondary" fit="scale-down" />
+          <QBtn class="left" dense flat round icon="chevron_left" size="15px" @click="onPrev" />
+          <QBtn class="right" dense flat round icon="chevron_right" size="15px" @click="onNext" />
+        </div>
       </QCard>
     </QDialog>
     <h3 class="text-center text-indigo q-pa-lg q-mb-sm">Галерея</h3>
-    <h5 v-if="!images.length && !loading" class="text-center text-red">{{ error || 'Нет изображений' }}</h5>
+    <h5 v-if="!images.length && !loading" class="text-center text-negative">{{ error || 'Нет изображений' }}</h5>
     <QInfiniteScroll @load="onFetchImages">
       <div class="images">
         <div class="image-block" v-for="(img, index) in images" @click="onOpenImage(index)">
@@ -88,13 +92,6 @@ function changeImage(event: KeyboardEvent) {
   min-width: 300px;
 }
 
-.close {
-  position: absolute;
-  top: 5px;
-  right: 5px;
-  z-index: 1;
-}
-
 .right {
   position: absolute;
   top: 50%;
@@ -112,13 +109,10 @@ function changeImage(event: KeyboardEvent) {
 }
 
 .total {
-  position: absolute;
-  top: 5px;
-  left: 5px;
   font-size: 1.3em;
   font-weight: bolder;
-  color: white;
-  z-index: 1;
+  font-style: italic;
+  padding-left: 5px;
 }
 
 .container {
@@ -173,10 +167,6 @@ function changeImage(event: KeyboardEvent) {
       grid-template-columns: repeat(2, 1fr);
     }
   }
-}
-
-.test {
-  background-color: rgba(0, 0, 0, 0.337);
 }
 
 .show {

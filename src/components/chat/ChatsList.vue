@@ -41,8 +41,9 @@
             />
             <div>{{ Time.showDialogListDate(new Date(chat.updatedAt)) }}</div>
           </div>
-          <div v-if="Number(chat.unread)" class="unread_count">
-            <span>{{ chat.unread }}</span>
+          <!-- <QBadge></QBadge> -->
+          <div v-if="Number(chat.unread)" class="row justify-end">
+            <QBadge rounded :label="chat.unread" color="blue-grey-3"/>
           </div>
         </QItemLabel>
       </QItemSection>

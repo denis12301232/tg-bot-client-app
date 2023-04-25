@@ -23,9 +23,14 @@
 import FormAssistance from '~/FormAssistance.vue';
 import FormReg from '~/FormReg.vue';
 import FormLog from '~/FormLog.vue';
-import { reactive, shallowRef, inject, type Ref } from 'vue';
+import { type Ref, reactive, shallowRef, inject, onBeforeMount } from 'vue';
 import { useFetch, useTelegram } from '@/hooks';
 import { AssistanceService } from '@/api/services';
+
+onBeforeMount(() => {
+  const el = document.getElementById('loader');
+  el && (el.style.cssText = 'display: none');
+});
 
 const loginModal = inject<Ref<boolean>>('loginModal')!;
 const component = shallowRef(FormLog);

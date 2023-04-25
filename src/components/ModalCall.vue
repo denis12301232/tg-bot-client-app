@@ -1,10 +1,10 @@
 <template>
   <QDialog v-model="videoModal" maximized>
-    <QCard class="overflow-hidden">
-      <QCardActions align="right">
-        <QBtn v-close-popup="2" dense flat round icon="close" color="negative" @click="endCall" />
-      </QCardActions>
-      <QCardSection>
+    <QCard class="fit column">
+      <div class="row justify-end">
+        <QBtn v-close-popup="2" dense flat round icon="close" color="negative" />
+      </div>
+      <div style="flex: 1 1 auto">
         <div :class="[$style.videos]">
           <CallVideo
             v-for="[id, stream] of streams.camera.entries()"
@@ -15,31 +15,34 @@
             :name="id === store.user._id ? store.user.name : abonents.get(id)?.info?.name"
           />
         </div>
-      </QCardSection>
-      <QCardActions align="center">
-        <QBtn
-          dense
-          round
-          flat
-          :icon="videos.get(store.user._id)?.mute.audio ? 'mic' : 'mic_off'"
-          @click="toggleTrackMuteAndRelay('audio')"
-        />
-        <QBtn
-          dense
-          round
-          flat
-          :icon="videos.get(store.user._id)?.mute.video ? 'videocam' : 'videocam_off'"
-          @click="toggleTrackMuteAndRelay('video')"
-        />
-        <QBtn dense round flat icon="call_end" color="negative" @click="endCall" />
-      </QCardActions>
+        <QSeparator />
+      </div>
+      <div class="row justify-center q-py-sm">
+        <QBtnGroup flat rounded>
+          <QBtn
+            round
+            flat
+            :icon="videos.get(store.user._id)?.mute.audio ? 'mic' : 'mic_off'"
+            @click="toggleTrackMuteAndRelay('audio')"
+          />
+          <QBtn
+            round
+            flat
+            :icon="videos.get(store.user._id)?.mute.video ? 'videocam' : 'videocam_off'"
+            @click="toggleTrackMuteAndRelay('video')"
+          />
+          <QBtn round flat icon="call_end" color="negative" @click="endCall" />
+        </QBtnGroup>
+      </div>
     </QCard>
   </QDialog>
   <QCard :class="$style.card">
-    <QCardSection class="text-h5">{{ call === 'outgoing' ? 'Набрать' : 'Входящий вызов' }} </QCardSection>
+    <QCardSection class="text-h5 text-primary text-center">
+      {{ call === 'outgoing' ? 'Набрать' : 'Входящий вызов' }}
+    </QCardSection>
     <QSeparator inset />
     <QCardSection class="q-py-sm q-mt-sm row">
-      <UserAvatar :avatar="abonent?.avatar" :name="abonent?.name" size="55px" />
+      <UserAvatar :avatar="abonent?.avatar" :name="abonent?.name" size="50px" />
       <div class="q-pl-sm column justify-center">
         <div class="text-subtitle1">{{ abonent?.name }}</div>
         <div class="text-subtitle2 text-caption">@{{ abonent?.login }}</div>
@@ -53,6 +56,7 @@
         icon="call"
         color="positive"
         size="1.1em"
+        :disable="isCalling"
         @click="call === 'outgoing' ? callToUser() : answer()"
       />
       <QSpinnerDots v-if="isCalling" size="2em" color="primary" />
@@ -93,12 +97,11 @@ watch(
 
 onMounted(() => socket.on('chat:call-answer', onChatCallAnswer));
 onUnmounted(() => socket.removeListener('chat:call-answer', onChatCallAnswer));
-onBeforeUnmount(() =>
-  streams.camera
-    .get(store.user._id)
-    ?.getTracks()
-    .forEach((t) => t.stop())
-);
+onBeforeUnmount(() => {
+  const stream = streams.camera.get(store.user._id);
+  stream?.getTracks().forEach((t) => t.stop());
+  endCall();
+});
 
 function onChatCallAnswer(chatId: string, answer: boolean) {
   isCalling.value = false;

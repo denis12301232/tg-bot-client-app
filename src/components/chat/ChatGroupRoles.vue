@@ -1,37 +1,34 @@
 <template>
   <QCard :class="$style.container">
-    <QCardSection>
-      <div class="text-h4 q-mb-lg text-center">Настроить роли</div>
-      <QTable
-        :columns="columns"
-        :rows="currentChat?.users"
-        :loading="loading"
-        :rows-per-page-options="[5, 10]"
-        binary-state-sort
-        separator="cell"
-        no-data-label="Ничего не найдено"
-        flat
-        bordered
-      >
-        <template #body="{ row }: { row: IUser }">
-          <QTr>
-            <QTd key="name">{{ row.name }}</QTd>
-            <QTd key="login">{{ row.login }}</QTd>
-            <QTd key="roles" auto-width>
-              <div>
-                <QCheckbox
-                  v-model="hasAdminRights"
-                  class="q-pr-sm"
-                  :val="row._id"
-                  label="Админ"
-                  @update:model-value="onUpdateRoles"
-                />
-              </div>
-            </QTd>
-          </QTr>
-        </template>
-      </QTable>
-    </QCardSection>
+    <QCardSection class="text-h4 text-center">Настроить роли</QCardSection>
+    <QTable
+      :columns="columns"
+      :rows="currentChat?.users"
+      :loading="loading"
+      :rows-per-page-options="[5, 10]"
+      binary-state-sort
+      separator="cell"
+      no-data-label="Ничего не найдено"
+      bordered
+    >
+      <template #body="{ row }: { row: IUser }">
+        <QTr>
+          <QTd key="name">{{ row.name }}</QTd>
+          <QTd key="login">{{ row.login }}</QTd>
+          <QTd key="roles" auto-width>
+            <div>
+              <QCheckbox
+                v-model="hasAdminRights"
+                class="q-pr-sm"
+                :val="row._id"
+                label="Админ"
+                @update:model-value="onUpdateRoles"
+              />
+            </div>
+          </QTd>
+        </QTr>
+      </template>
+    </QTable>
   </QCard>
 </template>
 
@@ -80,6 +77,5 @@ const columns: QTable['columns'] = [
   min-width: 300px;
   max-width: 500px;
   width: 500px;
-  padding: 10px 10px 10px 10px;
 }
 </style>

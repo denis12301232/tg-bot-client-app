@@ -1,6 +1,6 @@
 <template>
   <Transition name="menu">
-    <div v-if="menu" class="menu" >
+    <div v-if="menu" class="menu">
       <QCard class="full-height">
         <QCardSection class="text-center text-h5">Меню</QCardSection>
         <QSeparator />
@@ -51,8 +51,8 @@
       </template>
     </QInput>
   </div>
-  <QScrollArea class="fit divider">
-    <ChatUserSearchList v-if="search" :users="users" />
+  <QScrollArea class="fit divider" :thumb-style="{ width: '7px' }">
+    <ChatUserSearchList v-if="search" :users="users" @update:search="onUpdateSearch" />
     <ChatsList v-else />
   </QScrollArea>
 </template>
@@ -82,6 +82,10 @@ function openMenu() {
 
 function closeMenu() {
   menu.value = false;
+}
+
+function onUpdateSearch(value: string) {
+  search.value = value;
 }
 </script>
 

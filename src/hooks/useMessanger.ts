@@ -1,5 +1,5 @@
 import type { IMessage, ChatResponse, SocketTyped } from '@/types'
-import { ref, computed, type Ref } from 'vue'
+import { type Ref, ref, computed, watchEffect } from 'vue'
 import { MessangerService } from '@/api/services'
 import { ACTIONS } from '@/util'
 
@@ -12,6 +12,13 @@ export default function useMessanger(socket: SocketTyped) {
       .sort((a, b) => (new Date(a[1].updatedAt) > new Date(b[1].updatedAt)) ? - 1 : 1)));
    useMessangerEvents({ chats, currentChatId }).forEach((func, event) => socket.on(event, func));
 
+   watchEffect(() => {
+      if (currentChatId) {
+         const chat = chats.value.get(currentChatId.value!);
+         chat && (chat.unread = 0);
+      }
+   });
+
    async function onOpenChat(chat_id: string, page: number = 1, limit: number = 5) {
       currentChatId.value = chat_id;
       if (currentChat.value) {
@@ -20,7 +27,6 @@ export default function useMessanger(socket: SocketTyped) {
          const response = await MessangerService.openChat(chat_id, page, limit);
          const chat = chats.value.get(chat_id);
          if (chat) {
-            chat.unread = 0;
             chat.messages.splice(0, slice, ...response.data.messages);
          }
       }
