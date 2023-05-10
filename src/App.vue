@@ -1,8 +1,6 @@
 <template>
   <component :is="$route.meta.layoutComponent" :="$route.meta.layoutProps">
-    <QScrollArea class="full-height" :thumb-style="{ width: '7px' }" >
-      <RouterView />
-    </QScrollArea>
+    <RouterView />
   </component>
   <ModalAlert
     :class="$style.alert"
@@ -12,8 +10,8 @@
     @show="store.alert.visible = !store.alert.visible"
   />
   <LoaderPage :loading="store.isPageLoading" />
-  <QDialog v-model="store.modalCall.visible" >
-    <ModalCall :="store.modalCall.props"/>
+  <QDialog v-model="store.modalCall.visible">
+    <ModalCall :="store.modalCall.props" />
   </QDialog>
 </template>
 
@@ -33,24 +31,28 @@ onMounted(() => {
   tg.ready();
   isOpenedFromTg && (store.theme = theme);
   localStorage.getItem('token') && store.refresh();
-  window.addEventListener('online',  () => console.log('online'));
+  window.addEventListener('online', () => console.log('online'));
   window.addEventListener('offline', () => console.log('offline'));
 });
-watch(() => store.isAuth, () => {
+watch([() => store.isAuth], () => {
   if (store.isAuth) {
     socketStore.connect();
-    socketStore.socket.on('chat:call', (chatId) => {
-      store.modalCall.props.chat_id = chatId;
-      store.modalCall.visible = true;
-      store.modalCall.props.call = 'incoming'
-    });
-    socketStore.socket.on('chat:call-cancel', () => {
-      store.modalCall.visible = false;
-    });
+    socketStore.socket.on('chat:call', onChatCall);
+    socketStore.socket.on('chat:call-cancel', onChatCancel);
   } else {
     socketStore.socket.close();
   }
 });
+
+function onChatCall(chatId: string) {
+  store.modalCall.props.chat_id = chatId;
+  store.modalCall.visible = true;
+  store.modalCall.props.call = 'incoming';
+}
+
+function onChatCancel() {
+  store.modalCall.visible = false;
+}
 </script>
 
 <style module lang="scss">

@@ -11,10 +11,10 @@ export default function useAudioDuration(src: string) {
          this.remove();
       }
    }
+
    audio.addEventListener('durationchange', onDurationChange);
    audio.load();
    audio.currentTime = 1e101;
-   audio.removeEventListener('durationchange', onDurationChange);
    audio.remove();
 
    return duration;

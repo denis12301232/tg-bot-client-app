@@ -6,7 +6,7 @@
           <div class="text-primary total">{{ currentIndex + 1 + ' / ' + total }}</div>
           <QBtn v-close-popup icon="close" dense flat round color="negative" size="15px" />
         </div>
-        <div class="row justify-center" style="flex: 1 1 auto">
+        <div class="row justify-center items-center" style="flex: 1 1 auto">
           <QImg class="img" :src="images[currentIndex].link" spinner-color="secondary" fit="scale-down" />
           <QBtn class="left" dense flat round icon="chevron_left" size="15px" @click="onPrev" />
           <QBtn class="right" dense flat round icon="chevron_right" size="15px" @click="onNext" />
@@ -20,7 +20,10 @@
         <div class="image-block" v-for="(img, index) in images" @click="onOpenImage(index)">
           <QImg class="image_item" fit="cover" :src="img.link" spinner-color="secondary" />
           <div class="image_hover"></div>
-          <div :class="['image_controls row justify-end', { show: selection.includes(img.fileId) }]">
+          <div
+            v-if="store.isAdmin"
+            :class="['image_controls row justify-end', { show: selection.includes(img.fileId) }]"
+          >
             <QCheckbox v-model="selection" :val="img.fileId" dark />
           </div>
         </div>
@@ -36,6 +39,7 @@
 
 <script setup lang="ts">
 import { type Ref, ref, computed, inject } from 'vue';
+import { useStore } from '@/stores';
 import { ImageService } from '@/api/services';
 
 interface Injected {
@@ -43,6 +47,7 @@ interface Injected {
   selection: Ref<string[]>;
 }
 
+const store = useStore();
 const { images, selection } = inject<Injected>('images')!;
 const pageToken = ref<string>();
 const currentIndex = ref(0);
@@ -90,6 +95,7 @@ function changeImage(event: KeyboardEvent) {
 .img {
   max-width: 900px;
   min-width: 300px;
+  max-height: 500px;
 }
 
 .right {
@@ -126,6 +132,9 @@ function changeImage(event: KeyboardEvent) {
       overflow: hidden;
       position: relative;
       cursor: pointer;
+      height: auto;
+      min-height: 200px;
+      max-height: 250px;
 
       & .image_item {
         width: 100%;

@@ -1,6 +1,6 @@
 <template>
   <QList>
-    <h6 v-if="!users?.length" class="text-center text-negative">Ничего не найдено</h6>
+    <h6 v-if="!users?.length" class="text-center text-negative q-mt-sm">Ничего не найдено...</h6>
     <QItem v-for="user in users" v-ripple clickable @click="openOrCreateChat(user._id)">
       <QItemSection avatar>
         <UserAvatar :name="user.name" :avatar="user.avatar" />
@@ -14,11 +14,12 @@
 </template>
 
 <script setup lang="ts">
-import type { IUser } from '@/types';
+import type { IUser, ChatResponse } from '@/types';
 import UserAvatar from '~/UserAvatar.vue';
+import { onMounted, onUnmounted } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useStore, useChatStore } from '@/stores';
-import { MessangerService } from '@/api/services';
+
 
 defineProps<{
   users?: IUser[];
@@ -28,15 +29,23 @@ const emit = defineEmits<{
 }>();
 
 const { user } = storeToRefs(useStore());
-const { chats, currentChatId } = storeToRefs(useChatStore());
+const chatStore = useChatStore();
+const { chats, currentChatId } = storeToRefs(chatStore);
+
+onMounted(() => chatStore.socket.on('chat:create', onChatCreate));
+onUnmounted(() => chatStore.socket.removeListener('chat:create', onChatCreate));
+
+function onChatCreate(chat: ChatResponse) {
+  if (chats.value.has(chat._id)) {
+    currentChatId.value = chat._id;
+  } else {
+    chats.value.set(chat._id, chat);
+  }
+  currentChatId.value = chat._id;
+  emit('update:search', '');
+}
 
 async function openOrCreateChat(userId: string) {
-  const response = await MessangerService.createChat([user.value._id, userId]);
-  if (chats.value.has(response.data._id)) {
-    currentChatId.value = response.data._id;
-  } else {
-    chats.value.set(response.data._id, response.data);
-  }
-  emit('update:search', '');
+  chatStore.socket.emit('chat:create', user.value._id, [user.value._id, userId]);
 }
 </script>

@@ -4,7 +4,9 @@
     :limits="[10, Infinity]"
     :before-class="$style.splitter_before"
     :after-class="$style.splitter_after"
+    :horizontal="horizontal"
   >
+    <QResizeObserver @resize="onResize" />
     <template #before>
       <QTabs v-model="tab" vertical active-color="indigo">
         <QTab name="task" icon="task" label="Задача" />
@@ -22,15 +24,10 @@
         transition-next="jump-up"
       >
         <QTabPanel name="task" :class="$style.tab_panel">
-          <TaskByIdTask :task="task || ({} as ITask)" :loading="loading" :set-status-color="setStatusColor" />
+          <Task.Task :task="task || ({} as ITask)" :loading="loading" :set-status-color="setStatusColor" />
         </QTabPanel>
         <QTabPanel name="subtasks" :class="$style.tab_panel">
-          <TaskByIdSubtasks
-            v-if="task"
-            :subtasks="task.subtasks"
-            :set-status-color="setStatusColor"
-            :task_id="task._id"
-          />
+          <Task.Subtasks v-if="task" :subtasks="task.subtasks" :set-status-color="setStatusColor" :task_id="task._id" />
         </QTabPanel>
       </QTabPanels>
     </template>
@@ -39,7 +36,7 @@
 
 <script setup lang="ts">
 import type { ITask } from '@/types';
-import { TaskByIdTask, TaskByIdSubtasks } from '~/task';
+import Task from '~/task';
 import { ref, onMounted, provide } from 'vue';
 import { useRoute } from 'vue-router';
 import { useFetch } from '@/hooks';
@@ -47,6 +44,7 @@ import { TaskService } from '@/api/services';
 
 const route = useRoute();
 const splitterModel = ref(10);
+const horizontal = ref(false);
 const tab = ref('task');
 const { f: onGetTask, data: task, loading } = useFetch<ITask>({
   fn: () => TaskService.getTaskById(route.params.id.toString()),
@@ -68,6 +66,10 @@ function setStatusColor(status?: string) {
     default:
       return 'positive';
   }
+}
+
+function onResize({ height, width }: { height: number; width: number }) {
+  width < 415 ? (horizontal.value = true) : (horizontal.value = false);
 }
 </script>
 
@@ -101,10 +103,6 @@ function setStatusColor(status?: string) {
   .tab_panel {
     width: 100% !important;
     padding: 16px 5px;
-  }
-
-  .splitter_before {
-    display: none;
   }
 }
 </style>

@@ -7,7 +7,7 @@
       <h5 class="text-center">Информация о группе</h5>
     </QCardSection>
     <QCardSection class="row justify-center q-pa-none">
-      <QItem style="max-width: 500px; min-width: 150px; width: 100%">
+      <QItem style="max-width: 500px; min-width: 150px">
         <QItemSection avatar>
           <UserAvatar :avatar="avatar" :name="name" size="55px" />
         </QItemSection>
@@ -16,6 +16,12 @@
           <QItemLabel caption>{{ currentChat?.members_count }} участников</QItemLabel>
         </QItemSection>
       </QItem>
+    </QCardSection>
+    <QCardSection class="row justify-center q-pb-none">
+      <div style="max-width: 500px; min-width: 150px">
+        <h6 class="q-mt-sm text-center">О группе</h6>
+        <div class="text-body1 q-mt-sm text-italic text-justify text-weight-thin">{{ currentChat?.group.about }}</div>
+      </div>
     </QCardSection>
     <QCardSection class="column items-center">
       <div class="users">

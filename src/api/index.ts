@@ -1,11 +1,11 @@
 import axios from 'axios'
-import { Constants } from '@/util'
+import { ENV } from '@/util'
 import { useStore } from '@/stores'
 
 
 const $api = axios.create({
    withCredentials: true,
-   baseURL: Constants.API_V1,
+   baseURL: ENV.API_V1,
 });
 
 $api.interceptors.request.use(config => {

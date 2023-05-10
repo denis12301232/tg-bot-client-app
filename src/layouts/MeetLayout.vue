@@ -10,7 +10,7 @@
       <slot />
     </QPageContainer>
     <QFooter class="footer" reveal bordered>
-      <QToolbar class="row justify-between">
+      <QToolbar class="row justify-between overflow-auto">
         <div></div>
         <QBtnGroup flat rounded>
           <QBtn
@@ -21,13 +21,13 @@
             :icon="videos.get(store.user._id)?.mute.video ? 'videocam' : 'videocam_off'"
             @click="toggleTrackMuteAndRelay('video')"
           />
-          <QBtn icon="present_to_all" @click="shareMyScreen" />
+          <QBtn class="share" icon="present_to_all" @click="shareMyScreen" />
           <QBtn icon="chat_bubble" @click="[setComponent('chat'), toggleDrawer('right')]">
             <QBadge v-if="unreadMessages" color="red" floating rounded>{{ unreadMessages }}</QBadge>
           </QBtn>
           <QBtn icon="call_end" color="negative" flat @click="goBack" />
         </QBtnGroup>
-        <div class="row">
+        <div class="row no-wrap">
           <QBtn dense flat round icon="groups" @click="[setComponent('user-list'), toggleDrawer('right')]" />
           <QBtn dense flat round icon="info" @click="[setComponent('info'), toggleDrawer('right')]" />
         </div>
@@ -44,7 +44,7 @@ import MeetUserList from '~/meet/MeetUserList.vue';
 import { ref, reactive, provide, onMounted, onBeforeUnmount, shallowRef, watch, type DefineComponent } from 'vue';
 import { useStore, useChatStore } from '@/stores';
 import { useNavigation, useWebRtc } from '@/hooks';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { WebRtcDto } from '@/api/dto';
 
 
@@ -54,6 +54,7 @@ interface RightDrawer {
 }
 
 const route = useRoute();
+const router = useRouter();
 const store = useStore();
 const { socket } = useChatStore();
 const { goBack } = useNavigation();
@@ -90,7 +91,10 @@ provide('streams', streams);
 onMounted(() => {
   captureMyStream('camera', { video: true, audio: true })
     .then((stream) => socket.emit('meet:join', meetId))
-    .catch((e) => console.error(e));
+    .catch((e) => {
+      router.go(-1);
+      store.setAlert('warning', { message: 'Нет доступа к камере или микрофону!', visible: true });
+    });
 });
 onBeforeUnmount(() => {
   for (const type of ['camera', 'screen'] as ['camera', 'screen']) {
@@ -195,6 +199,12 @@ html.light {
 html.dark {
   & .footer {
     background-color: #121212;
+  }
+}
+
+@media (max-width: 768px) {
+  .share {
+    display: none;
   }
 }
 </style>

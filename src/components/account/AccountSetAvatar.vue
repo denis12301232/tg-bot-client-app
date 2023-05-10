@@ -3,7 +3,7 @@
     <ChangeAvatar
       v-model="avatar"
       size="200px"
-      :src="store.user.avatar && `${Constants.SERVER_URL}/avatars/${store.user.avatar}`"
+      :src="store.user.avatar && `${ENV.SERVER_URL}/avatars/${store.user.avatar}`"
     />
     <QBtn
       class="q-mt-lg"
@@ -22,7 +22,7 @@ import { ref, watchEffect } from 'vue';
 import { useStore } from '@/stores';
 import { useFetch, useWatchPause } from '@/hooks';
 import { ToolsService } from '@/api/services';
-import { Constants } from '@/util';
+import { ENV } from '@/util';
 
 const store = useStore();
 const avatar = ref<File | null>(null);

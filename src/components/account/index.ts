@@ -1,4 +1,12 @@
-export { default as AccountSetAvatar } from './AccountSetAvatar.vue'
-export { default as AccountSetEmail } from './AccountSetEmail.vue'
-export { default as AccountSetName } from './AccountSetName.vue'
-export { default as AccountSetPassword } from './AccountSetPassword.vue'
+import AccountSetAvatar from './AccountSetAvatar.vue'
+import AccountSetEmail from './AccountSetEmail.vue'
+import AccountSetName from './AccountSetName.vue'
+import AccountSetPassword from './AccountSetPassword.vue'
+
+
+export default class Account {
+   static readonly SetAvatar = AccountSetAvatar;
+   static readonly SetEmail = AccountSetEmail;
+   static readonly SetName = AccountSetName;
+   static readonly SetPassword = AccountSetPassword;
+}

@@ -1,11 +1,36 @@
-*,
-*::before,
-*::after {
+*, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
   position: relative;
   font-weight: normal;
-  -webkit-tap-highlight-color: transparent;
+}
+
+
+html.light {
+  --scroll-thumb-color: #bab9bc;
+  --scroll-thumb-color-hover: rgb(144, 140, 140);
+}
+
+html.dark {
+  --scroll-thumb-color: #949494;
+  --scroll-thumb-color-hover: rgb(118, 118, 118);
+}
+
+* {
+  &::-webkit-scrollbar {
+    width: 7px; /* width of the entire scrollbar */
+    height: 7px;  
+  }
+  &::-webkit-scrollbar-track {
+    background: transparent;  /* color of the tracking area */  
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: var(--scroll-thumb-color);    /* color of the scroll thumb */
+    border-radius: 20px;   /* roundness of the scroll thumb */
+  }
+  &::-webkit-scrollbar-thumb:hover {
+    background: var(--scroll-thumb-color-hover);
+  }
 }
 
 body {
@@ -29,4 +54,16 @@ body {
 
 textarea.q-field__native {
   overflow-y: hidden !important;
+}
+
+.scroll {
+  &::-webkit-scrollbar-thumb {
+   display: none; 
+  }
+
+  &:hover {
+    &::-webkit-scrollbar-thumb {
+      display: block; 
+    }
+  }
 }

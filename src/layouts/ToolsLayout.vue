@@ -12,15 +12,13 @@
       </QTabs>
     </QHeader>
     <QPageContainer class="window-height">
-      <slot />
+      <div class="fit scroll">
+        <slot />
+      </div>
     </QPageContainer>
   </QLayout>
 </template>
 
-<script setup lang="ts">
+<script setup lang="ts"></script>
 
-</script>
-
-<style lang="scss" scoped>
-
-</style>
+<style lang="scss" scoped></style>

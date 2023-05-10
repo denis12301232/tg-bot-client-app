@@ -1,10 +1,12 @@
 <template>
   <QCard class="add">
     <QCardSection>
-      <div class="q-pb-lg text-h5 text-center">Добавить в группу</div>
+      <div class="text-h5 text-center">Добавить в группу</div>
+    </QCardSection>
+    <QCardSection>
       <QInput v-model="search" debounce="300" label="Имя или логин" filled clearable :loading="isUsersLoading" />
     </QCardSection>
-    <QCardSection class="q-pa-none">
+    <QCardSection v-show="search">
       <QList>
         <QItem v-for="user in users" v-ripple clickable @click="select(user)">
           <QItemSection top avatar>
@@ -14,14 +16,16 @@
             <QItemLabel>{{ user.name }}</QItemLabel>
             <QItemLabel caption lines="2">{{ user.login }}</QItemLabel>
           </QItemSection>
-          <QItemSection v-if="userToAdd" class="row justify-center items-center" side top>
-            <QIcon name="check_circle_outline" />
+          <QItemSection v-if="userToAdd?._id === user._id" class="row justify-center items-center" side top>
+            <QIcon name="check_circle_outline" color="positive" />
           </QItemSection>
         </QItem>
       </QList>
-      <div v-if="!users?.length && search" class="text-center text-negative">Не найдено ни одного человека</div>
+      <div v-if="!users?.length && search" class="text-center text-subtitle1 text-negative">
+        Не найдено ни одного человека...
+      </div>
     </QCardSection>
-    <QCardActions align="center">
+    <QCardActions class="q-pb-md" align="center">
       <QBtn
         v-close-popup
         color="primary"
@@ -67,7 +71,7 @@ watch(search, (n, o) => {
 });
 
 function select(user: IUser) {
-  userToAdd.value ? (userToAdd.value = null) : (userToAdd.value = user);
+  userToAdd.value?._id === user._id ? (userToAdd.value = null) : (userToAdd.value = user);
 }
 
 async function addUserToGroup() {

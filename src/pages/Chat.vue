@@ -19,8 +19,8 @@
 
 <script setup lang="ts">
 import type { ChatModal } from '@/types';
-import ChatLeftPanel from '@/components/chat/ChatPanelLeft.vue';
-import ChatRightPanel from '@/components/chat/ChatPanelRight.vue';
+import ChatLeftPanel from '~/chat/ChatPanelLeft.vue';
+import ChatRightPanel from '~/chat/ChatPanelRight.vue';
 import { ref, shallowRef, watch, defineAsyncComponent } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useChatStore } from '@/stores';

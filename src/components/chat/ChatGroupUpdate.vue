@@ -5,8 +5,21 @@
       :src="group?.avatar && `${ENV.SERVER_URL}/avatars/${group.avatar}`"
       size="200px"
     />
-    <QInput v-model="settings.title" class="q-mt-md full-width" clearable label="Название" />
-    <QInput v-model="settings.about" class="q-mt-md full-width" type="textarea" label="О группе" autogrow />
+    <QInput
+      v-model="settings.title"
+      class="q-mt-md full-width"
+      clearable
+      label="Название"
+      standout="text-white bg-indigo"
+    />
+    <QInput
+      v-model="settings.about"
+      class="q-mt-md full-width"
+      type="textarea"
+      label="О группе"
+      autogrow
+      standout="text-white bg-indigo"
+    />
     <QBtn
       :loading="loading"
       :disable="!valid || loading"
@@ -28,7 +41,11 @@ import { MessangerService } from '@/api/services';
 import { ENV } from '@/util';
 
 const { currentChat } = storeToRefs(useChatStore());
-const settings = reactive({ avatar: null as File | null, title: '', about: '' });
+const settings = reactive({
+  avatar: null as File | null,
+  title: currentChat.value?.group.title || '',
+  about: currentChat.value?.group.about || '',
+});
 
 const formData = ref<FormData>(new FormData());
 const group = computed(() => currentChat.value?.group);
@@ -36,7 +53,7 @@ const valid = computed(() => Boolean(settings.title || settings.avatar || settin
 const { f: onUpdateGroup, loading } = useFetch({ fn: updateGroup, successMsg: 'Изменено', alert: true });
 
 watch(() => settings.avatar, () => {
-   if (settings.avatar) {
+  if (settings.avatar) {
     formData.value = new FormData();
     formData.value.append('avatar', settings.avatar);
   }

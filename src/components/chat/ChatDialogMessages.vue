@@ -1,6 +1,6 @@
 <template>
   <div v-if="!messages.length" class="row justify-center items-center text-indigo chat_void">Здесь пусто...</div>
-  <QScrollArea v-else ref="scroll" class="fit" :thumb-style="{ width: '7px' }">
+  <QScrollArea v-else ref="scroll" class="fit q-pt-sm" :thumb-style="{ width: '7px' }">
     <QInfiniteScroll reverse :key="String(currentChatId)" :offset="10" :initial-index="initialIndex" @load="onLoad">
       <template #loading>
         <div v-if="currentChat?.total || 0 > messages.length" class="row justify-center q-my-md">
@@ -36,14 +36,14 @@
           </div>
         </template>
         <template #default>
-          <div :class="{ [$style.msg]: msg.attachments.length }">
+          <div :class="{ [$style.msg]: msg.attachments?.length }">
             <span v-if="msg.text" style="font-size: 1.2em">{{ msg.text }}</span>
             <ChatMessageVoice
-              v-if="msg.attachments[0]?.type === 'audio'"
+              v-if="msg.attachments?.at(0)?.type === 'audio'"
               :src="`${ENV.SERVER_URL}/audio/${msg.attachments.at(0)?.name}`"
             />
             <ChatMessageImage
-              v-else-if="msg.attachments[0]?.type === 'image'"
+              v-else-if="msg.attachments?.at(0)?.type === 'image'"
               :images="msg.attachments.map((msg) => `${ENV.SERVER_URL}/media/${msg?.name}`)"
               @open="onOpenImage"
             />
@@ -82,9 +82,12 @@ const messages = computed(() => currentChat.value?.messages || []);
 const initialIndex = computed(() => (messages.value.length > limit ? Math.ceil(messages.value.length / limit) : 0));
 const limit = 10;
 
-watch(() => currentChat.value?.total, () => {
-  nextTick().then(() => setTimeout(() => scroll.value?.setScrollPercentage('vertical', 1), 0));
-});
+watch(
+  () => currentChat.value?.total,
+  () => {
+    nextTick().then(() => setTimeout(() => scroll.value?.setScrollPercentage('vertical', 1), 0));
+  }
+);
 
 async function onLoad(index: number, done: (stop?: boolean | undefined) => void) {
   if (currentChat.value && currentChat.value.total > messages.value.length) {

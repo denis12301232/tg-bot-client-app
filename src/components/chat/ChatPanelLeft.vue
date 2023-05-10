@@ -1,10 +1,10 @@
 <template>
   <Transition name="menu">
     <div v-if="menu" class="menu">
-      <QCard class="full-height">
-        <QCardSection class="text-center text-h5">Меню</QCardSection>
+      <QCard class="full-height" square>
+        <QCardSection class="text-center text-h5 divider">Меню</QCardSection>
         <QSeparator />
-        <QList>
+        <QList class="q-px-sm q-pt-sm">
           <QItem v-ripple class="list_item" clickable tag="a" to="/" active-class="active">
             <QItemSection avatar>
               <QIcon name="home" color="primary" />
@@ -52,8 +52,8 @@
     </QInput>
   </div>
   <QScrollArea class="fit divider" :thumb-style="{ width: '7px' }">
-    <ChatUserSearchList v-if="search" :users="users" @update:search="onUpdateSearch" />
-    <ChatsList v-else />
+    <ChatUserSearchList v-show="search" :users="users" @update:search="onUpdateSearch" />
+    <ChatsList v-show="!search" />
   </QScrollArea>
 </template>
 
@@ -101,7 +101,7 @@ function onUpdateSearch(value: string) {
 }
 
 .divider {
-  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px !important;
 }
 
 html.dark {

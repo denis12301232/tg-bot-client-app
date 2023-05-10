@@ -4,7 +4,6 @@ export * from './io'
 
 export type ChatModal = 'modal:group-create' | 'modal:group-info' | 'modal:group-settings' | 'modal:group-add-user' | 'modal:open-image';
 export type AlertType = 'success' | 'info' | 'warning' | 'error';
-export type ModalContent = 'create-group' | 'group-info' | 'add-user' | 'open-image' | 'group-settings';
 export type TaskStatus = 'Не выбрана' | 'В работе' | 'Отменена' | 'Выполнена';
 export interface Pagination {
    sortBy: string;

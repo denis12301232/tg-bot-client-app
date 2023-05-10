@@ -1,6 +1,6 @@
 <template>
   <QList class="list">
-    <h6 v-if="!sortedChats.size" class="text-center text-negative">Список диалогов пуст</h6>
+    <h6 v-if="!sortedChats.size" class="text-center text-negative q-mt-sm">Список диалогов пуст...</h6>
     <QItem
       v-for="chat in sortedChats.values()"
       v-ripple
@@ -41,9 +41,8 @@
             />
             <div>{{ Time.showDialogListDate(new Date(chat.updatedAt)) }}</div>
           </div>
-          <!-- <QBadge></QBadge> -->
           <div v-if="Number(chat.unread)" class="row justify-end">
-            <QBadge rounded :label="chat.unread" color="blue-grey-3"/>
+            <QBadge rounded :label="chat.unread" color="blue-grey-3" />
           </div>
         </QItemLabel>
       </QItemSection>
@@ -64,8 +63,8 @@ const { currentChatId, sortedChats } = storeToRefs(useChatStore());
 
 function showLastMessageText(msg: IMessage | undefined) {
   if (msg?.text) return msg.text;
-  if (msg?.attachments[0].type === 'audio') return 'Аудиосообщение';
-  if (msg?.attachments[0].type === 'image') return 'Фотография';
+  if (msg?.attachments?.at(0)?.type === 'audio') return 'Аудиосообщение';
+  if (msg?.attachments?.at(0)?.type === 'image') return 'Фотография';
 }
 
 function onOpenChat(chat_id: string) {
@@ -76,9 +75,8 @@ function onOpenChat(chat_id: string) {
 
 <style scoped lang="scss">
 .list {
-
+  padding: 5px 2px;
   & .list_item {
-
     &:hover {
       color: $primary;
     }

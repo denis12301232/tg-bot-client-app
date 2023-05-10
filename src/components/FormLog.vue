@@ -81,9 +81,10 @@ async function onSubmit() {
     store.user = response.data.user;
     emit('submit');
   } catch (e: any) {
-    if (e?.response?.data?.errors.includes('email')) {
+    console.log(e);
+    if (e?.response?.data?.errors?.includes('email')) {
       formErrors.loginOrEmail = 'Неверный логин или е-мэйл';
-    } else if (e?.response?.data?.errors.includes('password')) {
+    } else if (e?.response?.data?.errors?.includes('password')) {
       formErrors.password = 'Неверный пароль';
     }
   } finally {

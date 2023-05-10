@@ -14,6 +14,8 @@ interface ServerToClientEvents {
    'chat:call': (chatId: string) => void;
    'chat:call-answer': (chatId: string, answer: boolean) => void;
    'chat:call-cancel': () => void;
+   'chat:create': (chat: ChatResponse) => void;
+   'chat:create-group': (chat: ChatResponse) => void;
    'webrtc:add-peer': (peerId: string, offer: boolean, user?: IUser) => void;
    'webrtc:remove-peer': (peerId: string) => void;
    'webrtc:sdp': (peerId: string, sdp: RTCSessionDescriptionInit) => void;
@@ -22,10 +24,13 @@ interface ServerToClientEvents {
 }
 
 interface ClientToServerEvents {
+   'chat:message': (data: { text: string, chatId: string, attachments: File[] | null, type: 'audio' | 'image' | null }) => void;
    'chat:typing': (chat_id: string, user_name: string, user_id: string) => void;
    'chat:call': (chatId: string) => void;
    'chat:call-answer': (chatId: string, answer: boolean) => void;
    'chat:call-cancel': (chatId: string) => void;
+   'chat:create': (userId: string, users: string[]) => void;
+   'chat:create-group': (data: { title: string, about: string, users: string[], avatar: File | null }) => void;
    'webrtc:add-peer': (chatId: string) => void;
    'webrtc:remove-peer': (chatId: string) => void;
    'webrtc:sdp': (peerId: string, sdp: RTCSessionDescriptionInit) => void;

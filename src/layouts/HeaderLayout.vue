@@ -105,7 +105,9 @@
       </QList>
     </QDrawer>
     <QPageContainer class="window-height">
-      <slot />
+      <div class="fit scroll">
+        <slot />
+      </div>
     </QPageContainer>
   </QLayout>
 </template>
@@ -138,8 +140,6 @@ function openLogin() {
 </script>
 
 <style lang="scss" scoped>
-
-
 .list {
   padding: 5px;
   margin-top: 5px;

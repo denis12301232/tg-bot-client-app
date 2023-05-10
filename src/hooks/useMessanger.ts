@@ -1,7 +1,6 @@
 import type { IMessage, ChatResponse, SocketTyped } from '@/types'
 import { type Ref, ref, computed, watchEffect } from 'vue'
 import { MessangerService } from '@/api/services'
-import { ACTIONS } from '@/util'
 
 
 export default function useMessanger(socket: SocketTyped) {
@@ -44,12 +43,12 @@ export default function useMessanger(socket: SocketTyped) {
 function useMessangerEvents({ chats, currentChatId }: { chats: Ref<Map<string, ChatResponse>>, currentChatId: Ref<string | null> }) {
    const timers = new Map<string, number>();
    const list = {
-      [ACTIONS.CHAT_MESSAGE]: onNewMessage,
-      [ACTIONS.CHAT_READ_MESSAGE]: onReadMessage,
-      [ACTIONS.CHAT_USER_STATUS]: onUpdateStatus,
-      [ACTIONS.CHAT_INVITE_TO_GROUP]: onInviteToGroup,
-      [ACTIONS.CHAT_KICK_FROM_GROUP]: onKickFromGroup,
-      [ACTIONS.CHAT_TYPING]: onTyping,
+      'chat:message': onNewMessage,
+      'chat:read-message': onReadMessage,
+      'chat:user-status': onUpdateStatus,
+      'chat:invite-to-group': onInviteToGroup,
+      'chat:kick-from-group': onKickFromGroup,
+      'chat:typing': onTyping,
    }
 
    async function onNewMessage(message: IMessage) {

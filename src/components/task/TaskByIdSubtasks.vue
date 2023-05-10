@@ -1,6 +1,6 @@
 <template>
   <QDialog v-model="modal">
-    <component :is="modalComponent.component" :="modalComponent.props" />
+    <component :is="modalComponent?.component" :="modalComponent?.props" />
   </QDialog>
   <h4 class="q-mb-lg text-center">Подзадачи</h4>
   <QTable
@@ -95,10 +95,15 @@
 <script setup lang="ts">
 import type { QTable } from 'quasar';
 import type { ISubtask } from '@/types';
-import { TaskByIdModalDelete, TaskByIdModalMove } from '~/task';
-import { computed, markRaw, ref } from 'vue';
+import Task from '~/task';
+import {  ref, watch, shallowRef } from 'vue';
 import { useFetch } from '@/hooks';
 import { TaskService } from '@/api/services';
+
+interface ModalComponent {
+  component: typeof Task.ModalDelete | typeof Task.ModalMove;
+  props: { [name: string]: any };
+}
 
 const props = defineProps<{
   task_id: string;
@@ -109,17 +114,23 @@ const props = defineProps<{
 const modal = ref(false);
 const modalName = ref<'delete' | 'move'>('delete');
 const subtaskId = ref<string | null>(null);
-const modalComponent = computed(() => {
-  switch (modalName.value) {
+const modalComponent = shallowRef<ModalComponent | null>(null);
+
+watch(modalName, (n) => {
+  switch (n) {
     case 'delete':
-      return { component: markRaw(TaskByIdModalDelete), props: { subtask_id: subtaskId.value } };
+      return (modalComponent.value = {
+        component: Task.ModalDelete,
+        props: { subtask_id: subtaskId.value },
+      });
     case 'move':
-      return {
-        component: markRaw(TaskByIdModalMove),
+      return (modalComponent.value = {
+        component: Task.ModalMove,
         props: { subtask_id: subtaskId.value, setStatusColor: props.setStatusColor },
-      };
+      });
   }
-});
+}, { immediate: true });
+
 const { f: onUpdateSubtask, loading: isUpdateSubtaskLoading } = useFetch({
   fn: TaskService.updateSubtask,
 });

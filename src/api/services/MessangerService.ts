@@ -7,16 +7,6 @@ export default class MessangerService {
       return $api.get<IUser[]>('/messanger/find_users', { params: { loginOrName } });
    }
 
-   static createChat(users: string[]) {
-      return $api.post<ChatResponse>('/messanger/create_chat', { users });
-   }
-
-   static createGroup(title: string, about: string, users: string[], formData?: FormData) {
-      return $api.post<ChatResponse>('/messanger/create_group', formData, {
-         headers: { 'Content-Type': 'multipart/form-data' }, params: { title, about, users }
-      });
-   }
-
    static addUserToGroup(chat_id: string, user_id: string) {
       return $api.patch('/messanger/add_user_to_group', { chat_id, user_id });
    }

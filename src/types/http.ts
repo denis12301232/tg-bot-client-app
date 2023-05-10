@@ -11,6 +11,7 @@ export interface ChatResponse extends IChat {
       _id: string;
       title: string;
       avatar: string;
+      about: string;
       roles: { [name: string]: string[] };
    }
 }

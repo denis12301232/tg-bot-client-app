@@ -1,7 +1,4 @@
 export default class Constants {
-   static readonly API_V1 = import.meta.env.VITE_API_V1;
-   static readonly SERVER_URL = import.meta.env.VITE_SERVER_URL;
-   static readonly SOCKET_URL = import.meta.env.VITE_SOCKET_URL;
    static readonly districts = [
       'Индустриальный', 'Киевский', 'Московский', 'Немышлянский', 'Новобаварский',
       'Основянский', 'Слободской', 'Холодногорский', 'Шевченковский'

@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.container">
+  <div class="column items-center q-pa-sm">
     <h4 class="text-center q-mt-lg q-mb-lg">Задачи</h4>
     <QTable
       v-model:pagination="pagination"
@@ -116,7 +116,7 @@
 
 <script setup lang="ts">
 import type { QTable } from 'quasar';
-import type { ITask, TaskStatus } from '@/types/interfaces';
+import type { ITask, TaskStatus } from '@/types';
 import { onMounted } from 'vue';
 import { useStore } from '@/stores';
 import { useFetch, useRequest } from '@/hooks';
@@ -197,13 +197,6 @@ function setStatusColor(status: TaskStatus) {
 </script>
 
 <style lang="scss" module>
-.container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 0 10px;
-}
-
 .table {
   max-width: 100%;
 

@@ -9,7 +9,7 @@ export default function useVoice() {
 
    async function startRecording() {
       stream.value = await navigator.mediaDevices.getUserMedia({ audio: true });
-      mediaRecorder.value = new MediaRecorder(stream.value, { audioBitsPerSecond: 128000 });
+      mediaRecorder.value = new MediaRecorder(stream.value);
       mediaRecorder.value.onstart = () => isRecording.value = true;
       mediaRecorder.value.onstop = () => isRecording.value = false;
       mediaRecorder.value.ondataavailable = (event) => {

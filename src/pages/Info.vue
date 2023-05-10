@@ -5,7 +5,7 @@
       <QInput
         v-model="search"
         class="full-width"
-        outlined
+        standout="text-white bg-indigo"
         label="Имя или фамилия"
         :error="!!error"
         :error-message="error"

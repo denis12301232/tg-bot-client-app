@@ -1,6 +1,8 @@
 <template>
   <div ref="container" :class="[$style.container, { [$style.fullscreen]: sets.fullscreen }]">
-    <UserAvatar v-if="!mute.video" :avatar="avatar" :name="name" size="200px"/>
+    <div v-if="!mute.video" class="q-pa-md">
+      <UserAvatar :avatar="avatar" :name="name" size="200px" />
+    </div>
     <video v-else ref="$el" :class="$style.video" autoplay playsinline />
     <div :class="$style.controls">
       <QBtn
@@ -37,12 +39,12 @@ const sets = reactive({ fullscreen: false });
 const mute = reactive({ video: props.enableVideo, audio: props.enableAudio });
 
 defineExpose({ $el, mute, toggleTrackMute });
-watchEffect(() => ($el.value && props.stream) && ($el.value.srcObject = props.stream));
+watchEffect(() => $el.value && props.stream && ($el.value.srcObject = props.stream));
 watch([mute, () => props.stream], () => {
   if (props.stream) {
     props.stream.getTracks().forEach((t) => (t.enabled = mute[t.kind as keyof typeof mute]));
   }
-}, { immediate: true });
+},{ immediate: true });
 onMounted(() => document.addEventListener('fullscreenchange', onFullScreenChange));
 onUnmounted(() => document.removeEventListener('fullscreenchange', onFullScreenChange));
 
@@ -65,10 +67,6 @@ function toggleTrackMute(type: 'video' | 'audio') {
 
 <style lang="scss" module>
 .container {
-  max-width: 500px;
-  width: 100%;
-  min-height: 250px;
-  height: 100%;
   position: relative;
   display: flex;
   flex-direction: column;
@@ -76,9 +74,11 @@ function toggleTrackMute(type: 'video' | 'audio') {
   justify-content: center;
 
   & .video {
+    height: auto;
     width: 100%;
-    height: 100%;
     object-fit: cover;
+    max-height: 350px;
+    max-width: 500px;
   }
 
   & .controls {

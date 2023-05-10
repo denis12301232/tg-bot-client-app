@@ -1,14 +1,14 @@
 <template>
-  <div :class="$style.container">
-    <QStepper v-model="step" vertical flat color="primary" animated>
+  <div class="column items-center q-pt-lg q-px-sm q-pb-sm">
+    <QStepper v-model="step" vertical flat color="primary" animated :class="$style.stepper">
       <QStep :name="1" title="Создать задачу" icon="task_alt" :done="step > 1">
-        <TaskCreateFirstStep v-model:title="task.title" v-model:tags="task.tags" @valid="setFirstStepValid" />
+        <Task.CreateFirstStep v-model:title="task.title" v-model:tags="task.tags" @valid="setFirstStepValid" />
         <QStepperNavigation>
           <QBtn flat color="primary" label="Далее" :loading="loading" :disable="!valid.first" @click="step++" />
         </QStepperNavigation>
       </QStep>
       <QStep :name="2" title="Добавить подзадачи" caption="Как минимум одна" icon="add_task" :done="step > 2">
-        <TaskCreateSecondStep
+        <Task.CreateSecondStep
           v-model:title="subtask.title"
           v-model:description="subtask.description"
           v-model:subtasks="task.subtasks"
@@ -30,7 +30,7 @@
 </template>
 
 <script setup lang="ts">
-import { TaskCreateFirstStep, TaskCreateSecondStep } from '~/task';
+import Task from '~/task';
 import { ref, reactive } from 'vue';
 import { useRouter } from 'vue-router';
 import { useFetch } from '@/hooks';
@@ -61,27 +61,8 @@ function setFirstStepValid(value: boolean) {
 </script>
 
 <style lang="scss" module>
-.container {
-  width: 60%;
-  margin: 0 auto;
-  padding: 30px 5px;
-}
-
-@media (max-width: 1024px) {
-  .container {
-    width: 70%;
-  }
-}
-
-@media (max-width: 768px) {
-  .container {
-    width: 90%;
-  }
-}
-
-@media (max-width: 480px) {
-  .container {
-    width: 100%;
-  }
+.stepper {
+  max-width: 500px;
+  width: 100%;
 }
 </style>

@@ -1,15 +1,18 @@
-import type { IUser, AlertType } from '@/types'
-import { defineStore } from 'pinia'
-import { ref, reactive, computed, watch } from 'vue'
-import { useQuasar } from 'quasar'
-import { AuthService } from '@/api/services'
+import type { IUser, AlertType } from '@/types';
+import { defineStore } from 'pinia';
+import { ref, reactive, computed, watch } from 'vue';
+import { useQuasar } from 'quasar';
+import { AuthService } from '@/api/services';
 
 interface Alert {
-  type: AlertType; message: string; visible: boolean;
+  type: AlertType;
+  message: string;
+  visible: boolean;
 }
 
 interface ModalCall {
-  visible: boolean, props: { chat_id: string, call: 'incoming' | 'outgoing' }
+  visible: boolean;
+  props: { chat_id: string; call: 'incoming' | 'outgoing' };
 }
 
 export const useStore = defineStore('main', () => {
@@ -28,7 +31,7 @@ export const useStore = defineStore('main', () => {
       case 'dark':
         return theme.value;
       case 'system':
-        if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+        if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
           return 'dark';
         } else {
           return 'light';
@@ -38,18 +41,22 @@ export const useStore = defineStore('main', () => {
     }
   });
 
-  watch(currentTheme, (n, o) => {
-    const html = document.querySelector('html');
-    n === 'dark' ? $q.dark.set(true) : $q.dark.set(false);
-    html?.setAttribute( 'class', n);
-    localStorage.setItem('theme', n);
-  }, { immediate: true });
+  watch(
+    currentTheme,
+    (n, o) => {
+      const html = document.querySelector('html');
+      n === 'dark' ? $q.dark.set(true) : $q.dark.set(false);
+      html?.setAttribute('class', n);
+      localStorage.setItem('theme', n);
+    },
+    { immediate: true }
+  );
 
   function setTheme() {
-    currentTheme.value === 'dark' ? theme.value = 'light' : theme.value = 'dark'
+    currentTheme.value === 'dark' ? (theme.value = 'light') : (theme.value = 'dark');
   }
 
-  function setAlert({ type = 'success', message, visible }: { type?: AlertType, message: string, visible: boolean }) {
+  function setAlert(type: AlertType, { message, visible }: { message: string, visible: boolean }) {
     alert.message = message;
     alert.type = type;
     alert.visible = visible;
@@ -71,10 +78,22 @@ export const useStore = defineStore('main', () => {
       localStorage.removeItem('token');
       user.value = <IUser>{};
     } catch (e: any) {
-      console.log(e?.response?.data?.message)
+      console.log(e?.response?.data?.message);
     }
   }
 
-  return { user, theme, isPageLoading, alert, isAuth, isAdmin, currentTheme, setTheme, setAlert, refresh, logout,
-  modalCall };
+  return {
+    user,
+    theme,
+    isPageLoading,
+    alert,
+    isAuth,
+    isAdmin,
+    currentTheme,
+    setTheme,
+    setAlert,
+    refresh,
+    logout,
+    modalCall,
+  };
 });

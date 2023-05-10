@@ -5,10 +5,9 @@
     class="input"
     filled
     label-slot
-    :loading="isMsgLoading"
     :readonly="isRecording || !!voiceMessage"
     :="$attrs"
-    @keyup.enter="onSaveMsg(formData ? 'audio' : 'text')"
+    @keyup.enter="saveMessage()"
   >
     <template #label>
       <div v-if="voiceMessage">Записано голосовое сообщение</div>
@@ -20,15 +19,7 @@
     </template>
     <template #append>
       <QBtn v-if="!message" dense round flat icon="photo_camera" @click="fileInput?.click()" />
-      <QBtn
-        v-if="voiceMessage"
-        dense
-        round
-        flat
-        icon="stop_circle"
-        color="red"
-        @click="formData, (voiceMessage = null)"
-      />
+      <QBtn v-if="voiceMessage" dense round flat icon="stop_circle" color="red" @click="voiceMessage = null" />
       <QBtn
         v-if="!message && !voiceMessage"
         dense
@@ -38,13 +29,12 @@
         @click="!isRecording ? startRecording() : stopRecording()"
       />
       <QBtn
-        v-if="message || formData"
+        v-if="message || voiceMessage"
         dense
         round
         flat
         icon="send"
-        :disable="isMsgLoading"
-        @click="onSaveMsg(formData ? 'audio' : 'text')"
+        @click="saveMessage(voiceMessage ? 'audio' : null)"
       />
     </template>
   </QInput>
@@ -53,32 +43,21 @@
 
 <script setup lang="ts">
 import type { QInput } from 'quasar';
-import type { IMessage } from '@/types';
 import EmojiPicker from '~/EmojiPicker.vue';
 import { ref, watch } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useStore, useChatStore } from '@/stores';
-import { useVoice, useFetch } from '@/hooks';
-import { MessangerService } from '@/api/services';
+import { useVoice } from '@/hooks';
 import { Util } from '@/util';
 
 const { user } = storeToRefs(useStore());
 const chatStore = useChatStore();
 const message = ref<string | null>(null);
+const files = ref<File[] | null>(null);
 const inputRef = ref<QInput | null>(null);
 const fileInput = ref<HTMLInputElement | null>(null);
-const formData = ref<FormData | null>(null);
 const { voiceMessage, isRecording, startRecording, stopRecording } = useVoice();
-const { f: onSaveMsg, data: msg, loading: isMsgLoading } = useFetch<IMessage, typeof saveMsg>({ fn: saveMsg });
 const onTypingDebounce = Util.debounceDecorator(onTyping, 1000);
-
-watch(msg, (newMsg, oldMsg) => {
-  if (newMsg && newMsg !== oldMsg) {
-    formData.value = null;
-    voiceMessage.value = null;
-    message.value = null;
-  }
-});
 
 watch(message, () => {
   onTypingDebounce();
@@ -86,8 +65,13 @@ watch(message, () => {
 
 watch(voiceMessage, () => {
   if (voiceMessage.value) {
-    formData.value = new FormData();
-    formData.value.append('audio', voiceMessage.value);
+    files.value = [voiceMessage.value];
+  }
+});
+
+watch(files, () => {
+  if (files.value && !voiceMessage.value) {
+    saveMessage('image');
   }
 });
 
@@ -95,26 +79,22 @@ watch(isRecording, () => {
   inputRef.value?.blur();
 });
 
-async function saveMsg(type: 'text' | 'audio' | 'image') {
-  if (type === 'text') {
-    if (message.value && chatStore.currentChatId) {
-      return await MessangerService.saveMessage(chatStore.currentChatId, message.value);
-    }
-  } else {
-    if (formData.value && chatStore.currentChatId) {
-      return await MessangerService.saveMediaMessage(formData.value, chatStore.currentChatId, type);
-    }
-  }
+function saveMessage(type: 'audio' | 'image' | null = null) {
+  chatStore.socket.emit('chat:message', {
+    text: message.value!,
+    chatId: chatStore.currentChatId!,
+    attachments: files.value,
+    type: type,
+  });
+  message.value = null;
+  files.value = null;
+  voiceMessage.value = null;
 }
 
 async function onMedia(event: Event) {
   const target = event.target as HTMLInputElement;
-  const files = target.files;
-
-  if (files) {
-    formData.value = new FormData();
-    Array.from(files).forEach((file) => formData.value?.append('images', file));
-    await onSaveMsg('image');
+  if (target.files) {
+    files.value = Array.from(target.files);
   }
 }
 

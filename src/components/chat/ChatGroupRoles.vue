@@ -1,6 +1,5 @@
 <template>
   <QCard :class="$style.container">
-    <QCardSection class="text-h4 text-center">Настроить роли</QCardSection>
     <QTable
       :columns="columns"
       :rows="currentChat?.users"
@@ -11,6 +10,13 @@
       no-data-label="Ничего не найдено"
       bordered
     >
+      <template #header>
+        <QTr>
+          <QTh colspan="3">
+            <h6 class="q-py-sm">Настроить роли</h6>
+          </QTh>
+        </QTr>
+      </template>
       <template #body="{ row }: { row: IUser }">
         <QTr>
           <QTd key="name">{{ row.name }}</QTd>
