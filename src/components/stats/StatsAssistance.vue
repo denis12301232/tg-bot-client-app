@@ -29,8 +29,8 @@ const props = defineProps<{
   by: 'month' | 'day';
 }>();
 
-const chartRef = ref<HTMLCanvasElement | null>(null);
 const date = ref('');
+const chartRef = ref<HTMLCanvasElement | null>(null);
 const chart = shallowRef<Chart<any>>();
 const timestamp = computed(() => {
   const data = date.value?.split('/');

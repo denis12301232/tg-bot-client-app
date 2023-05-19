@@ -61,7 +61,7 @@
           </QItemSection>
           <QItemSection>Встречи</QItemSection>
         </QItem>
-        <QItem class="list_item" v-if="store.isAuth" v-ripple clickable tag="a" to="/stats" active-class="active">
+        <QItem class="list_item" v-if="store.isAdmin" v-ripple clickable tag="a" to="/stats" active-class="active">
           <QItemSection avatar>
             <QIcon name="percent" color="primary" />
           </QItemSection>

@@ -100,7 +100,7 @@ export const routes: RouteRecordRaw[] = [
    {
       path: '/stats',
       component: () => import('@/pages/Stats.vue'),
-      //beforeEnter: [useAuthGuard],
+      beforeEnter: [useAuthGuard],
       meta: { layout: 'StatsLayout' },
       redirect: '/stats/month',
       children: [
