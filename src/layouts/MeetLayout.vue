@@ -9,19 +9,30 @@
     <QPageContainer class="window-height">
       <slot />
     </QPageContainer>
+    <QHeader class="footer" reveal elevated height-hint="98">
+      <QToolbar>
+        <QBtn dense flat round icon="arrow_back" color="indigo" @click="goBack" />
+        <QToolbarTitle>Встреча</QToolbarTitle>
+      </QToolbar>
+    </QHeader>
     <QFooter class="footer" reveal bordered>
       <QToolbar class="row justify-between overflow-auto">
         <div></div>
         <QBtnGroup flat rounded>
           <QBtn
-            :icon="videos.get(store.user._id)?.mute.audio ? 'mic' : 'mic_off'"
+            :icon="videos.get(store.user._id)?.mute.audio ? 'mic_off' : 'mic'"
             @click="toggleTrackMuteAndRelay('audio')"
           />
           <QBtn
-            :icon="videos.get(store.user._id)?.mute.video ? 'videocam' : 'videocam_off'"
+            :icon="videos.get(store.user._id)?.mute.video ? 'videocam_off' : 'videocam'"
             @click="toggleTrackMuteAndRelay('video')"
           />
-          <QBtn class="share" icon="present_to_all" @click="shareMyScreen" />
+          <QBtn
+            class="share"
+            icon="present_to_all"
+            :disable="streams.screen.has(store.user._id)"
+            @click="shareMyScreen"
+          />
           <QBtn icon="chat_bubble" @click="[setComponent('chat'), toggleDrawer('right')]">
             <QBadge v-if="unreadMessages" color="red" floating rounded>{{ unreadMessages }}</QBadge>
           </QBtn>
@@ -37,45 +48,49 @@
 </template>
 
 <script setup lang="ts">
-import type CallVideo from '~/CallVideo.vue';
-import MeetChat from '~/meet/MeetChat.vue';
-import MeetInfo from '~/meet/MeetInfo.vue';
-import MeetUserList from '~/meet/MeetUserList.vue';
-import { ref, reactive, provide, onMounted, onBeforeUnmount, shallowRef, watch, type DefineComponent } from 'vue';
+import type CustomVideo from '~/CustomVideo.vue';
+import Meet from '~/meet';
+import { ref, reactive, provide, onMounted, onBeforeUnmount, onUnmounted, shallowRef, watch } from 'vue';
 import { useStore, useChatStore } from '@/stores';
-import { useNavigation, useWebRtc } from '@/hooks';
-import { useRoute, useRouter } from 'vue-router';
+import { useNavigation, useWebRtc, useFetch } from '@/hooks';
+import { useRoute } from 'vue-router';
 import { WebRtcDto } from '@/api/dto';
-
+import { MeetService } from '@/api/services';
 
 interface RightDrawer {
-  component: typeof MeetInfo | typeof MeetUserList | typeof MeetChat;
+  component: typeof Meet.Info | typeof Meet.UserList | typeof Meet.Chat;
   props: { [name: string]: any };
 }
 
 const route = useRoute();
-const router = useRouter();
 const store = useStore();
 const { socket } = useChatStore();
 const { goBack } = useNavigation();
-const { abonents, streams, streamIds, captureMyStream } = useWebRtc(socket as any, store.user._id,
-{ setChannelEvents });
+const { abonents, streams, streamIds, captureMyStream } = useWebRtc(socket, store.user._id, { setChannelEvents });
+const { f: fetchMeetInfo, data: meetInfo, error, loading } = useFetch<{ title: string }>({ fn: getMeetInfo });
 const open = reactive({ left: false, right: false });
-const videos = ref<Map<string, InstanceType<typeof CallVideo> | null>>(new Map());
+const videos = ref<Map<string, InstanceType<typeof CustomVideo> | null>>(new Map());
 const messages = ref<{ user_id: string; msg: string }[]>([]);
 const component = ref<'chat' | 'info' | 'user-list'>('chat');
 const unreadMessages = ref(0);
 const rightDrawer = shallowRef<RightDrawer | null>(null);
 const meetId = route.params.id?.toString();
 
+function getMeetInfo() {
+  return MeetService.getMeetInfo(String(route.params.id));
+}
+provide('rtc', { videos, abonents, streams });
 watch(component, () => {
   switch (component.value) {
     case 'info':
-      return rightDrawer.value = { component: MeetInfo, props: { link: meetId } };
+      rightDrawer.value = { component: Meet.Info, props: { link: meetId, title: meetInfo.value?.title } };
+      break;
     case 'user-list':
-      return rightDrawer.value = { component: MeetUserList, props: { abonents: abonents.value } };
+      rightDrawer.value = { component: Meet.UserList, props: { abonents: abonents.value } };
+      break;
     default:
-      return rightDrawer.value = { component: MeetChat, props: { abonents: abonents.value, messages: messages.value } };
+      rightDrawer.value = { component: Meet.Chat, props: { abonents: abonents.value, messages: messages.value } };
+      break;
   }
 }, { immediate: true });
 
@@ -85,16 +100,21 @@ watch([() => open.right], () => {
   }
 });
 
-provide('videos', videos);
-provide('abonents', abonents);
-provide('streams', streams);
+watch(error, () => {
+  goBack();
+  store.setAlert('error', { message: 'Встреча не найдена!', visible: true });
+});
+
 onMounted(() => {
-  captureMyStream('camera', { video: true, audio: true })
-    .then((stream) => socket.emit('meet:join', meetId))
-    .catch((e) => {
-      router.go(-1);
-      store.setAlert('warning', { message: 'Нет доступа к камере или микрофону!', visible: true });
-    });
+  socket.on('error:meet-join', onErrorMeetJoin);
+  fetchMeetInfo().then(() => {
+    captureMyStream('camera', { video: true, audio: true })
+      .then((stream) => socket.emit('meet:join', meetId))
+      .catch((e) => {
+        goBack();
+        store.setAlert('warning', { message: 'Нет доступа к камере или микрофону!', visible: true });
+      });
+  });
 });
 onBeforeUnmount(() => {
   for (const type of ['camera', 'screen'] as ['camera', 'screen']) {
@@ -103,6 +123,11 @@ onBeforeUnmount(() => {
   }
   socket.emit('meet:leave', meetId);
 });
+onUnmounted(() => socket.removeListener('error:meet-join', onErrorMeetJoin));
+
+function onErrorMeetJoin(code: number, message: string) {
+  error.value = message;
+}
 
 function toggleDrawer(side: 'left' | 'right') {
   open[side] = !open[side];
@@ -113,7 +138,7 @@ function setComponent(comp: 'chat' | 'info' | 'user-list') {
 }
 
 function toggleTrackMuteAndRelay(track: 'video' | 'audio') {
-  videos.value.get(store.user._id)?.toggleTrackMute(track);
+  videos.value.get(store.user._id)?.muteTrack(track);
   const msg = new WebRtcDto('track:toggle', {
     track,
     peerId: store.user._id,
@@ -145,14 +170,14 @@ function onMessage(this: RTCDataChannel, e: MessageEvent) {
 function onTrackToggleInit(peerId: string) {
   for (const type of ['camera', 'screen'] as ['camera', 'screen']) {
     const stream = streams[type].get(store.user._id);
-    stream?.getTracks().forEach((track) => {
+    for (const track of stream?.getTracks() || []) {
       const msg = new WebRtcDto('track:toggle', {
         track: track.kind,
         peerId: store.user._id,
-        value: track.enabled,
+        value: !track.enabled,
       }).toString();
       abonents.value.get(peerId)?.channel?.send(msg);
-    });
+    }
   }
 }
 

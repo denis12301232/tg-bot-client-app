@@ -95,7 +95,18 @@ export const routes: RouteRecordRaw[] = [
       component: () => import('@/pages/MeetId.vue'),
       beforeEnter: [useAuthGuard, useUUIDV4Guard],
       meta: { layout: 'MeetLayout' }
-      
+
+   },
+   {
+      path: '/stats',
+      component: () => import('@/pages/Stats.vue'),
+      //beforeEnter: [useAuthGuard],
+      meta: { layout: 'StatsLayout' },
+      redirect: '/stats/month',
+      children: [
+         { path: 'month', component: () => import('~/stats/StatsMonth.vue') },
+         { path: 'day', component: () => import('~/stats/StatsDay.vue') },
+      ]
    },
    {
       path: '/:pathMatch(.*)*',
@@ -108,6 +119,6 @@ export const routes: RouteRecordRaw[] = [
       path: '/test',
       name: 'test',
       component: () => import('@/pages/Test.vue'),
-      meta: {layout: 'VoidLayout'}
+      meta: { layout: 'VoidLayout' }
    },
 ];

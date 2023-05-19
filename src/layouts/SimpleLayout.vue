@@ -7,9 +7,7 @@
       </QToolbar>
     </QHeader>
     <QPageContainer class="window-height">
-      <div class="fit scroll">
-        <slot />
-      </div>
+      <slot />
     </QPageContainer>
   </QLayout>
 </template>
@@ -24,6 +22,4 @@ defineProps<{
 const store = useStore();
 </script>
 
-<style lang="scss" scoped>
-
-</style>
+<style lang="scss" scoped></style>

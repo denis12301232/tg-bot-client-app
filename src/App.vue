@@ -1,6 +1,13 @@
 <template>
   <component :is="$route.meta.layoutComponent" :="$route.meta.layoutProps">
-    <RouterView />
+    <QScrollArea
+      class="fit"
+      :thumb-style="{ width: '7px' }"
+      :content-style="{ position: 'relative', overflow: 'hidden' }"
+      :content-active-style="{ position: 'relative', overflow: 'hidden' }"
+    >
+      <RouterView />
+    </QScrollArea>
   </component>
   <ModalAlert
     :class="$style.alert"

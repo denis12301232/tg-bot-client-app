@@ -30,9 +30,7 @@
       </QToolbar>
     </QHeader>
     <QPageContainer class="window-height">
-      <QScrollArea class="fit" :thumb-style="{ width: '7px' }">
-        <slot />
-      </QScrollArea>
+      <slot />
     </QPageContainer>
   </QLayout>
   <input ref="imagesRef" class="hidden" type="file" accept="image/*" multiple @change="onMedia" />

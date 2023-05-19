@@ -3,11 +3,11 @@
     <QHeader class="header" reveal elevated height-hint="98">
       <QToolbar>
         <QBtn dense flat round icon="arrow_back" color="indigo" @click="$router.push('/')" />
-        <QToolbarTitle>Задачи</QToolbarTitle>
+        <QToolbarTitle>Статистика</QToolbarTitle>
       </QToolbar>
       <QTabs align="left" active-color="secondary">
-        <QRouteTab to="/task/list" label="Список задач" />
-        <QRouteTab v-if="store.isAdmin" to="/task/create" label="Создать задачу" />
+        <QRouteTab to="/stats/month" label="По месяцам" />
+        <QRouteTab to="/stats/day" label="По дням" />
       </QTabs>
     </QHeader>
     <QPageContainer class="window-height">

@@ -17,9 +17,7 @@
       <QTabPanels
         v-model="tab"
         animated
-        swipeable
         vertical
-        infinite
         transition-prev="jump-up"
         transition-next="jump-up"
       >

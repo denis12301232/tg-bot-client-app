@@ -61,6 +61,12 @@
           </QItemSection>
           <QItemSection>Встречи</QItemSection>
         </QItem>
+        <QItem class="list_item" v-if="store.isAuth" v-ripple clickable tag="a" to="/stats" active-class="active">
+          <QItemSection avatar>
+            <QIcon name="percent" color="primary" />
+          </QItemSection>
+          <QItemSection>Статистика</QItemSection>
+        </QItem>
       </QList>
     </QDrawer>
     <QDrawer v-if="store.isAuth" v-model="rightDrawerOpen" side="right" overlay bordered>
@@ -105,9 +111,7 @@
       </QList>
     </QDrawer>
     <QPageContainer class="window-height">
-      <div class="fit scroll">
-        <slot />
-      </div>
+      <slot />
     </QPageContainer>
   </QLayout>
 </template>

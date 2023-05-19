@@ -12,9 +12,7 @@
       </QTabs>
     </QHeader>
     <QPageContainer class="window-height">
-      <div class="fit scroll">
-        <slot />
-      </div>
+      <slot />
     </QPageContainer>
   </QLayout>
 </template>

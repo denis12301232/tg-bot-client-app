@@ -50,17 +50,22 @@ import { useStore, useChatStore } from '@/stores';
 import { useVoice } from '@/hooks';
 import { Util } from '@/util';
 
-const { user } = storeToRefs(useStore());
+const store = useStore();
+const { user } = storeToRefs(store);
 const chatStore = useChatStore();
 const message = ref<string | null>(null);
 const files = ref<File[] | null>(null);
 const inputRef = ref<QInput | null>(null);
 const fileInput = ref<HTMLInputElement | null>(null);
-const { voiceMessage, isRecording, startRecording, stopRecording } = useVoice();
+const { voiceMessage, isRecording, error, startRecording, stopRecording } = useVoice();
 const onTypingDebounce = Util.debounceDecorator(onTyping, 1000);
 
 watch(message, () => {
   onTypingDebounce();
+});
+
+watch(error, () => {
+  error.value && store.setAlert('error', { message: 'Нет доступа к микрофону!', visible: true });
 });
 
 watch(voiceMessage, () => {

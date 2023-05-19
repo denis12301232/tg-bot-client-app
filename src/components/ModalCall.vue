@@ -1,34 +1,43 @@
 <template>
   <QDialog v-model="videoModal" maximized>
     <QCard class="fit column">
-      <div class="row justify-end">
+      <div class="row justify-end q-py-sm">
         <QBtn v-close-popup="2" dense flat round icon="close" color="negative" />
       </div>
       <div style="flex: 1 1 auto">
         <div :class="[$style.videos]">
-          <CallVideo
+          <CustomVideo
             v-for="[id, stream] of streams.camera.entries()"
             :ref="(ref) => setRefs(ref, id)"
             :stream="stream"
-            :fullscreen-btn="id === store.user._id ? false : true"
-            :avatar="id === store.user._id ? store.user.avatar : abonents.get(id)?.info?.avatar"
-            :name="id === store.user._id ? store.user.name : abonents.get(id)?.info?.name"
-          />
+            :btns="{ fullscreen: id !== store.user._id }"
+            :muted="id === store.user._id"
+            :mute="{ audio: true, video: true }"
+            autoplay
+            plays-inline
+            :volume="1"
+            style="width: 100%; padding: 5px"
+          >
+            <UserAvatar
+              :avatar="id === store.user._id ? store.user.avatar : abonents.get(id)?.info?.avatar"
+              :name="id === store.user._id ? store.user.name : abonents.get(id)?.info?.name"
+              size="200px"
+            />
+          </CustomVideo>
         </div>
-        <QSeparator />
       </div>
-      <div class="row justify-center q-py-sm">
+      <div class="row justify-center q-py-sm" style="border-top: 1px solid #ccc">
         <QBtnGroup flat rounded>
           <QBtn
             round
             flat
-            :icon="videos.get(store.user._id)?.mute.audio ? 'mic' : 'mic_off'"
+            :icon="videos.get(store.user._id)?.mute.audio ? 'mic_off' : 'mic'"
             @click="toggleTrackMuteAndRelay('audio')"
           />
           <QBtn
             round
             flat
-            :icon="videos.get(store.user._id)?.mute.video ? 'videocam' : 'videocam_off'"
+            :icon="videos.get(store.user._id)?.mute.video ? 'videocam_off' : 'videocam'"
             @click="toggleTrackMuteAndRelay('video')"
           />
           <QBtn round flat icon="call_end" color="negative" @click="endCall" />
@@ -41,7 +50,7 @@
       {{ call === 'outgoing' ? 'Набрать' : 'Входящий вызов' }}
     </QCardSection>
     <QSeparator inset />
-    <QCardSection class="q-py-sm q-mt-sm row">
+    <QCardSection class="q-py-sm q-mt-sm row justify-center">
       <UserAvatar :avatar="abonent?.avatar" :name="abonent?.name" size="50px" />
       <div class="q-pl-sm column justify-center">
         <div class="text-subtitle1">{{ abonent?.name }}</div>
@@ -69,6 +78,7 @@
 import type { SocketTyped } from '@/types';
 import UserAvatar from '~/UserAvatar.vue';
 import CallVideo from '~/CallVideo.vue';
+import CustomVideo from '~/CustomVideo.vue';
 import { ref, computed, watch, onMounted, onUnmounted, onBeforeUnmount } from 'vue';
 import { useStore, useChatStore } from '@/stores';
 import { useWebRtc } from '@/hooks';
@@ -81,7 +91,7 @@ const { socket } = chatStore;
 const { abonents, streams, streamIds, captureMyStream } = useWebRtc(socket as SocketTyped, store.user._id, {
   setChannelEvents,
 });
-const videos = ref<Map<string, InstanceType<typeof CallVideo>>>(new Map());
+const videos = ref<Map<string, InstanceType<typeof CustomVideo>>>(new Map());
 const videoModal = ref(false);
 const isCalling = ref(false);
 const abonent = computed(() => chatStore.chats.get(props.chat_id)?.companion);
@@ -115,7 +125,7 @@ async function callToUser() {
   isCalling.value = true;
   captureMyStream('camera', { video: true, audio: true })
     .then((stream) => socket.emit('chat:call', props.chat_id))
-    .catch((e) => console.error(e));
+    .catch((e) => store.setAlert('warning', { message: 'Требуется доступ к микрофону', visible: true }));
 }
 
 async function answer() {
@@ -124,7 +134,7 @@ async function answer() {
       socket.emit('chat:call-answer', props.chat_id, true);
       videoModal.value = true;
     })
-    .catch((e) => console.error(e));
+    .catch((e) => store.setAlert('warning', { message: 'Требуется доступ к микрофону', visible: true }));
 }
 
 function endCall() {
@@ -162,7 +172,7 @@ function onTrackToggleInit(peerId: string) {
       const msg = new WebRtcDto('track:toggle', {
         track: track.kind,
         peerId: store.user._id,
-        value: track.enabled,
+        value: !track.enabled,
       }).toString();
       abonents.value.get(peerId)?.channel?.send(msg);
     });
@@ -171,12 +181,13 @@ function onTrackToggleInit(peerId: string) {
 
 function onTrackToggle({ track, value, peerId }: { track: 'audio' | 'video'; value: boolean; peerId: string }) {
   if (videos.value?.get(peerId)?.mute) {
+    console.log('toggle', videos.value?.get(peerId)?.mute);
     videos.value.get(peerId)!.mute[track] = value;
   }
 }
 
 function toggleTrackMuteAndRelay(track: 'video' | 'audio') {
-  videos.value.get(store.user._id)?.toggleTrackMute(track);
+  videos.value.get(store.user._id)?.muteTrack(track);
   const msg = new WebRtcDto('track:toggle', {
     track,
     peerId: store.user._id,
@@ -202,7 +213,8 @@ function onIdentifyStream({ type, id }: { type: 'camera' | 'screen'; id: string 
   grid-template-columns: repeat(auto-fit, 500px);
   gap: 5px;
   justify-content: center;
-  height: 100%;
+
+  max-height: 300px;
 }
 
 @media (max-width: 1368px) {

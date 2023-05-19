@@ -21,6 +21,7 @@ interface ServerToClientEvents {
    'webrtc:sdp': (peerId: string, sdp: RTCSessionDescriptionInit) => void;
    'webrtc:ice': (peerId: string, ice: RTCIceCandidate) => void;
    'meet:create': (meetId: string) => void;
+   'error:meet-join': (code: number, message: string) => void;
 }
 
 interface ClientToServerEvents {

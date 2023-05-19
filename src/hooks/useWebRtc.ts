@@ -54,6 +54,7 @@ function useWebRtcEvents({ socket, myId, abonents, streams, streamIds, opts }: W
          } else if (streamIds.screen.has(stream.id)) {
             streams.screen.set(peerId, stream);
          }
+         
          abonents.value.forEach((a) => a.channel?.send(new WebRtcDto('track:toggle-init', myId).toString()));
       }
 

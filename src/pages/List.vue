@@ -13,8 +13,8 @@
     </QDialog>
     <h4 class="text-center q-my-md">Полный список</h4>
     <QTable
-      class="q-mt-lg"
       v-model:pagination="pagination"
+      class="q-mt-lg"
       :columns="columns"
       :rows="list"
       :loading="loading"
@@ -36,30 +36,9 @@
           <QTd class="item_fio" @click="$router.push(`/list/${row._id}`)">{{ row.fio }}</QTd>
           <QTd auto-width>
             <QBtnGroup flat>
-              <QBtn
-                dense
-                round
-                flat
-                icon="content_copy"
-                color="indigo"
-                @click="Util.copyTextToClipboard(row.fio)"
-              />
-              <QBtn
-                dense
-                round
-                flat
-                icon="search"
-                color="teal"
-                @click="findHuman(row.fio.split(' ')[0])"
-              />
-              <QBtn
-                dense
-                round
-                flat
-                icon="delete"
-                color="negative"
-                @click="showDeleteModal(row._id)"
-              />
+              <QBtn dense round flat icon="content_copy" color="indigo" @click="Util.copyTextToClipboard(row.fio)" />
+              <QBtn dense round flat icon="search" color="teal" @click="findHuman(row.fio.split(' ')[0])" />
+              <QBtn dense round flat icon="delete" color="negative" @click="showDeleteModal(row._id)" />
             </QBtnGroup>
           </QTd>
         </QTr>
@@ -78,7 +57,7 @@
 <script setup lang="ts">
 import type { QTable } from 'quasar';
 import type { HumansList } from '@/types';
-import { ref, onMounted } from 'vue';
+import { ref, reactive, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { useFetch, useRequest } from '@/hooks';
 import { AssistanceService } from '@/api/services';
@@ -92,7 +71,7 @@ const modal = ref(false);
 const { pagination, loading, data: list, filter, onRequest } = useRequest<HumansList>({
   f: AssistanceService.catchHumansList,
   sort: 'fio',
-  descending: false
+  descending: false,
 });
 const { f: onDeleteForm, loading: isDeleteLoading } = useFetch({
   fn: deleteHuman,
@@ -119,7 +98,8 @@ function findHuman(surname: string) {
 
 function showDeleteModal(id?: string) {
   if (id) {
-    currentId.value = id;``
+    currentId.value = id;
+    ``;
   }
   modal.value = !modal.value;
 }

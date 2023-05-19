@@ -5,8 +5,10 @@
     </QItemSection>
     <QItemSection avatar>
       <UserAvatar
+        class="avatar"
         :name="type === 'group' ? currentChat?.group.title : companion?.name"
         :avatar="type === 'group' ? currentChat?.group.avatar : companion?.avatar"
+        @click="type === 'group' && emit('open-modal', 'modal:group-info')"
       />
     </QItemSection>
     <QItemSection style="width: 50px">
@@ -133,6 +135,13 @@ html.dark {
 html.light {
   & .header {
     background-color: $blue-grey-1;
+  }
+}
+
+.avatar {
+  &:hover {
+    cursor: pointer;
+    transform: scale(1.01);
   }
 }
 </style>

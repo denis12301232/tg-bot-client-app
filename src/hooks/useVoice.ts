@@ -6,25 +6,33 @@ export default function useVoice() {
    const mediaRecorder = ref<MediaRecorder | null>(null);
    const voiceMessage = ref<File | null>(null);
    const isRecording = ref(false);
+   const error = ref<string | null>(null);
 
    async function startRecording() {
-      stream.value = await navigator.mediaDevices.getUserMedia({ audio: true });
-      mediaRecorder.value = new MediaRecorder(stream.value);
-      mediaRecorder.value.onstart = () => isRecording.value = true;
-      mediaRecorder.value.onstop = () => isRecording.value = false;
-      mediaRecorder.value.ondataavailable = (event) => {
-         voiceMessage.value = new File([event.data], 'audio.ogg', {
-            type: mediaRecorder.value?.mimeType,
-         });
+      try {
+         error.value = null;
+         stream.value = await navigator.mediaDevices.getUserMedia({ audio: true });
+         mediaRecorder.value = new MediaRecorder(stream.value);
+         mediaRecorder.value.onstart = () => isRecording.value = true;
+         mediaRecorder.value.onstop = () => isRecording.value = false;
+         mediaRecorder.value.ondataavailable = (event) => {
+            voiceMessage.value = new File([event.data], 'audio.ogg', {
+               type: mediaRecorder.value?.mimeType,
+            });
+         }
+         mediaRecorder.value.start();
+      } catch (e) {
+         if (e instanceof Error) {
+            error.value = e.message;
+         }
       }
-      mediaRecorder.value.start();
    }
 
    function stopRecording() {
       mediaRecorder.value?.stop();
       voiceMessage.value = null;
-      stream.value?.getTracks().at(0)?.stop();
+      stream.value?.getTracks().forEach((track) => track.stop());
    }
 
-   return { mediaRecorder, isRecording, voiceMessage, startRecording, stopRecording }
+   return { mediaRecorder, isRecording, voiceMessage, error, startRecording, stopRecording }
 }
