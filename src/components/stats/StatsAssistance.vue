@@ -34,7 +34,7 @@ const chartRef = ref<HTMLCanvasElement | null>(null);
 const chart = shallowRef<Chart<any>>();
 const timestamp = computed(() => {
   const data = date.value?.split('/');
-  return !date.value ? Date.now() : new Date(+data.at(0)!, +data.at(1)!, +data.at(2)!).getTime();
+  return !date.value ? Date.now() : new Date(+data.at(0)!, +data.at(1)! - 1, +data.at(2)!).getTime();
 });
 const { f: onGetStats, data: stats, loading } = useFetch<{ [key: string]: string }>({ fn: getStats });
 
