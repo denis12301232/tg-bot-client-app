@@ -61,8 +61,8 @@
     </FormAssistanceGroup>
     <FormAssistanceGroup v-if="Number(form.people_num) > 1" title="ФИО и возраст проживающих">
       <QInput
-        v-for="i in Number(form.people_num) - 1 > 10 ? 10 : Number(form.people_num)"
-        v-model.trim="form.people_fio[i]"
+        v-for="i in Number(form.people_num) - 1 > 10 ? 10 : Number(form.people_num) - 1"
+        v-model.trim="form.people_fio[i-1]"
         :label="`ФИО и возраст ${i}-го`"
         :rules="formRules.people_num"
         lazy-rules
