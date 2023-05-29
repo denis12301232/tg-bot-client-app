@@ -16,7 +16,7 @@
         <QBadge color="indigo">С {{ query.birth.min }} по {{ query.birth.max }}</QBadge>
         <QRange v-model="query.birth" :min="1920" :max="2022" color="secondary"></QRange>
       </div>
-      <div v-if="valid" class="column items-center" >
+      <div v-if="valid" class="column items-center">
         <QBtn class="q-mt-md" color="red-10" type="submit" :loading="loading" :disable="!valid" label="Сохранить" />
         <a v-if="data?.link" :class="[$style.link, 'q-mt-sm']" target="_blank" :href="data.link"
           >Ссылка на выгруженные заявки</a
@@ -28,6 +28,7 @@
 
 <script setup lang="ts">
 import { ref, reactive, computed, watchEffect } from 'vue';
+import { useStore } from '@/stores';
 import { Constants } from '@/util';
 import { useFetch } from '@/hooks';
 import { AssistanceService } from '@/api/services';
@@ -36,10 +37,17 @@ type Criterias = 'district' | 'birth';
 type T = { message: string; link: string };
 type S = typeof AssistanceService.saveFormsToSheet;
 
+const store = useStore();
 const criterias = ref<Criterias[]>([]);
 const query = reactive({ district: '', birth: { min: 1920, max: 2022 } });
 const valid = computed(() => !!criterias.value.length);
-const { request, loading, data } = useFetch<T, S>(AssistanceService.saveFormsToSheet);
+const { request, loading, data } = useFetch<T, S>(AssistanceService.saveFormsToSheet, {
+  afterResponse: ({ response }) => {
+    response.status === 200
+      ? store.setAlert(true, { message: 'Сформировано' })
+      : store.setAlert(true, { message: 'Ничего не найдено по запросу!', type: 'error' });
+  },
+});
 const options = [
   { label: 'По району', value: 'district' },
   { label: 'По году', value: 'birth' },

@@ -25,9 +25,7 @@
 import { reactive, computed } from 'vue';
 import { useFetch } from '@/hooks';
 import { ToolsService } from '@/api/services';
-import { useStore } from '@/stores';
 
-const store = useStore();
 const google = reactive({
   serviceUser: '',
   servicePrivateKey: '',
@@ -36,12 +34,7 @@ const google = reactive({
 });
 const valid = computed(() => !!Object.values(google).reduce((sum, item) => (sum += item.length), 0));
 const { request, loading } = useFetch(ToolsService.setGoogleServiceAccountSettings, {
-  afterResponse: ({ response }) => {
-    response.status === 200
-      ? store.setAlert(true, { message: 'Сформировано' })
-      : store.setAlert(true, { message: 'Ничего не найдено по запросу!', type: 'error' });
-    Object.keys(google).forEach((key) => (google[key as keyof typeof google] = ''));
-  },
+  afterResponse: () => Object.keys(google).forEach((key) => (google[key as keyof typeof google] = '')),
 });
 </script>
 
