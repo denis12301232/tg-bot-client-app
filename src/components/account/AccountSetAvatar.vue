@@ -6,6 +6,9 @@
       :src="store.user?.avatar && `${ENV.SERVER_URL}/avatars/${store.user.avatar}`"
     />
     <QBtn class="q-mt-sm" :disable="!avatar || loading" type="submit" :loading="loading">Изменить</QBtn>
+    <div class="row justify-center text-negative text-bold caption">
+      {{ typeof error === 'object' ? error.message : error }}
+    </div>
   </form>
 </template>
 
@@ -23,7 +26,10 @@ type S = typeof ToolsService.setAvatar;
 const store = useStore();
 const avatar = ref<File | null>(null);
 const { request, loading, error } = useFetch<T, S>(ToolsService.setAvatar, {
-  afterResponse: ({ data }) => store.user?.avatar && (store.user.avatar = data.value.avatar),
+  afterSuccess: ({ data }) => {
+    store.user?.avatar && (store.user.avatar = data.value.avatar);
+    store.setAlert(true, { message: 'Аватар изменен!' });
+  },
 });
 const formData = new FormData();
 
