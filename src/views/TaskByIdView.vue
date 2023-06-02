@@ -10,8 +10,8 @@
     <QResizeObserver @resize="onResize" />
     <template v-slot:before>
       <QTabs v-model="tab" :vertical="width > 500" active-color="red-10">
-        <QTab name="task" icon="eva-list" label="Задача" />
-        <QTab name="subtasks" icon="eva-list" label="Подзадачи" />
+        <QTab name="task" icon="eva-list" :label="t('tasks.byId.tabs.task')" />
+        <QTab name="subtasks" icon="eva-list" :label="t('tasks.byId.tabs.subtasks')" />
       </QTabs>
     </template>
     <template #after>
@@ -36,16 +36,18 @@
 </template>
 
 <script setup lang="ts">
-import type { ITask } from '@/types';
+import type { ITask, I18n, Langs } from '@/types';
 import Tasks from '~/tasks';
 import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { useFetch } from '@/hooks';
 import { TaskService } from '@/api/services';
+import { useI18n } from 'vue-i18n';
 
 type T = ITask;
 type S = typeof TaskService.getTaskById;
 
+const { t } = useI18n<I18n, Langs>({ useScope: 'global' });
 const route = useRoute();
 const tab = ref('task');
 const splitterModel = ref(150);

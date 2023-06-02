@@ -3,7 +3,7 @@
     <QInput
       class="q-mt-sm"
       v-model="email"
-      label="Адрес электронной почты"
+      :label="label"
       standout
       :rules="rules"
       :error="!!error"
@@ -36,6 +36,10 @@ import { useStore } from '@/stores';
 import { useFetch } from '@/hooks';
 import { Validate } from '@/util';
 import { ToolsService } from '@/api/services';
+
+defineProps<{
+  label: string;
+}>();
 
 const store = useStore();
 const email = ref(store.user?.email || '');

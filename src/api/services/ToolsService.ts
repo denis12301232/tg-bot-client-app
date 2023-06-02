@@ -1,3 +1,4 @@
+import type { Langs } from '@/types/i18n';
 import { $api } from '@/api';
 
 export default class ToolsService {
@@ -32,5 +33,18 @@ export default class ToolsService {
 
   static updateRoles(_id: string, roles: string[]) {
     return $api.post('tools/setroles', { json: { _id, roles } });
+  }
+
+  static fetchLocale(locale: Langs) {
+    return fetch(`./locales/${locale}.json`)
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        }
+        throw new Error('Something went wrong!');
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   }
 }

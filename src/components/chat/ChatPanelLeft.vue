@@ -2,26 +2,26 @@
   <Transition name="menu">
     <div v-if="menu" class="menu">
       <QCard class="full-height" square>
-        <QCardSection class="text-center text-h5">Меню</QCardSection>
+        <QCardSection class="text-center text-h5">{{ t('chat.menu.title') }}</QCardSection>
         <QSeparator />
         <QList class="q-px-sm q-pt-sm">
           <QItem v-ripple clickable tag="a" to="/">
             <QItemSection avatar>
               <QIcon name="eva-home-outline" color="red-10" />
             </QItemSection>
-            <QItemSection>На главную</QItemSection>
+            <QItemSection>{{ t('chat.menu.home') }}</QItemSection>
           </QItem>
           <QItem v-ripple clickable tag="a" to="/account">
             <QItemSection avatar>
               <QIcon name="eva-person-outline" color="red-10" />
             </QItemSection>
-            <QItemSection>Аккаунт</QItemSection>
+            <QItemSection>{{ t('chat.menu.account') }}</QItemSection>
           </QItem>
           <QItem v-ripple v-close-popup clickable @click="emit('openModal', 'modal:group-create')">
             <QItemSection avatar>
               <QIcon name="eva-plus-square-outline" color="red-10" />
             </QItemSection>
-            <QItemSection>Создать группу</QItemSection>
+            <QItemSection>{{ t('chat.menu.group') }}</QItemSection>
           </QItem>
         </QList>
       </QCard>
@@ -32,7 +32,7 @@
       v-model="search"
       class="full-width"
       debounce="300"
-      label="Поиск"
+      :label="t('chat.playsholders.search')"
       :loading="loading"
       clearable
       hide-bottom-space
@@ -51,11 +51,12 @@
 </template>
 
 <script setup lang="ts">
-import type { IUser, ChatModal } from '@/types';
+import type { IUser, ChatModal, I18n, Langs } from '@/types';
 import Chat from '~/chat';
 import { ref, onMounted, onUnmounted, watchEffect } from 'vue';
 import { useFetch } from '@/hooks';
 import { ChatService } from '@/api/services';
+import { useI18n } from 'vue-i18n';
 
 type T = IUser[];
 type S = typeof ChatService.findUsers;
@@ -64,6 +65,7 @@ const emit = defineEmits<{
   openModal: [name: ChatModal];
 }>();
 
+const { t } = useI18n<I18n, Langs>();
 const menu = ref(false);
 const search = ref('');
 const { request: searchUsers, data: users, loading } = useFetch<T, S>(ChatService.findUsers);

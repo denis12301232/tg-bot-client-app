@@ -1,12 +1,12 @@
 <template>
   <div class="column items-center q-pa-sm">
-    <h4 class="text-center q-my-lg q-pb-sm">Поиск</h4>
+    <h4 class="text-center q-my-lg q-pb-sm">{{ t('info.title') }}</h4>
     <div :class="$style.find">
       <QInput
         v-model="search"
         class="full-width"
         standout="text-white bg-indigo"
-        label="Имя или фамилия"
+        :label="t('info.placeholder')"
         debounce="1000"
         :loading="loading"
         :error="!!error"
@@ -23,20 +23,20 @@
         <th colspan="2">
           <div class="row justify-between">
             <div class="text-h6">
-              <span>Найдено</span>
+              <span>{{ t('info.table.title') }}</span>
             </div>
             <div>
               <QBtn icon="eva-edit" dense flat round @click="$router.push(`/info/${form._id}?edit=true`)">
-                <QTooltip class="bg-indigo" :offset="[10, 10]" :delay="1000">Редактировать</QTooltip>
+                <QTooltip class="bg-indigo" :offset="[10, 10]" :delay="1000">{{ t('info.hints.edit') }}</QTooltip>
               </QBtn>
             </div>
           </div>
         </th>
       </thead>
       <tbody>
-        <tr v-for="(key, value, index) in Util.formatForm(form)" :key="index">
-          <td>{{ Constants.assistance[value] }}</td>
-          <td>{{ Util.formatAssistanceKey(key) }}</td>
+        <tr v-for="(value, key, index) in Util.formatForm(form)" :key="index">
+          <td>{{ t(`assistance.fields.${key}`) }}</td>
+          <td>{{ Util.formatAssistanceValue(value, key, t) }}</td>
         </tr>
       </tbody>
     </QMarkupTable>
@@ -45,15 +45,17 @@
 </template>
 
 <script setup lang="ts">
-import type { AssistanceResponse } from '@/types';
+import type { AssistanceResponse, I18n, Langs } from '@/types';
 import { AssistanceService } from '@/api/services';
 import { ref, watch } from 'vue';
 import { useFetch } from '@/hooks';
-import { Util, Constants } from '@/util';
+import { Util } from '@/util';
+import { useI18n } from 'vue-i18n';
 
 type T = AssistanceResponse[];
 type S = typeof AssistanceService.findForms;
 
+const { t } = useI18n<I18n, Langs>({ useScope: 'global' });
 const LIMIT = 1;
 const search = ref('');
 const page = ref(1);

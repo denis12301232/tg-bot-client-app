@@ -1,10 +1,10 @@
 <template>
   <QForm ref="formRef" no-error-focus>
     <QInput
-      class="q-mt-sm"
       v-model="title"
+      class="q-mt-sm"
       standout
-      label="Название"
+      :label="t('tasks.create.first.placeholders.title')"
       counter
       lazy-rules
       :rules="rules.title"
@@ -12,10 +12,10 @@
     >
     </QInput>
     <QInput
-      class="q-mt-sm"
       v-model="tag"
+      class="q-mt-sm"
       standout
-      label="Теги"
+      :label="t('tasks.create.first.placeholders.tags')"
       lazy-rules
       :rules="rules.tags"
       :readonly="tags.length >= 3"
@@ -47,9 +47,11 @@
 </template>
 
 <script setup lang="ts">
+import type { I18n, Langs } from '@/types';
 import type { QForm } from 'quasar';
 import { ref, watch, computed } from 'vue';
 import { Validate } from '@/util';
+import { useI18n } from 'vue-i18n';
 
 const props = defineProps<{
   title: string;
@@ -61,6 +63,7 @@ const emit = defineEmits<{
   valid: [value: boolean];
 }>();
 
+const { t } = useI18n<I18n, Langs>({ useScope: 'global' });
 const formRef = ref<QForm | null>(null);
 const tag = ref('');
 // eslint-disable-next-line vue/no-dupe-keys
@@ -83,8 +86,8 @@ const tags = computed({
 });
 
 const rules = {
-  title: [(v: string) => Validate.required(v) || 'Заполните поле'],
-  tags: [() => Validate.lengthInterval(1, 3)(tags.value) || 'Введите хотя бы один тег'],
+  title: [(v: string) => Validate.required(v) || t('tasks.create.first.errors.title.required')],
+  tags: [() => Validate.lengthInterval(1, 3)(tags.value) || t('tasks.create.first.errors.tags.lengthInterval')],
 };
 
 watch([title, () => tags.value.length], () => {

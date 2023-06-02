@@ -1,6 +1,6 @@
 <template>
   <div class="column items-center q-pa-sm">
-    <h4 class="text-center q-mt-lg q-mb-lg">Задачи</h4>
+    <h4 class="text-center q-mt-lg q-mb-lg">{{ t('tasks.list.title') }}</h4>
     <QTable
       v-model:pagination="pagination"
       :class="$style.table"
@@ -9,10 +9,12 @@
       :filter="filter"
       :loading="loading || isTaskStatusLoading || isSetUserLoading"
       :rows-per-page-options="[5, 10, 20]"
-      :pagination-label="(f, t, a) => `${f}-${t} из ${a}`"
-      no-data-label="Задач нет"
-      loading-label="Загрузка..."
-      rows-per-page-label="Отображать на странице:"
+      :pagination-label="(f, l, a) => `${f}-${l} ${t('table.of')} ${a}`"
+      :loading-label="t('table.loading')"
+      :no-data-label="t('table.noData')"
+      :rows-per-page-label="t('table.show')"
+      :no-results-label="t('table.notFound')"
+      :selected-rows-label="(n) => `${t('table.selected')} ${n}`"
       separator="cell"
       row-key="_id"
       binary-state-sort
@@ -24,7 +26,7 @@
           class="full-width"
           borderless
           dense
-          label="Отображать"
+          :label="t('tasks.list.table.filter')"
           :options="options"
           emit-value
           map-options
@@ -51,7 +53,7 @@
           </QTd>
           <QTd>
             <div class="row justify-center">
-              <QBadge :label="scope.row.status" :color="Util.setStatusColor(scope.row.status)" />
+              <QBadge :label="t(`tasks.statuses.${scope.row.status}`)" :color="Util.setStatusColor(scope.row.status)" />
             </div>
           </QTd>
           <QTd class="text-center">{{ new Date(scope.row.createdAt).toLocaleDateString() }}</QTd>
@@ -59,15 +61,17 @@
             <div class="row justify-center">
               <QBtnGroup flat>
                 <QBtn
-                  v-if="scope.row.user && scope.row.status === 'В работе'"
+                  v-if="scope.row.user && scope.row.status === 'performed'"
                   round
                   dense
                   flat
                   icon="eva-checkmark-outline"
                   color="positive"
-                  @click="onUpdateTaskStatus(scope.row._id, 'Выполнена')"
+                  @click="onUpdateTaskStatus(scope.row._id, 'completed')"
                 >
-                  <QTooltip class="bg-indigo" :offset="[10, 10]" :delay="1000">Отметить, как выполненую</QTooltip>
+                  <QTooltip class="bg-indigo" :offset="[10, 10]" :delay="1000">
+                    {{ t('tasks.list.hints.complete') }}
+                  </QTooltip>
                 </QBtn>
                 <QBtn
                   v-if="!scope.row.user"
@@ -78,18 +82,22 @@
                   color="warning"
                   @click="[setUserForTask(scope.row._id)]"
                 >
-                  <QTooltip class="bg-indigo" :offset="[10, 10]" :delay="1000">Взять задачу</QTooltip>
+                  <QTooltip class="bg-indigo" :offset="[10, 10]" :delay="1000">
+                    {{ t('tasks.list.hints.take') }}
+                  </QTooltip>
                 </QBtn>
                 <QBtn
-                  v-if="scope.row.status !== 'Выполнена' && scope.row.status !== 'Отменена' && store.isAdmin"
+                  v-if="scope.row.status !== 'completed' && scope.row.status !== 'canceled' && store.isAdmin"
                   round
                   dense
                   flat
                   icon="eva-close"
                   color="negative"
-                  @click="onUpdateTaskStatus(scope.row._id, 'Отменена')"
+                  @click="onUpdateTaskStatus(scope.row._id, 'canceled')"
                 >
-                  <QTooltip class="bg-indigo" :offset="[10, 10]" :delay="1000">Оменить задачу</QTooltip>
+                  <QTooltip class="bg-indigo" :offset="[10, 10]" :delay="1000">
+                    {{ t('tasks.list.hints.cancel') }}
+                  </QTooltip>
                 </QBtn>
                 <QBtn
                   round
@@ -99,7 +107,9 @@
                   color="primary"
                   @click="$router.push(`/task/${scope.row._id}`)"
                 >
-                  <QTooltip class="bg-indigo" :offset="[10, 10]" :delay="1000">Подробнее о задаче</QTooltip>
+                  <QTooltip class="bg-indigo" :offset="[10, 10]" :delay="1000">
+                    {{ t('tasks.list.hints.about') }}
+                  </QTooltip>
                 </QBtn>
               </QBtnGroup>
             </div>
@@ -128,23 +138,25 @@
 
 <script setup lang="ts">
 import type { QTable } from 'quasar';
-import type { ITask } from '@/types';
-import { onMounted } from 'vue';
+import type { ITask, I18n, Langs } from '@/types';
+import { computed, onMounted } from 'vue';
 import { useStore } from '@/stores';
 import { useFetch, useRequest } from '@/hooks';
 import { TaskService } from '@/api/services';
-import { Util } from '@/util';
+import { Util, Constants } from '@/util';
+import { useI18n } from 'vue-i18n';
 
 type T = { message: string; taskId: string };
 type S = typeof TaskService.setUserForTask;
 
+const { t } = useI18n<I18n, Langs>({ useScope: 'global' });
 const store = useStore();
 const { request: updateTaskStatus, loading: isTaskStatusLoading } = useFetch(TaskService.updateTaskStatus);
 const { request: setUserForTask, loading: isSetUserLoading } = useFetch<T, S>(TaskService.setUserForTask, {
   afterResponse: ({ data }) => {
     const task = tasks.value?.find((task) => task._id === data.value.taskId);
     if (task) {
-      task.status = 'В работе';
+      task.status = 'performed';
       ((task.user as unknown) as any) = store.user?._id;
     }
   },
@@ -153,19 +165,25 @@ const { request, data: tasks, pagination, filter, loading } = useRequest<ITask>(
   sort: 'createdAt',
   limit: 5,
 });
-const columns: QTable['columns'] = [
+const columns = computed<QTable['columns']>(() => [
   {
     name: 'title',
-    label: 'Название',
+    label: t('tasks.list.table.columns.title'),
     align: 'center',
     field: 'title',
     headerStyle: 'font-size: 1.1em;',
     sortable: true,
   },
-  { name: 'tags', label: 'Теги', align: 'center', field: 'tags', headerStyle: 'font-size: 1.1em;' },
+  {
+    name: 'tags',
+    label: t('tasks.list.table.columns.tags'),
+    align: 'center',
+    field: 'tags',
+    headerStyle: 'font-size: 1.1em;',
+  },
   {
     name: 'status',
-    label: 'Статус',
+    label: t('tasks.list.table.columns.status'),
     align: 'center',
     field: 'status',
     headerStyle: 'font-size: 1.1em;',
@@ -173,18 +191,24 @@ const columns: QTable['columns'] = [
   },
   {
     name: 'createdAt',
-    label: 'Дата создания',
+    label: t('tasks.list.table.columns.date'),
     align: 'center',
     field: 'createdAt',
     headerStyle: 'font-size: 1.1em;',
     sortable: true,
   },
-  { name: '_id', label: 'Действия', align: 'center', field: '_id', headerStyle: 'font-size: 1.1em;' },
-];
-const options = [
-  { label: 'Все', value: 'all' },
-  { label: 'Только мои', value: 'my' },
-];
+  {
+    name: '_id',
+    label: t('tasks.list.table.columns.actions'),
+    align: 'center',
+    field: '_id',
+    headerStyle: 'font-size: 1.1em;',
+  },
+]);
+const options = computed(() => [
+  { label: t('tasks.list.table.checkbox.all'), value: 'all' },
+  { label: t('tasks.list.table.checkbox.mine'), value: 'my' },
+]);
 
 onMounted(() => request({ pagination: pagination.value }));
 

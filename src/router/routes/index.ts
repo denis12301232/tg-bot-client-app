@@ -26,7 +26,7 @@ export const routes: RouteRecordRaw[] = [
     path: '/restore',
     name: 'restore',
     component: () => import('@/views/RestoreView.vue'),
-    meta: { layout: 'SimpleLayout', layoutProps: { title: 'Восстановление пароля' } },
+    meta: { layout: 'SimpleLayout', layoutProps: { title: 'restore.layout.title' } },
     beforeEnter: [RouteMiddlewares.useNotAuthOnly],
   },
   {
@@ -86,14 +86,14 @@ export const routes: RouteRecordRaw[] = [
     path: '/task/:id',
     name: 'taskById',
     component: () => import('@/views/TaskByIdView.vue'),
-    meta: { layout: 'SimpleLayout', layoutProps: { title: 'Задача' } },
+    meta: { layout: 'SimpleLayout', layoutProps: { title: 'tasks.byId.title' } },
     beforeEnter: [RouteMiddlewares.useAuthGuard],
   },
   {
     path: '/gallery',
     name: 'gallery',
     component: () => import('@/views/GalleryView.vue'),
-    meta: { layout: 'GalleryLayout', layoutProps: { title: 'Галерея' } },
+    meta: { layout: 'GalleryLayout' },
   },
   {
     path: '/stats',
@@ -110,7 +110,7 @@ export const routes: RouteRecordRaw[] = [
     path: '/meets',
     name: 'meets',
     component: () => import('@/views/MeetView.vue'),
-    meta: { layout: 'SimpleLayout', layoutProps: { title: 'Встречи' } },
+    meta: { layout: 'SimpleLayout', layoutProps: { title: 'meets.title' } },
     beforeEnter: [RouteMiddlewares.useAuthGuard],
   },
   {
@@ -131,6 +131,12 @@ export const routes: RouteRecordRaw[] = [
     name: '404',
     component: () => import('~/TheError.vue'),
     props: { code: 404, message: 'Not found' },
+    meta: { layout: 'VoidLayout' },
+  },
+  {
+    path: '/test',
+    name: '404',
+    component: () => import('@/views/TestView.vue'),
     meta: { layout: 'VoidLayout' },
   },
 ];

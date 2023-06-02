@@ -1,6 +1,6 @@
 <template>
   <QList class="list">
-    <h6 v-if="!sortedChats.size" class="text-center text-negative q-mt-sm">Список диалогов пуст...</h6>
+    <h6 v-if="!sortedChats.size" class="text-center text-negative q-mt-sm">{{ t('chat.write.dialogs') }}</h6>
     <QItem
       v-for="chat in sortedChats.values()"
       v-ripple
@@ -9,7 +9,7 @@
       style="flex-wrap: wrap"
       clickable
       :active="currentChatId === chat._id"
-      :active-class="currentTheme === 'light' ?  'bg-indigo-1 text-grey-8': 'bg-blue-grey-9 text-white'"
+      :active-class="currentTheme === 'light' ? 'bg-indigo-1 text-grey-8' : 'bg-blue-grey-9 text-white'"
       @click="onOpenChat(chat._id)"
     >
       <QItemSection avatar>
@@ -24,11 +24,15 @@
         </QItemLabel>
         <QItemLabel class="text-cut" caption lines="2">
           <div v-if="!Object.values(chat.typing || {}).at(0)">
-            {{ chat.messages?.length ? showLastMessageText(chat.messages.at(-1)) : 'Еще нет сообщений' }}
+            {{ chat.messages?.length ? showLastMessageText(chat.messages.at(-1)) : t('chat.msg.none') }}
           </div>
           <div v-else>
             <QSpinnerDots size="1rem" />
-            {{ chat.type === 'group' ? Object.values(chat.typing || {}).at(0) + ' печатает' : 'печатает' }}
+            {{
+              chat.type === 'group'
+                ? Object.values(chat.typing || {}).at(0) + ` ${t('chat.writing')}`
+                : ` ${t('chat.writing')}`
+            }}
           </div>
         </QItemLabel>
       </QItemSection>
@@ -56,20 +60,22 @@
 </template>
 
 <script setup lang="ts">
-import type { IMessage } from '@/types';
+import type { IMessage, I18n, Langs } from '@/types';
 import UserAvatar from '~/UserAvatar.vue';
 import { storeToRefs } from 'pinia';
 import { useChatStore, useStore } from '@/stores';
 import { Time } from '@/util';
 import { ChatService } from '@/api/services';
+import { useI18n } from 'vue-i18n';
 
+const { t } = useI18n<I18n, Langs>();
 const { user, currentTheme } = storeToRefs(useStore());
 const { currentChatId, sortedChats } = storeToRefs(useChatStore());
 
 function showLastMessageText(msg: IMessage | undefined) {
   if (msg?.text) return msg.text;
-  if (msg?.attachments?.at(0)?.type === 'audio') return 'Аудиосообщение';
-  if (msg?.attachments?.at(0)?.type === 'image') return 'Фотография';
+  if (msg?.attachments?.at(0)?.type === 'audio') return t('chat.msg.audio');
+  if (msg?.attachments?.at(0)?.type === 'image') return t('chat.msg.image');
 }
 
 function onOpenChat(chat_id: string) {

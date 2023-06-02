@@ -1,12 +1,12 @@
 <template>
   <QForm ref="formRef" :class="$style.settings" @submit.prevent="request(password, link)">
-    <h5 class="q-pa-lg text-center">Введите новый пароль</h5>
+    <h5 class="q-pa-lg text-center">{{ t('restore.titles.password') }}</h5>
     <QInput
       v-model="password"
       standout
       :rules="rules"
       lazy-rules
-      label="Пароль"
+      :label="t('restore.placeholders.password')"
       :type="visible ? 'text' : 'password'"
       counter
       maxlength="20"
@@ -19,20 +19,23 @@
       </template>
     </QInput>
     <div class="row justify-center">
-      <QBtn type="submit" :disable="!valid || loading" :loading="loading">Изменить</QBtn>
+      <QBtn type="submit" :disable="!valid || loading" :loading="loading">{{ t('restore.buttons.password') }}</QBtn>
     </div>
     <div v-if="message" :class="$style.message">{{ message }}</div>
   </QForm>
 </template>
 
 <script setup lang="ts">
+import type { I18n, Langs } from '@/types';
 import type { QForm } from 'quasar';
 import { ref, watch, computed } from 'vue';
 import { useRoute } from 'vue-router';
 import { useFetch } from '@/hooks';
 import { Validate } from '@/util';
 import { AuthService } from '@/api/services';
+import { useI18n } from 'vue-i18n';
 
+const { t } = useI18n<I18n, Langs>();
 const route = useRoute();
 const password = ref('');
 const formRef = ref<QForm | null>(null);
@@ -41,13 +44,13 @@ const valid = ref(false);
 const message = ref('');
 const link = computed(() => String(route.query.link));
 const rules = [
-  (v: string) => Validate.required(v) || 'Заполните поле',
-  (v: string) => Validate.lengthInterval(6, 20)(v) || 'Пароль должен содержать от 6 до 20 символов',
+  (v: string) => Validate.required(v) || t('restore.errors.password.required'),
+  (v: string) => Validate.lengthInterval(6, 20)(v) || t('restore.errors.password.lengthInterval'),
 ];
 const { request, loading, error } = useFetch(AuthService.restorePassword, {
   afterResponse: () => {
     password.value = '';
-    message.value = 'Пароль изменен!';
+    message.value = t('restore.msgs.set');
   },
 });
 

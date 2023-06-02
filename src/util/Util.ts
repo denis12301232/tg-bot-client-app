@@ -1,4 +1,5 @@
-import type { ITask, AssistanceResponse } from '@/types';
+import type { ITask, AssistanceResponse, I18n, Langs } from '@/types';
+import { ComposerTranslation } from 'vue-i18n';
 
 export default class Util {
   static debounceDecorator(f: Function, ms: number) {
@@ -59,30 +60,33 @@ export default class Util {
 
   static setStatusColor(status: ITask['status']) {
     switch (status) {
-      case 'Не выбрана':
+      case 'untaken':
         return 'warning';
-      case 'В работе':
+      case 'performed':
         return 'primary';
-      case 'Отменена':
+      case 'canceled':
         return 'negative';
-      case 'Выполнена':
+      case 'completed':
         return 'positive';
       default:
         return 'positive';
     }
   }
 
-  static formatAssistanceKey(key: string[] | boolean | string | number) {
-    if (Array.isArray(key)) {
-      return key.length ? key.join(',') : '-';
-    } else if (key === true) {
-      return 'Да';
-    } else if (key === false) {
-      return 'Нет';
-    } else if (!key) {
+  static formatAssistanceValue(value: any, key: any, t: ComposerTranslation<I18n, Langs>) {
+    if (key === 'district') {
+      return t(`assistance.districts.${value}`);
+    }
+    if (Array.isArray(value)) {
+      return value.length ? value.join(',') : '-';
+    } else if (value === true) {
+      return t('assistance.checkboxes.yesNo.yes');
+    } else if (value === false) {
+      return t('assistance.checkboxes.yesNo.no');
+    } else if (!value) {
       return '-';
     } else {
-      return key;
+      return value;
     }
   }
 

@@ -12,10 +12,12 @@
       :loading="isUpdating || isDeleting"
       row-key="_id"
       separator="cell"
-      loading-label="Загрузка..."
-      no-data-label="Список пуст"
-      rows-per-page-label="Отображать:"
-      no-results-label="Ничего не найдено"
+      :pagination-label="(f, l, a) => `${f}-${l} ${t('table.of')} ${a}`"
+      :loading-label="t('table.loading')"
+      :no-data-label="t('table.noData')"
+      :rows-per-page-label="t('table.show')"
+      :no-results-label="t('table.notFound')"
+      :selected-rows-label="(n) => `${t('table.selected')} ${n}`"
       title="Список"
       selection="single"
     >
@@ -42,7 +44,9 @@
               color="teal"
               @click="openModal"
             >
-              <QTooltip class="bg-indigo" :offset="[10, 10]" :delay="1000">Переместить</QTooltip>
+              <QTooltip class="bg-indigo" :offset="[10, 10]" :delay="1000">
+                {{ t('tasks.byId.subtasks.hints.move') }}
+              </QTooltip>
             </QBtn>
             <QBtn
               :disable="!selected.length"
@@ -53,7 +57,9 @@
               color="negative"
               @click="onDeleteSubtask"
             >
-              <QTooltip class="bg-indigo" :offset="[10, 10]" :delay="1000">Удалить</QTooltip>
+              <QTooltip class="bg-indigo" :offset="[10, 10]" :delay="1000">{{
+                t('tasks.byId.subtasks.hints.delete')
+              }}</QTooltip>
             </QBtn>
           </QTh>
           <QTh v-for="col in scope.cols" :key="col.label" :style="col.headerStyle">{{ col.label }}</QTh>
@@ -70,18 +76,19 @@
             <QPopupEdit
               v-model="scope.row.status"
               #="data"
-              title="Изменить статус"
+              :title="t('tasks.byId.subtasks.table.edit.status')"
               @save="(v) => updateSubtask({ subtask_id: scope.row._id, status: v })"
             >
               <QSelect
                 v-model="data.value"
-                :options="['Не выбрана', 'В работе', 'Выполнена', 'Отменена']"
+                :options="options"
                 :color="Util.setStatusColor(data.value)"
                 standout
+                emit-value
                 @keyup.enter="data.value.set"
               >
                 <template #selected>
-                  <div :class="`text-${Util.setStatusColor(data.value)}`">{{ data.value }}</div>
+                  <div :class="`text-${Util.setStatusColor(data.value)}`">{{ t(`tasks.statuses.${data.value}`) }}</div>
                 </template>
               </QSelect>
               <div class="row justify-between q-my-sm">
@@ -89,14 +96,14 @@
                 <QBtn round dense flat icon="eva-close-outline" color="negative" @click="data.cancel" />
               </div>
             </QPopupEdit>
-            <QBadge :label="scope.row.status" :color="Util.setStatusColor(scope.row.status)" />
+            <QBadge :label="t(`tasks.statuses.${scope.row.status}`)" :color="Util.setStatusColor(scope.row.status)" />
           </QTd>
           <QTd :class="$style.cut_text">
             {{ scope.row.cause }}
             <QPopupEdit
               v-model="scope.row.cause"
               #="data"
-              title="Укажите причину"
+              :title="t('tasks.byId.subtasks.table.edit.cause')"
               @save="(v) => updateSubtask({ subtask_id: scope.row._id, cause: v })"
             >
               <QInput
@@ -126,11 +133,12 @@
 <script setup lang="ts">
 import Tasks from '~/tasks';
 import type { QTable } from 'quasar';
-import type { ISubtask } from '@/types';
+import type { ISubtask, I18n, Langs } from '@/types';
 import { ref, computed } from 'vue';
 import { useFetch } from '@/hooks';
 import { TaskService } from '@/api/services';
 import { Util } from '@/util';
+import { useI18n } from 'vue-i18n';
 
 const props = defineProps<{
   taskId: string;
@@ -140,6 +148,7 @@ const emit = defineEmits<{
   'update:subtasks': [value: ISubtask[]];
 }>();
 
+const { t } = useI18n<I18n, Langs>();
 const modal = ref(false);
 const selected = ref<ISubtask[]>([]);
 // eslint-disable-next-line vue/no-dupe-keys
@@ -161,13 +170,42 @@ const { request: createTaskCsv, loading: isCsvCreating, data: csvUrl } = useFetc
   type: 'blob',
 });
 const { request: deleteSubtask, loading: isDeleting } = useFetch(TaskService.deleteSubtask);
-
-const columns: QTable['columns'] = [
-  { name: 'title', label: 'Название', align: 'center', field: 'title', headerStyle: 'font-size: 1.1em;' },
-  { name: 'description', label: 'Описание', align: 'center', field: 'description', headerStyle: 'font-size: 1.1em;' },
-  { name: 'status', label: 'Статус', align: 'center', field: 'status', headerStyle: 'font-size: 1.1em;' },
-  { name: 'cause', label: 'Причина', align: 'center', field: 'cause', headerStyle: 'font-size: 1.1em;' },
-];
+const columns = computed<QTable['columns']>(() => [
+  {
+    name: 'title',
+    label: t('tasks.byId.subtasks.table.columns.title'),
+    align: 'center',
+    field: 'title',
+    headerStyle: 'font-size: 1.1em;',
+  },
+  {
+    name: 'description',
+    label: t('tasks.byId.subtasks.table.columns.description'),
+    align: 'center',
+    field: 'description',
+    headerStyle: 'font-size: 1.1em;',
+  },
+  {
+    name: 'status',
+    label: t('tasks.byId.subtasks.table.columns.status'),
+    align: 'center',
+    field: 'status',
+    headerStyle: 'font-size: 1.1em;',
+  },
+  {
+    name: 'cause',
+    label: t('tasks.byId.subtasks.table.columns.cause'),
+    align: 'center',
+    field: 'cause',
+    headerStyle: 'font-size: 1.1em;',
+  },
+]);
+const options = computed(() => [
+  { label: t('tasks.statuses.untaken'), value: 'untaken' },
+  { label: t('tasks.statuses.performed'), value: 'performed' },
+  { label: t('tasks.statuses.canceled'), value: 'canceled' },
+  { label: t('tasks.statuses.completed'), value: 'completed' },
+]);
 
 async function onDeleteSubtask() {
   const subtaskId = selected.value.at(0)?._id || '';

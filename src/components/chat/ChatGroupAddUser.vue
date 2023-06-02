@@ -1,10 +1,17 @@
 <template>
   <QCard class="add">
     <QCardSection>
-      <div class="text-h5 text-center">Добавить в группу</div>
+      <div class="text-h5 text-center">{{ t('chat.addUser.title') }}</div>
     </QCardSection>
     <QCardSection>
-      <QInput v-model="search" debounce="300" label="Имя или логин" filled clearable :loading="isUsersLoading" />
+      <QInput
+        v-model="search"
+        debounce="300"
+        :label="t('chat.addUser.playsholder')"
+        filled
+        clearable
+        :loading="isUsersLoading"
+      />
     </QCardSection>
     <QCardSection v-show="search">
       <QList>
@@ -22,7 +29,7 @@
         </QItem>
       </QList>
       <div v-if="!users?.length && search" class="text-center text-subtitle1 text-negative">
-        Не найдено ни одного человека...
+        {{ t('chat.addUser.errors.none') }}
       </div>
     </QCardSection>
     <QCardActions class="q-pb-md" align="center">
@@ -31,7 +38,7 @@
         color="primary"
         :disable="!userToAdd?._id"
         :loading="isAddUserLoading"
-        label="Добавить"
+        :label="t('chat.addUser.button')"
         @click="addUser(currentChatId!, userToAdd!._id)"
       />
     </QCardActions>
@@ -39,14 +46,16 @@
 </template>
 
 <script setup lang="ts">
-import type { IUser } from '@/types';
+import type { IUser, I18n, Langs } from '@/types';
 import UserAvatar from '~/UserAvatar.vue';
 import { ref, watch } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useStore, useChatStore } from '@/stores';
 import { useFetch } from '@/hooks';
 import { ChatService } from '@/api/services';
+import { useI18n } from 'vue-i18n';
 
+const { t } = useI18n<I18n, Langs>();
 const store = useStore();
 const { chats, currentChatId } = storeToRefs(useChatStore());
 const search = ref('');

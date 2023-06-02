@@ -1,6 +1,6 @@
 import ChatPanelLeft from './ChatPanelLeft.vue';
 import ChatListSearch from './ChatListSearch.vue';
-import ChatList from './ChatsList.vue';
+import ChatList from './ChatList.vue';
 import ChatPanelRight from './ChatPanelRight.vue';
 import ChatDialogHeader from './ChatDialogHeader.vue';
 import ChatDialogMessages from './ChatDialogMessages.vue';

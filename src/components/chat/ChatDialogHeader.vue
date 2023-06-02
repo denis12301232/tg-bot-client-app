@@ -17,7 +17,7 @@
       </QItemLabel>
       <QItemLabel caption>
         <div v-if="!Object.values(typing || {}).at(0)" class="text-cut">
-          {{ type === 'group' ? currentChat?.members_count + ' участников' : companion?.status }}
+          {{ type === 'group' ? currentChat?.members_count + ` ${t('chat.msg.people')}` : companion?.status }}
         </div>
         <div v-else class="text-cut">
           <QSpinnerDots size="1rem" />
@@ -34,7 +34,7 @@
         icon="eva-person-add-outline"
         @click="emit('open-modal', 'modal:group-add-user')"
       >
-        <QTooltip class="bg-indigo" :offset="[10, 10]" :delay="1000">Добавить в группу</QTooltip>
+        <QTooltip class="bg-indigo" :offset="[10, 10]" :delay="1000">{{ t('chat.hints.add') }}</QTooltip>
       </QBtn>
       <QBtnDropdown dropdown-icon="eva-more-vertical-outline" rounded dense flat>
         <QList separator>
@@ -42,7 +42,7 @@
             <QItemSection avatar class="q-pr-sm" style="min-width: 0">
               <QIcon name="eva-trash" color="red" />
             </QItemSection>
-            <QItemSection>Удалить чат</QItemSection>
+            <QItemSection>{{ t('chat.menu.leaveChat') }}</QItemSection>
           </QItem>
           <QItem
             v-if="type === 'group'"
@@ -54,7 +54,7 @@
             <QItemSection avatar class="q-pr-sm" style="min-width: 0">
               <QIcon color="red-10" name="eva-info-outline" />
             </QItemSection>
-            <QItemSection>Информация о группе</QItemSection>
+            <QItemSection>{{ t('chat.menu.info') }}</QItemSection>
           </QItem>
           <QItem
             v-if="type === 'group' && isGroupAdmin"
@@ -66,13 +66,13 @@
             <QItemSection avatar class="q-pr-sm" style="min-width: 0">
               <QIcon color="red-10" name="eva-settings-outline" />
             </QItemSection>
-            <QItemSection>Настройки</QItemSection>
+            <QItemSection>{{ t('chat.menu.settings') }}</QItemSection>
           </QItem>
           <QItem v-if="type === 'group'" v-ripple v-close-popup clickable @click="leaveGroup">
             <QItemSection avatar class="q-pr-sm" style="min-width: 0">
               <QIcon name="eva-log-out-outline" color="red-10" />
             </QItemSection>
-            <QItemSection>Покинуть группу</QItemSection>
+            <QItemSection>{{ t('chat.menu.leave') }}</QItemSection>
           </QItem>
         </QList>
       </QBtnDropdown>
@@ -81,12 +81,13 @@
 </template>
 
 <script setup lang="ts">
-import type { ChatModal } from '@/types';
+import type { ChatModal, I18n, Langs } from '@/types';
 import UserAvatar from '~/UserAvatar.vue';
 import { computed } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useStore, useChatStore } from '@/stores';
 import { ChatService } from '@/api/services';
+import { useI18n } from 'vue-i18n';
 
 defineProps<{
   type: 'dialog' | 'group';
@@ -95,6 +96,7 @@ const emit = defineEmits<{
   'open-modal': [name: ChatModal];
 }>();
 
+const { t } = useI18n<I18n, Langs>();
 const { user } = storeToRefs(useStore());
 const { chats, currentChatId, currentChat } = storeToRefs(useChatStore());
 const companion = computed(() => currentChat.value?.companion);

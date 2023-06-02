@@ -10,9 +10,9 @@
     @keyup.enter="saveMessage()"
   >
     <template #label>
-      <div v-if="voiceMessage">Записано голосовое сообщение</div>
-      <div v-else-if="!isRecording">Написать сообщение</div>
-      <div class="recording" v-else>Идет запись...</div>
+      <div v-if="voiceMessage">{{ t('chat.playsholders.voice') }}</div>
+      <div v-else-if="!isRecording">{{ t('chat.playsholders.send') }}</div>
+      <div class="recording" v-else>{{ t('chat.playsholders.recording') }}</div>
     </template>
     <template #prepend>
       <EmojiPicker @pick="onPickEmoji" @hide="inputRef?.$el.focus()" />
@@ -52,13 +52,16 @@
 
 <script setup lang="ts">
 import type { QInput } from 'quasar';
+import type { I18n, Langs } from '@/types';
 import EmojiPicker from '~/EmojiPicker.vue';
 import { ref, watch } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useStore, useChatStore } from '@/stores';
 import { useVoice } from '@/hooks';
 import { Util } from '@/util';
+import { useI18n } from 'vue-i18n';
 
+const { t } = useI18n<I18n, Langs>();
 const store = useStore();
 const { user } = storeToRefs(store);
 const chatStore = useChatStore();

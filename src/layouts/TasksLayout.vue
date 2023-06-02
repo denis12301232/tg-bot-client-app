@@ -3,11 +3,11 @@
     <QHeader class="header" reveal elevated height-hint="98">
       <QToolbar>
         <QBtn dense flat round icon="eva-arrow-back" color="red-10" @click="$router.push('/')" />
-        <QToolbarTitle>Задачи</QToolbarTitle>
+        <QToolbarTitle>{{ t('tasks.layout.title') }}</QToolbarTitle>
       </QToolbar>
       <QTabs align="left" active-color="red-10">
-        <QRouteTab to="/tasks/list" label="Список задач" />
-        <QRouteTab v-if="store.isAdmin" to="/tasks/create" label="Создать задачу" />
+        <QRouteTab to="/tasks/list" :label="t('tasks.layout.tabs.list')" />
+        <QRouteTab v-if="store.isAdmin" to="/tasks/create" :label="t('tasks.layout.tabs.create')" />
       </QTabs>
     </QHeader>
     <QPageContainer class="window-height">
@@ -17,9 +17,12 @@
 </template>
 
 <script setup lang="ts">
+import type { I18n, Langs } from '@/types';
 import { useStore } from '@/stores';
+import { useI18n } from 'vue-i18n';
 
 const store = useStore();
+const { t } = useI18n<I18n, Langs>({ useScope: 'global' });
 </script>
 
 <style lang="scss" scoped></style>

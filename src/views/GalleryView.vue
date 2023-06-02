@@ -17,7 +17,7 @@
         </div>
       </QCard>
     </QDialog>
-    <h3 class="text-center q-pa-lg q-my-sm">Галерея</h3>
+    <h3 class="text-center q-pa-lg q-my-sm">{{ t('gallery.title') }}</h3>
     <h5 v-if="!images.length && !loading" class="text-center text-negative">{{ error || 'Нет изображений' }}</h5>
     <QInfiniteScroll @load="onFetchImages">
       <div class="images">
@@ -46,16 +46,18 @@
 </template>
 
 <script setup lang="ts">
-import type { ImagesResponse } from '@/types';
+import type { ImagesResponse, I18n, Langs } from '@/types';
 import { type Ref, ref, computed, inject } from 'vue';
 import { useStore } from '@/stores';
 import { ImageService } from '@/api/services';
+import { useI18n } from 'vue-i18n';
 
 interface Injected {
   images: Ref<{ link: string, fileId: string }[]>;
   selection: Ref<string[]>;
 }
 
+const { t } = useI18n<I18n, Langs>();
 const store = useStore();
 const { images, selection } = inject<Injected>('images')!;
 const pageToken = ref<string>();

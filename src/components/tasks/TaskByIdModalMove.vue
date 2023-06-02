@@ -7,6 +7,12 @@
       :loading="loading || isMoving"
       :columns="columns"
       :rows="tasks"
+      :pagination-label="(f, l, a) => `${f}-${l} ${t('table.of')} ${a}`"
+      :loading-label="t('table.loading')"
+      :no-data-label="t('table.noData')"
+      :rows-per-page-label="t('table.show')"
+      :no-results-label="t('table.notFound')"
+      :selected-rows-label="(n) => `${t('table.selected')} ${n}`"
       selection="single"
       row-key="_id"
       title="Задачи"
@@ -76,11 +82,12 @@
 
 <script setup lang="ts">
 import type { QTable } from 'quasar';
-import type { ITask } from '@/types';
+import type { ITask, I18n, Langs } from '@/types';
 import { ref, onMounted } from 'vue';
 import { useRequest, useFetch } from '@/hooks';
 import { TaskService } from '@/api/services';
 import { Util } from '@/util';
+import { useI18n } from 'vue-i18n';
 
 const props = defineProps<{
   taskId: string;
@@ -90,6 +97,7 @@ const emit = defineEmits<{
   move: [id: string];
 }>();
 
+const { t } = useI18n<I18n, Langs>({ useScope: 'global' });
 const selected = ref<ITask[]>([]);
 const { request, pagination, loading, data: tasks } = useRequest<ITask>(TaskService.getTasks, {
   limit: 5,

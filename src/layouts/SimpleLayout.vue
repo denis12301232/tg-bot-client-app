@@ -3,7 +3,7 @@
     <QHeader class="header" reveal elevated height-hint="98">
       <QToolbar>
         <QBtn dense flat round icon="eva-arrow-back" color="red-10" @click="$router.push('/')"></QBtn>
-        <QToolbarTitle>{{ title }}</QToolbarTitle>
+        <QToolbarTitle>{{ t(title) }}</QToolbarTitle>
       </QToolbar>
     </QHeader>
     <QPageContainer class="window-height">
@@ -13,9 +13,13 @@
 </template>
 
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n';
+
 defineProps<{
   title: string;
 }>();
+
+const { t } = useI18n();
 </script>
 
 <style lang="scss" scoped></style>

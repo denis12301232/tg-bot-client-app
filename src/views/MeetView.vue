@@ -1,23 +1,30 @@
 <template>
   <div class="column items-center q-pa-sm">
     <form class="meet q-mt-lg column items-center" @submit.prevent="createNewMeet">
-      <h5 class="text-center">Создать встречу</h5>
-      <QInput v-model="meetTitle" class="q-my-md full-width" label="Название" standout />
-      <QBtn :disable="!meetTitle" color="red-10" label="Создать" type="submit" />
+      <h5 class="text-center">{{ t('meets.subtitles.create') }}</h5>
+      <QInput v-model="meetTitle" class="q-my-md full-width" :label="t('meets.playsholders.create')" standout />
+      <QBtn :disable="!meetTitle" color="red-10" type="submit">
+        {{ t('meets.buttons.create') }}
+      </QBtn>
     </form>
     <form class="meet q-mt-lg column items-center" @submit.prevent="joinMeet">
-      <h5 class="text-center">Присоедениться</h5>
-      <QInput v-model="meetId" class="q-my-md full-width" label="ID встречи" standout />
-      <QBtn :disable="!meetId" color="red-10" label="Присоедениться" type="submit" />
+      <h5 class="text-center">{{ t('meets.subtitles.join') }}</h5>
+      <QInput v-model="meetId" class="q-my-md full-width" :label="t('meets.playsholders.join')" standout />
+      <QBtn :disable="!meetId" color="red-10" type="submit">
+        {{ t('meets.buttons.join') }}
+      </QBtn>
     </form>
   </div>
 </template>
 
 <script setup lang="ts">
+import type { I18n, Langs } from '@/types';
 import { ref, onMounted, onUnmounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { useChatStore } from '@/stores';
+import { useI18n } from 'vue-i18n';
 
+const { t } = useI18n<I18n, Langs>();
 const router = useRouter();
 const { socket } = useChatStore();
 const meetTitle = ref('');

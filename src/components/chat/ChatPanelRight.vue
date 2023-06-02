@@ -1,6 +1,6 @@
 <template>
   <div v-if="!currentChatId" class="full-height row justify-center items-center text-indigo text-bold text-h6">
-    Выберите, кому вы бы хотели написать
+    {{ t('chat.write.select') }}
   </div>
   <div v-else :class="[$style.container]">
     <Chat.DialogHeader :type="type" @open-modal="onOpenModal" />
@@ -10,15 +10,18 @@
 </template>
 
 <script setup lang="ts">
-import type { ChatModal } from '@/types';
+import type { ChatModal, I18n, Langs } from '@/types';
 import Chat from '~/chat';
 import { computed } from 'vue';
 import { useChatStore } from '@/stores';
 import { storeToRefs } from 'pinia';
+import { useI18n } from 'vue-i18n';
 
 const emit = defineEmits<{
   (event: 'open-modal', component: ChatModal): void;
 }>();
+
+const { t } = useI18n<I18n, Langs>();
 const { currentChat, currentChatId } = storeToRefs(useChatStore());
 const type = computed(() => currentChat.value?.type || 'dialog');
 

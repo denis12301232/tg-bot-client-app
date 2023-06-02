@@ -1,6 +1,6 @@
 <template>
   <div class="column items-center q-pa-sm">
-    <h5 class="q-pa-lg text-center">Настроить роли пользователей</h5>
+    <h5 class="q-pa-lg text-center">{{ t('tools.roles.title') }}</h5>
     <QTable
       v-model:pagination="pagination"
       :class="$style.table"
@@ -9,13 +9,27 @@
       :rows-per-page-options="[5, 10]"
       :filter="filter"
       :loading="isUsersLoading || loading"
+      :pagination-label="(f, l, a) => `${f}-${l} ${t('table.of')} ${a}`"
+      :loading-label="t('table.loading')"
+      :no-data-label="t('table.noData')"
+      :rows-per-page-label="t('table.show')"
+      :no-results-label="t('table.notFound')"
+      :selected-rows-label="(n) => `${t('table.selected')} ${n}`"
       binary-state-sort
       separator="cell"
       row-key="_id"
       @request="getUsers"
     >
       <template #top>
-        <QInput v-model="filter" class="full-width" debounce="300" borderless dense clearable label="Поиск">
+        <QInput
+          v-model="filter"
+          class="full-width"
+          debounce="300"
+          borderless
+          dense
+          clearable
+          :label="t('tools.roles.table.search')"
+        >
           <template #append>
             <QIcon name="eva-search" />
           </template>
@@ -45,26 +59,27 @@
 
 <script setup lang="ts">
 import type { QTable } from 'quasar';
-import type { IUser } from '@/types';
-import { onMounted } from 'vue';
+import type { IUser, I18n, Langs } from '@/types';
+import { onMounted, computed } from 'vue';
 import { useRequest, useFetch } from '@/hooks';
 import { ToolsService } from '@/api/services';
+import { useI18n } from 'vue-i18n';
 
+const { t } = useI18n<I18n, Langs>({ useScope: 'global' });
 const { request, loading } = useFetch(ToolsService.updateRoles);
 const { request: getUsers, pagination, filter, loading: isUsersLoading, data: users } = useRequest<IUser>(
   ToolsService.getUsers,
   { limit: 3 }
 );
-
-const columns: QTable['columns'] = [
-  { name: 'name', label: 'Имя', align: 'left', field: 'name' },
-  { name: 'login', label: 'Логин', align: 'left', field: 'login' },
-  { name: 'roles', label: 'Роль', align: 'center', field: 'roles' },
-];
-const options = [
-  { label: 'Пользователь', value: 'user', disable: true },
-  { label: 'Админ', value: 'admin' },
-];
+const columns = computed<QTable['columns']>(() => [
+  { name: 'name', label: t('tools.roles.table.columns.name'), align: 'left', field: 'name' },
+  { name: 'login', label: t('tools.roles.table.columns.login'), align: 'left', field: 'login' },
+  { name: 'roles', label: t('tools.roles.table.columns.role'), align: 'center', field: 'roles' },
+]);
+const options = computed(() => [
+  { label: t('tools.roles.table.columns.checkbox.user'), value: 'user', disable: true },
+  { label: t('tools.roles.table.columns.checkbox.admin'), value: 'admin' },
+]);
 
 onMounted(() => getUsers({ pagination: pagination.value }));
 </script>

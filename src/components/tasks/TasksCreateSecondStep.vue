@@ -2,40 +2,56 @@
   <div>
     <slot name="subtasks" />
     <QForm ref="formRef" no-error-focus>
-      <QInput class="q-mt-sm" v-model="title" standout label="Название" counter maxlength="30" :rules="rules.title" />
+      <QInput
+        class="q-mt-sm"
+        v-model="title"
+        standout
+        :label="t('tasks.create.second.placeholders.title')"
+        counter
+        maxlength="30"
+        :rules="rules.title"
+      />
       <QInput
         class="q-mt-sm"
         v-model="description"
         standout=""
-        label="Описание"
+        :label="t('tasks.create.second.placeholders.description')"
         type="textarea"
         autogrow
         counter
         maxlength="2048"
         :rules="rules.description"
       />
-      <QBtn class="q-mt-sm" color="primary" :disable="!valid" label="Добавить" @click="addSubtask" />
+      <QBtn
+        class="q-mt-sm"
+        color="primary"
+        :disable="!valid"
+        :label="t('tasks.create.second.buttons.add')"
+        @click="addSubtask"
+      />
     </QForm>
   </div>
 </template>
 
 <script setup lang="ts">
+import type { I18n, Langs } from '@/types';
 import type { QForm } from 'quasar';
 import { ref, watch, computed } from 'vue';
 import { Validate } from '@/util';
+import { useI18n } from 'vue-i18n';
 
 const props = defineProps<{
   title: string;
   description: string;
   subtasks: { title: string; description: string }[];
 }>();
-
 const emit = defineEmits<{
   'update:title': [value: string];
   'update:description': [value: string];
   'update:subtasks': [value: { title: string; description: string }[]];
 }>();
 
+const { t } = useI18n<I18n, Langs>({ useScope: 'global' });
 const formRef = ref<QForm | null>(null);
 const valid = ref(false);
 // eslint-disable-next-line vue/no-dupe-keys

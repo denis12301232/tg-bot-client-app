@@ -3,7 +3,7 @@
     <QHeader class="header" reveal elevated height-hint="98">
       <QToolbar>
         <QBtn dense flat round icon="eva-arrow-back" color="red-10" @click="$router.push('/')" />
-        <QToolbarTitle>{{ title }}</QToolbarTitle>
+        <QToolbarTitle>{{ t('gallery.layout.title') }}</QToolbarTitle>
         <QBtnGroup v-if="store.isAdmin" flat>
           <QBtn
             v-if="selection.length"
@@ -16,7 +16,7 @@
             :disable="isDeleteLoading"
             @click="deleteImages(selection)"
           >
-            <QTooltip class="bg-indigo" :offset="[10, 10]" :delay="1000">Удалить выбранные</QTooltip>
+            <QTooltip class="bg-indigo" :offset="[10, 10]" :delay="1000">{{ t('gallery.hints.delete') }}</QTooltip>
           </QBtn>
           <QBtn
             icon="eva-upload-outline"
@@ -28,7 +28,7 @@
             :loading="loading"
             @click="imagesRef?.click()"
           >
-            <QTooltip class="bg-indigo" :offset="[10, 10]" :delay="1000">Загрузить фото</QTooltip>
+            <QTooltip class="bg-indigo" :offset="[10, 10]" :delay="1000">{{ t('gallery.hints.upload') }}</QTooltip>
           </QBtn>
         </QBtnGroup>
       </QToolbar>
@@ -41,19 +41,17 @@
 </template>
 
 <script setup lang="ts">
-import type { UploadImagesResponse } from '@/types';
+import type { UploadImagesResponse, I18n, Langs } from '@/types';
 import { ref, provide, watch } from 'vue';
 import { useStore } from '@/stores';
 import { useFetch } from '@/hooks';
 import { ImageService } from '@/api/services';
+import { useI18n } from 'vue-i18n';
 
 type T = UploadImagesResponse;
 type S = typeof ImageService.uploadImages;
 
-defineProps<{
-  title: string;
-}>();
-
+const { t } = useI18n<I18n, Langs>();
 const store = useStore();
 const images = ref<{ link: string; fileId: string }[]>([]);
 const selection = ref<string[]>([]);
@@ -73,6 +71,7 @@ watch([uploadResult, deleteResult], ([newUpload, newDelete], [oldUpload, oldDele
     selection.value = [];
   }
 });
+
 async function onMedia(event: Event) {
   const target = event.target as HTMLInputElement;
   const files = target.files;

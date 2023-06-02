@@ -5,15 +5,20 @@
       :rows="currentChat?.users"
       :loading="loading"
       :rows-per-page-options="[5, 10]"
+      :pagination-label="(f, l, a) => `${f}-${l} ${t('table.of')} ${a}`"
+      :loading-label="t('table.loading')"
+      :no-data-label="t('table.noData')"
+      :rows-per-page-label="t('table.show')"
+      :no-results-label="t('table.notFound')"
+      :selected-rows-label="(n) => `${t('table.selected')} ${n}`"
       binary-state-sort
       separator="cell"
-      no-data-label="Ничего не найдено"
       bordered
     >
       <template #header>
         <QTr>
           <QTh colspan="3">
-            <h6 class="q-py-sm">Настроить роли</h6>
+            <h6 class="q-py-sm">{{ t('chat.groupSettings.roles.table.title') }}</h6>
           </QTh>
         </QTr>
       </template>
@@ -27,7 +32,7 @@
                 v-model="hasAdminRights"
                 class="q-pr-sm"
                 :val="row._id"
-                label="Админ"
+                :label="t('chat.groupSettings.roles.table.checkboxes.admin')"
                 @update:model-value="request(currentChat!.group._id, 'admin', hasAdminRights)"
               />
             </div>
@@ -40,13 +45,15 @@
 
 <script setup lang="ts">
 import type { QTable } from 'quasar';
-import type { IUser } from '@/types';
+import type { IUser, I18n, Langs } from '@/types';
 import { ref } from 'vue';
 import { useFetch } from '@/hooks';
 import { ChatService } from '@/api/services';
 import { storeToRefs } from 'pinia';
 import { useChatStore, useStore } from '@/stores';
+import { useI18n } from 'vue-i18n';
 
+const { t } = useI18n<I18n, Langs>();
 const store = useStore();
 const { currentChat } = storeToRefs(useChatStore());
 const hasAdminRights = ref(currentChat.value?.group.roles.admin || []);

@@ -1,11 +1,11 @@
 <template>
   <QCard :class="[$style.card, 'q-py-md', 'q-px-lg', 'text-center']">
     <QForm ref="formRef" class="q-pb-md" no-error-focus @submit.prevent="request(form.loginOrEmail, form.password)">
-      <h4 class="q-py-lg q-mb-sm">Вход</h4>
+      <h4 class="q-py-lg q-mb-sm">{{ t('login.title') }}</h4>
       <QInput
         v-model.trim="form.loginOrEmail"
         class="q-mb-md"
-        label="Логин или е-мэйл"
+        :label="t('login.placeholders.loginOrEmail')"
         standout
         counter
         maxlength="30"
@@ -16,7 +16,7 @@
       <QInput
         v-model.trim="form.password"
         class="q-mb-md"
-        label="Пароль"
+        :label="t('login.placeholders.password')"
         :type="isPasswordVisible ? 'text' : 'password'"
         standout
         counter
@@ -31,28 +31,29 @@
         </template>
       </QInput>
       <div class="row justify-center q-my-md">
-        <QBtn type="submit" :loading="loading" :disable="!valid" color="red-10">Войти</QBtn>
+        <QBtn type="submit" :loading="loading" :disable="!valid" color="red-10">{{ t('login.buttons.login') }}</QBtn>
       </div>
       <div :class="$style.swap">
-        Еще не зарегестрировны?
-        <span @click="$router.push('/registration')">Регистрация</span>
+        {{ t('login.notRegister') }}
+        <span @click="$router.push('/registration')">{{ t('login.buttons.notRegister') }}</span>
       </div>
       <div :class="$style.swap">
-        Забыли пароль?
-        <span @click="$router.push('/restore')">Восстановить</span>
+        {{ t('login.restore') }}
+        <span @click="$router.push('/restore')">{{ t('login.buttons.restore') }}</span>
       </div>
     </QForm>
   </QCard>
 </template>
 
 <script setup lang="ts">
+import type { I18n, Langs, LoginResponse } from '@/types';
 import type { QForm } from 'quasar';
 import { ref, reactive, watch } from 'vue';
 import { useStore } from '@/stores';
 import { Validate } from '@/util';
 import { AuthService } from '@/api/services';
 import { useFetch } from '@/hooks';
-import { LoginResponse } from '@/types';
+import { useI18n } from 'vue-i18n';
 
 type T = LoginResponse;
 type S = typeof AuthService['login'];
@@ -61,6 +62,7 @@ const emit = defineEmits<{
   close: [];
 }>();
 
+const { t } = useI18n<I18n, Langs>({ useScope: 'global' });
 const store = useStore();
 const valid = ref(false);
 const isPasswordVisible = ref(false);
@@ -68,8 +70,8 @@ const formRef = ref<QForm>();
 const form = reactive({ loginOrEmail: '', password: '' });
 const errors = reactive({ loginOrEmail: '', password: '' });
 const rules = {
-  loginOrEmail: [(v: string) => Validate.required(v) || 'Заполните поле'],
-  password: [(v: string) => Validate.required(v) || 'Заполните поле'],
+  loginOrEmail: [(v: string) => Validate.required(v) || t('login.errors.loginOrEmail.required')],
+  password: [(v: string) => Validate.required(v) || t('login.errors.password.required')],
 };
 const { request, loading, error } = useFetch<T, S>(AuthService.login, {
   afterResponse: ({ data }) => {
@@ -87,8 +89,8 @@ watch(form, () => {
 watch(error, () => {
   if (typeof error.value === 'object') {
     error.value.errors.includes('login')
-      ? (errors.loginOrEmail = 'Неверный логин или адрес электронной почты')
-      : (errors.password = 'Неверный пароль');
+      ? (errors.loginOrEmail = t('login.errors.loginOrEmail.incorrect'))
+      : (errors.password = t('login.errors.password.incorrect'));
   }
 });
 

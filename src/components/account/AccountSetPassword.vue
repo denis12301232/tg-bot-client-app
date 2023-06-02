@@ -3,7 +3,7 @@
     <QInput
       v-model="password.old.value"
       class="q-mt-sm"
-      label="Старый пароль"
+      :label="label.old"
       standout
       :type="password.old.visible ? 'text' : 'password'"
       lazy-rules
@@ -20,7 +20,7 @@
     </QInput>
     <QInput
       v-model="password.new.value"
-      label="Новый пароль"
+      :label="label.new"
       standout
       :type="password.new.visible ? 'text' : 'password'"
       :rules="rules"
@@ -43,7 +43,7 @@
       color="primary"
       :loading="loading"
       :disable="!valid"
-      label="Изменить"
+      :label="label.button"
     />
   </QForm>
 </template>
@@ -54,6 +54,10 @@ import { ref, reactive, watch } from 'vue';
 import { useFetch } from '@/hooks';
 import { ToolsService } from '@/api/services';
 import { Validate } from '@/util';
+
+defineProps<{
+  label: { old: string; new: string, button: string };
+}>();
 
 const formRef = ref<QForm | null>(null);
 const valid = ref(false);

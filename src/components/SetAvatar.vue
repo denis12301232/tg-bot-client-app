@@ -12,9 +12,10 @@
     <QBtn
       :class="['q-mt-sm', avatarTempUrl ? '' : 'invisible']"
       color="negative"
-      label="Убрать"
+      icon="eva-close"
       flat
       dense
+      round
       @click="resetAvatar"
     />
     <input class="hidden" ref="fileRef" type="file" :accept="accept" @change="onChange" />

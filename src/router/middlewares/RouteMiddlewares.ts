@@ -41,4 +41,5 @@ export default class RouteMiddlewares {
     const store = useStore();
     store.isAuth ? next({ path: '/' }) : next();
   }
+
 }

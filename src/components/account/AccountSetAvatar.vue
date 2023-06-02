@@ -5,7 +5,7 @@
       size="200px"
       :src="store.user?.avatar && `${ENV.SERVER_URL}/avatars/${store.user.avatar}`"
     />
-    <QBtn class="q-mt-sm" :disable="!avatar || loading" type="submit" :loading="loading">Изменить</QBtn>
+    <QBtn class="q-mt-sm" :disable="!avatar || loading" type="submit" :loading="loading">{{ label }}</QBtn>
     <div class="row justify-center text-negative text-bold caption">
       {{ typeof error === 'object' ? error.message : error }}
     </div>
@@ -19,6 +19,10 @@ import { useStore } from '@/stores';
 import { useFetch } from '@/hooks';
 import { ToolsService } from '@/api/services';
 import { ENV } from '@/util';
+
+defineProps<{
+  label: string;
+}>();
 
 type T = { avatar: string };
 type S = typeof ToolsService.setAvatar;

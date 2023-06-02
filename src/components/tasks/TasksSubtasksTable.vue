@@ -5,18 +5,26 @@
     style="max-height: 250px"
     flat
     bordered
-    title="Подзадачи"
+    :title="t('tasks.create.second.table.title')"
     :rows="subtasksWithId"
     :columns="columns"
     row-key="id"
     virtual-scroll
     :rows-per-page-options="[0]"
+    :pagination-label="(f, l, a) => `${f}-${l} ${t('table.of')} ${a}`"
+    :loading-label="t('table.loading')"
+    :no-data-label="t('table.noData')"
+    :rows-per-page-label="t('table.show')"
+    :no-results-label="t('table.notFound')"
+    :selected-rows-label="(n) => `${t('table.selected')} ${n}`"
     selection="multiple"
     separator="cell"
   >
     <template #header-selection>
       <QBtn dense round flat icon="eva-trash" color="negative" @click="removeSubtask">
-        <QTooltip class="bg-indigo" :offset="[10, 10]" :delay="1000">Удалить</QTooltip>
+        <QTooltip class="bg-indigo" :offset="[10, 10]" :delay="1000">
+          {{ t('tasks.byId.subtasks.hints.delete') }}
+        </QTooltip>
       </QBtn>
     </template>
     <template #body="scope: { row: Subtask, rowIndex: number, selected: boolean }">
@@ -32,8 +40,10 @@
 </template>
 
 <script setup lang="ts">
+import type { I18n, Langs } from '@/types';
 import type { QTable } from 'quasar';
 import { ref, computed } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 type Subtask = { title: string; description: string };
 
@@ -44,6 +54,7 @@ const emit = defineEmits<{
   'update:subtasks': [value: Subtask[]];
 }>();
 
+const { t } = useI18n<I18n, Langs>({ useScope: 'global' });
 const select = ref<(Subtask & { id: number })[]>([]);
 const pagination = ref({ rowsPerPage: 0 });
 // eslint-disable-next-line vue/no-dupe-keys
@@ -55,12 +66,24 @@ const subtasks = computed({
     emit('update:subtasks', value);
   },
 });
-const subtasksWithId = computed(() => props.subtasks.map((item, index) => Object.assign({ id: index }, item)));
 
-const columns: QTable['columns'] = [
-  { name: 'title', label: 'Название', align: 'center', field: 'title', headerStyle: 'font-size: 1.1em;' },
-  { name: 'description', label: 'Описание', align: 'center', field: 'description', headerStyle: 'font-size: 1.1em;' },
-];
+const subtasksWithId = computed(() => props.subtasks.map((item, index) => Object.assign({ id: index }, item)));
+const columns = computed<QTable['columns']>(() => [
+  {
+    name: 'title',
+    label: t('tasks.create.second.table.columns.title'),
+    align: 'center',
+    field: 'title',
+    headerStyle: 'font-size: 1.1em;',
+  },
+  {
+    name: 'description',
+    label: t('tasks.create.second.table.columns.description'),
+    align: 'center',
+    field: 'description',
+    headerStyle: 'font-size: 1.1em;',
+  },
+]);
 
 function removeSubtask() {
   subtasks.value = subtasksWithId.value.filter((item) => {

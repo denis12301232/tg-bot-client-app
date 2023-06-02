@@ -5,11 +5,11 @@
     </QCard>
     <QCard v-else :class="[$style.card, 'q-mt-lg']">
       <QCardSection class="q-pb-none">
-        <h6 class="text-center text-subtitle">Название</h6>
+        <h6 class="text-center text-subtitle">{{ t('tasks.byId.task.title') }}</h6>
         <div class="text-center q-my-sm text-bold text-indigo">{{ task.title }}</div>
       </QCardSection>
       <QCardSection class="q-pa-none">
-        <h6 class="text-center text-subtitle">Теги</h6>
+        <h6 class="text-center text-subtitle">{{ t('tasks.byId.task.tags') }}</h6>
         <div class="row justify-center q-my-sm">
           <QChip
             v-for="(tag, index) in task.tags"
@@ -25,17 +25,17 @@
         </div>
       </QCardSection>
       <QCardSection class="q-pa-none">
-        <h6 class="text-center text-subtitle">Статус</h6>
+        <h6 class="text-center text-subtitle">{{ t('tasks.byId.task.status') }}</h6>
         <div class="row justify-center q-my-sm">
           <QBadge :label="task.status" :color="Util.setStatusColor(task.status)" />
         </div>
       </QCardSection>
       <QCardSection class="q-pa-none">
-        <h6 class="text-center text-subtitle">Дата создания</h6>
+        <h6 class="text-center text-subtitle">{{ t('tasks.byId.task.date') }}</h6>
         <div class="text-center q-my-sm">{{ new Date(task.createdAt || '').toLocaleDateString() }}</div>
       </QCardSection>
       <QCardSection class="q-pt-none">
-        <h6 class="text-center text-subtitle">Взял задачу</h6>
+        <h6 class="text-center text-subtitle">{{ t('tasks.byId.task.take') }}</h6>
         <div class="text-center q-my-sm text-bold text-positive">
           {{ task?.user && task.user.name }}
           <span v-if="!task.user" class="text-negative text-bold">Не взята</span>
@@ -46,12 +46,15 @@
 </template>
 
 <script setup lang="ts">
-import type { ITask } from '@/types';
+import type { ITask, I18n, Langs } from '@/types';
 import { Util } from '@/util';
+import { useI18n } from 'vue-i18n';
 
 defineProps<{
   task?: ITask;
 }>();
+
+const { t } = useI18n<I18n, Langs>({ useScope: 'global' });
 </script>
 
 <style lang="scss" module>

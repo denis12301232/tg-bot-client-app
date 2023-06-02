@@ -9,11 +9,13 @@ export interface IUser {
   status: 'online' | 'offline';
 }
 
+type TaskStatus = 'untaken' | 'performed' | 'canceled' | 'completed';
+
 export interface ITask {
   _id: string;
   title: string;
   tags: string[];
-  status: 'Не выбрана' | 'В работе' | 'Отменена' | 'Выполнена';
+  status: TaskStatus;
   subtasks: ISubtask[];
   user: IUser;
   createdAt: string;
@@ -23,7 +25,7 @@ export interface ISubtask {
   _id: string;
   title: string;
   description: string;
-  status: 'Не выбрана' | 'В работе' | 'Отменена' | 'Выполнена';
+  status: TaskStatus;
   cause: string;
 }
 

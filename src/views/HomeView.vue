@@ -4,21 +4,22 @@
       <component :is="modalComponent" @close="onClose" />
     </QDialog>
     <FormAssistance
-      title="Заявка на получение гуманитарной помощи"
+      :class="$style.form"
+      :title="t('home.form.title')"
       :form="form"
       :loading="loading"
       reset
       @submit="request"
     >
       <template #submit="{ type, valid }">
-        <QBtn :type="type" :loading="loading" :disable="!valid" color="red-10" label="Отправить" />
+        <QBtn :type="type" :loading="loading" :disable="!valid" color="red-10" :label="t('home.form.buttons.submit')" />
       </template>
     </FormAssistance>
   </div>
 </template>
 
 <script setup lang="ts">
-import type { AssistanceResponse } from '@/types';
+import type { AssistanceResponse, I18n, Langs } from '@/types';
 import FormAssistance from '~/FormAssistance.vue';
 import FormReg from '~/FormReg.vue';
 import FormLog from '~/FormLog.vue';
@@ -27,10 +28,12 @@ import { useRoute, useRouter } from 'vue-router';
 import { useFetch } from '@/hooks';
 import { AssistanceService } from '@/api/services';
 import { useStore } from '@/stores';
+import { useI18n } from 'vue-i18n';
 
 type T = AssistanceResponse;
 type S = typeof AssistanceService['saveForm'];
 
+const { t } = useI18n<I18n, Langs>({ useScope: 'global' });
 const store = useStore();
 const router = useRouter();
 const route = useRoute();
@@ -87,3 +90,10 @@ function onClose() {
   router.push('/');
 }
 </script>
+
+<style lang="scss" module>
+.form {
+  max-width: 750px;
+  width: 100%;
+}
+</style>

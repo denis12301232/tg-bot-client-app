@@ -1,13 +1,26 @@
 <template>
   <div class="column items-center q-mt-md">
     <QStepper v-model="step" vertical flat color="primary" animated :class="$style.stepper">
-      <QStep :name="1" title="Создать задачу" icon="task_alt" :done="step > 1">
+      <QStep :name="1" :title="t('tasks.create.first.title')" icon="task_alt" :done="step > 1">
         <Tasks.CreateFirstStep v-model:title="task.title" v-model:tags="task.tags" @valid="setFirstStepValid" />
         <QStepperNavigation>
-          <QBtn flat color="primary" label="Далее" :loading="loading" :disable="!valid.first" @click="step++" />
+          <QBtn
+            flat
+            color="primary"
+            :label="t('tasks.create.first.buttons.next')"
+            :loading="loading"
+            :disable="!valid.first"
+            @click="step++"
+          />
         </QStepperNavigation>
       </QStep>
-      <QStep :name="2" title="Добавить подзадачи" caption="Как минимум одна" icon="eva-list" :done="step > 2">
+      <QStep
+        :name="2"
+        :title="t('tasks.create.second.title')"
+        :caption="t('tasks.create.second.subtitle')"
+        icon="eva-list"
+        :done="step > 2"
+      >
         <Tasks.CreateSecondStep
           v-model:title="subtask.title"
           v-model:description="subtask.description"
@@ -18,8 +31,14 @@
           </template>
         </Tasks.CreateSecondStep>
         <QStepperNavigation>
-          <QBtn flat color="primary" label="Создать" :disable="!task.subtasks.length" @click="request(task)" />
-          <QBtn class="q-ml-sm" flat color="primary" label="Назад" @click="step--" />
+          <QBtn
+            flat
+            color="primary"
+            :label="t('tasks.create.second.buttons.create')"
+            :disable="!task.subtasks.length"
+            @click="request(task)"
+          />
+          <QBtn class="q-ml-sm" flat color="primary" :label="t('tasks.create.second.buttons.back')" @click="step--" />
         </QStepperNavigation>
       </QStep>
     </QStepper>
@@ -27,12 +46,15 @@
 </template>
 
 <script setup lang="ts">
+import type { I18n, Langs } from '@/types';
 import Tasks from '~/tasks';
 import { ref, reactive } from 'vue';
 import { useFetch } from '@/hooks';
 import { TaskService } from '@/api/services';
 import { useRouter } from 'vue-router';
+import { useI18n } from 'vue-i18n';
 
+const { t } = useI18n<I18n, Langs>({ useScope: 'global' });
 const router = useRouter();
 const step = ref(1);
 const valid = reactive({ first: false, second: false });

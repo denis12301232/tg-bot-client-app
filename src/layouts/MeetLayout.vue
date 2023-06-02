@@ -12,7 +12,7 @@
     <QHeader class="footer" reveal elevated height-hint="98">
       <QToolbar>
         <QBtn dense flat round icon="eva-arrow-back" color="red-10" @click="goBack" />
-        <QToolbarTitle>Встреча</QToolbarTitle>
+        <QToolbarTitle>{{ t('meetId.layout.title') }}</QToolbarTitle>
       </QToolbar>
     </QHeader>
     <QFooter class="footer" reveal bordered>
@@ -23,31 +23,31 @@
             :icon="videos.get(user._id)?.mute.audio ? 'eva-mic-off-outline' : 'eva-mic-outline'"
             @click="toggleTrackMuteAndRelay('audio')"
           >
-            <QTooltip class="bg-indigo" :offset="[10, 10]" :delay="1000">Микрофон</QTooltip>
+            <QTooltip class="bg-indigo" :offset="[10, 10]" :delay="1000">{{ t('meetId.hints.mic') }}</QTooltip>
           </QBtn>
           <QBtn
             :icon="videos.get(user._id)?.mute.video ? 'eva-video-off-outline' : 'eva-video-outline'"
             @click="toggleTrackMuteAndRelay('video')"
           >
-            <QTooltip class="bg-indigo" :offset="[10, 10]" :delay="1000">Камера</QTooltip>
+            <QTooltip class="bg-indigo" :offset="[10, 10]" :delay="1000">{{ t('meetId.hints.cam') }}</QTooltip>
           </QBtn>
           <QBtn class="share" icon="eva-cast" :disable="streams.screen.has(user._id)" @click="shareMyScreen">
-            <QTooltip class="bg-indigo" :offset="[10, 10]" :delay="1000">Демонстрация экрана</QTooltip>
+            <QTooltip class="bg-indigo" :offset="[10, 10]" :delay="1000">{{ t('meetId.hints.share') }}</QTooltip>
           </QBtn>
           <QBtn icon="eva-message-circle-outline" @click="[setComponent('chat'), toggleDrawer('right')]">
             <QBadge v-if="unreadMessages" color="red" floating rounded>{{ unreadMessages }}</QBadge>
-            <QTooltip class="bg-indigo" :offset="[10, 10]" :delay="1000">Открыть чат</QTooltip>
+            <QTooltip class="bg-indigo" :offset="[10, 10]" :delay="1000">{{ t('meetId.hints.chat') }}</QTooltip>
           </QBtn>
           <QBtn icon="eva-phone-off-outline" color="negative" flat @click="goBack">
-            <QTooltip class="bg-indigo" :offset="[10, 10]" :delay="1000">Покинуть встречу</QTooltip>
+            <QTooltip class="bg-indigo" :offset="[10, 10]" :delay="1000">{{ t('meetId.hints.leave') }}</QTooltip>
           </QBtn>
         </QBtnGroup>
         <div class="row no-wrap">
           <QBtn dense flat round icon="eva-people-outline" @click="[setComponent('user-list'), toggleDrawer('right')]">
-            <QTooltip class="bg-indigo" :offset="[10, 10]" :delay="1000">Участники</QTooltip>
+            <QTooltip class="bg-indigo" :offset="[10, 10]" :delay="1000">{{ t('meetId.hints.people') }}</QTooltip>
           </QBtn>
           <QBtn dense flat round icon="eva-info" @click="[setComponent('info'), toggleDrawer('right')]">
-            <QTooltip class="bg-indigo" :offset="[10, 10]" :delay="1000">О встрече</QTooltip>
+            <QTooltip class="bg-indigo" :offset="[10, 10]" :delay="1000">{{ t('meetId.hints.info') }}</QTooltip>
           </QBtn>
         </div>
       </QToolbar>
@@ -56,6 +56,7 @@
 </template>
 
 <script setup lang="ts">
+import type { I18n, Langs } from '@/types';
 import type CustomVideo from '~/CustomVideo.vue';
 import Meet from '~/meet';
 import { ref, reactive, provide, onMounted, onBeforeUnmount, onUnmounted, shallowRef, watch, computed } from 'vue';
@@ -65,6 +66,7 @@ import { useRoute } from 'vue-router';
 import { WebRtcDto } from '@/api/dto';
 import { MeetService } from '@/api/services';
 import { IUser } from '@/types';
+import { useI18n } from 'vue-i18n';
 
 type T = { title: string };
 type S = typeof MeetService.getMeetInfo;
@@ -74,6 +76,7 @@ interface RightDrawer {
   props: { [name: string]: any };
 }
 
+const { t } = useI18n<I18n, Langs>();
 const route = useRoute();
 const store = useStore();
 const { socket } = useChatStore();

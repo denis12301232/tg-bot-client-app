@@ -1,7 +1,7 @@
 <template>
   <div :class="$style.content">
     <div>
-      <h5 class="text-center q-py-md text-uppercase">Чат</h5>
+      <h5 class="text-center q-py-md text-uppercase">{{ t('meetId.chat.title') }}</h5>
       <QSeparator />
     </div>
     <div>
@@ -28,7 +28,7 @@
         v-model="msg"
         class="full-width"
         hide-bottom-space
-        label="Сообщение участникам встречи"
+        :label="t('meetId.chat.playsholder')"
         standout
         @keyup.enter="sendMessage"
       >
@@ -49,11 +49,12 @@
 </template>
 
 <script setup lang="ts">
-import type { IAbonent, IUser } from '@/types';
+import type { IAbonent, IUser, I18n, Langs } from '@/types';
 import type { QScrollArea } from 'quasar';
 import { computed, ref, watch } from 'vue';
 import { useStore } from '@/stores';
 import { WebRtcDto } from '@/api/dto';
+import { useI18n } from 'vue-i18n';
 
 const props = defineProps<{
   abonents: Map<string, IAbonent>;
@@ -63,6 +64,7 @@ const emit = defineEmits<{
   (event: 'my-msg', msg: { user_id: string; msg: string }): void;
 }>();
 
+const { t } = useI18n<I18n, Langs>();
 const store = useStore();
 const msg = ref('');
 const scrollRef = ref<QScrollArea | null>(null);

@@ -9,14 +9,14 @@
       v-model="settings.title"
       class="q-mt-md full-width"
       clearable
-      label="Название"
+      :label="t('chat.groupSettings.placeholders.title')"
       standout="text-white bg-indigo"
     />
     <QInput
       v-model="settings.about"
       class="q-mt-md full-width"
       type="textarea"
-      label="О группе"
+      :label="t('chat.groupSettings.placeholders.about')"
       autogrow
       standout="text-white bg-indigo"
     />
@@ -25,17 +25,18 @@
       :disable="!valid || loading"
       class="q-mt-md"
       color="primary"
-      label="Готово"
       @click="updateGroup({ 
         formData: formData,
         params: { group_id: group!._id, title: settings.title, about: settings.about
         }})"
-    />
+    >
+      {{ t('chat.groupSettings.buttons.submit') }}
+    </QBtn>
   </div>
 </template>
 
 <script setup lang="ts">
-import type { ChatResponse } from '@/types';
+import type { ChatResponse, I18n, Langs } from '@/types';
 import SetAvatar from '~/SetAvatar.vue';
 import { ref, reactive, computed, watch } from 'vue';
 import { storeToRefs } from 'pinia';
@@ -43,7 +44,9 @@ import { useStore, useChatStore } from '@/stores';
 import { useFetch } from '@/hooks';
 import { ChatService } from '@/api/services';
 import { ENV } from '@/util';
+import { useI18n } from 'vue-i18n';
 
+const { t } = useI18n<I18n, Langs>();
 const store = useStore();
 const { currentChat } = storeToRefs(useChatStore());
 const settings = reactive({
@@ -67,15 +70,12 @@ const { request: updateGroup, loading } = useFetch<ChatResponse['group'], typeof
   }
 );
 
-watch(
-  () => settings.avatar,
-  () => {
-    if (settings.avatar) {
-      formData.value = new FormData();
-      formData.value.append('avatar', settings.avatar);
-    }
+watch([() => settings.avatar], () => {
+  if (settings.avatar) {
+    formData.value = new FormData();
+    formData.value.append('avatar', settings.avatar);
   }
-);
+});
 </script>
 
 <style lang="scss" module>

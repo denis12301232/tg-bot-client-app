@@ -1,6 +1,6 @@
 <template>
   <div class="column items-center q-pa-sm">
-    <h4 class="text-center q-my-lg q-pb-sm">Полный список</h4>
+    <h4 class="text-center q-my-lg q-pb-sm">{{ t('list.title') }}</h4>
     <QTable
       v-model:pagination="pagination"
       v-model:selected="select"
@@ -8,14 +8,15 @@
       :columns="columns"
       :rows="list"
       :loading="loading || isDelLoading"
-      :pagination-label="(f, l, t) => `${f}-${l} из ${t}`"
       :filter="filter"
       :rows-per-page-options="[5, 10, 20, 50]"
       binary-state-sort
-      loading-label="Загрузка..."
-      no-data-label="Ничего не найдено"
-      rows-per-page-label="Отображать:"
-      no-results-label="Ничего не найдено"
+      :pagination-label="(f, l, a) => `${f}-${l} ${t('table.of')} ${a}`"
+      :loading-label="t('table.loading')"
+      :no-data-label="t('table.noData')"
+      :rows-per-page-label="t('table.show')"
+      :no-results-label="t('table.notFound')"
+      :selected-rows-label="(n) => `${t('table.selected')} ${n}`"
       row-key="_id"
       separator="cell"
       selection="multiple"
@@ -31,7 +32,7 @@
           :disable="loading || isDelLoading || !select.length"
           @click="onDelete(ids)"
         >
-          <QTooltip class="bg-indigo" :offset="[10, 10]" :delay="1000">Удалить</QTooltip>
+          <QTooltip class="bg-indigo" :offset="[10, 10]" :delay="1000">{{ t('list.hints.delete') }}</QTooltip>
         </QBtn>
       </template>
       <template #body="scope: { row: ListResponse, rowIndex: number, selected: boolean }">
@@ -42,14 +43,22 @@
           <QTd auto-width>
             <div class="row justify-center">
               <QBtn dense round flat icon="eva-copy" color="indigo" @click="Util.copyTextToClipboard(scope.row.fio)">
-                <QTooltip class="bg-indigo" :offset="[10, 10]" :delay="1000">Скопировать ФИО</QTooltip>
+                <QTooltip class="bg-indigo" :offset="[10, 10]" :delay="1000">{{ t('list.hints.copy') }}</QTooltip>
               </QBtn>
             </div>
           </QTd>
         </QTr>
       </template>
       <template #top>
-        <QInput class="full-width" v-model="filter" debounce="300" borderless dense clearable placeholder="Поиск">
+        <QInput
+          class="full-width"
+          v-model="filter"
+          debounce="300"
+          borderless
+          dense
+          clearable
+          :placeholder="t('list.table.search')"
+        >
           <template #append>
             <QIcon name="eva-search" />
           </template>
@@ -61,17 +70,17 @@
 
 <script setup lang="ts">
 import type { QTable } from 'quasar';
-import type { ListResponse } from '@/types';
+import type { ListResponse, I18n, Langs } from '@/types';
 import { onMounted, ref, computed } from 'vue';
-import { useRouter } from 'vue-router';
 import { useRequest, useFetch } from '@/hooks';
 import { AssistanceService } from '@/api/services';
 import { Util } from '@/util';
+import { useI18n } from 'vue-i18n';
 
 type T = { acknowledged: boolean; deletedCount: number };
 type S = typeof AssistanceService['deleteForms'];
 
-const router = useRouter();
+const { t } = useI18n<I18n, Langs>({ useScope: 'global' });
 const select = ref<ListResponse[]>([]);
 const ids = computed(() => select.value.map((item) => item._id));
 const { request, pagination, data: list, loading, filter } = useRequest<ListResponse>(AssistanceService.getHumansList, {
@@ -82,11 +91,30 @@ const { request, pagination, data: list, loading, filter } = useRequest<ListResp
 const { request: onDelete, loading: isDelLoading } = useFetch<T, S>(AssistanceService.deleteForms, {
   afterResponse: ({ data }) => data.value.acknowledged && request({ pagination: pagination.value }),
 });
-const columns: QTable['columns'] = [
-  { name: 'index', label: 'Номер', align: 'center', field: 'index', headerStyle: 'font-size: 1.1em;' },
-  { name: 'fio', label: 'ФИО', align: 'center', field: 'fio', headerStyle: 'font-size: 1.1em;', sortable: true },
-  { name: 'buttons', label: 'Действия', align: 'center', field: 'buttons', headerStyle: 'font-size: 1.1em;' },
-];
+const columns = computed<QTable['columns']>(() => [
+  {
+    name: 'index',
+    label: t('list.table.columns.number'),
+    align: 'center',
+    field: 'index',
+    headerStyle: 'font-size: 1.1em;',
+  },
+  {
+    name: 'fio',
+    label: t('list.table.columns.fio'),
+    align: 'center',
+    field: 'fio',
+    headerStyle: 'font-size: 1.1em;',
+    sortable: true,
+  },
+  {
+    name: 'buttons',
+    label: t('list.table.columns.actions'),
+    align: 'center',
+    field: 'buttons',
+    headerStyle: 'font-size: 1.1em;',
+  },
+]);
 
 onMounted(() => request({ pagination: pagination.value }));
 </script>

@@ -1,8 +1,10 @@
-import type { IUser, IAlert } from '@/types';
-import { ref, reactive, computed, watch } from 'vue';
+import type { IUser, IAlert, Langs } from '@/types';
+import { ref, reactive, computed, watch, watchEffect } from 'vue';
 import { defineStore } from 'pinia';
 import { useQuasar } from 'quasar';
 import { AuthService } from '@/api/services';
+import { i18n } from '@/main';
+import { ToolsService } from '@/api/services';
 
 type Theme = 'light' | 'dark' | 'system';
 
@@ -11,6 +13,7 @@ export const useStore = defineStore('main', () => {
   const user = ref<IUser | null>(null);
   const theme = ref<Theme>(localStorage.getItem('theme') as Theme);
   const isPageLoading = ref(false);
+  const lang = ref((localStorage.getItem('lang') as Langs) || 'ru');
   const alert = reactive({ show: false, message: '', type: 'success' as IAlert });
   const isAuth = computed(() => !!user.value);
   const isAdmin = computed(() => user.value?.roles.includes('admin') || false);
@@ -36,6 +39,7 @@ export const useStore = defineStore('main', () => {
     },
     { immediate: true }
   );
+  watchEffect(() => setLocale(lang.value).then(() => localStorage.setItem('lang', lang.value)));
 
   function setTheme() {
     currentTheme.value === 'dark' ? (theme.value = 'light') : (theme.value = 'dark');
@@ -69,5 +73,29 @@ export const useStore = defineStore('main', () => {
     }
   }
 
-  return { user, theme, isPageLoading, alert, isAuth, isAdmin, currentTheme, setTheme, setAlert, refresh, logout };
+  async function setLocale(locale: Langs) {
+    if (!i18n.global.availableLocales.includes(locale)) {
+      const messages = await ToolsService.fetchLocale(locale);
+      if (messages === undefined) {
+        return;
+      }
+      i18n.global.setLocaleMessage(locale, messages);
+    }
+    i18n.global.locale.value = locale;
+  }
+
+  return {
+    user,
+    theme,
+    isPageLoading,
+    lang,
+    alert,
+    isAuth,
+    isAdmin,
+    currentTheme,
+    setTheme,
+    setAlert,
+    refresh,
+    logout,
+  };
 });

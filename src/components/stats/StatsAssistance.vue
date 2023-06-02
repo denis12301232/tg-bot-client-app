@@ -1,6 +1,13 @@
 <template>
   <div class="column items-center q-pa-md">
-    <QInput v-model="date" class="input" label="Период" mask="date" :loading="loading" standout="text-white bg-indigo">
+    <QInput
+      v-model="date"
+      class="input"
+      :label="t('stats.label')"
+      mask="date"
+      :loading="loading"
+      standout="text-white bg-indigo"
+    >
       <template #append>
         <QIcon class="cursor-pointer" name="eva-calendar">
           <QPopupProxy cover transition-show="scale" transition-hide="scale">
@@ -18,11 +25,12 @@
 </template>
 
 <script setup lang="ts">
+import type { I18n, Langs } from '@/types';
 import { ref, onMounted, watch, computed, shallowRef } from 'vue';
 import Chart from 'chart.js/auto';
-import { Constants } from '@/util';
 import { AssistanceService } from '@/api/services';
 import { useFetch } from '@/hooks';
+import { useI18n } from 'vue-i18n';
 
 type T = { [key: string]: string };
 type S = typeof AssistanceService.getStats;
@@ -32,6 +40,7 @@ const props = defineProps<{
   by: 'month' | 'day';
 }>();
 
+const { t } = useI18n<I18n, Langs>();
 const date = ref('');
 const chartRef = ref<HTMLCanvasElement | null>(null);
 const chart = shallowRef<Chart<any>>();
@@ -40,13 +49,26 @@ const timestamp = computed(() => {
   return !date.value ? Date.now() : new Date(+data.at(0)!, +data.at(1)! - 1, +data.at(2)!).getTime();
 });
 const { request: getStats, data: stats, loading } = useFetch<T, S>(AssistanceService.getStats);
-
+const monthes = computed(() => [
+  t('stats.monthes.0'),
+  t('stats.monthes.1'),
+  t('stats.monthes.2'),
+  t('stats.monthes.3'),
+  t('stats.monthes.4'),
+  t('stats.monthes.5'),
+  t('stats.monthes.6'),
+  t('stats.monthes.7'),
+  t('stats.monthes.8'),
+  t('stats.monthes.9'),
+  t('stats.monthes.10'),
+  t('stats.monthes.11'),
+]);
 onMounted(() => {
   chartRef.value &&
     (chart.value = new Chart(chartRef.value, {
       type: 'bar',
       data: {
-        labels: props.by === 'month' ? Constants.monthsShort : calculateDays(),
+        labels: props.by === 'month' ? monthes.value : calculateDays(),
         datasets: [
           {
             label: props.label,
@@ -70,9 +92,7 @@ watch(stats, () => {
         label: props.label,
         data: Object.values(stats.value || {}),
         borderWidth: 1,
-        backgroundColor: '#3f51b5'
-        
-        
+        backgroundColor: '#3f51b5',
       },
     ];
     chart.value.update();

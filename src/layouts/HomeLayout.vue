@@ -9,6 +9,7 @@
           </QAvatar>
           Kharkov Volonteer
         </QToolbarTitle>
+        <SetLang />
         <QBtn
           :icon="store.currentTheme === 'dark' ? 'eva-sun-outline' : 'eva-moon-outline'"
           dense
@@ -17,46 +18,52 @@
           color="yellow"
           @click="store.setTheme()"
         />
-        <QBtn v-if="!store.isAuth" label="Вход" color="red-10" @click="$router.push('/login')" />
+        <QBtn v-if="!store.isAuth" dense flat round icon="eva-log-in-outline" @click="$router.push('/login')" />
         <QBtn v-else dense flat round icon="eva-person" @click="toggleRightDrawer" />
       </QToolbar>
       <QTabs align="left" active-color="red-10">
-        <QRouteTab to="/" label="Заполнить форму" />
-        <QRouteTab v-if="store.isAdmin" to="/list" label="Список" />
-        <QRouteTab v-if="store.isAdmin" to="/info" label="Поиск" />
+        <QRouteTab to="/" :label="t('home.tabs.home')" />
+        <QRouteTab v-if="store.isAdmin" to="/list" :label="t('home.tabs.list')" />
+        <QRouteTab v-if="store.isAdmin" to="/info" :label="t('home.tabs.info')" />
       </QTabs>
     </QHeader>
     <QDrawer v-model="leftDrawerOpen" side="left" bordered>
+      <QCard square flat>
+        <QCardSection>
+          <h6 class="text-center">{{ t('home.drawers.left.title') }}</h6>
+        </QCardSection>
+      </QCard>
+      <QSeparator></QSeparator>
       <QList class="q-pa-sm text-uppercase">
         <QItem v-ripple clickable tag="a" to="/gallery">
           <QItemSection avatar>
             <QIcon color="red-10" name="eva-image" />
           </QItemSection>
-          <QItemSection>Галерея</QItemSection>
+          <QItemSection>{{ t('home.drawers.left.gallery') }}</QItemSection>
         </QItem>
         <QItem v-if="store.isAuth" v-ripple clickable tag="a" to="/chat">
           <QItemSection avatar>
             <QIcon color="red-10" name="eva-message-circle" />
           </QItemSection>
-          <QItemSection>Чат</QItemSection>
+          <QItemSection>{{ t('home.drawers.left.chat') }}</QItemSection>
         </QItem>
         <QItem v-if="store.isAuth" v-ripple clickable tag="a" to="tasks">
           <QItemSection avatar>
             <QIcon color="red-10" name="eva-checkmark-circle" />
           </QItemSection>
-          <QItemSection>Задачи</QItemSection>
+          <QItemSection>{{ t('home.drawers.left.tasks') }}</QItemSection>
         </QItem>
         <QItem v-if="store.isAuth" v-ripple clickable tag="a" to="/meets">
           <QItemSection avatar>
             <QIcon color="red-10" name="eva-people-outline" />
           </QItemSection>
-          <QItemSection>Встречи</QItemSection>
+          <QItemSection>{{ t('home.drawers.left.meets') }}</QItemSection>
         </QItem>
         <QItem v-if="store.isAdmin" v-ripple clickable tag="a" to="/stats">
           <QItemSection avatar>
             <QIcon color="red-10" name="eva-percent-outline" />
           </QItemSection>
-          <QItemSection>Статистика</QItemSection>
+          <QItemSection>{{ t('home.drawers.left.stats') }}</QItemSection>
         </QItem>
       </QList>
     </QDrawer>
@@ -80,19 +87,19 @@
           <QItemSection avatar>
             <QIcon color="red-10" name="eva-person" />
           </QItemSection>
-          <QItemSection>Аккаунт</QItemSection>
+          <QItemSection>{{ t('home.drawers.right.account') }}</QItemSection>
         </QItem>
         <QItem v-if="store.isAdmin" v-ripple clickable tag="a" to="/tools">
           <QItemSection avatar>
             <QIcon color="red-10" name="eva-settings-outline" />
           </QItemSection>
-          <QItemSection>Настройки</QItemSection>
+          <QItemSection>{{ t('home.drawers.right.settings') }}</QItemSection>
         </QItem>
         <QItem v-ripple clickable @click="[store.logout(), toggleRightDrawer()]">
           <QItemSection avatar>
             <QIcon color="red-10" name="eva-log-out" />
           </QItemSection>
-          <QItemSection>Выход</QItemSection>
+          <QItemSection>{{ t('home.drawers.right.logout') }}</QItemSection>
         </QItem>
       </QList>
     </QDrawer>
@@ -103,12 +110,16 @@
 </template>
 
 <script setup lang="ts">
+import type { I18n, Langs } from '@/types';
 import UserAvatar from '~/UserAvatar.vue';
+import SetLang from '~/SetLang.vue';
 import { ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { useStore } from '@/stores';
+import { useI18n } from 'vue-i18n';
 
 const icon = new URL('../../public/favicon.ico', import.meta.url).href;
+const { t } = useI18n<I18n, Langs>({ useScope: 'global' });
 const store = useStore();
 const route = useRoute();
 const leftDrawerOpen = ref(false);
