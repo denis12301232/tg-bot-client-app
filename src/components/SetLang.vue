@@ -16,7 +16,6 @@
     label-color="white"
     input-class="text-white"
   >
-
     <template #selected>
       <div class="text-white text-uppercase">{{ store.lang }}</div>
     </template>

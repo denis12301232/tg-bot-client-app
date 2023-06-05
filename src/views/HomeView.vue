@@ -67,11 +67,9 @@ const form = reactive({
   photo_agreement: false,
 });
 const { request, loading } = useFetch<T, S>(AssistanceService.saveForm, {
-  afterResponse: ({ response }) => {
-    response.status === 200
-      ? store.setAlert(true, { message: 'Заявка отправлена!' })
-      : store.setAlert(true, { message: 'Ошибка! Попробуйте позже...', type: 'error' });
-  },
+  alert: true,
+  successMsg: t('home.msgs.save'),
+  errorMsg: 'Error'
 });
 
 watch(

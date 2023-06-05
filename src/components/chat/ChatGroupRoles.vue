@@ -58,7 +58,7 @@ const store = useStore();
 const { currentChat } = storeToRefs(useChatStore());
 const hasAdminRights = ref(currentChat.value?.group.roles.admin || []);
 const { request, loading } = useFetch(ChatService.updateRolesInGroup, {
-  afterSuccess: () => store.setAlert(true, { message: 'Обновлено' }),
+  afterSuccess: () => store.addAlert('success', 'Обновлено'),
 });
 
 const columns: QTable['columns'] = [

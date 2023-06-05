@@ -14,7 +14,7 @@
           "password": "Password"
       },
        "buttons": {
-          "login": "Login",
+          "login": "Sign In",
           "notRegister": "Register",
           "restore": "Restore"
        },
@@ -68,6 +68,9 @@
          "home": "Fill out the form",
          "list": "List",
          "info": "Search"
+      },
+      "msgs": {
+         "save": "Form sent!"
       },
       "drawers": {
          "left": {
@@ -296,7 +299,11 @@
           "buttons": {
              "save": "Save"
           },
-          "link": "Link to uploaded orders"
+          "link": "Link to uploaded orders",
+          "msgs": {
+            "success": "Formed",
+            "error": "No results found for your search!"
+         }
        },
        "roles": {
           "title": "Set up user roles",
@@ -311,8 +318,10 @@
                    "admin": "Admin"
                 }
              }
-
-          }
+          },
+          "msgs": {
+            "update": "Updated!"
+         }
        }
     },
     "tasks": {
@@ -466,7 +475,7 @@
    },
    "meets": {
       "title": "Meetings",
-      "playholders":{
+      "playsholders":{
          "create": "Name",
          "join": "Meeting ID"
       },

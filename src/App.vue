@@ -1,6 +1,6 @@
 <template>
+  <AlertList v-model="alerts" />
   <LoaderPage :loading="store.isPageLoading" />
-  <AlertMessage v-model="alert.show" :class="$style.alert" :type="alert.type" :message="alert.message" />
   <component :is="$route.meta.layoutComponent" :="$route.meta.layoutProps">
     <QScrollArea
       class="fit"
@@ -14,7 +14,7 @@
 </template>
 
 <script setup lang="ts">
-import AlertMessage from '~/AlertMessage.vue';
+import AlertList from '~/AlertList.vue';
 import LoaderPage from '~/LoaderPage.vue';
 import { onMounted, watch } from 'vue';
 import { useStore, useChatStore } from '@/stores';
@@ -22,7 +22,7 @@ import { storeToRefs } from 'pinia';
 
 const store = useStore();
 const chatStore = useChatStore();
-const { isAuth, alert } = storeToRefs(store);
+const { isAuth, alerts } = storeToRefs(store);
 
 onMounted(() => {
   const el = document.getElementById('loader');

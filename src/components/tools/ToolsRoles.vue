@@ -66,7 +66,10 @@ import { ToolsService } from '@/api/services';
 import { useI18n } from 'vue-i18n';
 
 const { t } = useI18n<I18n, Langs>({ useScope: 'global' });
-const { request, loading } = useFetch(ToolsService.updateRoles);
+const { request, loading } = useFetch(ToolsService.updateRoles, {
+  alert: true,
+  successMsg: t('tools.roles.msgs.update'),
+});
 const { request: getUsers, pagination, filter, loading: isUsersLoading, data: users } = useRequest<IUser>(
   ToolsService.getUsers,
   { limit: 3 }

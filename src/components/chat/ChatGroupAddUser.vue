@@ -74,8 +74,8 @@ const { request: addUser, loading: isAddUserLoading } = useFetch(ChatService.add
   },
   afterResponse: ({ response }) => {
     response.status === 200
-      ? store.setAlert(true, { message: 'Пользователь добавлен в чат' })
-      : store.setAlert(true, { message: 'Пользователь уже в чате', type: 'error' });
+      ? store.addAlert('success', 'Пользователь добавлен в чат')
+      : store.addAlert('warning', 'Пользователь уже в чате');
   },
 });
 watch(search, (n) => {

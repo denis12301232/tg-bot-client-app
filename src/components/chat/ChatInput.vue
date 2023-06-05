@@ -77,7 +77,7 @@ watch(message, () => {
 });
 
 watch(error, () => {
-  error.value && store.setAlert(true, { message: 'Нет доступа к микрофону!', type: 'error' });
+  error.value && store.addAlert('error', 'Нет доступа к микрофону!');
 });
 
 watch(voiceMessage, () => {

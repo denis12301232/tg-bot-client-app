@@ -15,6 +15,8 @@
           :options="districtOptions"
           standout
           :label="t('tools.sheets.district.placeholder')"
+          map-options
+          emit-value
         />
       </div>
       <div v-if="criterias.includes('birth')">
@@ -43,7 +45,6 @@
 <script setup lang="ts">
 import type { I18n, Langs } from '@/types';
 import { ref, reactive, computed, watchEffect } from 'vue';
-import { useStore } from '@/stores';
 import { useFetch } from '@/hooks';
 import { AssistanceService } from '@/api/services';
 import { useI18n } from 'vue-i18n';
@@ -52,17 +53,14 @@ type Criterias = 'district' | 'birth';
 type T = { message: string; link: string };
 type S = typeof AssistanceService.saveFormsToSheet;
 
-const { t } = useI18n<I18n, Langs>({ useScope: 'global' });
-const store = useStore();
+const { t } = useI18n<I18n, Langs>();
 const criterias = ref<Criterias[]>([]);
 const query = reactive({ district: '', birth: { min: 1920, max: 2022 } });
 const valid = computed(() => !!criterias.value.length);
 const { request, loading, data } = useFetch<T, S>(AssistanceService.saveFormsToSheet, {
-  afterResponse: ({ response }) => {
-    response.status === 200
-      ? store.setAlert(true, { message: 'Сформировано' })
-      : store.setAlert(true, { message: 'Ничего не найдено по запросу!', type: 'error' });
-  },
+  alert: true,
+  successMsg: t('tools.sheets.msgs.success'),
+  errorMsg: t('tools.sheets.msgs.error'),
 });
 const options = computed(() => [
   { label: t('tools.sheets.checkbox.district'), value: 'district' },

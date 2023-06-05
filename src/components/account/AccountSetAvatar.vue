@@ -32,7 +32,7 @@ const avatar = ref<File | null>(null);
 const { request, loading, error } = useFetch<T, S>(ToolsService.setAvatar, {
   afterSuccess: ({ data }) => {
     store.user?.avatar && (store.user.avatar = data.value.avatar);
-    store.setAlert(true, { message: 'Аватар изменен!' });
+    store.addAlert('success', 'Аватар изменен!');
   },
 });
 const formData = new FormData();

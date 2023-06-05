@@ -20,13 +20,13 @@
         <div></div>
         <QBtnGroup flat>
           <QBtn
-            :icon="videos.get(user._id)?.mute.audio ? 'eva-mic-off-outline' : 'eva-mic-outline'"
+            :icon="videos.get(user._id)?.mute.audio ? 'eva-mic-off' : 'eva-mic'"
             @click="toggleTrackMuteAndRelay('audio')"
           >
             <QTooltip class="bg-indigo" :offset="[10, 10]" :delay="1000">{{ t('meetId.hints.mic') }}</QTooltip>
           </QBtn>
           <QBtn
-            :icon="videos.get(user._id)?.mute.video ? 'eva-video-off-outline' : 'eva-video-outline'"
+            :icon="videos.get(user._id)?.mute.video ? 'eva-video-off' : 'eva-video'"
             @click="toggleTrackMuteAndRelay('video')"
           >
             <QTooltip class="bg-indigo" :offset="[10, 10]" :delay="1000">{{ t('meetId.hints.cam') }}</QTooltip>
@@ -34,16 +34,16 @@
           <QBtn class="share" icon="eva-cast" :disable="streams.screen.has(user._id)" @click="shareMyScreen">
             <QTooltip class="bg-indigo" :offset="[10, 10]" :delay="1000">{{ t('meetId.hints.share') }}</QTooltip>
           </QBtn>
-          <QBtn icon="eva-message-circle-outline" @click="[setComponent('chat'), toggleDrawer('right')]">
+          <QBtn icon="eva-message-circle" @click="[setComponent('chat'), toggleDrawer('right')]">
             <QBadge v-if="unreadMessages" color="red" floating rounded>{{ unreadMessages }}</QBadge>
             <QTooltip class="bg-indigo" :offset="[10, 10]" :delay="1000">{{ t('meetId.hints.chat') }}</QTooltip>
           </QBtn>
-          <QBtn icon="eva-phone-off-outline" color="negative" flat @click="goBack">
+          <QBtn icon="eva-phone-off" color="negative" flat @click="goBack">
             <QTooltip class="bg-indigo" :offset="[10, 10]" :delay="1000">{{ t('meetId.hints.leave') }}</QTooltip>
           </QBtn>
         </QBtnGroup>
         <div class="row no-wrap">
-          <QBtn dense flat round icon="eva-people-outline" @click="[setComponent('user-list'), toggleDrawer('right')]">
+          <QBtn dense flat round icon="eva-people" @click="[setComponent('user-list'), toggleDrawer('right')]">
             <QTooltip class="bg-indigo" :offset="[10, 10]" :delay="1000">{{ t('meetId.hints.people') }}</QTooltip>
           </QBtn>
           <QBtn dense flat round icon="eva-info" @click="[setComponent('info'), toggleDrawer('right')]">

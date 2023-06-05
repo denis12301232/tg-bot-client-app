@@ -65,7 +65,7 @@ const { request: updateGroup, loading } = useFetch<ChatResponse['group'], typeof
       currentChat.value!.group = { ...currentChat.value!.group, ...data.value };
       settings.avatar = null;
       settings.title = '';
-      store.setAlert(true, { message: 'Изменено' });
+      store.addAlert('success', 'Изменено');
     },
   }
 );

@@ -15,7 +15,7 @@
       <tbody>
         <tr v-for="(value, key) of form" :key="key">
           <td>{{ Constants.assistance[key] }}</td>
-          <td>{{ Util.formatAssistanceKey(value) }}</td>
+          <td>{{ Util.formatAssistanceValue(value, key, $t) }}</td>
         </tr>
       </tbody>
     </QMarkupTable>

@@ -28,3 +28,5 @@ export type ChatModal =
   | 'modal:group-settings'
   | 'modal:group-add-user'
   | 'modal:open-image';
+
+export type IAlertType = 'success' | 'info' | 'warning' | 'error';
