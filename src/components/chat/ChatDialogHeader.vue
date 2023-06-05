@@ -1,7 +1,7 @@
 <template>
   <QItem class="header" style="flex-wrap: wrap">
     <QItemSection avatar>
-      <QBtn dense flat round icon="eva-arrow-back" color="red-10" @click="resetCurrentChat" />
+      <QBtn dense flat round icon="eva-arrow-back" color="primary" @click="resetCurrentChat" />
     </QItemSection>
     <QItemSection avatar>
       <UserAvatar
@@ -52,7 +52,7 @@
             @click="emit('open-modal', 'modal:group-info')"
           >
             <QItemSection avatar class="q-pr-sm" style="min-width: 0">
-              <QIcon color="red-10" name="eva-info-outline" />
+              <QIcon color="primary" name="eva-info-outline" />
             </QItemSection>
             <QItemSection>{{ t('chat.menu.info') }}</QItemSection>
           </QItem>
@@ -64,13 +64,13 @@
             @click="emit('open-modal', 'modal:group-settings')"
           >
             <QItemSection avatar class="q-pr-sm" style="min-width: 0">
-              <QIcon color="red-10" name="eva-settings-outline" />
+              <QIcon color="primary" name="eva-settings-outline" />
             </QItemSection>
             <QItemSection>{{ t('chat.menu.settings') }}</QItemSection>
           </QItem>
           <QItem v-if="type === 'group'" v-ripple v-close-popup clickable @click="leaveGroup">
             <QItemSection avatar class="q-pr-sm" style="min-width: 0">
-              <QIcon name="eva-log-out-outline" color="red-10" />
+              <QIcon name="eva-log-out-outline" color="primary" />
             </QItemSection>
             <QItemSection>{{ t('chat.menu.leave') }}</QItemSection>
           </QItem>

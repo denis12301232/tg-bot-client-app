@@ -10,14 +10,14 @@
         debounce="1000"
         :loading="loading"
         :error="!!error"
-        :error-message="typeof error === 'object' ? error.message : error"
+        :error-message="t('info.errors.search')"
       >
         <template #append>
           <QIcon name="eva-search" />
         </template>
       </QInput>
     </div>
-    <QPagination v-if="total > 1" v-model="page" color="red-10" :max="total" :max-pages="5" boundary-links />
+    <QPagination v-if="total > 1" v-model="page" color="primary" :max="total" :max-pages="5" boundary-links />
     <QMarkupTable v-for="form in forms" :key="form._id" :class="['q-my-md', $style.find]" separator="cell">
       <thead>
         <th colspan="2">
@@ -40,7 +40,7 @@
         </tr>
       </tbody>
     </QMarkupTable>
-    <QPagination v-if="total > 1" v-model="page" color="red-10" :max="total" :max-pages="5" boundary-links />
+    <QPagination v-if="total > 1" v-model="page" color="primary" :max="total" :max-pages="5" boundary-links />
   </div>
 </template>
 
@@ -55,12 +55,17 @@ import { useI18n } from 'vue-i18n';
 type T = AssistanceResponse[];
 type S = typeof AssistanceService.findForms;
 
-const { t } = useI18n<I18n, Langs>({ useScope: 'global' });
+const { t } = useI18n<I18n, Langs>();
 const LIMIT = 1;
 const search = ref('');
 const page = ref(1);
 const total = ref(0);
-const { request: findForms, data: forms, loading, error } = useFetch<T, S>(AssistanceService.findForms, {
+const {
+  request: findForms,
+  data: forms,
+  loading,
+  error,
+} = useFetch<T, S>(AssistanceService.findForms, {
   afterResponse: ({ response }) => {
     total.value = Number(response.headers.get('x-total-count')) || 0;
   },

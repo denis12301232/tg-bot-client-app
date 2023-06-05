@@ -2,7 +2,7 @@
   <QLayout view="hHh lpR fFf">
     <QHeader class="header" reveal elevated height-hint="98">
       <QToolbar>
-        <QBtn dense flat round icon="eva-arrow-back" color="red-10" @click="$router.push('/')"></QBtn>
+        <QBtn dense flat round icon="eva-arrow-back" color="primary" @click="$router.push('/')"></QBtn>
         <QToolbarTitle>{{ t(title) }}</QToolbarTitle>
       </QToolbar>
     </QHeader>

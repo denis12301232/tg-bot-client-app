@@ -15,7 +15,7 @@
       },
        "buttons": {
           "login": "Sign In",
-          "notRegister": "Register",
+          "notRegister": "Sign Up",
           "restore": "Restore"
        },
        "notRegister": "Not registered yet?",
@@ -195,11 +195,23 @@
        },
        "table": {
           "title": "Found"
-       }
+       },
+       "errors": {
+         "search": "Nothing found..."
+      }
+    },
+    "infoById": {
+      "title": "Form",
+      "table": {
+         "title": "Found"
+      },
+      "form": {
+         "title": "Edit form"
+      }
     },
    "assistance": {
       "fields": {
-          "surname": "surname",
+          "surname": "Surname",
           "name": "Name",
           "patronymic": "Patronymic",
           "phone":"Phone",
@@ -275,6 +287,10 @@
        },
        "google": {
           "title": "Set up Google integration",
+          "msgs": {
+            "success": "Saved",
+            "error": "Error"
+         },
           "buttons": {
              "save": "Save"
           }
@@ -458,7 +474,7 @@
       "day": {
          "title": "Orders by day"
       },
-      "months": {
+      "monthes": {
          "0": "Jan",
          "1": "Feb",
          "2": "March",
@@ -491,6 +507,10 @@
    "meetId": {
       "layout": {
          "title": "Meeting"
+      },
+      "msgs": {
+         "screenShare": "My screen",
+         "screen": "I"
       },
       "hints": {
          "mic": "Microphone",
@@ -583,6 +603,24 @@
                   "admin": "Admin"
                }
             }
+         }
+      },
+      "createGroup": {
+         "title": "Create a group",
+         "placeholders": {
+            "title": "Title",
+            "about": "Description"
+         },
+         "buttons": {
+            "next": "Continue",
+            "create": "Create",
+            "back": "Back"
+         },
+         "first": {
+            "title": "Title and Description"
+         },
+         "second": {
+            "title": "Avatar"
          }
       }
    },

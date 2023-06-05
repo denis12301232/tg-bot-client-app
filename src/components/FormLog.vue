@@ -31,7 +31,7 @@
         </template>
       </QInput>
       <div class="row justify-center q-my-md">
-        <QBtn type="submit" :loading="loading" :disable="!valid" color="red-10">{{ t('login.buttons.login') }}</QBtn>
+        <QBtn type="submit" :loading="loading" :disable="!valid" color="primary">{{ t('login.buttons.login') }}</QBtn>
       </div>
       <div :class="$style.swap">
         {{ t('login.notRegister') }}
@@ -116,7 +116,7 @@ function showPassword() {
     font-weight: bolder;
 
     &:hover {
-      color: $red-10;
+      color: $primary;
     }
   }
 }

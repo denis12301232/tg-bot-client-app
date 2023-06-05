@@ -2,10 +2,10 @@
   <QLayout view="hHh lpR fFf">
     <QHeader class="header" reveal elevated height-hint="98">
       <QToolbar>
-        <QBtn dense flat round icon="eva-arrow-back" color="red-10" @click="$router.push('/')" />
+        <QBtn dense flat round icon="eva-arrow-back" color="primary" @click="$router.push('/')" />
         <QToolbarTitle>{{ t('stats.title') }}</QToolbarTitle>
       </QToolbar>
-      <QTabs align="left" active-color="red-10">
+      <QTabs align="left" active-color="primary">
         <QRouteTab to="/stats/month" :label="t('stats.tabs.month')" />
         <QRouteTab to="/stats/day" :label="t('stats.tabs.days')" />
       </QTabs>

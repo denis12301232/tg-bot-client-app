@@ -50,7 +50,7 @@
         </template>
       </QInput>
       <div class="row justify-center q-my-md">
-        <QBtn type="submit" color="red-10" :disable="!valid || loading">
+        <QBtn type="submit" color="primary" :disable="!valid || loading">
           {{ t('registration.buttons.registration') }}
         </QBtn>
       </div>
@@ -146,7 +146,7 @@ function showPassword() {
     font-weight: bolder;
 
     &:hover {
-      color: $red-10;
+      color: $primary;
     }
   }
 }

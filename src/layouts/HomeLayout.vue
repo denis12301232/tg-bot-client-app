@@ -21,7 +21,7 @@
         <QBtn v-if="!store.isAuth" dense flat round icon="eva-log-in-outline" @click="$router.push('/login')" />
         <QBtn v-else dense flat round icon="eva-person" @click="toggleRightDrawer" />
       </QToolbar>
-      <QTabs align="left" active-color="red-10">
+      <QTabs align="left" active-color="primary">
         <QRouteTab to="/" :label="t('home.tabs.home')" />
         <QRouteTab v-if="store.isAdmin" to="/list" :label="t('home.tabs.list')" />
         <QRouteTab v-if="store.isAdmin" to="/info" :label="t('home.tabs.info')" />
@@ -37,31 +37,31 @@
       <QList class="q-pa-sm text-uppercase">
         <QItem v-ripple clickable tag="a" to="/gallery">
           <QItemSection avatar>
-            <QIcon color="red-10" name="eva-image" />
+            <QIcon color="primary" name="eva-image-outline" />
           </QItemSection>
           <QItemSection>{{ t('home.drawers.left.gallery') }}</QItemSection>
         </QItem>
         <QItem v-if="store.isAuth" v-ripple clickable tag="a" to="/chat">
           <QItemSection avatar>
-            <QIcon color="red-10" name="eva-message-circle" />
+            <QIcon color="primary" name="eva-message-circle-outline" />
           </QItemSection>
           <QItemSection>{{ t('home.drawers.left.chat') }}</QItemSection>
         </QItem>
         <QItem v-if="store.isAuth" v-ripple clickable tag="a" to="tasks">
           <QItemSection avatar>
-            <QIcon color="red-10" name="eva-checkmark-circle" />
+            <QIcon color="primary" name="eva-checkmark-circle-outline" />
           </QItemSection>
           <QItemSection>{{ t('home.drawers.left.tasks') }}</QItemSection>
         </QItem>
         <QItem v-if="store.isAuth" v-ripple clickable tag="a" to="/meets">
           <QItemSection avatar>
-            <QIcon color="red-10" name="eva-people-outline" />
+            <QIcon color="primary" name="eva-people-outline" />
           </QItemSection>
           <QItemSection>{{ t('home.drawers.left.meets') }}</QItemSection>
         </QItem>
         <QItem v-if="store.isAdmin" v-ripple clickable tag="a" to="/stats">
           <QItemSection avatar>
-            <QIcon color="red-10" name="eva-percent-outline" />
+            <QIcon color="primary" name="eva-percent-outline" />
           </QItemSection>
           <QItemSection>{{ t('home.drawers.left.stats') }}</QItemSection>
         </QItem>
@@ -85,19 +85,19 @@
       <QList class="q-pa-sm text-uppercase">
         <QItem v-ripple clickable tag="a" to="/account">
           <QItemSection avatar>
-            <QIcon color="red-10" name="eva-person" />
+            <QIcon color="primary" name="eva-person-outline" />
           </QItemSection>
           <QItemSection>{{ t('home.drawers.right.account') }}</QItemSection>
         </QItem>
         <QItem v-if="store.isAdmin" v-ripple clickable tag="a" to="/tools">
           <QItemSection avatar>
-            <QIcon color="red-10" name="eva-settings-outline" />
+            <QIcon color="primary" name="eva-settings-outline" />
           </QItemSection>
           <QItemSection>{{ t('home.drawers.right.settings') }}</QItemSection>
         </QItem>
-        <QItem v-ripple clickable @click="[store.logout(), toggleRightDrawer()]">
+        <QItem v-ripple clickable @click="[store.logout(), toggleRightDrawer(), $router.push('/')]">
           <QItemSection avatar>
-            <QIcon color="red-10" name="eva-log-out" />
+            <QIcon color="primary" name="eva-log-out-outline" />
           </QItemSection>
           <QItemSection>{{ t('home.drawers.right.logout') }}</QItemSection>
         </QItem>
@@ -118,8 +118,8 @@ import { useRoute } from 'vue-router';
 import { useStore } from '@/stores';
 import { useI18n } from 'vue-i18n';
 
-const icon = new URL('../../public/favicon.ico', import.meta.url).href;
-const { t } = useI18n<I18n, Langs>({ useScope: 'global' });
+const icon = new URL('../../public/icon.jpg', import.meta.url).href;
+const { t } = useI18n<I18n, Langs>();
 const store = useStore();
 const route = useRoute();
 const leftDrawerOpen = ref(false);

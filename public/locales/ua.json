@@ -195,8 +195,20 @@
       },
       "table": {
          "title": "Знайдено"
+      },
+      "errors": {
+         "search": "Нічого не знайдено..."
       }
    },
+   "infoById": {
+      "title": "Заявка",
+      "table": {
+         "title": "Знайдено"
+      },
+      "form": {
+         "title": "Редагувати заявку"
+      }
+    },
    "assistance": {
      "fields": {
          "surname": "Прізвище",
@@ -275,6 +287,10 @@
       },
       "google": {
          "title": "Налаштувати інтеграцію з Google",
+         "msgs": {
+            "success": "Збережено",
+            "error": "Помилка"
+         },
          "buttons": {
             "save": "Зберегти"
          }
@@ -492,6 +508,10 @@
       "layout": {
          "title": "Зустріч"
       },
+      "msgs": {
+         "screenShare": "Мій екран",
+         "screen": "Я"
+      },
       "hints": {
          "mic": "Мікрофон",
          "cam": "Камера",
@@ -583,6 +603,24 @@
                   "admin": "Адмін"
                }
             }
+         }
+      },
+      "createGroup": {
+         "title": "Створити групу",
+         "placeholders": {
+            "title": "Назва",
+            "about": "Опис"
+         },
+         "buttons": {
+            "next": "Продовжити",
+            "create": "Створити",
+            "back": "Назад"
+         },
+         "first": {
+            "title": "Назва та опис"
+         },
+         "second": {
+            "title": "Аватар"
          }
       }
    },

@@ -11,7 +11,7 @@
       <template #append>
         <QIcon class="cursor-pointer" name="eva-calendar">
           <QPopupProxy cover transition-show="scale" transition-hide="scale">
-            <QDate v-model="date" emit-immediately default-year-month="2023/05" color="red-10">
+            <QDate v-model="date" emit-immediately default-year-month="2023/05" color="primary">
               <div class="row items-center justify-end">
                 <QBtn v-close-popup label="Закрыть" color="primary" flat />
               </div>

@@ -1,7 +1,7 @@
 import { ref, type Ref } from 'vue';
 import { HTTPError, type ResponsePromise, type KyResponse } from 'ky';
 import { useStore } from '@/stores';
-import { IAlertType } from '@/types';
+import type { IAlertType } from '@/types';
 
 interface Opts<T> {
   beforeRequest?: (...args: unknown[]) => unknown;

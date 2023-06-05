@@ -11,7 +11,7 @@
     </QPageContainer>
     <QHeader class="footer" reveal elevated height-hint="98">
       <QToolbar>
-        <QBtn dense flat round icon="eva-arrow-back" color="red-10" @click="goBack" />
+        <QBtn dense flat round icon="eva-arrow-back" color="primary" @click="goBack" />
         <QToolbarTitle>{{ t('meetId.layout.title') }}</QToolbarTitle>
       </QToolbar>
     </QHeader>
@@ -20,33 +20,33 @@
         <div></div>
         <QBtnGroup flat>
           <QBtn
-            :icon="videos.get(user._id)?.mute.audio ? 'eva-mic-off' : 'eva-mic'"
+            :icon="videos.get(user._id)?.mute.audio ? 'eva-mic-off-outline' : 'eva-mic-outline'"
             @click="toggleTrackMuteAndRelay('audio')"
           >
             <QTooltip class="bg-indigo" :offset="[10, 10]" :delay="1000">{{ t('meetId.hints.mic') }}</QTooltip>
           </QBtn>
           <QBtn
-            :icon="videos.get(user._id)?.mute.video ? 'eva-video-off' : 'eva-video'"
+            :icon="videos.get(user._id)?.mute.video ? 'eva-video-off-outline' : 'eva-video-outline'"
             @click="toggleTrackMuteAndRelay('video')"
           >
             <QTooltip class="bg-indigo" :offset="[10, 10]" :delay="1000">{{ t('meetId.hints.cam') }}</QTooltip>
           </QBtn>
-          <QBtn class="share" icon="eva-cast" :disable="streams.screen.has(user._id)" @click="shareMyScreen">
+          <QBtn class="share" icon="eva-cast-outline" :disable="streams.screen.has(user._id)" @click="shareMyScreen">
             <QTooltip class="bg-indigo" :offset="[10, 10]" :delay="1000">{{ t('meetId.hints.share') }}</QTooltip>
           </QBtn>
-          <QBtn icon="eva-message-circle" @click="[setComponent('chat'), toggleDrawer('right')]">
+          <QBtn icon="eva-message-circle-outline" @click="[setComponent('chat'), toggleDrawer('right')]">
             <QBadge v-if="unreadMessages" color="red" floating rounded>{{ unreadMessages }}</QBadge>
             <QTooltip class="bg-indigo" :offset="[10, 10]" :delay="1000">{{ t('meetId.hints.chat') }}</QTooltip>
           </QBtn>
-          <QBtn icon="eva-phone-off" color="negative" flat @click="goBack">
+          <QBtn icon="eva-phone-off-outline" color="negative" flat @click="goBack">
             <QTooltip class="bg-indigo" :offset="[10, 10]" :delay="1000">{{ t('meetId.hints.leave') }}</QTooltip>
           </QBtn>
         </QBtnGroup>
         <div class="row no-wrap">
-          <QBtn dense flat round icon="eva-people" @click="[setComponent('user-list'), toggleDrawer('right')]">
+          <QBtn dense flat round icon="eva-people-outline" @click="[setComponent('user-list'), toggleDrawer('right')]">
             <QTooltip class="bg-indigo" :offset="[10, 10]" :delay="1000">{{ t('meetId.hints.people') }}</QTooltip>
           </QBtn>
-          <QBtn dense flat round icon="eva-info" @click="[setComponent('info'), toggleDrawer('right')]">
+          <QBtn dense flat round icon="eva-info-outline" @click="[setComponent('info'), toggleDrawer('right')]">
             <QTooltip class="bg-indigo" :offset="[10, 10]" :delay="1000">{{ t('meetId.hints.info') }}</QTooltip>
           </QBtn>
         </div>
@@ -56,7 +56,7 @@
 </template>
 
 <script setup lang="ts">
-import type { I18n, Langs } from '@/types';
+import type { I18n, Langs, IUser } from '@/types';
 import type CustomVideo from '~/CustomVideo.vue';
 import Meet from '~/meet';
 import { ref, reactive, provide, onMounted, onBeforeUnmount, onUnmounted, shallowRef, watch, computed } from 'vue';
@@ -65,7 +65,6 @@ import { useNavigation, useWebRtc, useFetch } from '@/hooks';
 import { useRoute } from 'vue-router';
 import { WebRtcDto } from '@/api/dto';
 import { MeetService } from '@/api/services';
-import { IUser } from '@/types';
 import { useI18n } from 'vue-i18n';
 
 type T = { title: string };

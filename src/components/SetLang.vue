@@ -1,28 +1,26 @@
 <template>
-  <QSelect
-    v-model="store.lang"
-    class="text-indigo"
-    :options="options"
-    rounded
-    dense
-    standout
-    emit-value
-    map-options
-    options-dense
-    hide-dropdown-icon
-    hide-bottom-space
-    hide-hint
-    bg-color="indigo"
-    label-color="white"
-    input-class="text-white"
-  >
-    <template #selected>
-      <div class="text-white text-uppercase">{{ store.lang }}</div>
-    </template>
-  </QSelect>
+  <QBtn color="primary" :label="store.lang" dense round flat>
+    <QMenu fit anchor="bottom start" self="top start">
+      <QList>
+        <QItem
+          v-for="lang in options"
+          v-close-popup
+          :key="lang.value"
+          clickable
+          class="q-pa-sm"
+          active-class="text-primary"
+          :active="lang.value === store.lang"
+          @click="setLang(lang.value as Langs)"
+        >
+          <QItemSection>{{ lang.label }}</QItemSection>
+        </QItem>
+      </QList>
+    </QMenu>
+  </QBtn>
 </template>
 
 <script setup lang="ts">
+import type { Langs } from '@/types';
 import { useStore } from '@/stores';
 
 const store = useStore();
@@ -31,4 +29,8 @@ const options = [
   { value: 'ua', label: 'UA' },
   { value: 'en', label: 'EN' },
 ];
+
+function setLang(lang: Langs) {
+  store.lang = lang;
+}
 </script>

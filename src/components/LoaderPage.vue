@@ -10,7 +10,7 @@ withDefaults(
     loading: boolean;
     color?: string;
   }>(),
-  { color: '#b71c1c' }
+  { color: '#3f51b5' }
 );
 </script>
 
@@ -18,6 +18,7 @@ withDefaults(
 .color {
   background-color: v-bind(color);
 }
+
 .loader {
   top: 0;
   width: 100%;

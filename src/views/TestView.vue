@@ -5,7 +5,7 @@
   </QBtnGroup>
   <div class="row items-center">
     <div>UA</div>
-    <QToggle v-model="test" color="red-10"></QToggle>
+    <QToggle v-model="test" color="primary"></QToggle>
     <div>RU</div>
   </div>
   

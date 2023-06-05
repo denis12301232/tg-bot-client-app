@@ -75,6 +75,7 @@ function hideAlert() {
 .alert {
   width: 200px;
 }
+
 .alert {
   min-height: 50px;
   width: 250px;
@@ -133,9 +134,11 @@ function hideAlert() {
 .list-leave-active {
   transition: all 0.6s ease;
 }
+
 .list-enter-to {
   opacity: 1;
 }
+
 .list-leave {
   height: 50px;
   opacity: 1;

@@ -25,7 +25,7 @@ import Account from '~/account';
 import type { I18n, Langs } from '@/types';
 import { useI18n } from 'vue-i18n';
 
-const { t } = useI18n<I18n, Langs>({ useScope: 'global' });
+const { t } = useI18n<I18n, Langs>();
 </script>
 
 <style lang="scss" module>

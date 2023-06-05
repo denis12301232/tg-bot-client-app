@@ -80,7 +80,7 @@ import { useI18n } from 'vue-i18n';
 type T = { acknowledged: boolean; deletedCount: number };
 type S = typeof AssistanceService['deleteForms'];
 
-const { t } = useI18n<I18n, Langs>({ useScope: 'global' });
+const { t } = useI18n<I18n, Langs>();
 const select = ref<ListResponse[]>([]);
 const ids = computed(() => select.value.map((item) => item._id));
 const { request, pagination, data: list, loading, filter } = useRequest<ListResponse>(AssistanceService.getHumansList, {

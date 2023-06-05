@@ -3,14 +3,14 @@
     <form class="meet q-mt-lg column items-center" @submit.prevent="createNewMeet">
       <h5 class="text-center">{{ t('meets.subtitles.create') }}</h5>
       <QInput v-model="meetTitle" class="q-my-md full-width" :label="t('meets.playsholders.create')" standout />
-      <QBtn :disable="!meetTitle" color="red-10" type="submit">
+      <QBtn :disable="!meetTitle" color="primary" type="submit">
         {{ t('meets.buttons.create') }}
       </QBtn>
     </form>
     <form class="meet q-mt-lg column items-center" @submit.prevent="joinMeet">
       <h5 class="text-center">{{ t('meets.subtitles.join') }}</h5>
       <QInput v-model="meetId" class="q-my-md full-width" :label="t('meets.playsholders.join')" standout />
-      <QBtn :disable="!meetId" color="red-10" type="submit">
+      <QBtn :disable="!meetId" color="primary" type="submit">
         {{ t('meets.buttons.join') }}
       </QBtn>
     </form>

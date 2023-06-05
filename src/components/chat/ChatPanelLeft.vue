@@ -7,19 +7,19 @@
         <QList class="q-px-sm q-pt-sm">
           <QItem v-ripple clickable tag="a" to="/">
             <QItemSection avatar>
-              <QIcon name="eva-home-outline" color="red-10" />
+              <QIcon name="eva-home-outline" color="primary" />
             </QItemSection>
             <QItemSection>{{ t('chat.menu.home') }}</QItemSection>
           </QItem>
           <QItem v-ripple clickable tag="a" to="/account">
             <QItemSection avatar>
-              <QIcon name="eva-person-outline" color="red-10" />
+              <QIcon name="eva-person-outline" color="primary" />
             </QItemSection>
             <QItemSection>{{ t('chat.menu.account') }}</QItemSection>
           </QItem>
           <QItem v-ripple v-close-popup clickable @click="emit('openModal', 'modal:group-create')">
             <QItemSection avatar>
-              <QIcon name="eva-plus-square-outline" color="red-10" />
+              <QIcon name="eva-plus-square-outline" color="primary" />
             </QItemSection>
             <QItemSection>{{ t('chat.menu.group') }}</QItemSection>
           </QItem>
@@ -28,17 +28,8 @@
     </div>
   </Transition>
   <div class="header row items-center">
-    <QInput
-      v-model="search"
-      class="full-width"
-      debounce="300"
-      :label="t('chat.playsholders.search')"
-      :loading="loading"
-      clearable
-      hide-bottom-space
-      borderless
-      square
-    >
+    <QInput v-model="search" class="full-width" debounce="300" :label="t('chat.playsholders.search')" :loading="loading"
+      clearable hide-bottom-space borderless square>
       <template #prepend>
         <QBtn v-model="menu" round dense flat icon="eva-menu" @click.stop="openMenu" />
       </template>
@@ -103,6 +94,10 @@ html.dark {
     background-color: $blue-grey-10;
     height: 61px;
   }
+
+  .divider {
+    border-right: 1px solid #636363;
+  }
 }
 
 html.light {
@@ -110,6 +105,11 @@ html.light {
     background-color: $blue-grey-1;
     height: 61px;
   }
+
+  .divider {
+    border-right: 1px solid #ccc;
+  }
+
 }
 
 .menu-enter-active {
@@ -124,5 +124,9 @@ html.light {
 .menu-leave-to {
   transform: translateX(-20px);
   opacity: 0;
+}
+
+.divider {
+  border-right: 1px solid #636363;
 }
 </style>

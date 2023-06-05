@@ -12,7 +12,7 @@
       @submit="request"
     >
       <template #submit="{ type, valid }">
-        <QBtn :type="type" :loading="loading" :disable="!valid" color="red-10" :label="t('home.form.buttons.submit')" />
+        <QBtn :type="type" :loading="loading" :disable="!valid" color="primary" :label="t('home.form.buttons.submit')" />
       </template>
     </FormAssistance>
   </div>
@@ -27,14 +27,12 @@ import { ref, watch, shallowRef, reactive } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useFetch } from '@/hooks';
 import { AssistanceService } from '@/api/services';
-import { useStore } from '@/stores';
 import { useI18n } from 'vue-i18n';
 
 type T = AssistanceResponse;
 type S = typeof AssistanceService['saveForm'];
 
-const { t } = useI18n<I18n, Langs>({ useScope: 'global' });
-const store = useStore();
+const { t } = useI18n<I18n, Langs>();
 const router = useRouter();
 const route = useRoute();
 const modal = ref(false);

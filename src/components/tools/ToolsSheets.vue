@@ -30,8 +30,8 @@
         </QBadge>
         <QRange v-model="query.birth" :min="1920" :max="2022" color="secondary"></QRange>
       </div>
-      <div v-if="valid" class="column items-center">
-        <QBtn class="q-mt-md" color="red-10" type="submit" :loading="loading" :disable="!valid">
+      <div v-if="criterias.length" class="column items-center">
+        <QBtn class="q-mt-md" color="primary" type="submit" :loading="loading" :disable="!valid">
           {{ t('tools.sheets.buttons.save') }}
         </QBtn>
         <a v-if="data?.link" :class="[$style.link, 'q-mt-sm']" target="_blank" :href="data.link">
@@ -56,7 +56,9 @@ type S = typeof AssistanceService.saveFormsToSheet;
 const { t } = useI18n<I18n, Langs>();
 const criterias = ref<Criterias[]>([]);
 const query = reactive({ district: '', birth: { min: 1920, max: 2022 } });
-const valid = computed(() => !!criterias.value.length);
+const valid = computed(() => {
+  return (criterias.value.includes('district') && query.district) || criterias.value.includes('birth');
+});
 const { request, loading, data } = useFetch<T, S>(AssistanceService.saveFormsToSheet, {
   alert: true,
   successMsg: t('tools.sheets.msgs.success'),

@@ -9,7 +9,7 @@
   >
     <QResizeObserver @resize="onResize" />
     <template v-slot:before>
-      <QTabs v-model="tab" :vertical="width > 500" active-color="red-10">
+      <QTabs v-model="tab" :vertical="width > 500" active-color="primary">
         <QTab name="task" icon="eva-list" :label="t('tasks.byId.tabs.task')" />
         <QTab name="subtasks" icon="eva-list" :label="t('tasks.byId.tabs.subtasks')" />
       </QTabs>
@@ -47,7 +47,7 @@ import { useI18n } from 'vue-i18n';
 type T = ITask;
 type S = typeof TaskService.getTaskById;
 
-const { t } = useI18n<I18n, Langs>({ useScope: 'global' });
+const { t } = useI18n<I18n, Langs>();
 const route = useRoute();
 const tab = ref('task');
 const splitterModel = ref(150);

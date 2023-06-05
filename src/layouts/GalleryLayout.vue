@@ -2,7 +2,7 @@
   <QLayout view="hHh lpR fFf">
     <QHeader class="header" reveal elevated height-hint="98">
       <QToolbar>
-        <QBtn dense flat round icon="eva-arrow-back" color="red-10" @click="$router.push('/')" />
+        <QBtn dense flat round icon="eva-arrow-back" color="primary" @click="$router.push('/')" />
         <QToolbarTitle>{{ t('gallery.layout.title') }}</QToolbarTitle>
         <QBtnGroup v-if="store.isAdmin" flat>
           <QBtn

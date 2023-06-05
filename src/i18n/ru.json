@@ -195,8 +195,20 @@
       },
       "table": {
          "title": "Найдено"
+      },
+      "errors": {
+         "search": "Ничего не найдено..."
       }
    },
+   "infoById": {
+      "title": "Заявка", 
+      "table": {
+         "title": "Найдено"
+      },
+      "form": {
+         "title": "Редактировать заявку"
+      }
+    },
    "assistance": {
      "fields": {
          "surname": "Фамилия",
@@ -275,6 +287,10 @@
       },
       "google": {
          "title": "Настроить интеграцию с Google",
+         "msgs": {
+            "success": "Сохранено",
+            "error": "Ошибка"
+         },
          "buttons": {
             "save": "Сохранить"
          }
@@ -492,6 +508,10 @@
       "layout": {
          "title": "Встреча"
       },
+      "msgs": {
+         "screenShare": "Мой экран",
+         "screen": "Я"
+      },
       "hints": {
          "mic": "Микрофон",
          "cam": "Камера",
@@ -583,6 +603,24 @@
                   "admin": "Админ"
                }
             }
+         }
+      },
+      "createGroup": {
+         "title": "Создать группу",
+         "placeholders": {
+            "title": "Название",
+            "about": "Описание"
+         },
+         "buttons": {
+            "next": "Продолжить",
+            "create": "Создать",
+            "back": "Назад"
+         },
+         "first": {
+            "title": "Название и описание"
+         },
+         "second": {
+            "title": "Аватар"
          }
       }
    },

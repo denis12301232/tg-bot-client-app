@@ -8,6 +8,7 @@
         :rules="formRules.surname"
         lazy-rules
         maxlength="50"
+        counter
       />
       <QInput
         v-model.trim="form.name"
@@ -15,6 +16,7 @@
         :rules="formRules.name"
         lazy-rules
         maxlength="50"
+        counter
       />
       <QInput
         v-model.trim="form.patronymic"
@@ -22,6 +24,7 @@
         :rules="formRules.patronymic"
         lazy-rules
         maxlength="50"
+        counter
       />
     </FormAssistanceGroup>
     <FormAssistanceGroup :title="t('home.form.sections.phone')">
@@ -46,7 +49,7 @@
         <template #append>
           <QIcon class="cursor-pointer" name="eva-calendar">
             <QPopupProxy cover transition-show="scale" transition-hide="scale">
-              <QDate v-model="form.birth" emit-immediately default-year-month="2000/12" color="red-10">
+              <QDate v-model="form.birth" emit-immediately default-year-month="2000/12" color="primary">
                 <div class="row items-center justify-end">
                   <QBtn v-close-popup label="Закрыть" color="primary" flat />
                 </div>
@@ -72,6 +75,7 @@
         :rules="formRules.street"
         lazy-rules
         maxlength="50"
+        counter
       />
       <QInput
         v-model.trim="form.house"
@@ -79,6 +83,7 @@
         :rules="formRules.house"
         lazy-rules
         maxlength="50"
+        counter
       />
       <QInput
         v-model.trim="form.flat"
@@ -86,6 +91,7 @@
         :rules="formRules.flat"
         lazy-rules
         maxlength="50"
+        counter
       />
     </FormAssistanceGroup>
     <FormAssistanceGroup :title="t('home.form.sections.peopleNum')">
@@ -95,6 +101,7 @@
         :rules="formRules.people_num"
         lazy-rules
         maxlength="2"
+        counter
       />
     </FormAssistanceGroup>
     <FormAssistanceGroup v-if="Number(form.people_num) > 1" :title="t('home.form.sections.peopleFio')">
@@ -106,6 +113,7 @@
         :rules="formRules.people_num"
         lazy-rules
         maxlength="50"
+        counter
       />
     </FormAssistanceGroup>
     <FormAssistanceGroup :title="t('home.form.sections.invalids')">
@@ -138,6 +146,7 @@
         :label="t('home.form.placeholders.medicinesInfo')"
         lazy-rules
         maxlength="50"
+        counter
       />
     </FormAssistanceGroup>
     <FormAssistanceGroup :title="t('home.form.sections.hygiene')">
@@ -149,6 +158,7 @@
         :label="t('home.form.placeholders.hygieneInfo')"
         lazy-rules
         maxlength="50"
+        counter
       />
     </FormAssistanceGroup>
     <FormAssistanceGroup :title="t('home.form.sections.pampers')">
@@ -160,10 +170,11 @@
         :abel="t('home.form.placeholders.pampersInfo')"
         lazy-rules
         maxlength="50"
+        counter
       />
     </FormAssistanceGroup>
     <FormAssistanceGroup :title="t('home.form.sections.diet')">
-      <QInput v-model.trim="form.diet" :label="t('home.form.placeholders.diet')" lazy-rules maxlength="50" />
+      <QInput v-model.trim="form.diet" :label="t('home.form.placeholders.diet')" lazy-rules maxlength="50" counter />
     </FormAssistanceGroup>
     <FormAssistanceGroup :title="t('home.form.sections.persDataAgreement')">
       <QCheckbox
@@ -206,7 +217,7 @@ const emit = defineEmits<{
   (event: 'submit', form: Omit<AssistanceResponse, '_id'>): void;
 }>();
 
-const { t } = useI18n<I18n, Langs>({ useScope: 'global' });
+const { t } = useI18n<I18n, Langs>();
 // eslint-disable-next-line vue/no-dupe-keys
 const form = reactive(props.form);
 const formRef = ref<QForm | null>(null);

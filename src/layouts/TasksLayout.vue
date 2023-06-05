@@ -2,10 +2,10 @@
   <QLayout view="hHh lpR fFf">
     <QHeader class="header" reveal elevated height-hint="98">
       <QToolbar>
-        <QBtn dense flat round icon="eva-arrow-back" color="red-10" @click="$router.push('/')" />
+        <QBtn dense flat round icon="eva-arrow-back" color="primary" @click="$router.push('/')" />
         <QToolbarTitle>{{ t('tasks.layout.title') }}</QToolbarTitle>
       </QToolbar>
-      <QTabs align="left" active-color="red-10">
+      <QTabs align="left" active-color="primary">
         <QRouteTab to="/tasks/list" :label="t('tasks.layout.tabs.list')" />
         <QRouteTab v-if="store.isAdmin" to="/tasks/create" :label="t('tasks.layout.tabs.create')" />
       </QTabs>
@@ -22,7 +22,7 @@ import { useStore } from '@/stores';
 import { useI18n } from 'vue-i18n';
 
 const store = useStore();
-const { t } = useI18n<I18n, Langs>({ useScope: 'global' });
+const { t } = useI18n<I18n, Langs>();
 </script>
 
 <style lang="scss" scoped></style>

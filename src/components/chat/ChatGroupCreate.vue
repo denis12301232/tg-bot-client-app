@@ -1,29 +1,46 @@
 <template>
   <QCard :class="$style.content">
     <QResizeObserver @resize="onResize" />
-    <QCardSection class="text-h5 text-center">Создать группу</QCardSection>
+    <QCardSection class="text-h5 text-center">{{ t('chat.createGroup.title') }}</QCardSection>
     <QCardSection class="q-pa-none">
-      <QStepper v-model="step" color="red-10" animated flat :vertical="vertical">
-        <QStep class="overflow-hidden" :name="1" title="Название и описание" icon="eva-settings" :done="step > 1">
-          <QInput v-model="group.title" standout label="Название" counter maxlength="30" />
+      <QStepper v-model="step" color="primary" animated flat :vertical="vertical">
+        <QStep
+          class="overflow-hidden"
+          :name="1"
+          :title="t('chat.createGroup.first.title')"
+          icon="eva-settings"
+          :done="step > 1"
+        >
+          <QInput
+            v-model="group.title"
+            standout
+            :label="t('chat.createGroup.placeholders.title')"
+            counter
+            maxlength="30"
+          />
           <QInput
             v-model="group.about"
             class="q-mt-sm"
             standout
-            label="Описание"
+            :label="t('chat.createGroup.placeholders.about')"
             type="textarea"
             autogrow
             counter
             maxlength="100"
           />
           <QStepperNavigation>
-            <QBtn color="red-10" label="Продолжить" :disable="!group.title" @click="setStep(2)" />
+            <QBtn
+              color="primary"
+              :label="t('chat.createGroup.buttons.next')"
+              :disable="!group.title"
+              @click="setStep(2)"
+            />
           </QStepperNavigation>
         </QStep>
         <QStep
           class="overflow-hidden"
           :name="2"
-          title="Аватар"
+          :title="t('chat.createGroup.second.title')"
           caption="Не обязательно"
           icon="eva-image-outline"
           :done="step > 2"
@@ -32,8 +49,14 @@
             <SetAvatar v-model="group.avatar" class="q-mr-lg" size="120px" />
           </div>
           <QStepperNavigation>
-            <QBtn color="red-10" label="Создать" @click="createGroup" />
-            <QBtn flat color="red-10" label="Назад" class="q-ml-sm" @click="setStep(1)" />
+            <QBtn color="primary" :label="t('chat.createGroup.buttons.create')" @click="createGroup" />
+            <QBtn
+              flat
+              color="primary"
+              :label="t('chat.createGroup.buttons.back')"
+              class="q-ml-sm"
+              @click="setStep(1)"
+            />
           </QStepperNavigation>
         </QStep>
       </QStepper>
@@ -42,14 +65,17 @@
 </template>
 
 <script setup lang="ts">
-import type { ChatResponse } from '@/types';
+import type { ChatResponse, I18n, Langs } from '@/types';
 import SetAvatar from '~/SetAvatar.vue';
 import { ref, reactive, onMounted, onUnmounted } from 'vue';
 import { useStore, useChatStore } from '@/stores';
+import { useI18n } from 'vue-i18n';
 
 const props = defineProps<{
   onCloseModal: () => void;
 }>();
+
+const { t } = useI18n<I18n, Langs>();
 const store = useStore();
 const chatStore = useChatStore();
 const step = ref(1);

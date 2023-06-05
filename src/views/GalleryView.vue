@@ -7,7 +7,7 @@
           <QBtn v-close-popup icon="eva-close" dense flat round color="negative" size="15px" />
         </div>
         <div class="row justify-center items-center" style="flex: 1 1 auto">
-          <QImg class="img" :src="images[currentIndex].link" spinner-color="red-10" fit="scale-down">
+          <QImg class="img" :src="images[currentIndex].link" spinner-color="primary" fit="scale-down">
             <template #loading>
               <QSpinnerIos />
             </template>
@@ -28,10 +28,7 @@
             </template>
           </QImg>
           <div class="image_hover"></div>
-          <div
-            v-if="store.isAdmin"
-            :class="['image_controls row justify-end', { show: selection.includes(img.fileId) }]"
-          >
+          <div v-if="store.isAdmin" :class="['image_controls row justify-end', { show: selection.includes(img.fileId) }]">
             <QCheckbox v-model="selection" :val="img.fileId" dark />
           </div>
         </div>
@@ -51,6 +48,7 @@ import { type Ref, ref, computed, inject } from 'vue';
 import { useStore } from '@/stores';
 import { ImageService } from '@/api/services';
 import { useI18n } from 'vue-i18n';
+import { HTTPError } from 'ky';
 
 interface Injected {
   images: Ref<{ link: string, fileId: string }[]>;
@@ -76,7 +74,12 @@ async function onFetchImages(index: number, done: (stop?: boolean | undefined) =
     pageToken.value = data.pageToken;
     pageToken.value ? done() : done(true);
   } catch (e) {
-    e instanceof Error && (error.value = e.message);
+    if (e instanceof HTTPError) {
+      const err: { message: string } = await e.response.json();
+      error.value = err.message;
+    } else if (e instanceof Error) {
+      error.value = e.message;
+    }
     done(true);
   } finally {
     loading.value = false;
@@ -163,6 +166,7 @@ function changeImage(event: KeyboardEvent) {
       }
 
       &:hover {
+
         .image_hover,
         .image_controls {
           opacity: 1;
