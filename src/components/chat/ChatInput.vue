@@ -3,7 +3,7 @@
     v-model="message"
     ref="inputRef"
     class="input"
-    filled
+    standout
     label-slot
     :readonly="isRecording || !!voiceMessage"
     :="$attrs"

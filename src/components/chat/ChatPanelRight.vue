@@ -1,5 +1,6 @@
 <template>
-  <div v-if="!currentChatId" class="full-height row justify-center items-center text-indigo text-bold text-h6">
+  <div v-if="!currentChatId" class="header"></div>
+  <div v-if="!currentChatId" class="full-height column justify-center items-center text-indigo text-bold text-h6">
     {{ t('chat.write.select') }}
   </div>
   <div v-else :class="[$style.container]">
@@ -35,5 +36,21 @@ function onOpenModal(c: ChatModal) {
   min-height: 100%;
   display: grid;
   grid-template-rows: auto 1fr auto;
+}
+</style>
+
+<style scoped lang="scss">
+html.dark {
+  .header {
+    background-color: $blue-grey-10;
+    height: 61px;
+  }
+}
+
+html.light {
+  & .header {
+    background-color: $blue-grey-1;
+    height: 61px;
+  }
 }
 </style>
