@@ -99,11 +99,6 @@ export const routes: RouteRecordRaw[] = [
     path: '/stats',
     component: () => import('@/views/StatsView.vue'),
     meta: { layout: 'StatsLayout' },
-    redirect: '/stats/month',
-    children: [
-      { path: 'month', component: () => import('~/stats/StatsMonth.vue') },
-      { path: 'day', component: () => import('~/stats/StatsDay.vue') },
-    ],
     beforeEnter: [RouteMiddlewares.useAuthGuard, RouteMiddlewares.useRoleGuard(['admin'])],
   },
   {
@@ -131,12 +126,6 @@ export const routes: RouteRecordRaw[] = [
     name: '404',
     component: () => import('~/TheError.vue'),
     props: { code: 404, message: 'Not found' },
-    meta: { layout: 'VoidLayout' },
-  },
-  {
-    path: '/test',
-    name: '404',
-    component: () => import('@/views/TestView.vue'),
     meta: { layout: 'VoidLayout' },
   },
 ];

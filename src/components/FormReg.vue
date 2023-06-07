@@ -1,6 +1,6 @@
 <template>
   <QCard :class="[$style.card, 'q-py-md', 'q-px-lg', 'text-center']">
-    <QForm ref="formRef" class="q-pb-md" @submit.prevent="request(form)">
+    <QForm ref="formRef" class="q-pb-md" no-error-focus @submit.prevent="request(form)">
       <h4 class="q-py-lg q-mb-sm">{{ t('registration.title') }}</h4>
       <QInput
         v-model.trim="form.name"

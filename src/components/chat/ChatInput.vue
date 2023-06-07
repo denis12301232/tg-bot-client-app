@@ -65,7 +65,7 @@ const { t } = useI18n<I18n, Langs>();
 const store = useStore();
 const { user } = storeToRefs(store);
 const chatStore = useChatStore();
-const message = ref<string | null>(null);
+const message = ref('');
 const files = ref<File[] | null>(null);
 const inputRef = ref<QInput | null>(null);
 const fileInput = ref<HTMLInputElement | null>(null);
@@ -103,7 +103,7 @@ function saveMessage(type: 'audio' | 'image' | null = null) {
     attachments: files.value,
     type: type,
   });
-  message.value = null;
+  message.value = '';
   files.value = null;
   voiceMessage.value = null;
 }

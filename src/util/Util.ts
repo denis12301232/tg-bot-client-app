@@ -1,5 +1,5 @@
 import type { ITask, AssistanceResponse, I18n, Langs } from '@/types';
-import { ComposerTranslation } from 'vue-i18n';
+import type { ComposerTranslation } from 'vue-i18n';
 
 export default class Util {
   static debounceDecorator(f: Function, ms: number) {

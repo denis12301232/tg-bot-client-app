@@ -1,10 +1,11 @@
 <template>
   <div :class="[$style.container, 'column', 'reverse', 'z-max', 'fixed']">
-    <TransitionGroup name="list">
+    <TransitionGroup :name="$style.animate">
       <div
         v-for="alert of alerts"
         :key="alert.id"
         :class="[$style.alert, $style[alert.type], 'q-pa-sm', 'row', 'q-mt-sm', 'items-center']"
+        @click="hideById(alert.id)"
       >
         <div class="q-mr-sm">
           <QIcon :name="setIcon(alert.type)" size="20px" />
@@ -62,6 +63,10 @@ function hideAlert() {
   setTimeout(() => {
     alerts.value.splice(0, 1);
   }, 3000);
+}
+
+function hideById(id: string) {
+  alerts.value = alerts.value.filter((item) => item.id !== id);
 }
 </script>
 
@@ -122,37 +127,19 @@ function hideAlert() {
     background-color: $blue-4;
   }
 }
-</style>
 
-<style scoped>
-.list-enter {
-  transform: translateX(120px);
-  opacity: 0;
-}
+.animate {
+  &:global(-enter-active) {
+    transition: all 0.3s ease-in-out;
+  }
 
-.list-enter-active,
-.list-leave-active {
-  transition: all 0.6s ease;
-}
-
-.list-enter-to {
-  opacity: 1;
-}
-
-.list-leave {
-  height: 50px;
-  opacity: 1;
-}
-
-.list-leave-to {
-  height: 0;
-  transform: translateX(120px);
-  opacity: 0;
-}
-
-.list-move {
-  transition: transform 0.7s ease;
-  position: relative;
-  overflow: hidden;
+  &:global(-leave-active) {
+    transition: all 0.3s cubic-bezier(1, 0.5, 0.8, 1);
+  }
+  &:global(-enter-from),
+  &:global(-leave-to) {
+    transform: translateX(30px);
+    opacity: 0;
+  }
 }
 </style>

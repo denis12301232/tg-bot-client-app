@@ -1,17 +1,23 @@
 <template>
-  <div class="column items-center q-pa-md">
+  <div class="column items-center">
     <QInput
       v-model="date"
       class="input"
-      :label="t('stats.label')"
+      :label="t('stats.labels.period')"
       mask="date"
       :loading="loading"
-      standout="text-white bg-indigo"
+      standout
     >
       <template #append>
         <QIcon class="cursor-pointer" name="eva-calendar">
           <QPopupProxy cover transition-show="scale" transition-hide="scale">
-            <QDate v-model="date" emit-immediately default-year-month="2023/05" color="primary">
+            <QDate
+              v-model="date"
+              emit-immediately
+              default-year-month="2023/05"
+              color="primary"
+              :locale="messages[locale].calendar"
+            >
               <div class="row items-center justify-end">
                 <QBtn v-close-popup label="Закрыть" color="primary" flat />
               </div>
@@ -37,10 +43,10 @@ type S = typeof AssistanceService.getStats;
 
 const props = defineProps<{
   label: string;
-  by: 'month' | 'day';
+  by: 'month' | 'year';
 }>();
 
-const { t } = useI18n<I18n, Langs>();
+const { t, messages, locale } = useI18n<I18n, Langs>();
 const date = ref('');
 const chartRef = ref<HTMLCanvasElement | null>(null);
 const chart = shallowRef<Chart<any>>();
@@ -50,48 +56,51 @@ const timestamp = computed(() => {
 });
 const { request: getStats, data: stats, loading } = useFetch<T, S>(AssistanceService.getStats);
 const monthes = computed(() => [
-  t('stats.monthes.0'),
-  t('stats.monthes.1'),
-  t('stats.monthes.2'),
-  t('stats.monthes.3'),
-  t('stats.monthes.4'),
-  t('stats.monthes.5'),
-  t('stats.monthes.6'),
-  t('stats.monthes.7'),
-  t('stats.monthes.8'),
-  t('stats.monthes.9'),
-  t('stats.monthes.10'),
-  t('stats.monthes.11'),
+  t('calendar.monthsShort.0'),
+  t('calendar.monthsShort.1'),
+  t('calendar.monthsShort.2'),
+  t('calendar.monthsShort.3'),
+  t('calendar.monthsShort.4'),
+  t('calendar.monthsShort.5'),
+  t('calendar.monthsShort.6'),
+  t('calendar.monthsShort.7'),
+  t('calendar.monthsShort.8'),
+  t('calendar.monthsShort.9'),
+  t('calendar.monthsShort.10'),
+  t('calendar.monthsShort.11'),
 ]);
 onMounted(() => {
   chartRef.value &&
     (chart.value = new Chart(chartRef.value, {
-      type: 'bar',
+      type: 'line',
       data: {
-        labels: props.by === 'month' ? monthes.value : calculateDays(),
+        labels: props.by === 'month' ? calculateDays() : monthes.value,
         datasets: [
           {
             label: props.label,
             data: Object.values(stats.value || {}),
-            borderWidth: 1,
+
+            borderColor: '#3f51b5',
+            backgroundColor: '#3f51b5',
           },
         ],
       },
       options: {
+        responsive: true,
         scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } },
       },
     }));
 
   getStats({ by: props.by, timestamp: timestamp.value });
 });
-watch(timestamp, () => getStats({ by: props.by, timestamp: timestamp.value }));
+watch([timestamp, () => props.by], () => getStats({ by: props.by, timestamp: timestamp.value }));
 watch(stats, () => {
   if (chart.value) {
     chart.value.data.datasets = [
       {
         label: props.label,
         data: Object.values(stats.value || {}),
-        borderWidth: 1,
+        borderColor: '#3f51b5',
         backgroundColor: '#3f51b5',
       },
     ];
@@ -112,10 +121,10 @@ function calculateDays() {
 
 <style scoped lang="scss">
 .chart {
-  max-width: 500px;
+  max-width: 650px;
   min-width: 300px;
   width: 100%;
-  max-height: 500px;
+  max-height: 450px;
   padding-top: 10px;
 }
 .input {

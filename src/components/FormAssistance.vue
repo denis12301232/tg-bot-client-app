@@ -49,7 +49,13 @@
         <template #append>
           <QIcon class="cursor-pointer" name="eva-calendar">
             <QPopupProxy cover transition-show="scale" transition-hide="scale">
-              <QDate v-model="form.birth" emit-immediately default-year-month="2000/12" color="primary">
+              <QDate
+                v-model="form.birth"
+                emit-immediately
+                default-year-month="2000/12"
+                color="primary"
+                :locale="messages[locale].calendar"
+              >
                 <div class="row items-center justify-end">
                   <QBtn v-close-popup label="Закрыть" color="primary" flat />
                 </div>
@@ -217,7 +223,7 @@ const emit = defineEmits<{
   (event: 'submit', form: Omit<AssistanceResponse, '_id'>): void;
 }>();
 
-const { t } = useI18n<I18n, Langs>();
+const { t, messages, locale } = useI18n<I18n, Langs>();
 // eslint-disable-next-line vue/no-dupe-keys
 const form = reactive(props.form);
 const formRef = ref<QForm | null>(null);

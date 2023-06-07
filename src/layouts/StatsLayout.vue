@@ -5,10 +5,6 @@
         <QBtn dense flat round icon="eva-arrow-back" color="primary" @click="$router.push('/')" />
         <QToolbarTitle>{{ t('stats.title') }}</QToolbarTitle>
       </QToolbar>
-      <QTabs align="left" active-color="primary">
-        <QRouteTab to="/stats/month" :label="t('stats.tabs.month')" />
-        <QRouteTab to="/stats/day" :label="t('stats.tabs.days')" />
-      </QTabs>
     </QHeader>
     <QPageContainer class="window-height">
       <slot />

@@ -30,3 +30,4 @@ export type ChatModal =
   | 'modal:open-image';
 
 export type IAlertType = 'success' | 'info' | 'warning' | 'error';
+export type ITheme = 'light' | 'dark' | 'system';

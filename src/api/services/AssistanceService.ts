@@ -26,7 +26,7 @@ export default class AssistanceService {
     return $api.post('assistance/sheet', { json: filters });
   }
 
-  static getStats(filters: { by: 'month' | 'day'; timestamp: number }) {
+  static getStats(filters: { by: 'month' | 'year'; timestamp: number }) {
     return $api.get('assistance/stats', { searchParams: filters });
   }
 

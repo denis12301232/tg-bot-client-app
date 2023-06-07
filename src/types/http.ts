@@ -1,4 +1,4 @@
-import { IUser, IChat } from '@/types';
+import type { IUser, IChat } from '@/types';
 
 export interface ListResponse {
   _id: string;

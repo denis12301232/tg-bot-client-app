@@ -1,5 +1,5 @@
-import type { IUser, IAlert, Langs, IAlertType } from '@/types';
-import { ref, reactive, computed, watch, watchEffect } from 'vue';
+import type { IUser, Langs, IAlertType, ITheme } from '@/types';
+import { ref, computed, watch, watchEffect } from 'vue';
 import { defineStore } from 'pinia';
 import { useQuasar } from 'quasar';
 import { AuthService } from '@/api/services';
@@ -7,15 +7,13 @@ import { i18n } from '@/main';
 import { ToolsService } from '@/api/services';
 import { Alert } from '@/util';
 
-type Theme = 'light' | 'dark' | 'system';
 
 export const useStore = defineStore('main', () => {
   const $q = useQuasar();
   const user = ref<IUser | null>(null);
-  const theme = ref<Theme>(localStorage.getItem('theme') as Theme);
+  const theme = ref<ITheme>(localStorage.getItem('theme') as ITheme);
   const isPageLoading = ref(false);
   const lang = ref((localStorage.getItem('lang') as Langs) || 'ru');
-  const alert = reactive({ show: false, message: '', type: 'success' as IAlert });
   const alerts = ref<Alert[]>([]);
   const isAuth = computed(() => !!user.value);
   const isAdmin = computed(() => user.value?.roles.includes('admin') || false);
@@ -52,11 +50,6 @@ export const useStore = defineStore('main', () => {
     alerts.value.push(alert);
   }
 
-  function setAlert(visible: boolean, opts: { type?: IAlert; message: string } = { type: 'success', message: '' }) {
-    alert.show = visible;
-    alert.type = opts.type || 'success';
-    alert.message = opts.message;
-  }
 
   async function refresh() {
     try {
@@ -64,7 +57,6 @@ export const useStore = defineStore('main', () => {
       localStorage.setItem('token', response.accessToken);
       user.value = response.user;
     } catch (e: any) {
-      setAlert(true, { type: 'error', message: e.message });
       console.error(e);
     }
   }
@@ -75,12 +67,11 @@ export const useStore = defineStore('main', () => {
       localStorage.removeItem('token');
       user.value = response;
     } catch (e: any) {
-      setAlert(true, { type: 'error', message: e.message });
       console.error(e);
     }
   }
 
-  async function setLocale(locale: Langs) {
+  async function setLocale(locale: any) {
     if (!i18n.global.availableLocales.includes(locale)) {
       const messages = await ToolsService.fetchLocale(locale);
       if (messages === undefined) {
@@ -96,12 +87,10 @@ export const useStore = defineStore('main', () => {
     theme,
     isPageLoading,
     lang,
-    alert,
     isAuth,
     isAdmin,
     currentTheme,
     setTheme,
-    setAlert,
     refresh,
     logout,
     alerts,

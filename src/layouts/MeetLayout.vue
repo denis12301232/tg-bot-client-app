@@ -1,8 +1,5 @@
 <template>
   <QLayout view="hhh lpR fff">
-    <QDrawer v-model="open.left" side="left" bordered>
-      <!-- drawer content -->
-    </QDrawer>
     <QDrawer v-model="open.right" side="right" bordered>
       <component :is="rightDrawer?.component" :="rightDrawer?.props" @my-msg="(msg: any) => messages.push(msg)" />
     </QDrawer>
@@ -71,7 +68,7 @@ type T = { title: string };
 type S = typeof MeetService.getMeetInfo;
 
 interface RightDrawer {
-  component: typeof Meet[keyof typeof Meet];
+  component: (typeof Meet)[keyof typeof Meet];
   props: { [name: string]: any };
 }
 
