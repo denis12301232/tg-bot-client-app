@@ -50,15 +50,16 @@ import { ref } from 'vue';
 import { useFetch } from '@/hooks';
 import { ChatService } from '@/api/services';
 import { storeToRefs } from 'pinia';
-import { useChatStore, useStore } from '@/stores';
+import { useChatStore } from '@/stores';
 import { useI18n } from 'vue-i18n';
 
 const { t } = useI18n<I18n, Langs>();
-const store = useStore();
 const { currentChat } = storeToRefs(useChatStore());
 const hasAdminRights = ref(currentChat.value?.group.roles.admin || []);
 const { request, loading } = useFetch(ChatService.updateRolesInGroup, {
-  afterSuccess: () => store.addAlert('success', 'Обновлено'),
+  alert: true,
+  successMsg: t('chat.groupSettings.msgs.updatedRoles'),
+  errorMsg: t('chat.groupSettings.msgs.updatedRolesFailed'),
 });
 
 const columns: QTable['columns'] = [

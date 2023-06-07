@@ -514,7 +514,7 @@
       },
       "opts": {
          "interval": {
-            "year": "Year",
+            "year": "Per year",
             "month": "Per month"
          }
       }
@@ -602,6 +602,10 @@
          "title": "Add user",
          "playsholder": "Name or login",
          "button": "Add",
+         "msgs": {
+            "added": "User added to chat",
+            "alreadyAdded": "User already in chat"
+         },
          "errors": {
             "none": "No person found"
          }
@@ -633,6 +637,12 @@
                   "admin": "Admin"
                }
             }
+         },
+         "msgs": { 
+            "updated": "Changed", 
+            "updateFailed": "Error",
+            "updatedRoles": "Updated",
+            "updatedRolesFailed": "Error"
          }
       },
       "createGroup": {

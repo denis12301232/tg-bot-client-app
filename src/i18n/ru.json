@@ -602,6 +602,10 @@
          "title": "Добавить пользователя",
          "playsholder": "Имя или логин",
          "button": "Добавить",
+         "msgs": {
+            "added": "Пользователь добавлен в чат",
+            "alreadyAdded": "Пользователь уже в чате"
+         },
          "errors": {
             "none": "Не найдено ни одного человека"
          }
@@ -633,6 +637,12 @@
                   "admin": "Админ"
                }
             }
+         },
+         "msgs": {
+            "updated": "Изменено",
+            "updateFailed": "Ошибка",
+            "updatedRoles": "Обновлено",
+            "updatedRolesFailed": "Ошибка"
          }
       },
       "createGroup": {

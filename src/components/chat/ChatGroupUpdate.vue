@@ -25,10 +25,12 @@
       :disable="!valid || loading"
       class="q-mt-md"
       color="primary"
-      @click="updateGroup({ 
-        formData: formData,
-        params: { group_id: group!._id, title: settings.title, about: settings.about
-        }})"
+      @click="
+        updateGroup({
+          formData: formData,
+          params: { group_id: group!._id, title: settings.title, about: settings.about },
+        })
+      "
     >
       {{ t('chat.groupSettings.buttons.submit') }}
     </QBtn>
@@ -40,14 +42,13 @@ import type { ChatResponse, I18n, Langs } from '@/types';
 import SetAvatar from '~/SetAvatar.vue';
 import { ref, reactive, computed, watch } from 'vue';
 import { storeToRefs } from 'pinia';
-import { useStore, useChatStore } from '@/stores';
+import { useChatStore } from '@/stores';
 import { useFetch } from '@/hooks';
 import { ChatService } from '@/api/services';
 import { ENV } from '@/util';
 import { useI18n } from 'vue-i18n';
 
 const { t } = useI18n<I18n, Langs>();
-const store = useStore();
 const { currentChat } = storeToRefs(useChatStore());
 const settings = reactive({
   avatar: null as File | null,
@@ -65,8 +66,10 @@ const { request: updateGroup, loading } = useFetch<ChatResponse['group'], typeof
       currentChat.value!.group = { ...currentChat.value!.group, ...data.value };
       settings.avatar = null;
       settings.title = '';
-      store.addAlert('success', 'Изменено');
     },
+    alert: true,
+    successMsg: t('chat.groupSettings.msgs.updated'),
+    errorMsg: t('chat.groupSettings.msgs.updateFailed'),
   }
 );
 

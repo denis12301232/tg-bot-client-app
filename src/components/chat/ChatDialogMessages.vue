@@ -17,7 +17,7 @@
         v-for="msg in messages"
         :sent="msg.author === user?._id"
         :key="msg._id"
-        :bg-color="msg.author === user?._id ? 'blue-8' : 'green-5'"
+        :bg-color="msg.author === user?._id ? 'indigo-6' : 'blue-grey'"
         text-color="white"
       >
         <template #name v-if="type === 'group'">

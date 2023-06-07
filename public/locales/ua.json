@@ -602,6 +602,10 @@
          "title": "Додати користувача",
          "playsholder": "Ім'я чи логін",
          "button": "Додати",
+         "msgs": {
+            "added": "Користувач додано до чату",
+            "alreadyAdded": "Користувач вже в чаті"
+         },
          "errors": {
             "none": "Не знайдено жодної людини"
          }
@@ -633,6 +637,12 @@
                   "admin": "Адмін"
                }
             }
+         },
+         "msfs": { 
+            "updated": "Змінено", 
+            "updateFailed": "Помилка",
+            "updatedRoles": "Оновлено",
+            "updatedRolesFailed": "Помилка"
          }
       },
       "createGroup": {

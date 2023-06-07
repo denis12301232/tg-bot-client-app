@@ -3,9 +3,13 @@
     v-model="message"
     ref="inputRef"
     class="input"
-    standout
+    standout="bg-indigo text-white"
+    :input-class="{ ['text-white']: focused || currentTheme === 'dark' }"
     label-slot
     :readonly="isRecording || !!voiceMessage"
+    square
+    :on-focus="() => setFocus(true)"
+    :on-blur="() => setFocus(false)"
     :="$attrs"
     @keyup.enter="saveMessage()"
   >
@@ -15,10 +19,18 @@
       <div class="recording" v-else>{{ t('chat.playsholders.recording') }}</div>
     </template>
     <template #prepend>
-      <EmojiPicker @pick="onPickEmoji" @hide="inputRef?.$el.focus()" />
+      <EmojiPicker :color="currentTheme === 'dark' ? 'white' : ''" @pick="onPickEmoji" @hide="inputRef?.$el.focus()" />
     </template>
     <template #append>
-      <QBtn v-if="!message" dense round flat icon="eva-image-outline" @click="fileInput?.click()" />
+      <QBtn
+        v-if="!message"
+        dense
+        round
+        flat
+        :color="currentTheme === 'dark' ? 'white' : ''"
+        icon="eva-image-outline"
+        @click="fileInput?.click()"
+      />
       <QBtn
         v-if="voiceMessage"
         dense
@@ -33,6 +45,7 @@
         dense
         round
         flat
+        :color="currentTheme === 'dark' ? 'white' : ''"
         :icon="!isRecording ? 'eva-mic' : 'eva-mic-off'"
         @click="!isRecording ? startRecording() : stopRecording()"
       />
@@ -41,6 +54,7 @@
         dense
         round
         flat
+        :color="currentTheme === 'dark' ? 'white' : ''"
         icon="eva-paper-plane-outline"
         style="transform: rotate(41deg)"
         @click="saveMessage(voiceMessage ? 'audio' : null)"
@@ -63,12 +77,13 @@ import { useI18n } from 'vue-i18n';
 
 const { t } = useI18n<I18n, Langs>();
 const store = useStore();
-const { user } = storeToRefs(store);
+const { user, currentTheme } = storeToRefs(store);
 const chatStore = useChatStore();
 const message = ref('');
 const files = ref<File[] | null>(null);
 const inputRef = ref<QInput | null>(null);
 const fileInput = ref<HTMLInputElement | null>(null);
+const focused = ref(false);
 const { voiceMessage, isRecording, error, startRecording, stopRecording } = useVoice();
 const onTypingDebounce = Util.debounceDecorator(onTyping, 1000);
 
@@ -121,6 +136,10 @@ function onTyping() {
 
 function onPickEmoji(emoji: string) {
   message.value = message.value + emoji;
+}
+
+function setFocus(focus: boolean) {
+  focused.value = focus;
 }
 </script>
 

@@ -43,7 +43,7 @@
             </QItemSection>
             <QItemSection>
               <QItemLabel>{{ item.name }}</QItemLabel>
-              <QItemLabel caption>{{ item.login }}</QItemLabel>
+              <QItemLabel caption> <QIcon name="eva-at-outline" />{{ item.login }} </QItemLabel>
             </QItemSection>
             <QItemSection v-if="canRemove && item._id !== user?._id" side>
               <QBtn
@@ -85,9 +85,11 @@ const filter = ref('');
 const selected = ref('');
 const avatar = computed(() => currentChat.value?.group?.avatar);
 const name = computed(() => currentChat.value?.group?.title);
-const { request: getUsersList, loading, data: users } = useFetch<IUser[], typeof ChatService.getUsersListInChat>(
-  ChatService.getUsersListInChat
-);
+const {
+  request: getUsersList,
+  loading,
+  data: users,
+} = useFetch<IUser[], typeof ChatService.getUsersListInChat>(ChatService.getUsersListInChat);
 const { request: removeUser, loading: isRemoveUserLoading } = useFetch(ChatService.removeUserFromGroup, {
   afterSuccess: () => {
     users.value = users.value?.filter((user) => user._id !== selected.value);

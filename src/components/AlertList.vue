@@ -4,13 +4,13 @@
       <div
         v-for="alert of alerts"
         :key="alert.id"
-        :class="[$style.alert, $style[alert.type], 'q-pa-sm', 'row', 'q-mt-sm', 'items-center']"
+        :class="[$style.alert, $style[alert.type], 'q-pa-sm', 'row', 'q-mt-sm', 'items-center', 'no-wrap']"
         @click="hideById(alert.id)"
       >
         <div class="q-mr-sm">
-          <QIcon :name="setIcon(alert.type)" size="20px" />
+          <QIcon :name="setIcon(alert.type)" size="25px" />
         </div>
-        <div>{{ alert.message }}</div>
+        <div class="text-body1">{{ alert.message }}</div>
       </div>
     </TransitionGroup>
   </div>
