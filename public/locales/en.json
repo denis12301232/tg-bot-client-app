@@ -1,4 +1,7 @@
 {
+   "error": {
+      "btn": "Home"
+   },
    "table": {
       "notFound": "Nothing found",
       "noData": "Nothing yet",
