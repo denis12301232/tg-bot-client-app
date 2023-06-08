@@ -319,7 +319,27 @@
        },
        "buttons": {
           "set": "Change"
-       }
+       },
+       "msgs": {
+         "avatarSuccess": "Avatar changed",
+         "nameSuccess": "Name changed",
+         "emailSuccess": "Email changed",
+         "passwordSuccess": "Password changed"
+      },
+      "errors": {
+         "name": {
+            "required": "Fill in the field",
+            "lengthInterval": "Minimum 3 characters"
+         },
+         "email": {
+            "required": "Fill in the field",
+            "isEmail": "Please enter a valid email"
+         },
+         "password": {
+            "required": "Fill in the field",
+            "lengthInterval": "Password must be between 6 and 20 characters long"
+         }
+      }
     },
     "tools": {
        "layout": {

@@ -20,8 +20,9 @@ import { useFetch } from '@/hooks';
 import { ToolsService } from '@/api/services';
 import { ENV } from '@/util';
 
-defineProps<{
+const props = defineProps<{
   label: string;
+  successMsg: string;
 }>();
 
 type T = { avatar: string };
@@ -32,8 +33,9 @@ const avatar = ref<File | null>(null);
 const { request, loading, error } = useFetch<T, S>(ToolsService.setAvatar, {
   afterSuccess: ({ data }) => {
     store.user?.avatar && (store.user.avatar = data.value.avatar);
-    store.addAlert('success', 'Аватар изменен!');
   },
+  alert: true,
+  successMsg: props.successMsg,
 });
 const formData = new FormData();
 

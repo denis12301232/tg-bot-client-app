@@ -1,9 +1,9 @@
 <template>
-  <QForm ref="formRef" @submit.prevent="request(name)">
+  <QForm ref="formRef">
     <QInput
       class="q-mt-sm"
       v-model="name"
-      :label="label"
+      :label="t('account.placeholders.name')"
       standout
       :rules="rules"
       :error="!!error"
@@ -22,7 +22,7 @@
           flat
           round
           color="positive"
-          type="submit"
+          @click="request(name)"
         />
       </template>
     </QInput>
@@ -36,11 +36,10 @@ import { useStore } from '@/stores';
 import { useFetch } from '@/hooks';
 import { Validate } from '@/util';
 import { ToolsService } from '@/api/services';
+import { useI18n } from 'vue-i18n';
+import type { I18n, Langs } from '@/types';
 
-defineProps<{
-  label: string;
-}>();
-
+const { t } = useI18n<I18n, Langs>();
 const store = useStore();
 const name = ref(store.user?.name || '');
 const valid = ref(false);
@@ -48,10 +47,12 @@ const formRef = ref<QForm | null>(null);
 const equal = computed(() => store.user?.name === name.value);
 const { request, loading, error } = useFetch(ToolsService.setNewName, {
   afterResponse: () => store.user?.name && (store.user.name = name.value),
+  alert: true,
+  successMsg: t('account.msgs.nameSuccess'),
 });
 const rules = [
-  (v: string) => Validate.required(v) || 'Это обязательное поле',
-  (v: string) => Validate.lengthInterval(3, 30)(v) || 'Минимум 3 символа',
+  (v: string) => Validate.required(v) || t('account.errors.name.required'),
+  (v: string) => Validate.lengthInterval(3, 30)(v) || t('account.errors.name.lengthInterval'),
 ];
 
 watch(name, () => {

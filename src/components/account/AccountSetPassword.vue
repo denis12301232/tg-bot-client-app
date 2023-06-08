@@ -3,7 +3,7 @@
     <QInput
       v-model="password.old.value"
       class="q-mt-sm"
-      :label="label.old"
+      :label="t('account.placeholders.oldPassword')"
       standout
       :type="password.old.visible ? 'text' : 'password'"
       lazy-rules
@@ -20,7 +20,8 @@
     </QInput>
     <QInput
       v-model="password.new.value"
-      :label="label.new"
+      class="q-mt-sm"
+      :label="t('account.placeholders.newPassword')"
       standout
       :type="password.new.visible ? 'text' : 'password'"
       :rules="rules"
@@ -43,22 +44,21 @@
       color="primary"
       :loading="loading"
       :disable="!valid"
-      :label="label.button"
+      :label="t('account.buttons.set')"
     />
   </QForm>
 </template>
 
 <script setup lang="ts">
 import type { QForm } from 'quasar';
+import type { I18n, Langs } from '@/types';
 import { ref, reactive, watch } from 'vue';
 import { useFetch } from '@/hooks';
 import { ToolsService } from '@/api/services';
 import { Validate } from '@/util';
+import { useI18n } from 'vue-i18n';
 
-defineProps<{
-  label: { old: string; new: string, button: string };
-}>();
-
+const { t } = useI18n<I18n, Langs>();
 const formRef = ref<QForm | null>(null);
 const valid = ref(false);
 const password = reactive({
@@ -66,11 +66,19 @@ const password = reactive({
   old: { value: '', visible: false },
 });
 const { request, loading, error } = useFetch(ToolsService.setNewPassword, {
-  afterResponse: () => (password.new.value = password.old.value = ''),
+  afterResponse: () => {
+    password.new.value = password.old.value = '';
+    setTimeout(() => formRef.value?.reset(), 0);
+  },
+  afterSuccess() {
+    error.value = '';
+  },
+  alert: true,
+  successMsg: t('account.msgs.passwordSuccess'),
 });
 const rules = [
-  (v: string) => Validate.required(v) || 'Это обязательное поле',
-  (v: string) => Validate.lengthInterval(6, 20)(v) || 'Пароль должен содержать от 6 до 20 символов',
+  (v: string) => Validate.required(v) || t('account.errors.password.required'),
+  (v: string) => Validate.lengthInterval(6, 20)(v) || t('account.errors.password.lengthInterval'),
 ];
 
 watch([() => password.new.value], () => {

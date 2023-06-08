@@ -1,13 +1,6 @@
 <template>
   <div class="column items-center">
-    <QInput
-      v-model="date"
-      class="input"
-      :label="t('stats.labels.period')"
-      mask="date"
-      :loading="loading"
-      standout
-    >
+    <QInput v-model="date" class="input" :label="t('stats.labels.period')" mask="date" :loading="loading" standout>
       <template #append>
         <QIcon class="cursor-pointer" name="eva-calendar">
           <QPopupProxy cover transition-show="scale" transition-hide="scale">
@@ -79,7 +72,6 @@ onMounted(() => {
           {
             label: props.label,
             data: Object.values(stats.value || {}),
-
             borderColor: '#3f51b5',
             backgroundColor: '#3f51b5',
           },
@@ -96,14 +88,15 @@ onMounted(() => {
 watch([timestamp, () => props.by], () => getStats({ by: props.by, timestamp: timestamp.value }));
 watch(stats, () => {
   if (chart.value) {
-    chart.value.data.datasets = [
-      {
-        label: props.label,
-        data: Object.values(stats.value || {}),
-        borderColor: '#3f51b5',
-        backgroundColor: '#3f51b5',
-      },
-    ];
+    (chart.value.data.labels = props.by === 'month' ? calculateDays() : monthes.value),
+      (chart.value.data.datasets = [
+        {
+          label: props.label,
+          data: Object.values(stats.value || {}),
+          borderColor: '#3f51b5',
+          backgroundColor: '#3f51b5',
+        },
+      ]);
     chart.value.update();
   }
 });

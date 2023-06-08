@@ -319,6 +319,26 @@
       },
       "buttons": {
          "set": "Змінити"
+      },
+      "msgs": {
+         "avatarSuccess": "Аватар змінено",
+         "nameSuccess": "Ім'я змінено",
+         "emailSuccess": "E-mail змінено",
+         "passwordSuccess": "Пароль змінено"
+      },
+      "errors": {
+         "name": {
+            "required": "Заповніть поле",
+            "lengthInterval": "Мінімум 3 символи"
+         },
+         "email": {
+            "required":"Заповніть поле",
+            "isEmail": "Введіть коректний е-мейл"
+         },
+         "password": {
+            "required":"Заповніть поле",
+            "lengthInterval": "Пароль повинен містити від 6 до 20 символів"
+         }
       }
    },
    "tools": {
