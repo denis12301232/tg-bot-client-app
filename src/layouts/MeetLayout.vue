@@ -64,7 +64,7 @@ import { WebRtcDto } from '@/api/dto';
 import { MeetService } from '@/api/services';
 import { useI18n } from 'vue-i18n';
 
-type T = { title: string };
+type T = { title: string; roles: { admin: string[] } };
 type S = typeof MeetService.getMeetInfo;
 
 interface RightDrawer {
@@ -115,7 +115,7 @@ watch([() => open.right], () => {
 
 watch(error, () => {
   goBack();
-  store.setAlert(true, { message: 'Встреча не найдена!', type: 'error' });
+  store.addAlert('error', t('meetId.msgs.noMeet'));
 });
 
 onMounted(() => {
@@ -123,9 +123,9 @@ onMounted(() => {
   getMeetInfo(meetId).then(() => {
     captureMyStream('camera', { video: true, audio: true })
       .then(() => socket.emit('meet:join', meetId))
-      .catch((e) => {
+      .catch(() => {
         goBack();
-        store.setAlert(true, { message: 'Нет доступа к камере или микрофону!', type: 'warning' });
+        store.addAlert('warning', t('meetId.msgs.noMic'));
       });
   });
 });

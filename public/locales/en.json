@@ -560,7 +560,9 @@
       },
       "msgs": {
          "screenShare": "My screen",
-         "screen": "I"
+         "screen": "Me",
+         "noMic": "No access to microphone",
+         "noMeet": "Meeting not found"
       },
       "hints": {
          "mic": "Microphone",

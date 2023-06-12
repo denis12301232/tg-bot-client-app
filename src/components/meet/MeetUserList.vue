@@ -12,7 +12,7 @@
           </QItemSection>
           <QItemSection>
             <QItemLabel> {{ user?.name }}</QItemLabel>
-            <QItemLabel caption> @{{ user?.login }}</QItemLabel>
+            <QItemLabel caption>@{{ user?.login }}</QItemLabel>
           </QItemSection>
         </QItem>
       </QList>
