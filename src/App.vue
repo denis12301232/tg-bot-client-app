@@ -19,15 +19,22 @@ import LoaderPage from '~/LoaderPage.vue';
 import { onMounted, watch } from 'vue';
 import { useStore, useChatStore } from '@/stores';
 import { storeToRefs } from 'pinia';
+import { useTelegram } from '@/hooks';
 
 const store = useStore();
 const chatStore = useChatStore();
 const { isAuth, alerts } = storeToRefs(store);
+const { tg, isOpenedFromTg, theme, locale } = useTelegram();
 
 onMounted(() => {
   const el = document.getElementById('loader');
   el && (el.style.cssText = 'display: none');
   localStorage.getItem('token') && store.refresh();
+  tg.ready();
+  if (isOpenedFromTg) {
+    store.theme = theme;
+    store.lang = locale;
+  }
 });
 
 watch(isAuth, () => {

@@ -10,9 +10,13 @@ export const $api = ky.extend({
     beforeRequest: [(request) => request.headers.set('Authorization', `Bearer ${localStorage.getItem('token')}`)],
     beforeRetry: [
       async ({ request, error, options, retryCount }) => {
-         const store = useStore();
-         await store.refresh();
+        const store = useStore();
+        await store.refresh();
       },
     ],
   },
+});
+
+export const $backend = ky.extend({
+  prefixUrl: ENV.SERVER_URL,
 });

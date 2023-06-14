@@ -12,7 +12,13 @@
       @submit="request"
     >
       <template #submit="{ type, valid }">
-        <QBtn :type="type" :loading="loading" :disable="!valid" color="primary" :label="t('home.form.buttons.submit')" />
+        <QBtn
+          :type="type"
+          :loading="loading"
+          :disable="!valid"
+          color="primary"
+          :label="t('home.form.buttons.submit')"
+        />
       </template>
     </FormAssistance>
   </div>
@@ -25,14 +31,15 @@ import FormReg from '~/FormReg.vue';
 import FormLog from '~/FormLog.vue';
 import { ref, watch, shallowRef, reactive } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { useFetch } from '@/hooks';
-import { AssistanceService } from '@/api/services';
+import { useFetch, useTelegram } from '@/hooks';
+import { AssistanceService, BotService } from '@/api/services';
 import { useI18n } from 'vue-i18n';
 
 type T = AssistanceResponse;
-type S = typeof AssistanceService['saveForm'];
+type S = (typeof AssistanceService)['saveForm'];
 
 const { t } = useI18n<I18n, Langs>();
+const { tg, isOpenedFromTg } = useTelegram();
 const router = useRouter();
 const route = useRoute();
 const modal = ref(false);
@@ -67,7 +74,10 @@ const form = reactive({
 const { request, loading } = useFetch<T, S>(AssistanceService.saveForm, {
   alert: true,
   successMsg: t('home.msgs.save'),
-  errorMsg: 'Error'
+  errorMsg: 'Error',
+  afterResponse() {
+    isOpenedFromTg && BotService.assistance(tg.initDataUnsafe.query_id || '', t('home.msgs.save'));
+  },
 });
 
 watch(

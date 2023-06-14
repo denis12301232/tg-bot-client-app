@@ -1,6 +1,6 @@
 <template>
   <QLayout view="hHh LpR fFf">
-    <QHeader reveal elevated class="header" height-hint="98">
+    <QHeader v-if="!isOpenedFromTg" reveal elevated class="header" height-hint="98">
       <QToolbar>
         <QBtn dense flat round icon="eva-menu" @click="toggleLeftDrawer" />
         <QToolbarTitle>
@@ -117,9 +117,11 @@ import { ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { useStore } from '@/stores';
 import { useI18n } from 'vue-i18n';
+import { useTelegram } from '@/hooks';
 
 const icon = new URL('../../public/icon.jpg', import.meta.url).href;
 const { t } = useI18n<I18n, Langs>();
+const { isOpenedFromTg } = useTelegram();
 const store = useStore();
 const route = useRoute();
 const leftDrawerOpen = ref(false);
