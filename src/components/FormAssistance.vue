@@ -75,14 +75,21 @@
         emit-value
         map-options
       />
-      <QInput
+      <QSelect
         v-model.trim="form.street"
         :label="t('home.form.placeholders.street')"
         :rules="formRules.street"
+        :options="streetOptions"
         lazy-rules
-        maxlength="50"
-        counter
-      />
+        map-options
+        emit-value
+      >
+        <template #no-option>
+          <QItem>
+            <QItemSection class="text-negative">{{ t('assistance.msgs.selectDistrict') }}</QItemSection>
+          </QItem>
+        </template>
+      </QSelect>
       <QInput
         v-model.trim="form.house"
         :label="t('home.form.placeholders.house')"
@@ -239,16 +246,26 @@ const kidsAgeOptions = computed(() => [
   { label: t('assistance.checkboxes.kidsAge.9-18'), value: '9-18' },
 ]);
 const districtOptions = computed(() => [
-  { label: t('assistance.districts.1'), value: 1 },
-  { label: t('assistance.districts.2'), value: 2 },
-  { label: t('assistance.districts.3'), value: 3 },
-  { label: t('assistance.districts.4'), value: 4 },
-  { label: t('assistance.districts.5'), value: 5 },
-  { label: t('assistance.districts.6'), value: 6 },
-  { label: t('assistance.districts.7'), value: 7 },
-  { label: t('assistance.districts.8'), value: 8 },
-  { label: t('assistance.districts.9'), value: 9 },
+  { label: t('assistance.districts.1'), value: '1' },
+  { label: t('assistance.districts.2'), value: '2' },
+  { label: t('assistance.districts.3'), value: '3' },
+  { label: t('assistance.districts.4'), value: '4' },
+  { label: t('assistance.districts.5'), value: '5' },
+  { label: t('assistance.districts.6'), value: '6' },
+  { label: t('assistance.districts.7'), value: '7' },
+  { label: t('assistance.districts.8'), value: '8' },
+  { label: t('assistance.districts.9'), value: '9' },
 ]);
+const streetOptions = computed(() =>
+  form.district
+    ? Object.entries(messages.value[locale.value].assistance.streets[form.district as '1'])
+        .map(([key, value]) => ({
+          label: value,
+          value: key,
+        }))
+        .sort((a, b) => a.label.localeCompare(b.label))
+    : []
+);
 
 watch(
   form,

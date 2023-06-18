@@ -6,7 +6,7 @@
         <tr>
           <th colspan="2">
             <div class="row justify-between items-center">
-              <div class="text-h6">{{ t('infoById.table.title')  }}</div>
+              <div class="text-h6">{{ t('infoById.table.title') }}</div>
               <QBtn icon="eva-edit" dense flat round @click="$router.push({ query: { edit: 'true' } })">
                 <QTooltip class="bg-indigo" :offset="[10, 10]" :delay="1000">{{ t('info.hints.edit') }}</QTooltip>
               </QBtn>
@@ -16,8 +16,8 @@
       </thead>
       <tbody>
         <tr v-for="(value, key) of form" :key="key">
-          <td>{{ t(`assistance.fields.${key}`)}}</td>
-          <td>{{ Util.formatAssistanceValue(value, key, t) }}</td>
+          <td>{{ t(`assistance.fields.${key}`) }}</td>
+          <td>{{ Util.formatAssistanceValue(value, key, t, form?.district) }}</td>
         </tr>
       </tbody>
     </QMarkupTable>
@@ -27,7 +27,7 @@
       :form="form"
       :loading="isUpdating"
       :reset="false"
-      :title="t('infoById.form.title') "
+      :title="t('infoById.form.title')"
       @submit="form && updateForm(form, formId)"
     >
       <template #submit="{ type, valid }">
@@ -43,7 +43,7 @@
         />
       </template>
       <template #cancel>
-        <QBtn @click="$router.push({ query: undefined })" color="negative" icon="eva-close-outline" round dense flat />
+        <QBtn color="negative" icon="eva-close-outline" round dense flat @click="$router.push({ query: undefined })" />
       </template>
     </FormAssistance>
   </div>

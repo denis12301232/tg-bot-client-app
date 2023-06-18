@@ -36,7 +36,7 @@
       <tbody>
         <tr v-for="(value, key, index) in Util.formatForm(form)" :key="index">
           <td>{{ t(`assistance.fields.${key}`) }}</td>
-          <td>{{ Util.formatAssistanceValue(value, key, t) }}</td>
+          <td>{{ Util.formatAssistanceValue(value, key, t, form.district) }}</td>
         </tr>
       </tbody>
     </QMarkupTable>

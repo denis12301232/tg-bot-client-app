@@ -73,11 +73,12 @@ export default class Util {
     }
   }
 
-  static formatAssistanceValue(value: any, key: any, t: ComposerTranslation<I18n, Langs>) {
+  static formatAssistanceValue(value: any, key: any, t: ComposerTranslation<I18n, Langs>, district?: string) {
     if (key === 'district') {
       return t(`assistance.districts.${value}`);
-    }
-    if (Array.isArray(value)) {
+    } else if (key === 'street') {
+      return t(`assistance.streets.${district}.${value}`);
+    } else if (Array.isArray(value)) {
       return value.length ? value.join(',') : '-';
     } else if (value === true) {
       return t('assistance.checkboxes.yesNo.yes');
