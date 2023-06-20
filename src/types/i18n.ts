@@ -1,5 +1,4 @@
-import type { languages } from '@/i18n';
+import type en from '../../public/locales/en.json';
 
-export type Text = (typeof languages)[keyof typeof languages];
 export type Langs = 'ru' | 'uk' | 'en';
-export type I18n = { message: Text };
+export type I18n = { message: typeof en };

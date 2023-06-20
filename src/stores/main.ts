@@ -1,15 +1,15 @@
-import type { IUser, Langs, IAlertType, ITheme } from '@/types';
+import type { IUser, Langs, I18n, IAlertType, ITheme } from '@/types';
 import { ref, computed, watch, watchEffect } from 'vue';
 import { defineStore } from 'pinia';
 import { useQuasar } from 'quasar';
 import { AuthService } from '@/api/services';
-import { i18n } from '@/main';
 import { ToolsService } from '@/api/services';
 import { Alert } from '@/util';
-
+import { useI18n } from 'vue-i18n';
 
 export const useStore = defineStore('main', () => {
   const $q = useQuasar();
+  const { locale, availableLocales, setLocaleMessage } = useI18n<I18n, Langs>();
   const user = ref<IUser | null>(null);
   const theme = ref<ITheme>(localStorage.getItem('theme') as ITheme);
   const isPageLoading = ref(false);
@@ -50,7 +50,6 @@ export const useStore = defineStore('main', () => {
     alerts.value.push(alert);
   }
 
-
   async function refresh() {
     try {
       const response = await AuthService.refresh();
@@ -71,15 +70,16 @@ export const useStore = defineStore('main', () => {
     }
   }
 
-  async function setLocale(locale: any) {
-    if (!i18n.global.availableLocales.includes(locale)) {
-      const messages = await ToolsService.fetchLocale(locale);
+  async function setLocale(lang: Langs) {
+    if (!availableLocales.includes(lang)) {
+      const messages = await ToolsService.fetchLocale(lang);
+      availableLocales.push(lang);
       if (messages === undefined) {
         return;
       }
-      i18n.global.setLocaleMessage(locale, messages);
+      setLocaleMessage(lang, messages);
     }
-    i18n.global.locale.value = locale;
+    locale.value = lang;
   }
 
   return {
@@ -94,6 +94,6 @@ export const useStore = defineStore('main', () => {
     refresh,
     logout,
     alerts,
-    addAlert
+    addAlert,
   };
 });
