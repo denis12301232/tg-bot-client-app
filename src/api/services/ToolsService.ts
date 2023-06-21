@@ -28,7 +28,7 @@ export default class ToolsService {
   }
 
   static getUsers({ page, limit, filter }: { page: number; limit: number; filter: string }) {
-    return $api.get('tools/users', { searchParams: new URLSearchParams({ limit, page, filter } as any) });
+    return $api.get('tools/users', { searchParams: { limit, page, filter } });
   }
 
   static updateRoles(_id: string, roles: string[]) {
@@ -36,15 +36,16 @@ export default class ToolsService {
   }
 
   static fetchLocale(locale: Langs) {
-    return fetch(`./locales/${locale}.json`)
-      .then((response) => {
-        if (response.ok) {
-          return response.json();
-        }
-        throw new Error('Something went wrong!');
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    return $api.get('tools/locale', { searchParams: { locale } });
+    // return fetch(`./locales/${locale}.json`)
+    //   .then((response) => {
+    //     if (response.ok) {
+    //       return response.json();
+    //     }
+    //     throw new Error('Something went wrong!');
+    //   })
+    //   .catch((error) => {
+    //     console.error(error);
+    //   });
   }
 }

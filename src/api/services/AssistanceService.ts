@@ -1,4 +1,4 @@
-import type { AssistanceResponse, PaginationRequest } from '@/types';
+import type { AssistanceResponse, Langs, PaginationRequest } from '@/types';
 import { $api } from '@/api';
 
 export default class AssistanceService {
@@ -22,7 +22,7 @@ export default class AssistanceService {
     return $api.get('assistance/id', { searchParams: new URLSearchParams({ id: formId }) });
   }
 
-  static saveFormsToSheet(filters: { district: string; birth: { from: number; to: number } }) {
+  static saveFormsToSheet(filters: { locale: Langs, street: string, district: string; birth: { from: number; to: number } }) {
     return $api.post('assistance/sheet', { json: filters });
   }
 

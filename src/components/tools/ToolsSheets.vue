@@ -2,7 +2,14 @@
   <div class="column items-center q-pa-sm">
     <form
       :class="$style.form"
-      @submit.prevent="request({ birth: { from: query.birth.min, to: query.birth.max }, district: query.district })"
+      @submit.prevent="
+        request({
+          birth: { from: query.birth.min, to: query.birth.max },
+          district: query.district,
+          street: query.street,
+          locale,
+        })
+      "
     >
       <h5 class="q-pa-lg text-center">{{ t('tools.sheets.title') }}</h5>
       <QOptionGroup v-model="criterias" class="criterias" type="checkbox" :options="options" />
@@ -18,6 +25,24 @@
           map-options
           emit-value
         />
+      </div>
+      <div v-if="criterias.includes('street')">
+        <h6 class="q-mt-md q-mb-sm text-center">{{ t('tools.sheets.checkbox.street') }}</h6>
+        <QSelect
+          v-model="query.street"
+          class="full-width"
+          :options="streetOptions"
+          standout
+          :label="t('tools.sheets.street.placeholder')"
+          map-options
+          emit-value
+        >
+          <template #no-option>
+            <QItem>
+              <QItemSection class="text-negative">{{ t('assistance.msgs.selectDistrict') }}</QItemSection>
+            </QItem>
+          </template>
+        </QSelect>
       </div>
       <div v-if="criterias.includes('birth')">
         <h6 class="q-mt-md q-mb-sm text-center">{{ t('tools.sheets.checkbox.year') }}</h6>
@@ -49,13 +74,13 @@ import { useFetch } from '@/hooks';
 import { AssistanceService } from '@/api/services';
 import { useI18n } from 'vue-i18n';
 
-type Criterias = 'district' | 'birth';
+type Criterias = 'district' | 'birth' | 'street';
 type T = { message: string; link: string };
 type S = typeof AssistanceService.saveFormsToSheet;
 
-const { t } = useI18n<I18n, Langs>();
+const { t, locale, messages } = useI18n<I18n, Langs>();
 const criterias = ref<Criterias[]>([]);
-const query = reactive({ district: '', birth: { min: 1920, max: 2022 } });
+const query = reactive({ district: '', street: '', birth: { min: 1920, max: 2022 } });
 const valid = computed(() => {
   return (criterias.value.includes('district') && query.district) || criterias.value.includes('birth');
 });
@@ -66,19 +91,22 @@ const { request, loading, data } = useFetch<T, S>(AssistanceService.saveFormsToS
 });
 const options = computed(() => [
   { label: t('tools.sheets.checkbox.district'), value: 'district' },
+  { label: t('tools.sheets.checkbox.street'), value: 'street' },
   { label: t('tools.sheets.checkbox.year'), value: 'birth' },
 ]);
-const districtOptions = computed(() => [
-  { label: t('assistance.districts.1'), value: 1 },
-  { label: t('assistance.districts.2'), value: 2 },
-  { label: t('assistance.districts.3'), value: 3 },
-  { label: t('assistance.districts.4'), value: 4 },
-  { label: t('assistance.districts.5'), value: 5 },
-  { label: t('assistance.districts.6'), value: 6 },
-  { label: t('assistance.districts.7'), value: 7 },
-  { label: t('assistance.districts.8'), value: 8 },
-  { label: t('assistance.districts.9'), value: 9 },
-]);
+const districtOptions = computed(() =>
+  Object.entries(messages.value[locale.value].assistance.districts).map(([key, value]) => ({
+    label: value,
+    value: key,
+  }))
+);
+const streetOptions = computed(() =>
+  query.district
+    ? Object.entries(messages.value[locale.value].assistance.streets[query.district as '1'])
+        .map(([key, value]) => ({ label: value, value: key }))
+        .sort((a, b) => a.label.localeCompare(b.label))
+    : []
+);
 
 watchEffect(() => {
   if (!criterias.value.includes('district')) {

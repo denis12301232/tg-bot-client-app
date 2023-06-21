@@ -239,30 +239,23 @@ const yesNoOptions = computed(() => [
   { label: t('assistance.checkboxes.yesNo.yes'), value: true },
   { label: t('assistance.checkboxes.yesNo.no'), value: false },
 ]);
-const kidsAgeOptions = computed(() => [
-  { label: t('assistance.checkboxes.kidsAge.0-1'), value: '0-1' },
-  { label: t('assistance.checkboxes.kidsAge.1-3'), value: '1-3' },
-  { label: t('assistance.checkboxes.kidsAge.3-9'), value: '3-9' },
-  { label: t('assistance.checkboxes.kidsAge.9-18'), value: '9-18' },
-]);
-const districtOptions = computed(() => [
-  { label: t('assistance.districts.1'), value: '1' },
-  { label: t('assistance.districts.2'), value: '2' },
-  { label: t('assistance.districts.3'), value: '3' },
-  { label: t('assistance.districts.4'), value: '4' },
-  { label: t('assistance.districts.5'), value: '5' },
-  { label: t('assistance.districts.6'), value: '6' },
-  { label: t('assistance.districts.7'), value: '7' },
-  { label: t('assistance.districts.8'), value: '8' },
-  { label: t('assistance.districts.9'), value: '9' },
-]);
+const kidsAgeOptions = computed(() =>
+  Object.entries(messages.value[locale.value].assistance.checkboxes.kidsAge).map(([key, value]) => ({
+    label: value,
+    value: key,
+  }))
+);
+
+const districtOptions = computed(() =>
+  Object.entries(messages.value[locale.value].assistance.districts).map(([key, value]) => ({
+    label: value,
+    value: key,
+  }))
+);
 const streetOptions = computed(() =>
   form.district
     ? Object.entries(messages.value[locale.value].assistance.streets[form.district as '1'])
-        .map(([key, value]) => ({
-          label: value,
-          value: key,
-        }))
+        .map(([key, value]) => ({ label: value, value: key }))
         .sort((a, b) => a.label.localeCompare(b.label))
     : []
 );

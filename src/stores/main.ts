@@ -72,12 +72,12 @@ export const useStore = defineStore('main', () => {
 
   async function setLocale(lang: Langs) {
     if (!availableLocales.includes(lang)) {
-      const messages = await ToolsService.fetchLocale(lang);
+      const messages = await ToolsService.fetchLocale(lang).json();
       availableLocales.push(lang);
       if (messages === undefined) {
         return;
       }
-      setLocaleMessage(lang, messages);
+      setLocaleMessage(lang, messages as any);
     }
     locale.value = lang;
   }

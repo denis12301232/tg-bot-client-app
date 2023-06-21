@@ -1,6 +1,6 @@
 <template>
   <QList class="list">
-    <h6 v-if="!sortedChats.size" class="text-center text-negative q-mt-sm">{{ t('chat.write.dialogs') }}</h6>
+    <h6 v-if="!sortedChats.size" class="text-center text-negative q-mt-lg">{{ t('chat.write.dialogs') }}</h6>
     <QItem
       v-for="chat in sortedChats.values()"
       v-ripple
