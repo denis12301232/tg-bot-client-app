@@ -127,5 +127,5 @@ export const routes: RouteRecordRaw[] = [
     component: () => import('~/TheError.vue'),
     props: { code: 404, message: 'Not found' },
     meta: { layout: 'VoidLayout' },
-  },
+  }
 ];

@@ -3,15 +3,15 @@
     <form
       :class="$style.form"
       @submit.prevent="
-        request({
+        createReport(locale, type || 'xlsx', {
           birth: { from: query.birth.min, to: query.birth.max },
           district: query.district,
           street: query.street,
-          locale,
         })
       "
     >
       <h5 class="q-pa-lg text-center">{{ t('tools.sheets.title') }}</h5>
+      <QSelect v-model="type" :label="t('tools.sheets.type')" :options="typeOptions" map-options emit-value standout />
       <QOptionGroup v-model="criterias" class="criterias" type="checkbox" :options="options" />
       <QSeparator />
       <div v-if="criterias.includes('district')">
@@ -55,11 +55,11 @@
         </QBadge>
         <QRange v-model="query.birth" :min="1920" :max="2022" color="secondary"></QRange>
       </div>
-      <div v-if="criterias.length" class="column items-center">
-        <QBtn class="q-mt-md" color="primary" type="submit" :loading="loading" :disable="!valid">
+      <div v-if="criterias.length && type" class="column items-center">
+        <QBtn class="q-mt-md" color="primary" type="submit" :loading="isLoading" :disable="!valid">
           {{ t('tools.sheets.buttons.save') }}
         </QBtn>
-        <a v-if="data?.link" :class="[$style.link, 'q-mt-sm']" target="_blank" :href="data.link">
+        <a v-if="url" :class="[$style.link, 'q-mt-sm']" target="_blank" :href="url">
           {{ t('tools.sheets.link') }}
         </a>
       </div>
@@ -70,24 +70,22 @@
 <script setup lang="ts">
 import type { I18n, Langs } from '@/types';
 import { ref, reactive, computed, watchEffect } from 'vue';
-import { useFetch } from '@/hooks';
 import { AssistanceService } from '@/api/services';
 import { useI18n } from 'vue-i18n';
+import { useStore } from '@/stores';
 
 type Criterias = 'district' | 'birth' | 'street';
-type T = { message: string; link: string };
-type S = typeof AssistanceService.saveFormsToSheet;
+type Filters = { street?: string; district?: string; birth: { from: number; to: number } };
 
+const store = useStore();
 const { t, locale, messages } = useI18n<I18n, Langs>();
+const type = ref<'xlsx' | 'csv' | 'google-sheets' | null>(null);
+const url = ref('');
+const isLoading = ref(false);
 const criterias = ref<Criterias[]>([]);
 const query = reactive({ district: '', street: '', birth: { min: 1920, max: 2022 } });
 const valid = computed(() => {
   return (criterias.value.includes('district') && query.district) || criterias.value.includes('birth');
-});
-const { request, loading, data } = useFetch<T, S>(AssistanceService.saveFormsToSheet, {
-  alert: true,
-  successMsg: t('tools.sheets.msgs.success'),
-  errorMsg: t('tools.sheets.msgs.error'),
 });
 const options = computed(() => [
   { label: t('tools.sheets.checkbox.district'), value: 'district' },
@@ -107,16 +105,45 @@ const streetOptions = computed(() =>
         .sort((a, b) => a.label.localeCompare(b.label))
     : []
 );
+const typeOptions = [
+  { label: 'XLSX', value: 'xlsx' },
+  { label: 'CSV', value: 'csv' },
+  { label: 'GOOGLE SHEETS', value: 'google-sheets' },
+];
 
 watchEffect(() => {
   if (!criterias.value.includes('district')) {
     query.district = '';
+  }
+  if (!criterias.value.includes('street')) {
+    query.street = '';
   }
   if (!criterias.value.includes('birth')) {
     query.birth.min = 1920;
     query.birth.max = 2022;
   }
 });
+
+async function createReport(locale: Langs, fileType: 'xlsx' | 'csv' | 'google-sheets', filters: Filters) {
+  try {
+    isLoading.value = true;
+    if (type.value === 'google-sheets') {
+      const data = await AssistanceService.saveFormsToSheet(locale, filters).json<{ link: string }>();
+      url.value = data.link;
+    } else if (type.value === 'csv' || type.value === 'xlsx') {
+      const blob = await AssistanceService.createReport(locale, fileType, filters).blob();
+      const file = new File([blob], 'subtasks', {
+        type: type.value === 'csv' ? 'text/csv' : 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      });
+      url.value = URL.createObjectURL(file);
+    }
+    store.addAlert('success', t('tools.sheets.msgs.success'));
+  } catch (e) {
+    store.addAlert('error', t('tools.sheets.msgs.error'));
+  } finally {
+    isLoading.value = false;
+  }
+}
 </script>
 
 <style lang="scss" module>

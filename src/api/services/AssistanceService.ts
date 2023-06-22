@@ -22,8 +22,15 @@ export default class AssistanceService {
     return $api.get('assistance/id', { searchParams: new URLSearchParams({ id: formId }) });
   }
 
-  static saveFormsToSheet(filters: { locale: Langs, street: string, district: string; birth: { from: number; to: number } }) {
-    return $api.post('assistance/sheet', { json: filters });
+  static saveFormsToSheet(
+    locale: Langs,
+    filters: {
+      street?: string;
+      district?: string;
+      birth: { from: number; to: number };
+    }
+  ) {
+    return $api.post('assistance/sheet', { json: { locale, filters } });
   }
 
   static getStats(filters: { by: 'month' | 'year'; timestamp: number }) {
@@ -32,5 +39,13 @@ export default class AssistanceService {
 
   static updateForm(form: Omit<AssistanceResponse, '_id'>, id: string) {
     return $api.patch('assistance', { json: { form, id } });
+  }
+
+  static createReport(
+    locale: Langs,
+    type: 'xlsx' | 'csv' | 'google-sheets',
+    filters: { street?: string; district?: string; birth: { from: number; to: number } }
+  ) {
+    return $api.post('assistance/report', { json: { locale, type, filters: filters } });
   }
 }
