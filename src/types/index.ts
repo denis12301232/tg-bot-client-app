@@ -2,6 +2,7 @@ export * from './models';
 export * from './http';
 export * from './io';
 export * from './i18n';
+export * from './injected';
 
 export type Entries<T> = {
   [K in keyof T]: [K, T[K]];

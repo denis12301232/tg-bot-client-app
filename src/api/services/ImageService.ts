@@ -1,8 +1,8 @@
 import { $api } from '@/api';
 
 export default class ImageService {
-  static getImages(pageToken?: string) {
-    return $api.get('images/', { searchParams: pageToken ? { pageToken } : undefined });
+  static getImages(params: { skip: number; limit: number; sort: string; descending: boolean }) {
+    return $api.get('images/', { searchParams: params });
   }
 
   static uploadImages(formData: FormData) {
@@ -11,5 +11,9 @@ export default class ImageService {
 
   static deleteImages(ids: string[]) {
     return $api.delete('images/delete', { json: ids });
+  }
+
+  static updateDescription(id: string, description: string) {
+    return $api.patch('images/description', { json: { id, description } });
   }
 }

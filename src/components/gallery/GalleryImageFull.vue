@@ -1,34 +1,110 @@
 <template>
   <QCard class="fit column">
     <div class="row justify-between items-center">
-      <div class="text-primary total">{{ currentIndex + 1 + ' / ' + total }}</div>
+      <div class="text-primary total">{{ index + 1 + ' / ' + total }}</div>
       <QBtn v-close-popup icon="eva-close" dense flat round color="negative" size="15px" />
     </div>
     <div class="row justify-center items-center" style="flex: 1 1 auto">
-      <QImg class="img" :src="images[currentIndex].link" spinner-color="primary" fit="scale-down">
+      <QImg class="img" :src="imgs[index]?.link" spinner-color="primary" fit="scale-down">
         <template #loading>
           <LoaderWheel size="35px" />
         </template>
       </QImg>
-      <QBtn class="left" dense flat round icon="eva-arrow-ios-back-outline" size="15px" @click="emit('prev')" />
-      <QBtn class="right" dense flat round icon="eva-arrow-ios-forward-outline" size="15px" @click="emit('next')" />
+      <QBtn class="left" dense flat round icon="eva-arrow-ios-back-outline" size="15px" @click="onPrev" />
+      <QBtn class="right" dense flat round icon="eva-arrow-ios-forward-outline" size="15px" @click="onNext" />
+    </div>
+    <div class="q-pa-sm text-center row justify-center" style="height: 50px">
+      <div class="row items-center">
+        <div class="text-body1 text-justify text-indigo"> {{ imgs[index]?.description || t('gallery.msgs.noDescription') }} </div>
+        <QPopupEdit v-if="imgs.length >= index+1" v-model="imgs[index].description" #="scope">
+          <QInput v-model="scope.value" filled dense autofocus counter maxlength="50" />
+          <div class="row justify-between q-mt-sm q-mb-sm">
+            <QBtn
+              round
+              dense
+              flat
+              icon="eva-checkmark-outline"
+              color="positive"
+              @click="[scope.set(), onSave(imgs[index]._id, scope.value)]"
+            />
+            <QBtn round dense flat icon="eva-close-outline" color="negative" @click="scope.cancel" />
+          </div>
+        </QPopupEdit>
+      </div>
     </div>
   </QCard>
 </template>
 
 <script setup lang="ts">
+import type { I18n, ImagesResponse, Langs } from '@/types';
+import { computed, onMounted, onUnmounted, nextTick } from 'vue';
+import { useI18n } from 'vue-i18n';
 import LoaderWheel from '~/LoaderWheel.vue';
+import { ImageService } from '@/api/services';
 
-defineProps<{
+const props = defineProps<{
   currentIndex: number;
   total: number;
-  images: { link: string; fileId: string }[];
+  images: ImagesResponse['images'];
+  loading: boolean;
 }>();
 
 const emit = defineEmits<{
   next: [];
   prev: [];
+  request: [];
+  'update:currentIndex': [value: number];
+  'update:images': [value: ImagesResponse['images']];
 }>();
+const { t } = useI18n<I18n, Langs>();
+const index = computed({
+  get() {
+    return props.currentIndex;
+  },
+  set(value) {
+    emit('update:currentIndex', value);
+  },
+});
+const imgs = computed({
+  get() {
+    return props.images;
+  },
+  set(images) {
+    emit('update:images', images);
+  },
+});
+
+onMounted(() => document.addEventListener('keydown', changeImage));
+onUnmounted(() => document.removeEventListener('keydown', changeImage));
+
+function onPrev() {
+  index.value > 0 && index.value--;
+}
+
+async function onNext() {
+  if (index.value + 1 === props.total) {
+    return;
+  }
+  index.value < props.total - 1 && index.value++;
+  await nextTick();
+
+  if (props.loading) {
+    return;
+  }
+
+  if (index.value + 1 > imgs.value.length) {
+    emit('request');
+  }
+}
+
+function changeImage(event: KeyboardEvent) {
+  if (event.key === 'ArrowLeft') onPrev();
+  else if (event.key === 'ArrowRight') onNext();
+}
+
+async function onSave(id: string, value: string) {
+  await ImageService.updateDescription(id, value).json();
+}
 </script>
 
 <style lang="scss" scoped>

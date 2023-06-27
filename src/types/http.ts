@@ -40,11 +40,16 @@ export interface AssistanceResponse {
   photo_agreement: boolean;
 }
 
-export type UploadImagesResponse = { link: string; fileId: string }[];
+export type UploadImagesResponse = { link: string; fileId: string, description: string }[];
 
 export interface ImagesResponse {
-  images: { link: string; fileId: string }[];
-  pageToken?: string;
+  images: {
+    _id: string;
+    link: string;
+    fileId: string;
+    description: string;
+  }[];
+  count: number;
 }
 
 export interface ChatResponse extends IChat {
