@@ -32,7 +32,9 @@
         v-model="form.phone"
         :label="t('home.form.placeholders.phone')"
         :rules="formRules.phone"
+        type="tel"
         mask="(###) ### - ####"
+        unmasked-value
         fill-mask
         prefix="+38"
         lazy-rules
