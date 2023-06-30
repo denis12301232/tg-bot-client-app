@@ -61,11 +61,12 @@ export const routes: RouteRecordRaw[] = [
     path: '/tools',
     name: 'tools',
     component: () => import('@/views/ToolsView.vue'),
-    redirect: '/tools/google',
+    redirect: '/tools/roles',
     children: [
       { path: 'google', component: () => import('~/tools/ToolsGoogle.vue') },
       { path: 'sheets', component: () => import('~/tools/ToolsSheets.vue') },
       { path: 'roles', component: () => import('~/tools/ToolsRoles.vue') },
+      { path: 'forms', component: () => import('~/tools/ToolsUploadForms.vue') },
     ],
     meta: { layout: 'ToolsLayout' },
     beforeEnter: [RouteMiddlewares.useAuthGuard, RouteMiddlewares.useRoleGuard(['admin'])],

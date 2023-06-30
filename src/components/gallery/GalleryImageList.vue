@@ -39,6 +39,7 @@ import LoaderWheel from '~/LoaderWheel.vue';
 import type { Langs, I18n, ImageInjected } from '@/types';
 import { onMounted, inject } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { useStore } from '@/stores';
 
 const props = defineProps<{
   loading: boolean;
@@ -50,6 +51,7 @@ const emit = defineEmits<{
 }>();
 const { images, total, selected } = inject<ImageInjected>('data')!;
 const { t } = useI18n<I18n, Langs>();
+const store = useStore();
 
 onMounted(() => emit('request'));
 
@@ -67,6 +69,9 @@ function onOpen(e: MouseEvent, index: number) {
 }
 
 function onTouch(e: MouseEvent, id: string) {
+  if (!store.isAdmin) {
+    return;
+  }
   if (e.ctrlKey) {
     selected.value.has(id) ? selected.value.delete(id) : selected.value.add(id);
   }

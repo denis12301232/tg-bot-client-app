@@ -6,9 +6,10 @@
         <QToolbarTitle>{{ t('tools.layout.title') }}</QToolbarTitle>
       </QToolbar>
       <QTabs align="left" active-color="primary">
+        <QRouteTab to="/tools/roles" :label="t('tools.layout.tabs.roles')" />
         <QRouteTab to="/tools/google" :label="t('tools.layout.tabs.google')" />
         <QRouteTab to="/tools/sheets" :label="t('tools.layout.tabs.sheets')" />
-        <QRouteTab to="/tools/roles" :label="t('tools.layout.tabs.roles')" />
+        <QRouteTab to="/tools/forms" :label="t('tools.layout.tabs.forms')" />
       </QTabs>
     </QHeader>
     <QPageContainer class="window-height">

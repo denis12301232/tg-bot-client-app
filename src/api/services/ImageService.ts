@@ -6,11 +6,11 @@ export default class ImageService {
   }
 
   static uploadImages(formData: FormData) {
-    return $api.post('images/upload', { body: formData });
+    return $api.post('images/upload', { body: formData, timeout: 6e5 });
   }
 
   static deleteImages(ids: string[]) {
-    return $api.delete('images/delete', { json: ids });
+    return $api.delete('images/delete', { json: ids, timeout: 6e5 });
   }
 
   static updateDescription(id: string, description: string) {

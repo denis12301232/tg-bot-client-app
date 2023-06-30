@@ -48,4 +48,8 @@ export default class AssistanceService {
   ) {
     return $api.post('assistance/report', { json: { locale, type, filters: filters } });
   }
+
+  static uploadFormsListCSV(formData: FormData) {
+    return $api.post('assistance/list', { body: formData });
+  }
 }

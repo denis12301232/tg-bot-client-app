@@ -9,9 +9,9 @@ export const $api = ky.extend({
   hooks: {
     beforeRequest: [(request) => request.headers.set('Authorization', `Bearer ${localStorage.getItem('token')}`)],
     beforeRetry: [
-      async ({ request, error, options, retryCount }) => {
-        const store = useStore();
-        await store.refresh();
+      async () => {
+        const { refresh } = useStore();
+        await refresh();
       },
     ],
   },
