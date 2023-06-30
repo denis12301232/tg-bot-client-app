@@ -36,51 +36,32 @@
 <script setup lang="ts">
 import type { I18n, Langs } from '@/types';
 import type { QForm } from 'quasar';
-import { ref, watch, computed } from 'vue';
+import { ref, watch } from 'vue';
 import { Validate } from '@/util';
 import { useI18n } from 'vue-i18n';
+import { useVModel } from '@/hooks';
 
-const props = defineProps<{
+type Subtasks = { title: string; description: string }[];
+defineProps<{
   title: string;
   description: string;
-  subtasks: { title: string; description: string }[];
+  subtasks: Subtasks;
 }>();
-const emit = defineEmits<{
+defineEmits<{
   'update:title': [value: string];
   'update:description': [value: string];
-  'update:subtasks': [value: { title: string; description: string }[]];
+  'update:subtasks': [value: Subtasks];
 }>();
 
 const { t } = useI18n<I18n, Langs>({ useScope: 'global' });
 const formRef = ref<QForm | null>(null);
 const valid = ref(false);
 // eslint-disable-next-line vue/no-dupe-keys
-const title = computed({
-  get() {
-    return props.title;
-  },
-  set(value) {
-    emit('update:title', value);
-  },
-});
+const title = useVModel<string>('title');
 // eslint-disable-next-line vue/no-dupe-keys
-const description = computed({
-  get() {
-    return props.description;
-  },
-  set(value) {
-    emit('update:description', value);
-  },
-});
+const description = useVModel<string>('description');
 // eslint-disable-next-line vue/no-dupe-keys
-const subtasks = computed({
-  get() {
-    return props.subtasks;
-  },
-  set(value) {
-    emit('update:subtasks', value);
-  },
-});
+const subtasks = useVModel<Subtasks>('subtasks');
 
 const rules = {
   title: [(v: string) => Validate.required(v) || 'Заполните поле'],

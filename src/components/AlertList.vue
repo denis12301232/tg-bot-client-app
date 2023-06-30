@@ -17,24 +17,17 @@
 </template>
 
 <script setup lang="ts">
-import { computed, watch } from 'vue';
 import type { Alert } from '@/util';
+import { watch } from 'vue';
+import { useVModel } from '@/hooks';
 
-const props = defineProps<{
+defineProps<{
   modelValue: Alert[];
 }>();
-const emit = defineEmits<{
+defineEmits<{
   'update:modelValue': [alerts: Alert[]];
 }>();
-
-const alerts = computed({
-  get() {
-    return props.modelValue;
-  },
-  set(alerts: Alert[]) {
-    emit('update:modelValue', alerts);
-  },
-});
+const alerts = useVModel<Alert[]>();
 
 watch(
   () => alerts.value.length,

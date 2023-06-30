@@ -125,7 +125,6 @@
         v-model.trim="form.people_fio[i - 1]"
         :key="i"
         :label="`${t('home.form.placeholders.peopleFio')} ${i}-го`"
-        :rules="formRules.people_num"
         lazy-rules
         maxlength="50"
         counter

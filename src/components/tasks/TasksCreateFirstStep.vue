@@ -49,11 +49,12 @@
 <script setup lang="ts">
 import type { I18n, Langs } from '@/types';
 import type { QForm } from 'quasar';
-import { ref, watch, computed } from 'vue';
+import { ref, watch } from 'vue';
 import { Validate } from '@/util';
 import { useI18n } from 'vue-i18n';
+import { useVModel } from '@/hooks';
 
-const props = defineProps<{
+defineProps<{
   title: string;
   tags: string[];
 }>();
@@ -63,27 +64,13 @@ const emit = defineEmits<{
   valid: [value: boolean];
 }>();
 
-const { t } = useI18n<I18n, Langs>({ useScope: 'global' });
+const { t } = useI18n<I18n, Langs>();
 const formRef = ref<QForm | null>(null);
 const tag = ref('');
 // eslint-disable-next-line vue/no-dupe-keys
-const title = computed({
-  get() {
-    return props.title;
-  },
-  set(value) {
-    emit('update:title', value);
-  },
-});
+const title = useVModel<string>('title');
 // eslint-disable-next-line vue/no-dupe-keys
-const tags = computed({
-  get() {
-    return props.tags;
-  },
-  set(value) {
-    emit('update:tags', value);
-  },
-});
+const tags = useVModel<string[]>('tags');
 
 const rules = {
   title: [(v: string) => Validate.required(v) || t('tasks.create.first.errors.title.required')],

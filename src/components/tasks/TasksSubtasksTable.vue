@@ -44,13 +44,14 @@ import type { I18n, Langs } from '@/types';
 import type { QTable } from 'quasar';
 import { ref, computed } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { useVModel } from '@/hooks';
 
 type Subtask = { title: string; description: string };
 
-const props = defineProps<{
+defineProps<{
   subtasks: Subtask[];
 }>();
-const emit = defineEmits<{
+defineEmits<{
   'update:subtasks': [value: Subtask[]];
 }>();
 
@@ -58,16 +59,8 @@ const { t } = useI18n<I18n, Langs>({ useScope: 'global' });
 const select = ref<(Subtask & { id: number })[]>([]);
 const pagination = ref({ rowsPerPage: 0 });
 // eslint-disable-next-line vue/no-dupe-keys
-const subtasks = computed({
-  get() {
-    return props.subtasks;
-  },
-  set(value) {
-    emit('update:subtasks', value);
-  },
-});
-
-const subtasksWithId = computed(() => props.subtasks.map((item, index) => Object.assign({ id: index }, item)));
+const subtasks = useVModel<Subtask[]>('subtasks');
+const subtasksWithId = computed(() => subtasks.value.map((item, index) => Object.assign({ id: index }, item)));
 const columns = computed<QTable['columns']>(() => [
   {
     name: 'title',

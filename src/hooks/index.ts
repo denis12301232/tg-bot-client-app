@@ -7,3 +7,4 @@ export { default as useNavigation } from './useNavigation';
 export { default as useAudioDuration } from './useAudioDuration';
 export { default as useVoice } from './useVoice';
 export { default as useTelegram } from './useTelegram';
+export { default as useVModel } from './useVModel';

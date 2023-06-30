@@ -92,8 +92,6 @@ const { request, loading, data } = useFetch<T, S>(AssistanceService.uploadFormsL
   afterSuccess: () => (file.value = null),
 });
 
-watchEffect(() => console.log(data.value))
-
 watchEffect((onCleanup) => {
   if (file.value) {
     formData.append('file', file.value);

@@ -17,25 +17,20 @@
 import type { IAlert } from '@/types';
 import { ref, computed, watchEffect } from 'vue';
 import { Util } from '@/util';
+import { useVModel } from '@/hooks';
 
 const props = defineProps<{
   modelValue: boolean;
   type: IAlert;
   message: string;
 }>();
-const emit = defineEmits<{
+defineEmits<{
   'update:modelValue': [value: boolean];
 }>();
 
 const timeout = ref(0);
-const show = computed({
-  get() {
-    return props.modelValue;
-  },
-  set(value: boolean) {
-    emit('update:modelValue', value);
-  },
-});
+const show = useVModel<boolean>();
+
 const icon = computed(() => {
   switch (props.type) {
     case 'success':

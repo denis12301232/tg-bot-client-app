@@ -1,5 +1,5 @@
 <template>
-  <div class="column items-center q-mt-md">
+  <div class="column items-center q-mt-lg">
     <QStepper v-model="step" vertical flat color="primary" animated :class="$style.stepper">
       <QStep :name="1" :title="t('tasks.create.first.title')" icon="task_alt" :done="step > 1">
         <Tasks.CreateFirstStep v-model:title="task.title" v-model:tags="task.tags" @valid="setFirstStepValid" />

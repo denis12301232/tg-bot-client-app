@@ -149,8 +149,8 @@ import { useI18n } from 'vue-i18n';
 type T = { message: string; taskId: string };
 type S = typeof TaskService.setUserForTask;
 
-const { t } = useI18n<I18n, Langs>({ useScope: 'global' });
 const store = useStore();
+const { t } = useI18n<I18n, Langs>({ useScope: 'global' });
 const { request: updateTaskStatus, loading: isTaskStatusLoading } = useFetch(TaskService.updateTaskStatus);
 const { request: setUserForTask, loading: isSetUserLoading } = useFetch<T, S>(TaskService.setUserForTask, {
   afterResponse: ({ data }) => {
@@ -221,7 +221,7 @@ async function onUpdateTaskStatus(taskId: string, status: ITask['status']) {
 
 <style lang="scss" module>
 .table {
-  max-width: 600px;
+  max-width: 700px;
   width: 100%;
 }
 </style>

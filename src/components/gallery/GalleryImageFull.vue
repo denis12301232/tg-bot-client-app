@@ -38,12 +38,13 @@
 </template>
 
 <script setup lang="ts">
+import LoaderWheel from '~/LoaderWheel.vue';
 import type { I18n, ImagesResponse, Langs } from '@/types';
 import { computed, onMounted, onUnmounted, nextTick } from 'vue';
 import { useI18n } from 'vue-i18n';
-import LoaderWheel from '~/LoaderWheel.vue';
 import { ImageService } from '@/api/services';
 import { useStore } from '@/stores';
+import { useVModel } from '@/hooks';
 
 const props = defineProps<{
   currentIndex: number;
@@ -61,22 +62,8 @@ const emit = defineEmits<{
 }>();
 const store = useStore();
 const { t } = useI18n<I18n, Langs>();
-const index = computed({
-  get() {
-    return props.currentIndex;
-  },
-  set(value) {
-    emit('update:currentIndex', value);
-  },
-});
-const imgs = computed({
-  get() {
-    return props.images;
-  },
-  set(images) {
-    emit('update:images', images);
-  },
-});
+const index = useVModel<number>('currentIndex');
+const imgs = useVModel<ImagesResponse['images']>('images')
 
 onMounted(() => document.addEventListener('keydown', changeImage));
 onUnmounted(() => document.removeEventListener('keydown', changeImage));
