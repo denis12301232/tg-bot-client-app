@@ -1,12 +1,19 @@
+import type { QUploaderFactoryObject } from 'quasar';
 import { $api } from '@/api';
+import { ENV } from '@/util';
 
 export default class ImageService {
   static getImages(params: { skip: number; limit: number; sort: string; descending: boolean }) {
     return $api.get('images/', { searchParams: params });
   }
 
-  static uploadImages(formData: FormData) {
-    return $api.post('images/upload', { body: formData, timeout: 6e5 });
+  static uploadImages() {
+    return {
+      url: ENV.API_V1 + '/images/upload',
+      method: 'POST',
+      headers: [{ name: 'Authorization', value: `Bearer ${localStorage.getItem('token')}` }],
+      withCredentials: true,
+    } as QUploaderFactoryObject;
   }
 
   static deleteImages(ids: string[]) {

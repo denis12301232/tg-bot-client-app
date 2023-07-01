@@ -6,4 +6,5 @@ export interface ImageInjected {
   total: Ref<number>;
   skip: ComputedRef<number>;
   selected: Ref<Set<string>>;
+  uploadModal: Ref<boolean>;
 }

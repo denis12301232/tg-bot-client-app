@@ -6,7 +6,7 @@
         <QToolbarTitle>{{ t('gallery.layout.title') }}</QToolbarTitle>
         <QBtnGroup v-if="store.isAdmin" flat>
           <GalleryImageDelete :selected="selected" />
-          <GalleryImageUpload />
+          <QBtn icon="eva-upload-outline" dense flat round color="indigo" @click="openModal" />
         </QBtnGroup>
       </QToolbar>
     </QHeader>
@@ -18,7 +18,6 @@
 
 <script setup lang="ts">
 import GalleryImageDelete from '~/gallery/GalleryImageDelete.vue';
-import GalleryImageUpload from '~/gallery/GalleryImageUpload.vue';
 import type { I18n, Langs, ImagesResponse } from '@/types';
 import { ref, provide, computed } from 'vue';
 import { useI18n } from 'vue-i18n';
@@ -29,7 +28,12 @@ const store = useStore();
 const images = ref<ImagesResponse['images']>([]);
 const total = ref(0);
 const selected = ref(new Set<string>());
+const uploadModal = ref(false);
 const skip = computed(() => images.value.length);
 
-provide('data', { images, total, skip, selected });
+provide('data', { images, total, skip, selected, uploadModal });
+
+function openModal() {
+  uploadModal.value = true;
+}
 </script>

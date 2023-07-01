@@ -1,50 +1,44 @@
 <template>
-  <QBtn
-    icon="eva-upload-outline"
-    dense
-    flat
-    round
-    color="indigo"
-    :disable="loading"
-    :loading="loading"
-    @click="imagesRef?.click()"
-  >
-    <QTooltip class="bg-indigo" :offset="[10, 10]" :delay="1000">{{ t('gallery.hints.upload') }}</QTooltip>
-  </QBtn>
-  <input ref="imagesRef" class="hidden" type="file" accept="image/*" multiple @change="onMedia" />
+  <QCard class="q-pa-md">
+    <QCardSection>
+      <h5 class="text-center">{{ t('gallery.msgs.upload') }}</h5>
+    </QCardSection>
+    <QCardSection class="row justify-center q-mb-sm">
+      <QUploader
+        flat
+        bordered
+        accept="image/*"
+        color="indigo"
+        multiple
+        batch
+        :label="t('gallery.msgs.imgs')"
+        :max-file-size="10e6"
+        :filter="checkFileType"
+        :factory="ImageService.uploadImages"
+        @uploaded="onUploaded"
+      >
+      </QUploader>
+    </QCardSection>
+  </QCard>
 </template>
 
 <script setup lang="ts">
-import type { ImagesResponse, I18n, Langs, ImageInjected } from '@/types';
-import { inject, ref } from 'vue';
-import { useFetch } from '@/hooks';
-import { ImageService } from '@/api/services';
+import type { ImagesResponse, ImageInjected, Langs, I18n } from '@/types';
+import { inject } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { ImageService } from '@/api/services';
 
-type T = ImagesResponse['images'];
-type S = typeof ImageService.uploadImages;
-
-const formData = new FormData();
-const { images, total } = inject<ImageInjected>('data')!;
-const imagesRef = ref<HTMLInputElement | null>(null);
 const { t } = useI18n<I18n, Langs>();
-const { request: uploadImages, loading } = useFetch<T, S>(ImageService.uploadImages, {
-  afterSuccess: ({ data }) => {
-    images.value = [...data.value, ...images.value];
-    total.value = data.value.length + total.value;
-  },
-});
+const { images, total } = inject<ImageInjected>('data')!;
 
-async function onMedia(event: Event) {
-  const target = event.target as HTMLInputElement;
-  const files = target.files;
+function onUploaded(info: { files: readonly File[]; xhr: XMLHttpRequest }) {
+  const data = JSON.parse(info.xhr.response) as ImagesResponse['images'];
+  images.value = [...data, ...images.value];
+  total.value = data.length + total.value;
+}
 
-  if (files) {
-    Array.from(files).forEach((file) => formData?.append('images', file));
-    uploadImages(formData);
-    target.value = '';
-    formData.delete('images');
-  }
+function checkFileType(files: readonly File[] | FileList) {
+  return Array.from(files).filter((file) => file.type.includes('image/'));
 }
 </script>
 
