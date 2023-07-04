@@ -42,6 +42,7 @@ import { useI18n } from 'vue-i18n';
 import { useVModel } from '@/hooks';
 
 type Subtasks = { title: string; description: string }[];
+
 defineProps<{
   title: string;
   description: string;
@@ -53,7 +54,7 @@ defineEmits<{
   'update:subtasks': [value: Subtasks];
 }>();
 
-const { t } = useI18n<I18n, Langs>({ useScope: 'global' });
+const { t } = useI18n<I18n, Langs>();
 const formRef = ref<QForm | null>(null);
 const valid = ref(false);
 // eslint-disable-next-line vue/no-dupe-keys
@@ -64,8 +65,8 @@ const description = useVModel<string>('description');
 const subtasks = useVModel<Subtasks>('subtasks');
 
 const rules = {
-  title: [(v: string) => Validate.required(v) || 'Заполните поле'],
-  description: [(v: string) => Validate.required(v) || 'Заполните поле'],
+  title: [(v: string) => Validate.required(v) || t('tasks.create.second.errors.title.required')],
+  description: [(v: string) => Validate.required(v) || t('tasks.create.second.errors.description.required')],
 };
 
 watch([title, description], () => {

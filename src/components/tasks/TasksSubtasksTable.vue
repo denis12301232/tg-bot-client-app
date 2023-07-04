@@ -55,7 +55,7 @@ defineEmits<{
   'update:subtasks': [value: Subtask[]];
 }>();
 
-const { t } = useI18n<I18n, Langs>({ useScope: 'global' });
+const { t } = useI18n<I18n, Langs>();
 const select = ref<(Subtask & { id: number })[]>([]);
 const pagination = ref({ rowsPerPage: 0 });
 // eslint-disable-next-line vue/no-dupe-keys

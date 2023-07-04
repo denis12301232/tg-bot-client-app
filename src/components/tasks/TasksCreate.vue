@@ -54,7 +54,7 @@ import { TaskService } from '@/api/services';
 import { useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 
-const { t } = useI18n<I18n, Langs>({ useScope: 'global' });
+const { t } = useI18n<I18n, Langs>();
 const router = useRouter();
 const step = ref(1);
 const valid = reactive({ first: false, second: false });

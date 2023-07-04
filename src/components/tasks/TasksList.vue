@@ -150,7 +150,7 @@ type T = { message: string; taskId: string };
 type S = typeof TaskService.setUserForTask;
 
 const store = useStore();
-const { t } = useI18n<I18n, Langs>({ useScope: 'global' });
+const { t } = useI18n<I18n, Langs>();
 const { request: updateTaskStatus, loading: isTaskStatusLoading } = useFetch(TaskService.updateTaskStatus);
 const { request: setUserForTask, loading: isSetUserLoading } = useFetch<T, S>(TaskService.setUserForTask, {
   afterResponse: ({ data }) => {

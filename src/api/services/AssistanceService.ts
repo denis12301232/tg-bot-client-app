@@ -6,8 +6,8 @@ export default class AssistanceService {
     return $api.post('assistance', { json: form });
   }
 
-  static getHumansList(params: PaginationRequest) {
-    return $api.get('assistance/list', { searchParams: new URLSearchParams(params as any) });
+  static getHumansList({ page, filter, limit, sort, descending }: PaginationRequest) {
+    return $api.get('assistance/list', { searchParams: { page, filter, limit, sort, descending } });
   }
 
   static deleteForms(ids: string[]) {
@@ -15,11 +15,11 @@ export default class AssistanceService {
   }
 
   static findForms(nameOrSurname: string, limit: number, page: number) {
-    return $api.get('assistance', { searchParams: new URLSearchParams({ nameOrSurname, limit, page } as any) });
+    return $api.get('assistance', { searchParams: { nameOrSurname, limit, page } });
   }
 
   static getFormById(formId: string) {
-    return $api.get('assistance/id', { searchParams: new URLSearchParams({ id: formId }) });
+    return $api.get('assistance/id', { searchParams: { id: formId } });
   }
 
   static saveFormsToSheet(

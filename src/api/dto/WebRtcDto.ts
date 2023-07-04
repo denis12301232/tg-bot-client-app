@@ -1,10 +1,10 @@
 type WebRtcEvents = 'meet:msg' | 'set-toggle' | 'identify-stream' | 'track:end' | 'track:toggle' | 'track:toggle-init';
 
-export default class WebRtcDto {
+export default class WebRtcDto<T = any> {
   readonly event: WebRtcEvents;
-  readonly data: any;
+  readonly data: T;
 
-  constructor(event: WebRtcEvents, data: any) {
+  constructor(event: WebRtcEvents, data: T) {
     this.event = event;
     this.data = data;
   }

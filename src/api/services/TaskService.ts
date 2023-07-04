@@ -1,9 +1,9 @@
-import type { ITask } from '@/types';
+import type { ITask, PaginationRequest } from '@/types';
 import { $api } from '@/api';
 
 export default class TaskService {
-  static getTasks(params: { page: number; limit: number; sort: string; descending: boolean; filter: string }) {
-    return $api.get('tasks', { searchParams: new URLSearchParams(params as any) });
+  static getTasks({ page, limit, sort, descending, filter }: PaginationRequest) {
+    return $api.get('tasks', { searchParams: { page, limit, sort, descending, filter } });
   }
 
   static updateTaskStatus(task_id: string, status: ITask['status']) {
@@ -19,7 +19,7 @@ export default class TaskService {
   }
 
   static getTaskById(taskId: string) {
-    return $api.get('tasks/get_task_by_id', { searchParams: new URLSearchParams({ task_id: taskId }) });
+    return $api.get('tasks/get_task_by_id', { searchParams: { task_id: taskId } });
   }
 
   static updateSubtask(data: { subtask_id: string; status?: string; cause?: string }) {
@@ -27,11 +27,11 @@ export default class TaskService {
   }
 
   static createTaskCsv(taskId: string) {
-    return $api.get('tasks/create_task_csv', { searchParams: new URLSearchParams({ task_id: taskId }) });
+    return $api.get('tasks/create_task_csv', { searchParams: { task_id: taskId } });
   }
 
   static deleteSubtask(subtask_id: string, task_id: string) {
-    return $api.delete('tasks/delete_subtask', { searchParams: new URLSearchParams({ subtask_id, task_id }) });
+    return $api.delete('tasks/delete_subtask', { searchParams: { subtask_id, task_id } });
   }
 
   static moveSubtask(subtask_id: string, task_id: string, new_task_id: string) {

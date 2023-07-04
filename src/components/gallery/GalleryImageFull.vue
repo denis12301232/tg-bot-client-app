@@ -40,7 +40,7 @@
 <script setup lang="ts">
 import LoaderWheel from '~/LoaderWheel.vue';
 import type { I18n, ImagesResponse, Langs } from '@/types';
-import { computed, onMounted, onUnmounted, nextTick } from 'vue';
+import { onMounted, onUnmounted, nextTick } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { ImageService } from '@/api/services';
 import { useStore } from '@/stores';

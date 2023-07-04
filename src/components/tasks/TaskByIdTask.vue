@@ -54,7 +54,7 @@ defineProps<{
   task?: ITask;
 }>();
 
-const { t } = useI18n<I18n, Langs>({ useScope: 'global' });
+const { t } = useI18n<I18n, Langs>();
 </script>
 
 <style lang="scss" module>

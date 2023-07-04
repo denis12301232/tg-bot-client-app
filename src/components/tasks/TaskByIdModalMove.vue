@@ -97,7 +97,7 @@ const emit = defineEmits<{
   move: [id: string];
 }>();
 
-const { t } = useI18n<I18n, Langs>({ useScope: 'global' });
+const { t } = useI18n<I18n, Langs>();
 const selected = ref<ITask[]>([]);
 const {
   request,

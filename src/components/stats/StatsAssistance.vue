@@ -48,20 +48,7 @@ const timestamp = computed(() => {
   return !date.value ? Date.now() : new Date(+data.at(0)!, +data.at(1)! - 1, +data.at(2)!).getTime();
 });
 const { request: getStats, data: stats, loading } = useFetch<T, S>(AssistanceService.getStats);
-const monthes = computed(() => [
-  t('calendar.monthsShort.0'),
-  t('calendar.monthsShort.1'),
-  t('calendar.monthsShort.2'),
-  t('calendar.monthsShort.3'),
-  t('calendar.monthsShort.4'),
-  t('calendar.monthsShort.5'),
-  t('calendar.monthsShort.6'),
-  t('calendar.monthsShort.7'),
-  t('calendar.monthsShort.8'),
-  t('calendar.monthsShort.9'),
-  t('calendar.monthsShort.10'),
-  t('calendar.monthsShort.11'),
-]);
+const monthes = computed(() => Object.values(messages.value[locale.value].calendar.monthsShort));
 onMounted(() => {
   chartRef.value &&
     (chart.value = new Chart(chartRef.value, {

@@ -27,7 +27,7 @@
       color="primary"
       @click="
         updateGroup({
-          formData: formData,
+          formData,
           params: { group_id: group!._id, title: settings.title, about: settings.about },
         })
       "
@@ -40,7 +40,7 @@
 <script setup lang="ts">
 import type { ChatResponse, I18n, Langs } from '@/types';
 import SetAvatar from '~/SetAvatar.vue';
-import { ref, reactive, computed, watch } from 'vue';
+import { reactive, computed, watchEffect } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useChatStore } from '@/stores';
 import { useFetch } from '@/hooks';
@@ -55,8 +55,7 @@ const settings = reactive({
   title: currentChat.value?.group.title || '',
   about: currentChat.value?.group.about || '',
 });
-
-const formData = ref<FormData>(new FormData());
+const formData = new FormData();
 const group = computed(() => currentChat.value?.group);
 const valid = computed(() => Boolean(settings.title || settings.avatar || settings.about));
 const { request: updateGroup, loading } = useFetch<ChatResponse['group'], typeof ChatService.updateGroup>(
@@ -72,12 +71,11 @@ const { request: updateGroup, loading } = useFetch<ChatResponse['group'], typeof
     errorMsg: t('chat.groupSettings.msgs.updateFailed'),
   }
 );
-
-watch([() => settings.avatar], () => {
+watchEffect((onCleanup) => {
   if (settings.avatar) {
-    formData.value = new FormData();
-    formData.value.append('avatar', settings.avatar);
+    formData.append('avatar', settings.avatar);
   }
+  onCleanup(() => formData.delete('avatar'));
 });
 </script>
 

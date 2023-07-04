@@ -1,6 +1,6 @@
 import { getCurrentInstance, computed } from 'vue';
 
-export default function useVModel<T>(m?: string) {
+export default function useVModel<T>(m = 'modelValue') {
   const instance = getCurrentInstance();
 
   if (!instance) {
@@ -10,10 +10,10 @@ export default function useVModel<T>(m?: string) {
 
   return computed<T>({
     get() {
-      return instance.props[m || 'modelValue'] as T;
+      return instance.props[m] as T;
     },
     set(v) {
-      emit(`update:${m || 'modelValue'}`, v);
+      emit(`update:${m}`, v);
     },
   });
 }
