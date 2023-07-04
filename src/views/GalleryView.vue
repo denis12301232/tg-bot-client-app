@@ -1,6 +1,6 @@
 <template>
   <div>
-    <QDialog v-model="uploadModal" >
+    <QDialog v-model="uploadModal">
       <GalleryImageUpload />
     </QDialog>
     <QDialog v-model="modal" maximized no-refocus>

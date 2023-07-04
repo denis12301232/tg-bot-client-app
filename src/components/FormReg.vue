@@ -73,7 +73,7 @@ import { useFetch } from '@/hooks';
 import { useI18n } from 'vue-i18n';
 
 type T = LoginResponse;
-type S = typeof AuthService['registration'];
+type S = (typeof AuthService)['registration'];
 
 const emit = defineEmits<{
   close: [];

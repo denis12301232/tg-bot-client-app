@@ -157,11 +157,17 @@ const { request: setUserForTask, loading: isSetUserLoading } = useFetch<T, S>(Ta
     const task = tasks.value?.find((task) => task._id === data.value.taskId);
     if (task) {
       task.status = 'performed';
-      ((task.user as unknown) as any) = store.user?._id;
+      (task.user as unknown as any) = store.user?._id;
     }
   },
 });
-const { request, data: tasks, pagination, filter, loading } = useRequest<ITask>(TaskService.getTasks, {
+const {
+  request,
+  data: tasks,
+  pagination,
+  filter,
+  loading,
+} = useRequest<ITask>(TaskService.getTasks, {
   sort: 'createdAt',
   limit: 5,
 });

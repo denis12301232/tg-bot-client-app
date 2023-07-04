@@ -1,24 +1,19 @@
 <template>
   <QCard class="q-pa-md">
-    <QCardSection>
-      <h5 class="text-center">{{ t('gallery.msgs.upload') }}</h5>
-    </QCardSection>
-    <QCardSection class="row justify-center q-mb-sm">
-      <QUploader
-        flat
-        bordered
-        accept="image/*"
-        color="indigo"
-        multiple
-        batch
-        :label="t('gallery.msgs.imgs')"
-        :max-file-size="10e6"
-        :filter="checkFileType"
-        :factory="ImageService.uploadImages"
-        @uploaded="onUploaded"
-      >
-      </QUploader>
-    </QCardSection>
+    <QUploader
+      flat
+      bordered
+      accept="image/*"
+      color="indigo"
+      multiple
+      batch
+      :label="t('gallery.msgs.imgs')"
+      :max-file-size="10e6"
+      :filter="checkFileType"
+      :factory="ImageService.uploadImages"
+      @uploaded="onUploaded"
+    >
+    </QUploader>
   </QCard>
 </template>
 

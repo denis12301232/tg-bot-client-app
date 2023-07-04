@@ -3,24 +3,24 @@
   font-weight: normal;
   margin: 0;
 
-    &::-webkit-scrollbar {
-      width: 7px; /* width of the entire scrollbar */
-      height: 7px;  
-    }
-    &::-webkit-scrollbar-track {
-      background: transparent;  /* color of the tracking area */  
-    }
-    &::-webkit-scrollbar-thumb {
-      background-color: var(--scroll-thumb-color);    /* color of the scroll thumb */
-      border-radius: 20px;   /* roundness of the scroll thumb */
-    }
-    &::-webkit-scrollbar-thumb:hover {
-      background: var(--scroll-thumb-color-hover);
-    }
-
+  &::-webkit-scrollbar {
+    width: 7px; /* width of the entire scrollbar */
+    height: 7px;
+  }
+  &::-webkit-scrollbar-track {
+    background: transparent; /* color of the tracking area */
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: var(--scroll-thumb-color); /* color of the scroll thumb */
+    border-radius: 20px; /* roundness of the scroll thumb */
+  }
+  &::-webkit-scrollbar-thumb:hover {
+    background: var(--scroll-thumb-color-hover);
+  }
 }
 
-*::before, *::after {
+*::before,
+*::after {
   box-sizing: border-box;
   margin: 0;
   position: relative;
@@ -31,10 +31,10 @@ html.light {
   --scroll-thumb-color: #bab9bc;
   --scroll-thumb-color-hover: rgb(144, 140, 140);
 
-    & .header {
-      background-color: white;
-      color: black;
-    }
+  & .header {
+    background-color: white;
+    color: black;
+  }
 }
 
 html.dark {
@@ -49,8 +49,8 @@ html.dark {
 body {
   transition: color 0.5s, background-color 0.5s;
   line-height: 1.6;
-  font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
-    Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Fira Sans',
+    'Droid Sans', 'Helvetica Neue', sans-serif;
   font-size: 15px !important;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;

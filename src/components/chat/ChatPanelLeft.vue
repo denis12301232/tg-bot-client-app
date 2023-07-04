@@ -28,8 +28,17 @@
     </div>
   </Transition>
   <div class="header row items-center">
-    <QInput v-model="search" class="full-width" debounce="300" :label="t('chat.playsholders.search')" :loading="loading"
-      clearable hide-bottom-space borderless square>
+    <QInput
+      v-model="search"
+      class="full-width"
+      debounce="300"
+      :label="t('chat.playsholders.search')"
+      :loading="loading"
+      clearable
+      hide-bottom-space
+      borderless
+      square
+    >
       <template #prepend>
         <QBtn v-model="menu" round dense flat icon="eva-menu" @click.stop="openMenu" />
       </template>
@@ -109,7 +118,6 @@ html.light {
   .divider {
     border-right: 1px solid #ccc;
   }
-
 }
 
 .menu-enter-active {

@@ -40,7 +40,7 @@ export interface AssistanceResponse {
   photo_agreement: boolean;
 }
 
-export type UploadImagesResponse = { link: string; fileId: string, description: string }[];
+export type UploadImagesResponse = { link: string; fileId: string; description: string }[];
 
 export interface ImagesResponse {
   images: {

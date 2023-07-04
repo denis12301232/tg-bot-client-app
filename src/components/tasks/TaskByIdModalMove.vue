@@ -99,7 +99,12 @@ const emit = defineEmits<{
 
 const { t } = useI18n<I18n, Langs>({ useScope: 'global' });
 const selected = ref<ITask[]>([]);
-const { request, pagination, loading, data: tasks } = useRequest<ITask>(TaskService.getTasks, {
+const {
+  request,
+  pagination,
+  loading,
+  data: tasks,
+} = useRequest<ITask>(TaskService.getTasks, {
   limit: 5,
   sort: 'createdAt',
 });

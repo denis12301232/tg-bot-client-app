@@ -41,7 +41,11 @@ const rules = [
   (v: string) => Validate.isEmail(v) || t('restore.errors.email.isEmail'),
 ];
 
-const { request: sendMail, loading, error } = useFetch(AuthService.sendMail, {
+const {
+  request: sendMail,
+  loading,
+  error,
+} = useFetch(AuthService.sendMail, {
   afterResponse: () => {
     message.value = `${t('restore.msgs.link')} ${email.value}`;
     email.value = '';

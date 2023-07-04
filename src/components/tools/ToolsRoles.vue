@@ -70,10 +70,13 @@ const { request, loading } = useFetch(ToolsService.updateRoles, {
   alert: true,
   successMsg: t('tools.roles.msgs.update'),
 });
-const { request: getUsers, pagination, filter, loading: isUsersLoading, data: users } = useRequest<IUser>(
-  ToolsService.getUsers,
-  { limit: 3 }
-);
+const {
+  request: getUsers,
+  pagination,
+  filter,
+  loading: isUsersLoading,
+  data: users,
+} = useRequest<IUser>(ToolsService.getUsers, { limit: 3 });
 const columns = computed<QTable['columns']>(() => [
   { name: 'name', label: t('tools.roles.table.columns.name'), align: 'left', field: 'name' },
   { name: 'login', label: t('tools.roles.table.columns.login'), align: 'left', field: 'login' },

@@ -1,1 +1,1 @@
-export { default as WebRtcDto } from './WebRtcDto'
+export { default as WebRtcDto } from './WebRtcDto';

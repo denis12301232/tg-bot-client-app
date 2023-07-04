@@ -63,7 +63,7 @@ const emit = defineEmits<{
 const store = useStore();
 const { t } = useI18n<I18n, Langs>();
 const index = useVModel<number>('currentIndex');
-const imgs = useVModel<ImagesResponse['images']>('images')
+const imgs = useVModel<ImagesResponse['images']>('images');
 
 onMounted(() => document.addEventListener('keydown', changeImage));
 onUnmounted(() => document.removeEventListener('keydown', changeImage));

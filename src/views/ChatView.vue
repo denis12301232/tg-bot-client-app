@@ -19,7 +19,7 @@ import { ref, shallowRef, watch } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useChatStore } from '@/stores';
 
-type ModalContent = { component: typeof Chat[keyof typeof Chat]; props?: { [name: string]: unknown } };
+type ModalContent = { component: (typeof Chat)[keyof typeof Chat]; props?: { [name: string]: unknown } };
 
 const { currentChatId } = storeToRefs(useChatStore());
 const modal = ref(false);

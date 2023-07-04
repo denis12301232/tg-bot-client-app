@@ -5,7 +5,9 @@
       size="200px"
       :src="store.user?.avatar && `${ENV.SERVER_URL}/avatars/${store.user.avatar}`"
     />
-    <QBtn class="q-mt-sm" color="primary" :disable="!avatar || loading" type="submit" :loading="loading">{{ label }}</QBtn>
+    <QBtn class="q-mt-sm" color="primary" :disable="!avatar || loading" type="submit" :loading="loading">{{
+      label
+    }}</QBtn>
     <div class="row justify-center text-negative text-bold caption">
       {{ typeof error === 'object' ? error.message : error }}
     </div>

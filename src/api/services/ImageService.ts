@@ -7,13 +7,13 @@ export default class ImageService {
     return $api.get('images/', { searchParams: params });
   }
 
-  static uploadImages() {
+  static uploadImages(): QUploaderFactoryObject {
     return {
       url: ENV.API_V1 + '/images/upload',
       method: 'POST',
       headers: [{ name: 'Authorization', value: `Bearer ${localStorage.getItem('token')}` }],
       withCredentials: true,
-    } as QUploaderFactoryObject;
+    };
   }
 
   static deleteImages(ids: string[]) {
