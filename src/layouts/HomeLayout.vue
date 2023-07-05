@@ -7,7 +7,7 @@
           <QAvatar>
             <img :src="icon" />
           </QAvatar>
-          Kharkov Volonteer
+          {{ ENV.TITLE }}
         </QToolbarTitle>
         <SetLang />
         <QBtn
@@ -118,6 +118,7 @@ import { useRoute } from 'vue-router';
 import { useStore } from '@/stores';
 import { useI18n } from 'vue-i18n';
 import { useTelegram } from '@/hooks';
+import { ENV } from '@/util';
 
 const icon = new URL('../../public/icon.jpg', import.meta.url).href;
 const { t } = useI18n<I18n, Langs>();

@@ -1,6 +1,6 @@
 <template>
   <QDialog v-model="modal" :maximized="maximized.includes(name || '')">
-    <component :is="content?.component" :="content?.props" />
+    <component v-if="content?.component" :is="content.component" :="content?.props" />
   </QDialog>
   <div class="window-height row no-wrap">
     <div :class="[$style.contacts, currentChatId ? $style.hide : $style.not_hide]">

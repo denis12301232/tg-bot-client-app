@@ -1,7 +1,12 @@
 <template>
   <QLayout view="hhh lpR fff">
     <QDrawer v-model="open.right" side="right" bordered>
-      <component :is="rightDrawer?.component" :="rightDrawer?.props" @my-msg="(msg: any) => messages.push(msg)" />
+      <component
+        v-if="rightDrawer?.component"
+        :is="rightDrawer.component"
+        :="rightDrawer?.props"
+        @my-msg="(msg: Message) => messages.push(msg)"
+      />
     </QDrawer>
     <QPageContainer class="window-height">
       <slot />
@@ -66,6 +71,7 @@ import { useI18n } from 'vue-i18n';
 
 type T = { title: string; roles: { admin: string[] } };
 type S = typeof MeetService.getMeetInfo;
+type Message = { user_id: string; msg: string };
 
 interface RightDrawer {
   component: (typeof Meet)[keyof typeof Meet];
@@ -82,7 +88,7 @@ const { abonents, streams, streamIds, captureMyStream } = useWebRtc(socket, user
 const { request: getMeetInfo, data: meetInfo, error } = useFetch<T, S>(MeetService.getMeetInfo);
 const open = reactive({ left: false, right: false });
 const videos = ref<Map<string, InstanceType<typeof CustomVideo> | null>>(new Map());
-const messages = ref<{ user_id: string; msg: string }[]>([]);
+const messages = ref<Message[]>([]);
 const component = ref<'chat' | 'info' | 'user-list'>('chat');
 const unreadMessages = ref(0);
 const rightDrawer = shallowRef<RightDrawer | null>(null);
@@ -194,7 +200,7 @@ function onTrackToggleInit(peerId: string) {
   }
 }
 
-function onMeetMsg(msg: any) {
+function onMeetMsg(msg: Message) {
   messages.value.push(msg);
   if (!open.right || (open.right && component.value !== 'chat')) {
     unreadMessages.value++;
@@ -215,8 +221,10 @@ async function shareMyScreen() {
   captureMyStream('screen', { video: true })
     .then((stream) => {
       const msg = new WebRtcDto('identify-stream', { type: 'screen', id: stream.id }).toString();
-      abonents.value.forEach((a) => a.channel?.send(msg));
-      abonents.value.forEach((a) => stream.getTracks().forEach((track) => a.peer?.addTrack(track, stream)));
+      abonents.value.forEach((a) => {
+        a.channel?.send(msg);
+        stream.getTracks().forEach((track) => a.peer?.addTrack(track, stream));
+      });
     })
     .catch((e) => console.error(e));
 }

@@ -9,7 +9,7 @@
           flat
           dense
           color="white"
-          :icon="sets.fullscreen ? 'fullscreen_exit' : 'fullscreen'"
+          :icon="sets.fullscreen ? 'eva-collapse-outline' : 'eva-expand-outline'"
           @click="toggleFullscreen"
         />
       </div>

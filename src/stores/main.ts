@@ -1,9 +1,8 @@
 import type { IUser, Langs, I18n, IAlertType, ITheme } from '@/types';
-import { ref, computed, watch, watchEffect } from 'vue';
+import { ref, computed, watchEffect } from 'vue';
 import { defineStore } from 'pinia';
 import { useQuasar } from 'quasar';
-import { AuthService } from '@/api/services';
-import { ToolsService } from '@/api/services';
+import { AuthService, ToolsService } from '@/api/services';
 import { Alert } from '@/util';
 import { useI18n } from 'vue-i18n';
 
@@ -28,17 +27,12 @@ export const useStore = defineStore('main', () => {
         return 'light';
     }
   });
-
-  watch(
-    currentTheme,
-    (n) => {
-      const html = document.querySelector('html');
-      n === 'dark' ? $q.dark.set(true) : $q.dark.set(false);
-      html?.setAttribute('class', n);
-      localStorage.setItem('theme', n);
-    },
-    { immediate: true }
-  );
+  watchEffect(() => {
+    const html = document.querySelector('html');
+    currentTheme.value === 'dark' ? $q.dark.set(true) : $q.dark.set(false);
+    html?.setAttribute('class', currentTheme.value);
+    localStorage.setItem('theme', currentTheme.value);
+  });
   watchEffect(() => setLocale(lang.value).then(() => localStorage.setItem('lang', lang.value)));
 
   function setTheme() {
