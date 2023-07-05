@@ -12,9 +12,9 @@
         @visibility="onVisible"
       >
         <QCard
+          :class="['q-ma-sm', 'non-selectable', { 'red-border': selected.has(image.fileId) }]"
           flat
           bordered
-          :class="['q-ma-sm', 'non-selectable', { 'red-border': selected.has(image.fileId) }]"
           @click="onTouch($event, image.fileId)"
         >
           <div class="image-block" @click="onOpen($event, index)">
@@ -62,17 +62,17 @@ function onVisible() {
   emit('request');
 }
 
-function onOpen(e: MouseEvent, index: number) {
-  if (!e.ctrlKey) {
+function onOpen(event: MouseEvent, index: number) {
+  if (!event.ctrlKey) {
     emit('open', index);
   }
 }
 
-function onTouch(e: MouseEvent, id: string) {
+function onTouch(event: MouseEvent, id: string) {
   if (!store.isAdmin) {
     return;
   }
-  if (e.ctrlKey) {
+  if (event.ctrlKey) {
     selected.value.has(id) ? selected.value.delete(id) : selected.value.add(id);
   }
 }

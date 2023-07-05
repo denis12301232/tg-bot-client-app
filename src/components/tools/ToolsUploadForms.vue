@@ -20,11 +20,11 @@
       </QFile>
       <div v-if="data" class="q-py-sm">
         <div>
-          <span class="text-subtitle1 text-positive">Загружено:</span>
+          <span class="text-subtitle1 text-positive">{{ t('tools.forms.msgs.uploaded') }}:</span>
           {{ data.created }}
         </div>
         <div>
-          <span class="text-subtitle1 text-negative">Ошибки:</span>
+          <span class="text-subtitle1 text-negative">{{ t('tools.forms.msgs.errors') }}:</span>
           {{ data.errors.length }}
         </div>
       </div>
@@ -38,9 +38,11 @@
     />
     <QCard v-if="help" style="width: 100%; max-width: 800px">
       <QCardSection>
-        <p class="text-body1 text-justify q-py-md q-px-sm">
-          {{ t('tools.forms.msgs.how') }}
-        </p>
+        <QList>
+          <QItem v-for="how of messages[locale].tools.forms.msgs.how.length" :key="how">
+            {{ how + '. ' + t(`tools.forms.msgs.how.${how - 1}`) }}.
+          </QItem>
+        </QList>
       </QCardSection>
       <QMarkupTable>
         <tbody>

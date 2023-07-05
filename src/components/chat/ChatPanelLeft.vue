@@ -44,7 +44,12 @@
       </template>
     </QInput>
   </div>
-  <QScrollArea class="fit divider" :thumb-style="{ width: '7px' }">
+  <QScrollArea
+    class="fit divider"
+    :thumb-style="{ width: '7px' }"
+    :content-style="{ position: 'relative', overflow: 'hidden' }"
+    :content-active-style="{ position: 'relative', overflow: 'hidden' }"
+  >
     <Chat.ListSearch v-show="search" :users="users" @update:search="onUpdateSearch" />
     <Chat.List v-show="!search" />
   </QScrollArea>

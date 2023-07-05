@@ -19,11 +19,11 @@
         />
       </QItemSection>
       <QItemSection>
-        <QItemLabel class="text-cut" style="max-width: 80%">
+        <QItemLabel class="text-cut" style="max-width: 90%">
           {{ chat.type === 'dialog' ? chat.companion.name : chat.group?.title }}
         </QItemLabel>
-        <QItemLabel class="text-cut" caption lines="2">
-          <div v-if="!Object.values(chat.typing || {}).at(0)">
+        <QItemLabel caption lines="2">
+          <div v-if="!Object.values(chat.typing || {}).at(0)" class="text-cut" style="max-width: 90%">
             {{ chat.messages?.length ? showLastMessageText(chat.messages.at(-1)) : t('chat.msg.none') }}
           </div>
           <div v-else>
