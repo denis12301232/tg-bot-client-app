@@ -1,10 +1,10 @@
-import type { DefineComponent } from 'vue';
+import type { Component } from 'vue';
 import 'vue-router';
 
 declare module 'vue-router' {
   export interface RouteMeta {
     layout?: string;
-    layoutComponent?: DefineComponent;
+    layoutComponent?: Component;
     layoutProps?: { [name: string]: any };
   }
 }
