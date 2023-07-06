@@ -6,8 +6,8 @@
       <QIntersection
         v-for="(image, index) of images"
         :key="index"
-        transition="scale"
         class="example-item"
+        transition="scale"
         once
         @visibility="onVisible"
       >
@@ -15,9 +15,10 @@
           :class="['q-ma-sm', 'non-selectable', { 'red-border': selected.has(image.fileId) }]"
           flat
           bordered
-          @click="onTouch($event, image.fileId)"
+          @pointerup="onPointerUp($event, image.fileId, index)"
+          @pointerdown="onPointerDown"
         >
-          <div class="image-block" @click="onOpen($event, index)">
+          <div class="image-block">
             <QImg class="image_item" fit="cover" :src="image.link">
               <template #loading>
                 <LoaderWheel size="35px" />
@@ -37,7 +38,7 @@
 <script setup lang="ts">
 import LoaderWheel from '~/LoaderWheel.vue';
 import type { Langs, I18n, ImageInjected } from '@/types';
-import { onMounted, inject } from 'vue';
+import { onMounted, inject, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useStore } from '@/stores';
 
@@ -50,8 +51,10 @@ const emit = defineEmits<{
   request: [];
 }>();
 const { images, total, selected } = inject<ImageInjected>('data')!;
-const { t } = useI18n<I18n, Langs>();
 const store = useStore();
+const { t } = useI18n<I18n, Langs>();
+const taped = ref(false);
+let timer = 0;
 
 onMounted(() => emit('request'));
 
@@ -62,19 +65,18 @@ function onVisible() {
   emit('request');
 }
 
-function onOpen(event: MouseEvent, index: number) {
-  if (!event.ctrlKey) {
+function onPointerUp(event: PointerEvent, id: string, index: number) {
+  clearTimeout(timer);
+  if (store.isAdmin && (taped.value || event.ctrlKey)) {
+    selected.value.has(id) ? selected.value.delete(id) : selected.value.add(id);
+  } else {
     emit('open', index);
   }
 }
 
-function onTouch(event: MouseEvent, id: string) {
-  if (!store.isAdmin) {
-    return;
-  }
-  if (event.ctrlKey) {
-    selected.value.has(id) ? selected.value.delete(id) : selected.value.add(id);
-  }
+function onPointerDown() {
+  taped.value = false;
+  timer = setTimeout(() => (taped.value = true), 400);
 }
 </script>
 
