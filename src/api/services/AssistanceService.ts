@@ -5,9 +5,8 @@ export default class AssistanceService {
   static saveForm(form: Omit<AssistanceResponse, '_id'>) {
     return $api.post('assistance', { json: form });
   }
-
-  static getHumansList({ page, filter, limit, sort, descending }: PaginationRequest) {
-    return $api.get('assistance/list', { searchParams: { page, filter, limit, sort, descending } });
+  static getForms({ page, limit, sort, descending }: PaginationRequest) {
+    return $api.get('assistance/forms', { searchParams: { page, limit, sort, descending } });
   }
 
   static deleteForms(ids: string[]) {

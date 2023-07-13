@@ -1,70 +1,82 @@
 <template>
-  <div class="column items-center q-pa-sm">
-    <form
-      :class="$style.form"
-      @submit.prevent="
-        createReport(locale, type || 'xlsx', {
-          birth: { from: query.birth.min, to: query.birth.max },
-          district: query.district,
-          street: query.street,
-        })
-      "
-    >
-      <h5 class="q-pa-lg text-center">{{ t('tools.sheets.title') }}</h5>
-      <QSelect v-model="type" :label="t('tools.sheets.type')" :options="typeOptions" map-options emit-value standout />
-      <QOptionGroup v-model="criterias" class="criterias" type="checkbox" :options="options" />
-      <QSeparator />
-      <div v-if="criterias.includes('district')">
-        <h6 class="q-mt-md q-mb-sm text-center">{{ t('tools.sheets.checkbox.district') }}</h6>
+  <QCard>
+    <QCardActions align="right">
+      <QBtn v-close-popup icon="eva-close-outline" dense flat round color="negative" />
+    </QCardActions>
+    <QCardSection class="row justify-center">
+      <form
+        :class="$style.form"
+        @submit.prevent="
+          createReport(locale, type || 'xlsx', {
+            birth: { from: query.birth.min, to: query.birth.max },
+            district: query.district,
+            street: query.street,
+          })
+        "
+      >
+        <h5 class="q-pa-lg text-center">{{ t('tools.sheets.title') }}</h5>
         <QSelect
-          v-model="query.district"
-          class="full-width"
-          :options="districtOptions"
-          standout
-          :label="t('tools.sheets.district.placeholder')"
+          v-model="type"
+          :label="t('tools.sheets.type')"
+          :options="typeOptions"
           map-options
           emit-value
+          standout
         />
-      </div>
-      <div v-if="criterias.includes('street')">
-        <h6 class="q-mt-md q-mb-sm text-center">{{ t('tools.sheets.checkbox.street') }}</h6>
-        <QSelect
-          v-model="query.street"
-          class="full-width"
-          :options="streetOptions"
-          standout
-          :label="t('tools.sheets.street.placeholder')"
-          map-options
-          emit-value
-        >
-          <template #no-option>
-            <QItem>
-              <QItemSection class="text-negative">{{ t('assistance.msgs.selectDistrict') }}</QItemSection>
-            </QItem>
-          </template>
-        </QSelect>
-      </div>
-      <div v-if="criterias.includes('birth')">
-        <h6 class="q-mt-md q-mb-sm text-center">{{ t('tools.sheets.checkbox.year') }}</h6>
-        <QBadge color="indigo">
-          {{
-            `${t('tools.sheets.year.placeholders.min')} ${query.birth.min} ${t('tools.sheets.year.placeholders.max')} ${
-              query.birth.max
-            }`
-          }}
-        </QBadge>
-        <QRange v-model="query.birth" :min="1920" :max="2022" color="secondary"></QRange>
-      </div>
-      <div v-if="criterias.length && type" class="column items-center">
-        <QBtn class="q-mt-md" color="primary" type="submit" :loading="isLoading" :disable="!valid">
-          {{ t('tools.sheets.buttons.save') }}
-        </QBtn>
-        <a v-if="url" :class="[$style.link, 'q-mt-sm']" target="_blank" :href="url">
-          {{ t('tools.sheets.link') }}
-        </a>
-      </div>
-    </form>
-  </div>
+        <QOptionGroup v-model="criterias" class="criterias" type="checkbox" :options="options" />
+        <QSeparator />
+        <div v-if="criterias.includes('district')">
+          <h6 class="q-mt-md q-mb-sm text-center">{{ t('tools.sheets.checkbox.district') }}</h6>
+          <QSelect
+            v-model="query.district"
+            class="full-width"
+            :options="districtOptions"
+            standout
+            :label="t('tools.sheets.district.placeholder')"
+            map-options
+            emit-value
+          />
+        </div>
+        <div v-if="criterias.includes('street')">
+          <h6 class="q-mt-md q-mb-sm text-center">{{ t('tools.sheets.checkbox.street') }}</h6>
+          <QSelect
+            v-model="query.street"
+            class="full-width"
+            :options="streetOptions"
+            standout
+            :label="t('tools.sheets.street.placeholder')"
+            map-options
+            emit-value
+          >
+            <template #no-option>
+              <QItem>
+                <QItemSection class="text-negative">{{ t('assistance.msgs.selectDistrict') }}</QItemSection>
+              </QItem>
+            </template>
+          </QSelect>
+        </div>
+        <div v-if="criterias.includes('birth')">
+          <h6 class="q-mt-md q-mb-sm text-center">{{ t('tools.sheets.checkbox.year') }}</h6>
+          <QBadge color="indigo">
+            {{
+              `${t('tools.sheets.year.placeholders.min')} ${query.birth.min} ${t(
+                'tools.sheets.year.placeholders.max'
+              )} ${query.birth.max}`
+            }}
+          </QBadge>
+          <QRange v-model="query.birth" :min="1920" :max="2022" color="secondary"></QRange>
+        </div>
+        <div v-if="criterias.length && type" class="column items-center">
+          <QBtn class="q-mt-md" color="primary" type="submit" :loading="isLoading" :disable="!valid">
+            {{ t('tools.sheets.buttons.save') }}
+          </QBtn>
+          <a v-if="url" :class="[$style.link, 'q-mt-sm']" target="_blank" :href="url">
+            {{ t('tools.sheets.link') }}
+          </a>
+        </div>
+      </form>
+    </QCardSection>
+  </QCard>
 </template>
 
 <script setup lang="ts">

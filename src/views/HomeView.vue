@@ -1,15 +1,15 @@
 <template>
   <div class="column items-center q-pa-sm">
     <QDialog v-model="modal" no-route-dismiss @before-hide="$router.push('/')">
-      <component :is="modalComponent" @close="onClose" />
+      <component :is="component" @close="onClose" />
     </QDialog>
     <FormAssistance
+      v-model="form"
       :class="$style.form"
       :title="t('home.form.title')"
-      :form="form"
       :loading="loading"
       reset
-      @submit="request"
+      @submit="request(form)"
     >
       <template #submit="{ type, valid }">
         <QBtn
@@ -29,7 +29,7 @@ import type { AssistanceResponse, I18n, Langs } from '@/types';
 import FormAssistance from '~/FormAssistance.vue';
 import FormReg from '~/FormReg.vue';
 import FormLog from '~/FormLog.vue';
-import { ref, watch, shallowRef, reactive } from 'vue';
+import { ref, watch, shallowRef } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useFetch, useTelegram } from '@/hooks';
 import { AssistanceService, BotService } from '@/api/services';
@@ -43,8 +43,8 @@ const { tg, isOpenedFromTg } = useTelegram();
 const router = useRouter();
 const route = useRoute();
 const modal = ref(false);
-const modalComponent = shallowRef<typeof FormLog | typeof FormReg>(FormLog);
-const form = reactive({
+const component = shallowRef<typeof FormLog | typeof FormReg>(FormLog);
+const form = ref({
   name: '',
   surname: '',
   patronymic: '',
@@ -85,7 +85,7 @@ watch(
   () => {
     if (route.name === 'login' || route.name === 'registration') {
       modal.value = true;
-      route.name === 'login' ? (modalComponent.value = FormLog) : (modalComponent.value = FormReg);
+      route.name === 'login' ? (component.value = FormLog) : (component.value = FormReg);
     }
   },
   { immediate: true }

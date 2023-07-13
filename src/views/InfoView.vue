@@ -26,9 +26,12 @@
               <span>{{ t('info.table.title') }}</span>
             </div>
             <div>
-              <QBtn icon="eva-edit" dense flat round @click="$router.push(`/info/${form._id}?edit=true`)">
-                <QTooltip class="bg-indigo" :offset="[10, 10]" :delay="1000">{{ t('info.hints.edit') }}</QTooltip>
-              </QBtn>
+              <QBtnGroup dense flat>
+                <QBtn icon="eva-info" color="teal" dense flat round @click="$router.push(`/info/${form._id}`)"> </QBtn>
+                <QBtn icon="eva-edit" color="orange" dense flat round @click="$router.push(`/info/${form._id}?edit=true`)">
+                  <QTooltip class="bg-indigo" :offset="[10, 10]" :delay="1000">{{ t('info.hints.edit') }}</QTooltip>
+                </QBtn>
+              </QBtnGroup>
             </div>
           </div>
         </th>

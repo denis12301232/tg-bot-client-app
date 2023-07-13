@@ -23,8 +23,8 @@
     </QMarkupTable>
     <FormAssistance
       v-else-if="form && isEditable"
+      v-model="form"
       :class="$style.table"
-      :form="form"
       :loading="isUpdating"
       :reset="false"
       :title="t('infoById.form.title')"

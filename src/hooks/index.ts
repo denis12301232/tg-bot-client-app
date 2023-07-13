@@ -8,3 +8,4 @@ export { default as useAudioDuration } from './useAudioDuration';
 export { default as useVoice } from './useVoice';
 export { default as useTelegram } from './useTelegram';
 export { default as useVModel } from './useVModel';
+export { default as useAssistanceFormOptions } from './useAssistanceFormOptions';
