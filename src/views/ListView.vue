@@ -20,36 +20,55 @@
       :selected-rows-label="(n) => `${t('table.selected')} ${n}`"
       row-key="_id"
       separator="cell"
-      selection="multiple"
+      :selection="visibleColumns.length ? 'multiple' : undefined"
       virtual-scroll
       :virtual-scroll-sticky-size-start="48"
+      :visible-columns="visibleColumns"
       @request="request"
     >
       <template #top>
-        <div class="row">
-          <QBtn color="white" round flat dense icon="eva-arrow-down">
-            <QMenu auto-close>
-              <QList>
-                <QItem clickable @click="openModal('import')">
-                  <QItemSection avatar>
-                    <QIcon color="green" name="eva-cloud-upload-outline" />
-                  </QItemSection>
-                  <QItemSection>Import</QItemSection>
-                </QItem>
-                <QItem clickable @click="openModal('export')">
-                  <QItemSection avatar>
-                    <QIcon color="red" name="eva-cloud-download-outline" />
-                  </QItemSection>
-                  <QItemSection>Export</QItemSection>
-                </QItem>
-              </QList>
-            </QMenu>
-          </QBtn>
-          <div class="text-h5 q-ml-md">{{ t('list.title') }}</div>
+        <div class="row justify-between full-width">
+          <div class="row">
+            <QBtn color="white" round flat dense icon="eva-arrow-down">
+              <QMenu auto-close>
+                <QList>
+                  <QItem clickable @click="openModal('import')">
+                    <QItemSection avatar>
+                      <QIcon color="green" name="eva-cloud-upload-outline" />
+                    </QItemSection>
+                    <QItemSection>Import</QItemSection>
+                  </QItem>
+                  <QItem clickable @click="openModal('export')">
+                    <QItemSection avatar>
+                      <QIcon color="red" name="eva-cloud-download-outline" />
+                    </QItemSection>
+                    <QItemSection>Export</QItemSection>
+                  </QItem>
+                </QList>
+              </QMenu>
+            </QBtn>
+            <div class="text-h5 q-ml-md">{{ t('list.title') }}</div>
+          </div>
+          <QSelect
+            v-model="visibleColumns"
+            :class="$style.select"
+            multiple
+            outlined
+            dense
+            options-dense
+            :display-value="$q.lang.table.columns"
+            emit-value
+            map-options
+            :options="columns"
+            option-value="name"
+            options-cover
+            style="min-width: 150px"
+          />
         </div>
       </template>
       <template #header-selection>
         <QBtn
+          v-if="visibleColumns.length"
           dense
           round
           flat
@@ -63,8 +82,10 @@
       </template>
       <template #body="scope: { row: AssistanceResponse, rowIndex: number, selected: boolean }">
         <QTr :key="scope.row._id">
-          <QTd><QCheckbox v-model="scope.selected" /></QTd>
-          <QTd class="text-center" auto-width>{{ scope.rowIndex + 1 }}</QTd>
+          <QTd v-if="visibleColumns.length"><QCheckbox v-model="scope.selected" /></QTd>
+          <QTd v-if="visibleColumns.includes('number')" class="text-center" auto-width key="number">
+            {{ scope.rowIndex + 1 }}
+          </QTd>
           <QTd :props="scope" key="surname">
             <QPopupEdit
               v-model="scope.row.surname"
@@ -549,8 +570,12 @@
             </QPopupEdit>
             {{ Util.formatAssistanceValue(scope.row.diet, 'diet', t) }}
           </QTd>
-          <QTd>{{ Util.formatAssistanceValue(scope.row.pers_data_agreement, 'pers_data_agreement', t) }}</QTd>
-          <QTd>{{ Util.formatAssistanceValue(scope.row.photo_agreement, 'photo_agreement', t) }}</QTd>
+          <QTd :props="scope" key="pers_data_agreement">
+            {{ Util.formatAssistanceValue(scope.row.pers_data_agreement, 'pers_data_agreement', t) }}
+          </QTd>
+          <QTd :props="scope" key="photo_agreement">
+            {{ Util.formatAssistanceValue(scope.row.photo_agreement, 'photo_agreement', t) }}
+          </QTd>
         </QTr>
       </template>
     </QTable>
@@ -595,6 +620,34 @@ const { request: updateForm, loading: isUpdating } = useFetch(AssistanceService.
 const select = ref<AssistanceResponse[]>([]);
 const modal = ref(false);
 const is = ref<'import' | 'export'>('export');
+const visibleColumns = ref([
+  'number',
+  'name',
+  'surname',
+  'patronymic',
+  'phone',
+  'birth',
+  'district',
+  'street',
+  'house',
+  'flat',
+  'people_num',
+  'people_fio',
+  'invalids',
+  'kids',
+  'kids_age',
+  'food',
+  'water',
+  'medicines',
+  'medicines_info',
+  'hygiene',
+  'hygiene_info',
+  'pampers',
+  'pampers_info',
+  'diet',
+  'pers_data_agreement',
+  'photo_agreement',
+]);
 const component = shallowRef<Component>(ListExport);
 const ids = computed(() => select.value.map((item) => item._id));
 
@@ -614,10 +667,10 @@ function openModal(name: 'import' | 'export') {
 
 const columns = computed<QTable['columns']>(() => [
   {
-    name: 'index',
+    name: 'number',
     label: t('list.table.columns.number'),
     align: 'center',
-    field: 'index',
+    field: 'number',
     headerStyle: 'font-size: 1.1em;',
   },
   {
@@ -839,5 +892,12 @@ const columns = computed<QTable['columns']>(() => [
     scroll-margin-top: 48px;
   }
   /* height of all previous header rows */
+}
+
+.select {
+  & span,
+  & i {
+    color: white;
+  }
 }
 </style>
