@@ -2,7 +2,7 @@ import type { AssistanceResponse, Langs, PaginationRequest } from '@/types';
 import { $api } from '@/api';
 
 export default class AssistanceService {
-  static saveForm(form: Omit<AssistanceResponse, '_id'>) {
+  static saveForm(form: Omit<AssistanceResponse, '_id' | 'sector'>) {
     return $api.post('assistance', { json: form });
   }
   static getForms({ page, limit, sort, descending }: PaginationRequest) {
@@ -48,7 +48,7 @@ export default class AssistanceService {
     return $api.post('assistance/report', { json: { locale, type, filters: filters } });
   }
 
-  static uploadFormsListCSV(formData: FormData) {
-    return $api.post('assistance/list', { body: formData });
+  static uploadFormsListCSV(formData: FormData, locale: Langs) {
+    return $api.post('assistance/list', { body: formData, searchParams: { locale } });
   }
 }

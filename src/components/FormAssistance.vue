@@ -223,7 +223,7 @@ import { Rules } from '@/util';
 import { useI18n } from 'vue-i18n';
 
 const props = defineProps<{
-  modelValue: Omit<AssistanceResponse, '_id'>;
+  modelValue: Omit<AssistanceResponse, '_id' | 'sector'>;
   title: string;
   loading: boolean;
   reset: boolean;
@@ -236,7 +236,7 @@ const { t, messages, locale } = useI18n<I18n, Langs>();
 const { districtOptions, kidsAgeOptions, yesNoOptions, getStreetOptions } = useAssistanceFormOptions();
 const rules = Rules.assistance(t);
 // eslint-disable-next-line vue/no-dupe-keys
-const form = useVModel<Omit<AssistanceResponse, '_id'>>();
+const form = useVModel<Omit<AssistanceResponse, '_id' | 'sector'>>();
 const formRef = ref<QForm | null>(null);
 const valid = ref(false);
 

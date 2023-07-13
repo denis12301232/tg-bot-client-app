@@ -38,6 +38,7 @@ export interface AssistanceResponse {
   diet: string;
   pers_data_agreement: boolean;
   photo_agreement: boolean;
+  sector: string;
 }
 
 export type UploadImagesResponse = { link: string; fileId: string; description: string }[];

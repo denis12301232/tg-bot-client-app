@@ -36,13 +36,13 @@
                     <QItemSection avatar>
                       <QIcon color="green" name="eva-cloud-upload-outline" />
                     </QItemSection>
-                    <QItemSection>Import</QItemSection>
+                    <QItemSection>{{ t('list.msgs.import') }}</QItemSection>
                   </QItem>
                   <QItem clickable @click="openModal('export')">
                     <QItemSection avatar>
                       <QIcon color="red" name="eva-cloud-download-outline" />
                     </QItemSection>
-                    <QItemSection>Export</QItemSection>
+                    <QItemSection>{{ t('list.msgs.export') }}</QItemSection>
                   </QItem>
                 </QList>
               </QMenu>
@@ -56,7 +56,7 @@
             outlined
             dense
             options-dense
-            :display-value="$q.lang.table.columns"
+            :display-value="t('list.table.show')"
             emit-value
             map-options
             :options="columns"
@@ -85,6 +85,20 @@
           <QTd v-if="visibleColumns.length"><QCheckbox v-model="scope.selected" /></QTd>
           <QTd v-if="visibleColumns.includes('number')" class="text-center" auto-width key="number">
             {{ scope.rowIndex + 1 }}
+          </QTd>
+          <QTd :props="scope" key="sector">
+            <QPopupEdit
+              v-model="scope.row.sector"
+              #default="props"
+              @update:model-value="updateForm(scope.row, scope.row._id)"
+            >
+              <QInput v-model.trim="props.value" :label="t('assistance.fields.sector')" maxlength="50" counter />
+              <div class="row justify-between">
+                <QBtn icon="eva-checkmark-outline" dense flat round color="positive" @click="props.set" />
+                <QBtn icon="eva-close-outline" dense flat round color="negative" @click="props.cancel" />
+              </div>
+            </QPopupEdit>
+            {{ scope.row.sector }}
           </QTd>
           <QTd :props="scope" key="surname">
             <QPopupEdit
@@ -622,6 +636,7 @@ const modal = ref(false);
 const is = ref<'import' | 'export'>('export');
 const visibleColumns = ref([
   'number',
+  'sector',
   'name',
   'surname',
   'patronymic',
@@ -672,6 +687,14 @@ const columns = computed<QTable['columns']>(() => [
     align: 'center',
     field: 'number',
     headerStyle: 'font-size: 1.1em;',
+  },
+  {
+    name: 'sector',
+    label: t('assistance.fields.sector'),
+    align: 'center',
+    field: 'sector',
+    headerStyle: 'font-size: 1.1em;',
+    sortable: true,
   },
   {
     name: 'surname',
@@ -855,6 +878,7 @@ const columns = computed<QTable['columns']>(() => [
     field: 'photo_agreement',
     headerStyle: 'font-size: 1.1em;',
   },
+
 ]);
 </script>
 

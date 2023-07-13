@@ -6,6 +6,7 @@
     <QCardSection class="column items-center">
       <div :class="$style.content">
         <h5 class="text-center q-my-lg">{{ t('tools.forms.title') }}</h5>
+        <QSelect v-model="lang" class="q-mb-md" emit-value map-options label="Language" standout :options="options" />
         <QFile v-model="file" class="full-width" standout label="CSV" accept="text/csv" clearable>
           <template #prepend>
             <QIcon color="green" name="eva-cloud-upload-outline" />
@@ -18,7 +19,7 @@
               round
               color="positive"
               :loading="loading"
-              @click="request(formData)"
+              @click="request(formData, lang)"
             />
           </template>
         </QFile>
@@ -93,11 +94,17 @@ const formData = new FormData();
 const { t, locale, messages } = useI18n<I18n, Langs>();
 const file = ref<File | null>(null);
 const help = ref(false);
+const lang = ref<Langs>('uk');
 const { request, loading, data } = useFetch<T, S>(AssistanceService.uploadFormsListCSV, {
   alert: true,
   successMsg: t('tools.forms.msgs.success'),
   afterSuccess: () => (file.value = null),
 });
+const options = [
+  { label: 'Русский', value: 'ru' },
+  { label: 'Українська', value: 'uk' },
+  { label: 'English', value: 'en' },
+];
 
 watchEffect((onCleanup) => {
   if (file.value) {
@@ -137,6 +144,7 @@ const example = [
     '',
     'Да',
     'Да',
+    ''
   ],
   [
     'Уткина',
@@ -164,6 +172,7 @@ const example = [
     '',
     'Да',
     'Да',
+    'Ж5'
   ],
 ];
 </script>
