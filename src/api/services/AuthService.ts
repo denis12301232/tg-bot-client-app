@@ -1,5 +1,5 @@
 import type { LoginResponse } from '@/types';
-import { $api, $auth } from '@/api';
+import { $auth } from '@/api';
 
 export default class AuthService {
   static login(loginOrEmail: string, password: string) {
