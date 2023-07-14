@@ -1,7 +1,6 @@
 import type { LoginResponse } from '@/types';
 import { $api, $auth } from '@/api';
 
-
 export default class AuthService {
   static login(loginOrEmail: string, password: string) {
     return $auth.post('auth/login', { json: { loginOrEmail, password } });
@@ -20,10 +19,10 @@ export default class AuthService {
   }
 
   static sendMail(email: string) {
-    return $api.post('auth/restore/password', { json: { email } });
+    return $auth.post('auth/restore/password', { json: { email } });
   }
 
   static restorePassword(password: string, link: string) {
-    return $api.post('auth/restore/password/new', { json: { password, link } });
+    return $auth.post('auth/restore/password/new', { json: { password, link } });
   }
 }
