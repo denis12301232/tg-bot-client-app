@@ -7,7 +7,7 @@
         :label="t('home.form.placeholders.surname')"
         :rules="rules.surname"
         lazy-rules
-        maxlength="50"
+        maxlength="100"
         counter
       />
       <QInput
@@ -15,7 +15,7 @@
         :label="t('home.form.placeholders.name')"
         :rules="rules.name"
         lazy-rules
-        maxlength="50"
+        maxlength="100"
         counter
       />
       <QInput
@@ -23,7 +23,7 @@
         :label="t('home.form.placeholders.patronimyc')"
         :rules="rules.patronymic"
         lazy-rules
-        maxlength="50"
+        maxlength="100"
         counter
       />
     </FormAssistanceGroup>
@@ -126,7 +126,7 @@
         :key="i"
         :label="`${t('home.form.placeholders.peopleFio')} ${i}-го`"
         lazy-rules
-        maxlength="50"
+        maxlength="100"
         counter
       />
     </FormAssistanceGroup>
@@ -159,7 +159,7 @@
         v-model.trim="form.medicines_info"
         :label="t('home.form.placeholders.medicinesInfo')"
         lazy-rules
-        maxlength="50"
+        maxlength="500"
         counter
       />
     </FormAssistanceGroup>
@@ -171,7 +171,7 @@
         v-model.trim="form.hygiene_info"
         :label="t('home.form.placeholders.hygieneInfo')"
         lazy-rules
-        maxlength="50"
+        maxlength="500"
         counter
       />
     </FormAssistanceGroup>
@@ -183,12 +183,12 @@
         v-model.trim="form.pampers_info"
         :abel="t('home.form.placeholders.pampersInfo')"
         lazy-rules
-        maxlength="50"
+        maxlength="500"
         counter
       />
     </FormAssistanceGroup>
     <FormAssistanceGroup :title="t('home.form.sections.diet')">
-      <QInput v-model.trim="form.diet" :label="t('home.form.placeholders.diet')" lazy-rules maxlength="50" counter />
+      <QInput v-model.trim="form.diet" :label="t('home.form.placeholders.diet')" lazy-rules maxlength="500" counter />
     </FormAssistanceGroup>
     <FormAssistanceGroup :title="t('home.form.sections.persDataAgreement')">
       <QCheckbox

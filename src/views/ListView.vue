@@ -92,7 +92,7 @@
               #default="props"
               @update:model-value="updateForm(scope.row, scope.row._id)"
             >
-              <QInput v-model.trim="props.value" :label="t('assistance.fields.sector')" maxlength="50" counter />
+              <QInput v-model.trim="props.value" :label="t('assistance.fields.sector')" maxlength="100" counter />
               <div class="row justify-between">
                 <QBtn icon="eva-checkmark-outline" dense flat round color="positive" @click="props.set" />
                 <QBtn icon="eva-close-outline" dense flat round color="negative" @click="props.cancel" />
@@ -115,7 +115,7 @@
                   :label="t('home.form.placeholders.surname')"
                   :rules="rules.surname"
                   lazy-rules
-                  maxlength="50"
+                  maxlength="100"
                   @keyup.enter="props.set"
                 />
                 <div class="row justify-between">
@@ -141,7 +141,7 @@
                   :label="t('home.form.placeholders.name')"
                   :rules="rules.name"
                   lazy-rules
-                  maxlength="50"
+                  maxlength="100"
                   @keyup.enter="props.set"
                 />
                 <div class="row justify-between">
@@ -167,7 +167,7 @@
                   :label="t('home.form.placeholders.patronymic')"
                   :rules="rules.patronymic"
                   lazy-rules
-                  maxlength="50"
+                  maxlength="100"
                   @keyup.enter="props.set"
                 />
                 <div class="row justify-between">
@@ -195,7 +195,6 @@
                   fill-mask
                   prefix="+38"
                   lazy-rules
-                  maxlength="50"
                   @keyup.enter="props.set"
                 />
                 <div class="row justify-between">
@@ -387,7 +386,7 @@
                 v-model.trim="props.value[i - 1]"
                 :key="i"
                 :label="`${t('home.form.placeholders.peopleFio')} ${i}-го`"
-                maxlength="50"
+                maxlength="100"
                 counter
               />
               <div class="row justify-between">
@@ -492,7 +491,7 @@
               <QInput
                 v-model.trim="props.value"
                 :label="t('home.form.placeholders.medicinesInfo')"
-                maxlength="50"
+                maxlength="500"
                 counter
               />
               <div class="row justify-between">
@@ -526,7 +525,7 @@
               <QInput
                 v-model.trim="props.value"
                 :label="t('home.form.placeholders.hygieneInfo')"
-                maxlength="50"
+                maxlength="500"
                 counter
               />
               <div class="row justify-between">
@@ -560,7 +559,7 @@
               <QInput
                 v-model.trim="props.value"
                 :label="t('home.form.placeholders.pampersInfo')"
-                maxlength="50"
+                maxlength="500"
                 counter
               />
               <div class="row justify-between">
@@ -576,7 +575,7 @@
               #default="props"
               @update:model-value="updateForm(scope.row, scope.row._id)"
             >
-              <QInput v-model.trim="props.value" :label="t('home.form.placeholders.diet')" maxlength="50" counter />
+              <QInput v-model.trim="props.value" :label="t('home.form.placeholders.diet')" maxlength="500" counter />
               <div class="row justify-between">
                 <QBtn icon="eva-checkmark-outline" dense flat round color="positive" @click="props.set" />
                 <QBtn icon="eva-close-outline" dense flat round color="negative" @click="props.cancel" />

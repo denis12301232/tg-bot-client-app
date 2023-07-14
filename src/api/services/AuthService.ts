@@ -1,21 +1,22 @@
 import type { LoginResponse } from '@/types';
-import { $api } from '@/api';
+import { $api, $auth } from '@/api';
+
 
 export default class AuthService {
   static login(loginOrEmail: string, password: string) {
-    return $api.post('auth/login', { json: { loginOrEmail, password } });
+    return $auth.post('auth/login', { json: { loginOrEmail, password } });
   }
 
   static refresh() {
-    return $api.get('auth/refresh').json<LoginResponse>();
+    return $auth.get('auth/refresh').json<LoginResponse>();
   }
 
   static logout() {
-    return $api.get('auth/logout').json<null>();
+    return $auth.get('auth/logout').json<null>();
   }
 
   static registration(user: { login: string; email: string; password: string; name: string }) {
-    return $api.post('auth/registration', { json: user });
+    return $auth.post('auth/registration', { json: user });
   }
 
   static sendMail(email: string) {
