@@ -61,26 +61,20 @@
 </template>
 
 <script setup lang="ts">
-import type { IAbonent, Streams, I18n, Langs } from '@/types';
+import type { I18n, Langs, RTCInjected } from '@/types';
 import CustomVideo from '~/CustomVideo.vue';
 import UserAvatar from '~/UserAvatar.vue';
-import { type Ref, inject } from 'vue';
+import { type ComponentPublicInstance, inject } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useStore } from '@/stores';
 import { useI18n } from 'vue-i18n';
 
-interface Injected {
-  videos: Ref<Map<string, InstanceType<typeof CustomVideo> | null>>;
-  abonents: Ref<Map<string, IAbonent>>;
-  streams: Streams;
-}
-
 const { t } = useI18n<I18n, Langs>();
 const { user } = storeToRefs(useStore());
-const { videos, abonents, streams } = inject<Injected>('rtc')!;
+const { videos, abonents, streams } = inject<RTCInjected>('rtc')!;
 
-function setRefs(ref: any, id: string) {
-  videos.value.set(id, ref);
+function setRefs(ref: Element | ComponentPublicInstance | null, id: string) {
+  videos.value.set(id, ref as InstanceType<typeof CustomVideo>);
 }
 </script>
 

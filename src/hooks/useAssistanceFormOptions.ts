@@ -3,7 +3,7 @@ import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 export default function useAssistanceFormOptions() {
-  const { t, messages, locale } = useI18n<I18n, Langs>();
+  const { messages, locale } = useI18n<I18n, Langs>();
 
   const districtOptions = computed(() =>
     Object.entries(messages.value[locale.value].assistance.districts).map(([key, value]) => ({
@@ -20,10 +20,12 @@ export default function useAssistanceFormOptions() {
       : [];
   }
 
-  const yesNoOptions = computed(() => [
-    { label: t('assistance.checkboxes.yesNo.yes'), value: true },
-    { label: t('assistance.checkboxes.yesNo.no'), value: false },
-  ]);
+  const yesNoOptions = computed(() =>
+    Object.entries(messages.value[locale.value].assistance.checkboxes.yesNo).map(([key, value]) => ({
+      label: value,
+      value: key,
+    }))
+  );
   const kidsAgeOptions = computed(() =>
     Object.entries(messages.value[locale.value].assistance.checkboxes.kidsAge).map(([key, value]) => ({
       label: value,

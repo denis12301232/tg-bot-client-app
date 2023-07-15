@@ -28,7 +28,14 @@
             <div>
               <QBtnGroup dense flat>
                 <QBtn icon="eva-info" color="teal" dense flat round @click="$router.push(`/info/${form._id}`)"> </QBtn>
-                <QBtn icon="eva-edit" color="orange" dense flat round @click="$router.push(`/info/${form._id}?edit=true`)">
+                <QBtn
+                  icon="eva-edit"
+                  color="orange"
+                  dense
+                  flat
+                  round
+                  @click="$router.push(`/info/${form._id}?edit=true`)"
+                >
                   <QTooltip class="bg-indigo" :offset="[10, 10]" :delay="1000">{{ t('info.hints.edit') }}</QTooltip>
                 </QBtn>
               </QBtnGroup>
@@ -55,9 +62,6 @@ import { useFetch } from '@/hooks';
 import { Util } from '@/util';
 import { useI18n } from 'vue-i18n';
 
-type T = AssistanceResponse[];
-type S = typeof AssistanceService.findForms;
-
 const { t } = useI18n<I18n, Langs>();
 const LIMIT = 1;
 const search = ref('');
@@ -68,7 +72,7 @@ const {
   data: forms,
   loading,
   error,
-} = useFetch<T, S>(AssistanceService.findForms, {
+} = useFetch<AssistanceResponse[], typeof AssistanceService.findForms>(AssistanceService.findForms, {
   afterResponse: ({ response }) => {
     total.value = Number(response.headers.get('x-total-count')) || 0;
   },

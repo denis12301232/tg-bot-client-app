@@ -30,4 +30,32 @@ export default class Rules {
       ],
     };
   }
+
+  static login(t: ComposerTranslation<I18n, Langs>) {
+    return {
+      loginOrEmail: [(v: string) => Validate.required(v) || t('login.errors.loginOrEmail.required')],
+      password: [(v: string) => Validate.required(v) || t('login.errors.password.required')],
+    };
+  }
+
+  static registration(t: ComposerTranslation<I18n, Langs>) {
+    return {
+      name: [
+        (v: string) => Validate.required(v) || t('registration.errors.name.required'),
+        (v: string) => Validate.noManySpaces(v) || t('registration.errors.name.noManySpaces'),
+      ],
+      login: [
+        (v: string) => Validate.required(v) || t('registration.errors.login.required'),
+        (v: string) => Validate.isLatinOrUnderscore(v) || t('registration.errors.login.isLatinOrUnderscore'),
+      ],
+      email: [
+        (v: string) => Validate.required(v) || t('registration.errors.email.required'),
+        (v: string) => Validate.isEmail(v) || t('registration.errors.email.isEmail'),
+      ],
+      password: [
+        (v: string) => Validate.required(v) || t('registration.errors.password.required'),
+        (v: string) => Validate.lengthInterval(6, 20)(v) || t('registration.errors.password.lengthInterval'),
+      ],
+    };
+  }
 }

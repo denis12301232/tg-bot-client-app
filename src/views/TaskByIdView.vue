@@ -44,15 +44,12 @@ import { useFetch } from '@/hooks';
 import { TaskService } from '@/api/services';
 import { useI18n } from 'vue-i18n';
 
-type T = ITask;
-type S = typeof TaskService.getTaskById;
-
 const { t } = useI18n<I18n, Langs>();
 const route = useRoute();
 const tab = ref('task');
 const splitterModel = ref(150);
 const width = ref(0);
-const { request, data: task } = useFetch<T, S>(TaskService.getTaskById);
+const { request, data: task } = useFetch<ITask, typeof TaskService.getTaskById>(TaskService.getTaskById);
 
 onMounted(() => request(String(route.params.id)));
 

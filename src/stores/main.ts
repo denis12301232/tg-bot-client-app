@@ -1,4 +1,5 @@
 import type { IUser, Langs, I18n, IAlertType, ITheme } from '@/types';
+import type { messages } from '@/i18n';
 import { ref, computed, watchEffect } from 'vue';
 import { defineStore } from 'pinia';
 import { useQuasar } from 'quasar';
@@ -10,21 +11,19 @@ export const useStore = defineStore('main', () => {
   const $q = useQuasar();
   const { locale, availableLocales, setLocaleMessage } = useI18n<I18n, Langs>();
   const user = ref<IUser | null>(null);
-  const theme = ref<ITheme>(localStorage.getItem('theme') as ITheme);
+  const theme = ref(localStorage.getItem('theme') as ITheme);
   const isPageLoading = ref(false);
   const lang = ref((localStorage.getItem('lang') as Langs) || 'ru');
   const alerts = ref<Alert[]>([]);
   const isAuth = computed(() => !!user.value);
   const isAdmin = computed(() => user.value?.roles.includes('admin') || false);
   const currentTheme = computed(() => {
-    switch (theme.value) {
-      case 'light':
-      case 'dark':
-        return theme.value;
-      case 'system':
-        return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-      default:
-        return 'light';
+    if (theme.value === 'dark' || theme.value === 'light') {
+      return theme.value;
+    } else if (theme.value === 'system') {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    } else {
+      return 'light';
     }
   });
   watchEffect(() => {
@@ -66,12 +65,12 @@ export const useStore = defineStore('main', () => {
 
   async function setLocale(lang: Langs) {
     if (!availableLocales.includes(lang)) {
-      const messages = await ToolsService.fetchLocale(lang).json();
+      const msgs = await ToolsService.fetchLocale(lang).json<(typeof messages)['ru']>();
       availableLocales.push(lang);
-      if (messages === undefined) {
+      if (msgs === undefined) {
         return;
       }
-      setLocaleMessage(lang, messages as any);
+      setLocaleMessage(lang, msgs);
     }
     locale.value = lang;
   }

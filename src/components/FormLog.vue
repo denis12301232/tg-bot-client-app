@@ -50,7 +50,7 @@ import type { I18n, Langs, LoginResponse } from '@/types';
 import type { QForm } from 'quasar';
 import { ref, reactive, watch } from 'vue';
 import { useStore } from '@/stores';
-import { Validate } from '@/util';
+import { Rules } from '@/util';
 import { AuthService } from '@/api/services';
 import { useFetch } from '@/hooks';
 import { useI18n } from 'vue-i18n';
@@ -62,17 +62,14 @@ const emit = defineEmits<{
   close: [];
 }>();
 
-const { t } = useI18n<I18n, Langs>({ useScope: 'global' });
+const { t } = useI18n<I18n, Langs>();
 const store = useStore();
 const valid = ref(false);
 const isPasswordVisible = ref(false);
 const formRef = ref<QForm>();
 const form = reactive({ loginOrEmail: '', password: '' });
 const errors = reactive({ loginOrEmail: '', password: '' });
-const rules = {
-  loginOrEmail: [(v: string) => Validate.required(v) || t('login.errors.loginOrEmail.required')],
-  password: [(v: string) => Validate.required(v) || t('login.errors.password.required')],
-};
+const rules = Rules.login(t);
 const { request, loading, error } = useFetch<T, S>(AuthService.login, {
   afterResponse: ({ data }) => {
     store.user = data.value.user;

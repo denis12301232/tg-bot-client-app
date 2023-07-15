@@ -1,5 +1,3 @@
-//import { Constants } from '@/util'
-
 export default class Validate {
   static required(value: string) {
     return !!value;
@@ -16,14 +14,10 @@ export default class Validate {
   static isPhone(value: string) {
     return /^0([0-9]{9})$/.test(value);
   }
-  //(___) ___ - ____
+
   static is10NumbersPhone(value: string) {
     return /^0([0-9]{9})$/.test(value);
   }
-
-  // static isValidDistrict(value: string) {
-  //    return Constants.districts.includes(value);
-  // }
 
   static isYearInterval(value: string) {
     return /^\d{4}-\d{4}$/.test(value);

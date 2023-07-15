@@ -15,11 +15,11 @@
 <script setup lang="ts">
 import type { ChatModal } from '@/types';
 import Chat from '~/chat';
-import { ref, shallowRef, watch } from 'vue';
+import { type Component, ref, shallowRef, watch } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useChatStore } from '@/stores';
 
-type ModalContent = { component: (typeof Chat)[keyof typeof Chat]; props?: { [name: string]: unknown } };
+type ModalContent = { component: Component; props?: { [name: string]: unknown } };
 
 const { currentChatId } = storeToRefs(useChatStore());
 const modal = ref(false);
@@ -55,58 +55,6 @@ function onOpenModal(n: ChatModal) {
 function onCloseModal() {
   modal.value = false;
 }
-
-// import type { ChatModal } from '@/types';
-// import ChatLeftPanel from '~/chat/ChatPanelLeft.vue';
-// import ChatRightPanel from '~/chat/ChatPanelRight.vue';
-// import { ref, shallowRef, watch, defineAsyncComponent } from 'vue';
-// import { storeToRefs } from 'pinia';
-// import { useChatStore } from '@/stores';
-
-// const { currentChatId } = storeToRefs(useChatStore());
-// const imgSrc = ref('');
-// const modal = ref(false);
-// const component = ref<ChatModal | null>(null);
-// const content = shallowRef<{ component: ReturnType<typeof defineAsyncComponent>; props?: any } | null>(null);
-// const maximized = ['modal:group-info', 'modal:group-settings', 'modal:open-image'];
-
-// function onOpenModal(c: ChatModal) {
-//   component.value = c;
-//   modal.value = true;
-// }
-
-// function onCloseModal() {
-//   modal.value = false;
-// }
-
-// function onOpenImage(src: string) {
-//   imgSrc.value = src;
-// }
-
-// watch(component, async () => {
-//   switch (component.value) {
-//     case 'modal:group-create':
-//       content.value = {
-//         component: defineAsyncComponent(() => import('~/chat/ChatGroupCreate.vue')),
-//         props: { onCloseModal },
-//       };
-//       break;
-//     case 'modal:group-info':
-//       content.value = { component: defineAsyncComponent(() => import('~/chat/ChatGroupInfo.vue')) };
-//       break;
-//     case 'modal:group-settings':
-//       content.value = { component: defineAsyncComponent(() => import('~/chat/ChatGroupSettings.vue')) };
-//       break;
-//     case 'modal:group-add-user':
-//       content.value = { component: defineAsyncComponent(() => import('~/chat/ChatGroupAddUser.vue')) };
-//       break;
-//     case 'modal:open-image':
-//       content.value = {
-//         component: defineAsyncComponent(() => import('~/chat/ChatModalImage.vue')),
-//         props: { src: imgSrc.value },
-//       };
-//   }
-// });
 </script>
 
 <style lang="scss" module>
@@ -133,12 +81,4 @@ function onCloseModal() {
     max-width: 100%;
   }
 }
-</style>
-
-//
-<style scoped lang="scss">
-// :deep(.chat_void) {
-//   font-size: 1.4em;
-//   font-weight: bold;
-// }
 </style>

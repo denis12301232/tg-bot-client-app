@@ -31,9 +31,6 @@ import { AssistanceService } from '@/api/services';
 import { useFetch } from '@/hooks';
 import { useI18n } from 'vue-i18n';
 
-type T = { [key: string]: string };
-type S = typeof AssistanceService.getStats;
-
 const props = defineProps<{
   label: string;
   by: 'month' | 'year';
@@ -42,13 +39,18 @@ const props = defineProps<{
 const { t, messages, locale } = useI18n<I18n, Langs>();
 const date = ref('');
 const chartRef = ref<HTMLCanvasElement | null>(null);
-const chart = shallowRef<Chart<any>>();
+const chart = shallowRef<Chart>();
 const timestamp = computed(() => {
   const data = date.value?.split('/');
   return !date.value ? Date.now() : new Date(+data.at(0)!, +data.at(1)! - 1, +data.at(2)!).getTime();
 });
-const { request: getStats, data: stats, loading } = useFetch<T, S>(AssistanceService.getStats);
 const monthes = computed(() => Object.values(messages.value[locale.value].calendar.monthsShort));
+const {
+  request: getStats,
+  data: stats,
+  loading,
+} = useFetch<object, typeof AssistanceService.getStats>(AssistanceService.getStats);
+
 onMounted(() => {
   chartRef.value &&
     (chart.value = new Chart(chartRef.value, {

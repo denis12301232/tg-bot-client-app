@@ -664,21 +664,6 @@ const visibleColumns = ref([
 ]);
 const component = shallowRef<Component>(ListExport);
 const ids = computed(() => select.value.map((item) => item._id));
-
-onMounted(() => request({ pagination: pagination.value }));
-watch(is, () => {
-  if (is.value === 'export') {
-    component.value = ListExport;
-  } else {
-    component.value = ListImport;
-  }
-});
-
-function openModal(name: 'import' | 'export') {
-  is.value = name;
-  modal.value = true;
-}
-
 const columns = computed<QTable['columns']>(() => [
   {
     name: 'number',
@@ -877,8 +862,21 @@ const columns = computed<QTable['columns']>(() => [
     field: 'photo_agreement',
     headerStyle: 'font-size: 1.1em;',
   },
-
 ]);
+
+onMounted(() => request({ pagination: pagination.value }));
+watch(is, () => {
+  if (is.value === 'export') {
+    component.value = ListExport;
+  } else {
+    component.value = ListImport;
+  }
+});
+
+function openModal(name: 'import' | 'export') {
+  is.value = name;
+  modal.value = true;
+}
 </script>
 
 <style lang="scss" module>

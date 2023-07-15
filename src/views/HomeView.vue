@@ -35,9 +35,6 @@ import { useFetch, useTelegram } from '@/hooks';
 import { AssistanceService, BotService } from '@/api/services';
 import { useI18n } from 'vue-i18n';
 
-type T = AssistanceResponse;
-type S = (typeof AssistanceService)['saveForm'];
-
 const { t } = useI18n<I18n, Langs>();
 const { tg, isOpenedFromTg } = useTelegram();
 const router = useRouter();
@@ -71,14 +68,17 @@ const form = ref({
   pers_data_agreement: false,
   photo_agreement: false,
 });
-const { request, loading } = useFetch<T, S>(AssistanceService.saveForm, {
-  alert: true,
-  successMsg: t('home.msgs.save'),
-  errorMsg: 'Error',
-  afterResponse() {
-    isOpenedFromTg && BotService.assistance(tg.initDataUnsafe.query_id || '', t('home.msgs.save'));
-  },
-});
+const { request, loading } = useFetch<AssistanceResponse, (typeof AssistanceService)['saveForm']>(
+  AssistanceService.saveForm,
+  {
+    alert: true,
+    successMsg: t('home.msgs.save'),
+    errorMsg: 'Error',
+    afterResponse() {
+      isOpenedFromTg && BotService.assistance(tg.initDataUnsafe.query_id || '', t('home.msgs.save'));
+    },
+  }
+);
 
 watch(
   () => route.name,

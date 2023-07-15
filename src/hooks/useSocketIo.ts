@@ -4,7 +4,7 @@ import { io } from 'socket.io-client';
 import { ENV } from '@/util';
 
 export default function useSocketIo() {
-  const socket = markRaw(
+  const socket = markRaw<SocketTyped>(
     io(ENV.SOCKET_URL, {
       auth: (cb) => cb({ token: localStorage.getItem('token') }),
       autoConnect: false,
@@ -13,7 +13,7 @@ export default function useSocketIo() {
       transports: ['websocket'],
       forceNew: true,
       path: '/socket',
-    }) as SocketTyped
+    })
   );
   const isConnected = ref(false);
 

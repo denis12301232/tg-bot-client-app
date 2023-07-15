@@ -6,10 +6,8 @@
 
 <script setup lang="ts">
 import Restore from '~/restore';
-import { shallowRef, computed, watch } from 'vue';
+import { type Component, shallowRef, computed, watch } from 'vue';
 import { useRoute } from 'vue-router';
-
-type Component = (typeof Restore)[keyof typeof Restore];
 
 const route = useRoute();
 const name = computed(() => (route.query.link ? 'setnewpassord' : 'sendmail'));

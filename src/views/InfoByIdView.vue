@@ -59,15 +59,14 @@ import { AssistanceService } from '@/api/services';
 import { Util } from '@/util';
 import { useI18n } from 'vue-i18n';
 
-type T = Omit<AssistanceResponse, '_id'>;
-type S = (typeof AssistanceService)['getFormById'];
-
 const { t } = useI18n<I18n, Langs>();
 const router = useRouter();
 const route = useRoute();
 const formId = computed(() => String(route.params.id));
 const isEditable = computed(() => !!route.query.edit);
-const { request, data: form } = useFetch<T, S>(AssistanceService.getFormById);
+const { request, data: form } = useFetch<Omit<AssistanceResponse, '_id'>, (typeof AssistanceService)['getFormById']>(
+  AssistanceService.getFormById
+);
 const { request: updateForm, loading: isUpdating } = useFetch(AssistanceService.updateForm, {
   afterResponse: () => router.push({ query: undefined }),
 });

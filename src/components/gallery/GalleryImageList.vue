@@ -15,8 +15,7 @@
           :class="['q-ma-sm', 'non-selectable', { 'red-border': selected.has(image.fileId) }]"
           flat
           bordered
-          @pointerup="onPointerUp($event, image.fileId, index)"
-          @pointerdown="onPointerDown"
+          @click="onClick($event, image.fileId, index)"
         >
           <div class="image-block">
             <QImg class="image_item" fit="cover" :src="image.link">
@@ -38,7 +37,7 @@
 <script setup lang="ts">
 import LoaderWheel from '~/LoaderWheel.vue';
 import type { Langs, I18n, ImageInjected } from '@/types';
-import { onMounted, inject, ref } from 'vue';
+import { onMounted, inject } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useStore } from '@/stores';
 
@@ -53,8 +52,6 @@ const emit = defineEmits<{
 const { images, total, selected } = inject<ImageInjected>('data')!;
 const store = useStore();
 const { t } = useI18n<I18n, Langs>();
-const taped = ref(false);
-let timer = 0;
 
 onMounted(() => emit('request'));
 
@@ -65,18 +62,12 @@ function onVisible() {
   emit('request');
 }
 
-function onPointerUp(event: PointerEvent, id: string, index: number) {
-  clearTimeout(timer);
-  if (store.isAdmin && (taped.value || event.ctrlKey)) {
+function onClick(event: MouseEvent, id: string, index: number) {
+  if (event.ctrlKey && store.isAdmin) {
     selected.value.has(id) ? selected.value.delete(id) : selected.value.add(id);
   } else {
     emit('open', index);
   }
-}
-
-function onPointerDown() {
-  taped.value = false;
-  timer = setTimeout(() => (taped.value = true), 400);
 }
 </script>
 

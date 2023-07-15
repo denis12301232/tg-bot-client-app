@@ -61,7 +61,18 @@
 import type { I18n, Langs, IUser } from '@/types';
 import type CustomVideo from '~/CustomVideo.vue';
 import Meet from '~/meet';
-import { ref, reactive, provide, onMounted, onBeforeUnmount, onUnmounted, shallowRef, watch, computed } from 'vue';
+import {
+  type Component,
+  ref,
+  reactive,
+  provide,
+  onMounted,
+  onBeforeUnmount,
+  onUnmounted,
+  shallowRef,
+  watch,
+  computed,
+} from 'vue';
 import { useStore, useChatStore } from '@/stores';
 import { useNavigation, useWebRtc, useFetch } from '@/hooks';
 import { useRoute } from 'vue-router';
@@ -74,7 +85,7 @@ type S = typeof MeetService.getMeetInfo;
 type Message = { user_id: string; msg: string };
 
 interface RightDrawer {
-  component: (typeof Meet)[keyof typeof Meet];
+  component: Component;
   props: { [name: string]: any };
 }
 
@@ -89,35 +100,34 @@ const { request: getMeetInfo, data: meetInfo, error } = useFetch<T, S>(MeetServi
 const open = reactive({ left: false, right: false });
 const videos = ref<Map<string, InstanceType<typeof CustomVideo> | null>>(new Map());
 const messages = ref<Message[]>([]);
-const component = ref<'chat' | 'info' | 'user-list'>('chat');
+const is = ref<'chat' | 'info' | 'user-list'>('chat');
 const unreadMessages = ref(0);
 const rightDrawer = shallowRef<RightDrawer | null>(null);
 const meetId = route.params.id?.toString();
 
 provide('rtc', { videos, abonents, streams });
 watch(
-  component,
-  () => {
-    switch (component.value) {
-      case 'info':
-        rightDrawer.value = { component: Meet.Info, props: { link: meetId, title: meetInfo.value?.title } };
-        break;
-      case 'user-list':
-        rightDrawer.value = { component: Meet.UserList, props: { abonents: abonents.value } };
-        break;
-      default:
-        rightDrawer.value = { component: Meet.Chat, props: { abonents: abonents.value, messages: messages.value } };
-        break;
+  is,
+  (n) => {
+    if (n === 'info') {
+      rightDrawer.value = { component: Meet.Info, props: { link: meetId, title: meetInfo.value?.title } };
+    } else if (n === 'user-list') {
+      rightDrawer.value = { component: Meet.UserList, props: { abonents: abonents.value } };
+    } else {
+      rightDrawer.value = { component: Meet.Chat, props: { abonents: abonents.value, messages: messages.value } };
     }
   },
   { immediate: true }
 );
 
-watch([() => open.right], () => {
-  if (open.right && component.value === 'chat') {
-    unreadMessages.value = 0;
+watch(
+  () => open.right,
+  () => {
+    if (open.right && is.value === 'chat') {
+      unreadMessages.value = 0;
+    }
   }
-});
+);
 
 watch(error, () => {
   goBack();
@@ -153,7 +163,7 @@ function toggleDrawer(side: 'left' | 'right') {
 }
 
 function setComponent(comp: 'chat' | 'info' | 'user-list') {
-  component.value = comp;
+ is.value = comp;
 }
 
 function toggleTrackMuteAndRelay(track: 'video' | 'audio') {
@@ -202,7 +212,7 @@ function onTrackToggleInit(peerId: string) {
 
 function onMeetMsg(msg: Message) {
   messages.value.push(msg);
-  if (!open.right || (open.right && component.value !== 'chat')) {
+  if (!open.right || (open.right && is.value !== 'chat')) {
     unreadMessages.value++;
   }
 }

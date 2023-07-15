@@ -67,7 +67,7 @@ import type { I18n, Langs, LoginResponse } from '@/types';
 import type { QForm } from 'quasar';
 import { ref, reactive, watch } from 'vue';
 import { useStore } from '@/stores';
-import { Validate } from '@/util';
+import { Rules } from '@/util';
 import { AuthService } from '@/api/services';
 import { useFetch } from '@/hooks';
 import { useI18n } from 'vue-i18n';
@@ -79,7 +79,7 @@ const emit = defineEmits<{
   close: [];
 }>();
 
-const { t } = useI18n<I18n, Langs>({ useScope: 'global' });
+const { t } = useI18n<I18n, Langs>();
 const store = useStore();
 const valid = ref(false);
 const isPasswordVisible = ref(false);
@@ -93,24 +93,7 @@ const { request, loading, error } = useFetch<T, S>(AuthService.registration, {
     emit('close');
   },
 });
-const rules = {
-  name: [
-    (v: string) => Validate.required(v) || t('registration.errors.name.required'),
-    (v: string) => Validate.noManySpaces(v) || t('registration.errors.name.noManySpaces'),
-  ],
-  login: [
-    (v: string) => Validate.required(v) || t('registration.errors.login.required'),
-    (v: string) => Validate.isLatinOrUnderscore(v) || t('registration.errors.login.isLatinOrUnderscore'),
-  ],
-  email: [
-    (v: string) => Validate.required(v) || t('registration.errors.email.required'),
-    (v: string) => Validate.isEmail(v) || t('registration.errors.email.isEmail'),
-  ],
-  password: [
-    (v: string) => Validate.required(v) || t('registration.errors.password.required'),
-    (v: string) => Validate.lengthInterval(6, 20)(v) || t('registration.errors.password.lengthInterval'),
-  ],
-};
+const rules = Rules.registration(t);
 
 watch(form, () => {
   formRef.value?.validate().then((v) => {

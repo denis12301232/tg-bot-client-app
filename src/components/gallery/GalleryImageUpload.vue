@@ -1,6 +1,7 @@
 <template>
-  <QCard class="q-pa-md">
+  <QCard :class="[$style.card, 'q-pa-md', 'row', 'justify-center']">
     <QUploader
+      :class="$style.uploader"
       flat
       bordered
       accept="image/*"
@@ -37,4 +38,16 @@ function checkFileType(files: readonly File[] | FileList) {
 }
 </script>
 
-<style lang="scss" module></style>
+<style lang="scss" module>
+.card {
+  max-width: 400px !important;
+  min-width: 300px;
+  width: 100%;
+}
+
+.uploader {
+  max-width: 350px;
+  min-width: 250px;
+  width: 100%;
+}
+</style>
