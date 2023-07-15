@@ -55,14 +55,12 @@
             multiple
             outlined
             dense
-            options-dense
             :display-value="t('list.table.show')"
             emit-value
             map-options
             :options="columns"
             option-value="name"
-            options-cover
-            style="min-width: 150px"
+            options-selected-class="text-positive"
           />
         </div>
       </template>
