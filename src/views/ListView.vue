@@ -29,7 +29,7 @@
       <template #top>
         <div class="row justify-between full-width">
           <div class="row">
-            <QBtn color="white" round flat dense icon="eva-arrow-down">
+            <QBtn color="white" round flat dense icon="eva-plus-outline">
               <QMenu auto-close>
                 <QList>
                   <QItem clickable @click="openModal('import')">
