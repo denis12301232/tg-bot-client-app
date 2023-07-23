@@ -5,8 +5,8 @@ export default class AssistanceService {
   static saveForm(form: Omit<AssistanceResponse, '_id' | 'sector'>) {
     return $api.post('assistance', { json: form });
   }
-  static getForms({ page, limit, sort, descending }: PaginationRequest) {
-    return $api.get('assistance/forms', { searchParams: { page, limit, sort, descending } });
+  static getForms({ page, limit, sort, descending, filter }: PaginationRequest) {
+    return $api.post('assistance/forms', { json: { page, limit, sort, descending, filter } });
   }
 
   static deleteForms(ids: string[]) {
@@ -21,15 +21,8 @@ export default class AssistanceService {
     return $api.get('assistance/id', { searchParams: { id: formId } });
   }
 
-  static saveFormsToSheet(
-    locale: Langs,
-    filters: {
-      street?: string;
-      district?: string;
-      birth: { from: number; to: number };
-    }
-  ) {
-    return $api.post('assistance/sheet', { json: { locale, filters } });
+  static saveFormsToSheet(locale: Langs, ids: string[]) {
+    return $api.post('assistance/sheet', { json: { locale, ids } });
   }
 
   static getStats(filters: { by: 'month' | 'year'; timestamp: number }) {
@@ -40,12 +33,8 @@ export default class AssistanceService {
     return $api.patch('assistance', { json: { form, id } });
   }
 
-  static createReport(
-    locale: Langs,
-    type: 'xlsx' | 'csv' | 'google-sheets',
-    filters: { street?: string; district?: string; birth: { from: number; to: number } }
-  ) {
-    return $api.post('assistance/report', { json: { locale, type, filters: filters } });
+  static createReport(locale: Langs, type: 'xlsx' | 'csv' | 'google-sheets', ids: string[]) {
+    return $api.post('assistance/report', { json: { locale, type, ids } });
   }
 
   static uploadFormsListCSV(formData: FormData, locale: Langs) {

@@ -16,10 +16,10 @@ export interface Pagination {
   rowsPerPage: number;
 }
 
-export interface PaginationRequest {
+export interface PaginationRequest<T = any> {
   limit: number;
   page: number;
-  filter: string;
+  filter: T;
   sort: string;
   descending: boolean;
 }

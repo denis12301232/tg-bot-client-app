@@ -1,7 +1,9 @@
 <template>
   <div class="column items-center q-pa-sm">
-    <QDialog v-model="modal" maximized>
-      <component :is="component" />
+    <QDialog v-model="modal" :maximized="is !== 'filters'">
+      <ListFilters v-if="is === 'filters'" v-model:query="filter" v-model:criterias="criterias" />
+      <ListExport v-else-if="is === 'export'" :ids="ids" />
+      <ListImport v-else />
     </QDialog>
     <QTable
       v-model:pagination="pagination"
@@ -18,6 +20,7 @@
       :rows-per-page-label="t('table.show')"
       :no-results-label="t('table.notFound')"
       :selected-rows-label="(n) => `${t('table.selected')} ${n}`"
+      :filter="filter"
       row-key="_id"
       separator="cell"
       :selection="visibleColumns.length ? 'multiple' : undefined"
@@ -29,42 +32,55 @@
       <template #top>
         <div class="row justify-between full-width">
           <div class="row">
-            <QBtn color="white" round flat dense icon="eva-plus-outline">
-              <QMenu auto-close>
-                <QList>
-                  <QItem clickable @click="openModal('import')">
-                    <QItemSection avatar>
-                      <QIcon color="green" name="eva-cloud-upload-outline" />
-                    </QItemSection>
-                    <QItemSection>{{ t('list.msgs.import') }}</QItemSection>
-                  </QItem>
-                  <QItem clickable @click="openModal('export')">
-                    <QItemSection avatar>
-                      <QIcon color="red" name="eva-cloud-download-outline" />
-                    </QItemSection>
-                    <QItemSection>{{ t('list.msgs.export') }}</QItemSection>
-                  </QItem>
-                </QList>
-              </QMenu>
-            </QBtn>
+            <div>
+              <QBtn color="white" round flat dense icon="eva-plus-outline">
+                <QMenu auto-close>
+                  <QList>
+                    <QItem clickable @click="openModal('import')">
+                      <QItemSection avatar>
+                        <QIcon color="green" name="eva-cloud-upload-outline" />
+                      </QItemSection>
+                      <QItemSection>{{ t('list.msgs.import') }}</QItemSection>
+                    </QItem>
+                    <QItem clickable @click="openModal('export')">
+                      <QItemSection avatar>
+                        <QIcon color="red" name="eva-cloud-download-outline" />
+                      </QItemSection>
+                      <QItemSection>{{ t('list.msgs.export') }}</QItemSection>
+                    </QItem>
+                  </QList>
+                </QMenu>
+              </QBtn>
+            </div>
             <div class="text-h5 q-ml-md">{{ t('list.title') }}</div>
           </div>
-          <QSelect
-            v-model="visibleColumns"
-            :class="$style.select"
-            multiple
-            outlined
-            dense
-            :display-value="t('list.table.show')"
-            emit-value
-            map-options
-            :options="columns"
-            option-value="name"
-            options-selected-class="text-positive"
-          />
+          <div class="row items-center">
+            <div class="q-mr-sm">
+              <QBtn icon="eva-options-outline" dense round flat @click="openModal('filters')">
+                <QTooltip class="bg-white text-black" :offset="[10, 10]" :delay="1000">
+                  {{ t('list.hints.filter') }}
+                </QTooltip>
+              </QBtn>
+            </div>
+            <QSelect
+              v-model="visibleColumns"
+              :class="$style.select"
+              multiple
+              outlined
+              dense
+              dark
+              :display-value="t('list.table.show')"
+              emit-value
+              map-options
+              :options="columns"
+              option-value="name"
+              options-selected-class="text-positive"
+            />
+          </div>
         </div>
       </template>
-      <template #header-selection>
+      <template #header-selection="scope">
+        <QCheckbox v-model="scope.selected" dark />
         <QBtn
           v-if="visibleColumns.length"
           dense
@@ -80,7 +96,9 @@
       </template>
       <template #body="scope: { row: AssistanceResponse, rowIndex: number, selected: boolean }">
         <QTr :key="scope.row._id">
-          <QTd v-if="visibleColumns.length"><QCheckbox v-model="scope.selected" /></QTd>
+          <QTd v-if="visibleColumns.length">
+            <QCheckbox v-model="scope.selected" />
+          </QTd>
           <QTd v-if="visibleColumns.includes('number')" class="text-center" auto-width key="number">
             {{ scope.rowIndex + 1 }}
           </QTd>
@@ -596,9 +614,10 @@
 <script setup lang="ts">
 import ListExport from '~/list/ListExport.vue';
 import ListImport from '~/list/ListImport.vue';
+import ListFilters from '~/list/ListFilters.vue';
 import type { QTable } from 'quasar';
 import type { AssistanceResponse, I18n, Langs } from '@/types';
-import { onMounted, ref, computed, shallowRef, watch, type Component } from 'vue';
+import { onMounted, ref, computed } from 'vue';
 import { useRequest, useFetch, useAssistanceFormOptions } from '@/hooks';
 import { AssistanceService } from '@/api/services';
 import { Util, Rules } from '@/util';
@@ -615,10 +634,12 @@ const {
   pagination,
   data: forms,
   loading,
+  filter,
 } = useRequest<AssistanceResponse[]>(AssistanceService.getForms, {
   sort: '_id',
   descending: true,
   limit: 10,
+  filters: { district: '', street: '', birth: { min: 1920, max: new Date().getFullYear() }, sector: '' },
 });
 const { request: onDelete, loading: isDelLoading } = useFetch<T, S>(AssistanceService.deleteForms, {
   afterResponse: ({ data }) => {
@@ -626,11 +647,11 @@ const { request: onDelete, loading: isDelLoading } = useFetch<T, S>(AssistanceSe
     select.value.length = 0;
   },
 });
-
 const { request: updateForm, loading: isUpdating } = useFetch(AssistanceService.updateForm);
+const criterias = ref<('district' | 'birth' | 'street' | 'sector')[]>([]);
 const select = ref<AssistanceResponse[]>([]);
 const modal = ref(false);
-const is = ref<'import' | 'export'>('export');
+const is = ref<'import' | 'export' | 'filters'>('export');
 const visibleColumns = ref([
   'number',
   'sector',
@@ -660,7 +681,6 @@ const visibleColumns = ref([
   'pers_data_agreement',
   'photo_agreement',
 ]);
-const component = shallowRef<Component>(ListExport);
 const ids = computed(() => select.value.map((item) => item._id));
 const columns = computed<QTable['columns']>(() => [
   {
@@ -862,16 +882,9 @@ const columns = computed<QTable['columns']>(() => [
   },
 ]);
 
-onMounted(() => request({ pagination: pagination.value }));
-watch(is, () => {
-  if (is.value === 'export') {
-    component.value = ListExport;
-  } else {
-    component.value = ListImport;
-  }
-});
+onMounted(() => request({ pagination: pagination.value, filter: filter.value }));
 
-function openModal(name: 'import' | 'export') {
+function openModal(name: 'import' | 'export' | 'filters') {
   is.value = name;
   modal.value = true;
 }

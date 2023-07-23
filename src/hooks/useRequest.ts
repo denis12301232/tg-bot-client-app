@@ -7,15 +7,16 @@ interface Opts {
   page?: number;
   sort?: string;
   descending?: boolean;
+  filters?: any;
 }
 
 export default function useRequest<T>(
   f: (args: PaginationRequest) => ResponsePromise,
-  { limit = 10, page = 1, sort = '', descending = true }: Opts = {}
+  { limit = 10, page = 1, sort = '', descending = true, filters }: Opts = {}
 ) {
   const loading = ref(false);
   const error = ref('');
-  const filter = ref('');
+  const filter = ref(filters);
   const data = ref<T[]>([]) as Ref<T[]>;
   const pagination = ref({
     sortBy: sort,
@@ -24,8 +25,8 @@ export default function useRequest<T>(
     rowsPerPage: limit, // limit
     rowsNumber: 0, // total
   });
-
-  async function request(props: { pagination: Pagination; filter?: string }) {
+  
+  async function request(props: { pagination: Pagination; filter?: any }) {
     try {
       loading.value = true;
       const { page, rowsPerPage, sortBy, descending } = props.pagination;
