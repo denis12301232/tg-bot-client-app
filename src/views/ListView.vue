@@ -56,26 +56,24 @@
           </div>
           <div class="row items-center">
             <div class="q-mr-sm">
-              <QBtn icon="eva-options-outline" dense round flat @click="openModal('filters')">
+              <QBtn icon="eva-options-outline" dense flat @click="openModal('filters')">
                 <QTooltip class="bg-white text-black" :offset="[10, 10]" :delay="1000">
                   {{ t('list.hints.filter') }}
                 </QTooltip>
               </QBtn>
             </div>
-            <QSelect
-              v-model="visibleColumns"
-              :class="$style.select"
-              multiple
-              outlined
-              dense
-              dark
-              :display-value="t('list.table.show')"
-              emit-value
-              map-options
-              :options="columns"
-              option-value="name"
-              options-selected-class="text-positive"
-            />
+            <QBtn icon="eva-more-horizontal-outline" dense flat>
+              <QTooltip class="bg-white text-black" :offset="[10, 10]" :delay="1000">
+                {{ t('list.hints.columns') }}
+              </QTooltip>
+              <QMenu>
+                <QList>
+                  <QItem v-for="column in columns" :key="(column.field as string)">
+                    <QToggle v-model="visibleColumns" :val="column.field" :label="column.label" />
+                  </QItem>
+                </QList>
+              </QMenu>
+            </QBtn>
           </div>
         </div>
       </template>
@@ -702,7 +700,7 @@ const columns = computed<QTable['columns']>(() => [
     name: 'surname',
     label: t('assistance.fields.surname'),
     align: 'center',
-    field: 'fio',
+    field: 'surname',
     headerStyle: 'font-size: 1.1em;',
     sortable: true,
   },
