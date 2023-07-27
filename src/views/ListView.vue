@@ -892,7 +892,8 @@ function openModal(name: 'import' | 'export' | 'filters') {
 .table {
   max-width: 1280px;
   width: 100%;
-  max-height: 670px;
+  max-height: calc(100vh - 115px);
+
   & thead tr th {
     position: sticky;
     z-index: 1;

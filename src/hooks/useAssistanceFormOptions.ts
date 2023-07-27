@@ -19,13 +19,11 @@ export default function useAssistanceFormOptions() {
           .sort((a, b) => a.label.localeCompare(b.label))
       : [];
   }
+  const yesNoOptions = computed(() => [
+    { label: messages.value[locale.value].assistance.checkboxes.yesNo.yes, value: true },
+    { label: messages.value[locale.value].assistance.checkboxes.yesNo.no, value: false },
+  ]);
 
-  const yesNoOptions = computed(() =>
-    Object.entries(messages.value[locale.value].assistance.checkboxes.yesNo).map(([key, value]) => ({
-      label: value,
-      value: key,
-    }))
-  );
   const kidsAgeOptions = computed(() =>
     Object.entries(messages.value[locale.value].assistance.checkboxes.kidsAge).map(([key, value]) => ({
       label: value,
