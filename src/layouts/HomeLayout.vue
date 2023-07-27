@@ -21,7 +21,7 @@
         <QBtn v-if="!store.isAuth" dense flat round icon="eva-log-in-outline" @click="$router.push('/login')" />
         <QBtn v-else dense flat round icon="eva-person" @click="toggleRightDrawer" />
       </QToolbar>
-      <QTabs align="left" active-color="primary">
+      <QTabs :class="$style.tabs" align="left" active-color="primary">
         <QRouteTab to="/" :label="t('home.tabs.home')" />
         <QRouteTab v-if="store.isAdmin" to="/list" :label="t('home.tabs.list')" />
         <QRouteTab v-if="store.isAdmin" to="/info" :label="t('home.tabs.info')" />
@@ -35,6 +35,26 @@
       </QCard>
       <QSeparator></QSeparator>
       <QList class="q-pa-sm text-uppercase">
+        <template :class="$style.list">
+          <QItem v-ripple clickable tag="a" to="/">
+            <QItemSection avatar>
+              <QIcon color="primary" name="eva-home-outline" />
+            </QItemSection>
+            <QItemSection>{{ t('home.tabs.home') }}</QItemSection>
+          </QItem>
+          <QItem v-if="store.isAdmin" v-ripple clickable tag="a" to="/list">
+            <QItemSection avatar>
+              <QIcon color="primary" name="eva-list-outline" />
+            </QItemSection>
+            <QItemSection>{{ t('home.tabs.list') }}</QItemSection>
+          </QItem>
+          <QItem v-if="store.isAdmin" v-ripple clickable tag="a" to="/info">
+            <QItemSection avatar>
+              <QIcon color="primary" name="eva-search-outline" />
+            </QItemSection>
+            <QItemSection>{{ t('home.tabs.info') }}</QItemSection>
+          </QItem>
+        </template>
         <QItem v-ripple clickable tag="a" to="/gallery">
           <QItemSection avatar>
             <QIcon color="primary" name="eva-image-outline" />
@@ -144,4 +164,17 @@ function toggleRightDrawer() {
 }
 </script>
 
-<style lang="scss" module></style>
+<style lang="scss" module>
+.list {
+  display: none;
+}
+@media (max-width: 600px) {
+  .tabs {
+    display: none;
+  }
+
+  .list {
+    display: block;
+  }
+}
+</style>
