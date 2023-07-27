@@ -1,6 +1,6 @@
 <template>
   <div class="column items-center q-pa-sm">
-    <h5 class="q-pa-lg text-center">{{ t('tools.roles.title') }}</h5>
+    <h5 class="q-pa-md text-center">{{ t('tools.roles.title') }}</h5>
     <QTable
       v-model:pagination="pagination"
       :class="$style.table"
@@ -18,6 +18,8 @@
       binary-state-sort
       separator="cell"
       row-key="_id"
+      virtual-scroll
+      :virtual-scroll-sticky-size-start="48"
       @request="getUsers"
     >
       <template #top>
@@ -94,5 +96,6 @@ onMounted(() => getUsers({ pagination: pagination.value }));
 .table {
   max-width: 500px;
   width: 100%;
+  max-height: calc(100vh - 210px);
 }
 </style>

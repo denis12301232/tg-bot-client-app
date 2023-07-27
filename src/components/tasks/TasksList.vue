@@ -229,5 +229,6 @@ async function onUpdateTaskStatus(taskId: string, status: ITask['status']) {
 .table {
   max-width: 700px;
   width: 100%;
+  max-height: calc(100vh - 210px);
 }
 </style>

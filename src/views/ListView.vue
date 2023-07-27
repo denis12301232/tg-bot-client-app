@@ -917,4 +917,10 @@ function openModal(name: 'import' | 'export' | 'filters') {
     color: white;
   }
 }
+
+@media (max-width: 600px) {
+  .table {
+    max-height: calc(100vh - 67px);
+  }
+}
 </style>

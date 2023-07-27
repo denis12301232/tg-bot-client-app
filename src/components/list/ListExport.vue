@@ -3,7 +3,7 @@
     <QCardActions align="right">
       <QBtn v-close-popup icon="eva-close-outline" dense flat round color="negative" />
     </QCardActions>
-    <div class="q-py-md" style="height: calc(100vh - 50px)">
+    <div class="q-py-md q-px-sm" style="height: calc(100vh - 50px)">
       <QScrollArea
         class="fit"
         :thumb-style="{ width: '7px' }"
