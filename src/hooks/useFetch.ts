@@ -13,10 +13,10 @@ interface Opts<T> {
   errorMsg?: string;
 }
 
-export default function useFetch<
-  T,
-  S extends (...args: Parameters<S>) => ResponsePromise = (...args: any[]) => ResponsePromise
->(f: S, opts: Opts<T> = { type: 'json', alert: false }) {
+export default function useFetch<T, S extends (...args: Parameters<S>) => ResponsePromise>(
+  f: S,
+  opts: Opts<T> = { type: 'json', alert: false }
+) {
   const loading = ref(false);
   const error = ref<string | { message: string; errors: unknown[] }>('');
   const data = ref<T>();

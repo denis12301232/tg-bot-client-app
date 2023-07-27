@@ -45,15 +45,14 @@
 
 <script setup lang="ts">
 import type { QTable } from 'quasar';
-import type { IUser, I18n, Langs } from '@/types';
+import type { IUser } from '@/types';
 import { ref } from 'vue';
-import { useFetch } from '@/hooks';
+import { useFetch, useI18nT } from '@/hooks';
 import { ChatService } from '@/api/services';
 import { storeToRefs } from 'pinia';
 import { useChatStore } from '@/stores';
-import { useI18n } from 'vue-i18n';
 
-const { t } = useI18n<I18n, Langs>();
+const { t } = useI18nT();
 const { currentChat } = storeToRefs(useChatStore());
 const hasAdminRights = ref(currentChat.value?.group.roles.admin || []);
 const { request, loading } = useFetch(ChatService.updateRolesInGroup, {

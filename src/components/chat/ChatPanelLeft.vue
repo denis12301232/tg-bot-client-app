@@ -56,24 +56,24 @@
 </template>
 
 <script setup lang="ts">
-import type { IUser, ChatModal, I18n, Langs } from '@/types';
+import type { IUser, ChatModal } from '@/types';
 import Chat from '~/chat';
 import { ref, onMounted, onUnmounted, watchEffect } from 'vue';
-import { useFetch } from '@/hooks';
+import { useFetch, useI18nT } from '@/hooks';
 import { ChatService } from '@/api/services';
-import { useI18n } from 'vue-i18n';
-
-type T = IUser[];
-type S = typeof ChatService.findUsers;
 
 const emit = defineEmits<{
   openModal: [name: ChatModal];
 }>();
 
-const { t } = useI18n<I18n, Langs>();
+const { t } = useI18nT();
 const menu = ref(false);
 const search = ref('');
-const { request: searchUsers, data: users, loading } = useFetch<T, S>(ChatService.findUsers);
+const {
+  request: searchUsers,
+  data: users,
+  loading,
+} = useFetch<IUser[], typeof ChatService.findUsers>(ChatService.findUsers);
 
 onMounted(() => window.addEventListener('click', closeMenu));
 onUnmounted(() => window.removeEventListener('click', closeMenu));

@@ -46,15 +46,13 @@
 </template>
 
 <script setup lang="ts">
-import type { I18n, Langs } from '@/types';
 import Tasks from '~/tasks';
 import { ref, reactive } from 'vue';
-import { useFetch } from '@/hooks';
+import { useFetch, useI18nT } from '@/hooks';
 import { TaskService } from '@/api/services';
 import { useRouter } from 'vue-router';
-import { useI18n } from 'vue-i18n';
 
-const { t } = useI18n<I18n, Langs>();
+const { t } = useI18nT();
 const router = useRouter();
 const step = ref(1);
 const valid = reactive({ first: false, second: false });

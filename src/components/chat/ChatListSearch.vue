@@ -14,12 +14,13 @@
 </template>
 
 <script setup lang="ts">
-import type { IUser, ChatResponse, I18n, Langs } from '@/types';
+import type { IUser, ChatResponse } from '@/types';
 import UserAvatar from '~/UserAvatar.vue';
 import { onMounted, onUnmounted } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useStore, useChatStore } from '@/stores';
-import { useI18n } from 'vue-i18n';
+
+import { useI18nT } from '@/hooks';
 
 defineProps<{
   users?: IUser[];
@@ -28,7 +29,7 @@ const emit = defineEmits<{
   (event: 'update:search', value: string): void;
 }>();
 
-const { t } = useI18n<I18n, Langs>();
+const { t } = useI18nT();
 const { user } = storeToRefs(useStore());
 const chatStore = useChatStore();
 const { chats, currentChatId } = storeToRefs(chatStore);

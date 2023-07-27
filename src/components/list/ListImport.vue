@@ -101,18 +101,17 @@
 </template>
 
 <script setup lang="ts">
-import type { I18n, Langs } from '@/types';
+import type { Langs } from '@/types';
 import { ref, watchEffect } from 'vue';
-import { useFetch } from '@/hooks';
+import { useFetch, useI18nT } from '@/hooks';
 import { AssistanceService } from '@/api/services';
 import { QIcon } from 'quasar';
-import { useI18n } from 'vue-i18n';
 
 type T = { created: number; errors: { message: string; row: number }[] };
 type S = typeof AssistanceService.uploadFormsListCSV;
 
 const formData = new FormData();
-const { t, locale, messages } = useI18n<I18n, Langs>();
+const { t, locale, messages } = useI18nT();
 const file = ref<File | null>(null);
 const help = ref(false);
 const lang = ref<Langs>('uk');

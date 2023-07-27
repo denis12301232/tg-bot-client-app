@@ -25,17 +25,16 @@
 </template>
 
 <script setup lang="ts">
-import type { AssistanceResponse, I18n, Langs } from '@/types';
+import type { AssistanceResponse } from '@/types';
 import FormAssistance from '~/FormAssistance.vue';
 import FormReg from '~/FormReg.vue';
 import FormLog from '~/FormLog.vue';
 import { ref, watch, shallowRef } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { useFetch, useTelegram } from '@/hooks';
+import { useFetch, useI18nT, useTelegram } from '@/hooks';
 import { AssistanceService, BotService } from '@/api/services';
-import { useI18n } from 'vue-i18n';
 
-const { t } = useI18n<I18n, Langs>();
+const { t } = useI18nT();
 const { tg, isOpenedFromTg } = useTelegram();
 const router = useRouter();
 const route = useRoute();

@@ -46,15 +46,16 @@
 </template>
 
 <script setup lang="ts">
-import type { ITask, I18n, Langs } from '@/types';
+import type { ITask } from '@/types';
+import { useI18nT } from '@/hooks';
+
 import { Util } from '@/util';
-import { useI18n } from 'vue-i18n';
 
 defineProps<{
   task?: ITask;
 }>();
 
-const { t } = useI18n<I18n, Langs>();
+const { t } = useI18nT();
 </script>
 
 <style lang="scss" module>

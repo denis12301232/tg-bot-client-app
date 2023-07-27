@@ -18,12 +18,12 @@
 
 <script setup lang="ts">
 import GalleryImageDelete from '~/gallery/GalleryImageDelete.vue';
-import type { I18n, Langs, ImagesResponse } from '@/types';
+import type { ImagesResponse } from '@/types';
 import { ref, provide, computed } from 'vue';
-import { useI18n } from 'vue-i18n';
 import { useStore } from '@/stores';
+import { useI18nT } from '@/hooks';
 
-const { t } = useI18n<I18n, Langs>();
+const { t } = useI18nT();
 const store = useStore();
 const images = ref<ImagesResponse['images']>([]);
 const total = ref(0);

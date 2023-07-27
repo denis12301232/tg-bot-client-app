@@ -130,18 +130,16 @@
 </template>
 
 <script setup lang="ts">
-import type { I18n, Langs } from '@/types';
 import UserAvatar from '~/UserAvatar.vue';
 import SetLang from '~/SetLang.vue';
 import { ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { useStore } from '@/stores';
-import { useI18n } from 'vue-i18n';
-import { useTelegram } from '@/hooks';
+import { useI18nT, useTelegram } from '@/hooks';
 import { ENV } from '@/util';
 
 const icon = new URL('../../public/icon.jpg', import.meta.url).href;
-const { t } = useI18n<I18n, Langs>();
+const { t } = useI18nT();
 const { isOpenedFromTg } = useTelegram();
 const store = useStore();
 const route = useRoute();

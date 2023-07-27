@@ -13,13 +13,13 @@
 </template>
 
 <script setup lang="ts">
-import { useI18n } from 'vue-i18n';
+import { useI18nT } from '@/hooks';
 
 defineProps<{
   title: string;
 }>();
 
-const { t } = useI18n();
+const { t } = useI18nT();
 </script>
 
 <style lang="scss" scoped></style>

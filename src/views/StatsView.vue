@@ -12,17 +12,16 @@
 </template>
 
 <script setup lang="ts">
-import type { I18n, Langs } from '@/types';
 import StatsAssistance from '~/stats/StatsAssistance.vue';
 import { ref, computed } from 'vue';
-import { useI18n } from 'vue-i18n';
+import { useI18nT } from '@/hooks';
 
 interface Show {
   label: string;
   value: 'year' | 'month';
 }
 
-const { t } = useI18n<I18n, Langs>();
+const { t } = useI18nT();
 const show = ref<Show>({ label: t('stats.opts.interval.year'), value: 'year' });
 const options = computed(() => [
   { label: t('stats.opts.interval.year'), value: 'year' },

@@ -138,19 +138,18 @@
 
 <script setup lang="ts">
 import type { QTable } from 'quasar';
-import type { ITask, I18n, Langs } from '@/types';
+import type { ITask } from '@/types';
 import { computed, onMounted } from 'vue';
 import { useStore } from '@/stores';
-import { useFetch, useRequest } from '@/hooks';
+import { useFetch, useI18nT, useRequest } from '@/hooks';
 import { TaskService } from '@/api/services';
 import { Util } from '@/util';
-import { useI18n } from 'vue-i18n';
 
 type T = { message: string; taskId: string };
 type S = typeof TaskService.setUserForTask;
 
 const store = useStore();
-const { t } = useI18n<I18n, Langs>();
+const { t } = useI18nT();
 const { request: updateTaskStatus, loading: isTaskStatusLoading } = useFetch(TaskService.updateTaskStatus);
 const { request: setUserForTask, loading: isSetUserLoading } = useFetch<T, S>(TaskService.setUserForTask, {
   afterResponse: ({ data }) => {

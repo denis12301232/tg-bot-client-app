@@ -81,13 +81,13 @@
 </template>
 
 <script setup lang="ts">
-import type { ChatModal, I18n, Langs } from '@/types';
+import type { ChatModal } from '@/types';
 import UserAvatar from '~/UserAvatar.vue';
 import { computed } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useStore, useChatStore } from '@/stores';
 import { ChatService } from '@/api/services';
-import { useI18n } from 'vue-i18n';
+import { useI18nT } from '@/hooks';
 
 defineProps<{
   type: 'dialog' | 'group';
@@ -96,7 +96,7 @@ const emit = defineEmits<{
   'open-modal': [name: ChatModal];
 }>();
 
-const { t } = useI18n<I18n, Langs>();
+const { t } = useI18nT();
 const { user } = storeToRefs(useStore());
 const { chats, currentChatId, currentChat } = storeToRefs(useChatStore());
 const companion = computed(() => currentChat.value?.companion);

@@ -13,10 +13,8 @@
 </template>
 
 <script setup lang="ts">
-import type { I18n, Langs } from '@/types';
-import { useI18n } from 'vue-i18n';
-import { useNavigation } from '@/hooks';
+import { useI18nT, useNavigation } from '@/hooks';
 
-const { t } = useI18n<I18n, Langs>();
+const { t } = useI18nT();
 const { goBack } = useNavigation();
 </script>

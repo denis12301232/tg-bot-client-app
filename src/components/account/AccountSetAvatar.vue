@@ -27,18 +27,18 @@ const props = defineProps<{
   successMsg: string;
 }>();
 
-type T = { avatar: string };
-type S = typeof ToolsService.setAvatar;
-
 const store = useStore();
 const avatar = ref<File | null>(null);
-const { request, loading, error } = useFetch<T, S>(ToolsService.setAvatar, {
-  afterSuccess: ({ data }) => {
-    store.user?.avatar && (store.user.avatar = data.value.avatar);
-  },
-  alert: true,
-  successMsg: props.successMsg,
-});
+const { request, loading, error } = useFetch<{ avatar: string }, typeof ToolsService.setAvatar>(
+  ToolsService.setAvatar,
+  {
+    afterSuccess: ({ data }) => {
+      store.user?.avatar && (store.user.avatar = data.value.avatar);
+    },
+    alert: true,
+    successMsg: props.successMsg,
+  }
+);
 const formData = new FormData();
 
 watch(avatar, () => {

@@ -21,17 +21,17 @@
 </template>
 
 <script setup lang="ts">
-import type { IAbonent, I18n, Langs } from '@/types';
+import type { IAbonent } from '@/types';
 import UserAvatar from '~/UserAvatar.vue';
 import { computed } from 'vue';
 import { useStore } from '@/stores';
-import { useI18n } from 'vue-i18n';
+import { useI18nT } from '@/hooks';
 
 const props = defineProps<{
   abonents: Map<string, IAbonent>;
 }>();
 
-const { t } = useI18n<I18n, Langs>();
+const { t } = useI18nT();
 const store = useStore();
 const users = computed(() => [store.user, ...Array.from(props.abonents.values()).map((a) => a.info)]);
 </script>

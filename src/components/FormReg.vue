@@ -63,14 +63,13 @@
 </template>
 
 <script setup lang="ts">
-import type { I18n, Langs, LoginResponse } from '@/types';
+import type { LoginResponse } from '@/types';
 import type { QForm } from 'quasar';
 import { ref, reactive, watch } from 'vue';
 import { useStore } from '@/stores';
 import { Rules } from '@/util';
 import { AuthService } from '@/api/services';
-import { useFetch } from '@/hooks';
-import { useI18n } from 'vue-i18n';
+import { useFetch, useI18nT } from '@/hooks';
 
 type T = LoginResponse;
 type S = (typeof AuthService)['registration'];
@@ -79,7 +78,7 @@ const emit = defineEmits<{
   close: [];
 }>();
 
-const { t } = useI18n<I18n, Langs>();
+const { t } = useI18nT();
 const store = useStore();
 const valid = ref(false);
 const isPasswordVisible = ref(false);

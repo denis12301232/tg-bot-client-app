@@ -19,12 +19,12 @@
 </template>
 
 <script setup lang="ts">
-import type { ImagesResponse, ImageInjected, Langs, I18n } from '@/types';
+import type { ImagesResponse, ImageInjected } from '@/types';
 import { inject } from 'vue';
-import { useI18n } from 'vue-i18n';
 import { ImageService } from '@/api/services';
+import { useI18nT } from '@/hooks';
 
-const { t } = useI18n<I18n, Langs>();
+const { t } = useI18nT();
 const { images, total } = inject<ImageInjected>('data')!;
 
 function onUploaded(info: { files: readonly File[]; xhr: XMLHttpRequest }) {

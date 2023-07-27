@@ -34,12 +34,10 @@
 </template>
 
 <script setup lang="ts">
-import type { I18n, Langs } from '@/types';
 import type { QForm } from 'quasar';
 import { ref, watch } from 'vue';
 import { Validate } from '@/util';
-import { useI18n } from 'vue-i18n';
-import { useVModel } from '@/hooks';
+import { useI18nT, useVModel } from '@/hooks';
 
 type Subtasks = { title: string; description: string }[];
 
@@ -54,7 +52,7 @@ defineEmits<{
   'update:subtasks': [value: Subtasks];
 }>();
 
-const { t } = useI18n<I18n, Langs>();
+const { t } = useI18nT();
 const formRef = ref<QForm | null>(null);
 const valid = ref(false);
 // eslint-disable-next-line vue/no-dupe-keys

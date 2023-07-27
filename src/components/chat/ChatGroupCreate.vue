@@ -65,17 +65,18 @@
 </template>
 
 <script setup lang="ts">
-import type { ChatResponse, I18n, Langs } from '@/types';
+import type { ChatResponse } from '@/types';
 import SetAvatar from '~/SetAvatar.vue';
 import { ref, reactive, onMounted, onUnmounted } from 'vue';
 import { useStore, useChatStore } from '@/stores';
-import { useI18n } from 'vue-i18n';
+
+import { useI18nT } from '@/hooks';
 
 const props = defineProps<{
   onCloseModal: () => void;
 }>();
 
-const { t } = useI18n<I18n, Langs>();
+const { t } = useI18nT();
 const store = useStore();
 const chatStore = useChatStore();
 const step = ref(1);

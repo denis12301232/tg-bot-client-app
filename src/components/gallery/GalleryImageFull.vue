@@ -39,12 +39,11 @@
 
 <script setup lang="ts">
 import LoaderWheel from '~/LoaderWheel.vue';
-import type { I18n, ImagesResponse, Langs } from '@/types';
+import type { ImagesResponse } from '@/types';
 import { onMounted, onUnmounted, nextTick } from 'vue';
-import { useI18n } from 'vue-i18n';
 import { ImageService } from '@/api/services';
 import { useStore } from '@/stores';
-import { useVModel } from '@/hooks';
+import { useI18nT, useVModel } from '@/hooks';
 
 const props = defineProps<{
   currentIndex: number;
@@ -61,7 +60,7 @@ const emit = defineEmits<{
   'update:images': [value: ImagesResponse['images']];
 }>();
 const store = useStore();
-const { t } = useI18n<I18n, Langs>();
+const { t } = useI18nT();
 const index = useVModel<number>('currentIndex');
 const imgs = useVModel<ImagesResponse['images']>('images');
 

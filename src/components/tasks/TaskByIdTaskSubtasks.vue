@@ -133,12 +133,11 @@
 <script setup lang="ts">
 import Tasks from '~/tasks';
 import type { QTable } from 'quasar';
-import type { ISubtask, I18n, Langs } from '@/types';
+import type { ISubtask } from '@/types';
 import { ref, computed } from 'vue';
-import { useFetch, useVModel } from '@/hooks';
+import { useFetch, useI18nT, useVModel } from '@/hooks';
 import { TaskService } from '@/api/services';
 import { Util } from '@/util';
-import { useI18n } from 'vue-i18n';
 
 const props = defineProps<{
   taskId: string;
@@ -148,7 +147,7 @@ defineEmits<{
   'update:subtasks': [value: ISubtask[]];
 }>();
 
-const { t } = useI18n<I18n, Langs>();
+const { t } = useI18nT();
 const modal = ref(false);
 const selected = ref<ISubtask[]>([]);
 // eslint-disable-next-line vue/no-dupe-keys

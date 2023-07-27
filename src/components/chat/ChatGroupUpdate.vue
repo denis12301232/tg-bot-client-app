@@ -38,17 +38,16 @@
 </template>
 
 <script setup lang="ts">
-import type { ChatResponse, I18n, Langs } from '@/types';
+import type { ChatResponse } from '@/types';
 import SetAvatar from '~/SetAvatar.vue';
 import { reactive, computed, watchEffect } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useChatStore } from '@/stores';
-import { useFetch } from '@/hooks';
+import { useFetch, useI18nT } from '@/hooks';
 import { ChatService } from '@/api/services';
 import { ENV } from '@/util';
-import { useI18n } from 'vue-i18n';
 
-const { t } = useI18n<I18n, Langs>();
+const { t } = useI18nT();
 const { currentChat } = storeToRefs(useChatStore());
 const settings = reactive({
   avatar: null as File | null,

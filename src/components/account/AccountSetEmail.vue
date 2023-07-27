@@ -31,15 +31,13 @@
 
 <script setup lang="ts">
 import type { QForm } from 'quasar';
-import type { I18n, Langs } from '@/types';
 import { ref, watch, computed } from 'vue';
 import { useStore } from '@/stores';
-import { useFetch } from '@/hooks';
+import { useFetch, useI18nT } from '@/hooks';
 import { Validate } from '@/util';
 import { ToolsService } from '@/api/services';
-import { useI18n } from 'vue-i18n';
 
-const { t } = useI18n<I18n, Langs>();
+const { t } = useI18nT();
 const store = useStore();
 const email = ref(store.user?.email || '');
 const valid = ref(false);

@@ -1,5 +1,4 @@
 import type { IUser, Langs, I18n, IAlertType, ITheme } from '@/types';
-import type { messages } from '@/i18n';
 import { ref, computed, watchEffect } from 'vue';
 import { defineStore } from 'pinia';
 import { useQuasar } from 'quasar';
@@ -9,7 +8,7 @@ import { useI18n } from 'vue-i18n';
 
 export const useStore = defineStore('main', () => {
   const $q = useQuasar();
-  const { locale, availableLocales, setLocaleMessage } = useI18n<I18n, Langs>();
+  const { messages, locale, availableLocales, setLocaleMessage } = useI18n<I18n, Langs>();
   const user = ref<IUser | null>(null);
   const theme = ref(localStorage.getItem('theme') as ITheme);
   const isPageLoading = ref(false);
@@ -65,7 +64,7 @@ export const useStore = defineStore('main', () => {
 
   async function setLocale(lang: Langs) {
     if (!availableLocales.includes(lang)) {
-      const msgs = await ToolsService.fetchLocale(lang).json<(typeof messages)['ru']>();
+      const msgs = await ToolsService.fetchLocale(lang).json<(typeof messages.value)['ru']>();
       availableLocales.push(lang);
       if (msgs === undefined) {
         return;

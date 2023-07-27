@@ -61,13 +61,12 @@
 
 <script setup lang="ts">
 import type { QTable } from 'quasar';
-import type { IUser, I18n, Langs } from '@/types';
+import type { IUser } from '@/types';
 import { onMounted, computed } from 'vue';
-import { useRequest, useFetch } from '@/hooks';
+import { useRequest, useFetch, useI18nT } from '@/hooks';
 import { ToolsService } from '@/api/services';
-import { useI18n } from 'vue-i18n';
 
-const { t } = useI18n<I18n, Langs>();
+const { t } = useI18nT();
 const { request, loading } = useFetch(ToolsService.updateRoles, {
   alert: true,
   successMsg: t('tools.roles.msgs.update'),

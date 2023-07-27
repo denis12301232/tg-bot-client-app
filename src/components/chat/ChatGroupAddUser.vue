@@ -45,16 +45,15 @@
 </template>
 
 <script setup lang="ts">
-import type { IUser, I18n, Langs } from '@/types';
+import type { IUser } from '@/types';
 import UserAvatar from '~/UserAvatar.vue';
 import { ref, watch } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useChatStore } from '@/stores';
-import { useFetch } from '@/hooks';
+import { useFetch, useI18nT } from '@/hooks';
 import { ChatService } from '@/api/services';
-import { useI18n } from 'vue-i18n';
 
-const { t } = useI18n<I18n, Langs>();
+const { t } = useI18nT();
 const { chats, currentChatId } = storeToRefs(useChatStore());
 const search = ref('');
 const userToAdd = ref<IUser | null>(null);

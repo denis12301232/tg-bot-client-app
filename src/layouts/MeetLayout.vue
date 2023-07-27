@@ -58,7 +58,7 @@
 </template>
 
 <script setup lang="ts">
-import type { I18n, Langs, IUser } from '@/types';
+import type { IUser } from '@/types';
 import type CustomVideo from '~/CustomVideo.vue';
 import Meet from '~/meet';
 import {
@@ -74,11 +74,10 @@ import {
   computed,
 } from 'vue';
 import { useStore, useChatStore } from '@/stores';
-import { useNavigation, useWebRtc, useFetch } from '@/hooks';
+import { useNavigation, useWebRtc, useFetch, useI18nT } from '@/hooks';
 import { useRoute } from 'vue-router';
 import { WebRtcDto } from '@/api/dto';
 import { MeetService } from '@/api/services';
-import { useI18n } from 'vue-i18n';
 
 type T = { title: string; roles: { admin: string[] } };
 type S = typeof MeetService.getMeetInfo;
@@ -89,7 +88,7 @@ interface RightDrawer {
   props: { [name: string]: any };
 }
 
-const { t } = useI18n<I18n, Langs>();
+const { t } = useI18nT();
 const route = useRoute();
 const store = useStore();
 const { socket } = useChatStore();
@@ -163,7 +162,7 @@ function toggleDrawer(side: 'left' | 'right') {
 }
 
 function setComponent(comp: 'chat' | 'info' | 'user-list') {
- is.value = comp;
+  is.value = comp;
 }
 
 function toggleTrackMuteAndRelay(track: 'video' | 'audio') {

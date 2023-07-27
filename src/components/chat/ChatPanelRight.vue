@@ -11,18 +11,18 @@
 </template>
 
 <script setup lang="ts">
-import type { ChatModal, I18n, Langs } from '@/types';
+import type { ChatModal } from '@/types';
 import Chat from '~/chat';
 import { computed } from 'vue';
 import { useChatStore } from '@/stores';
 import { storeToRefs } from 'pinia';
-import { useI18n } from 'vue-i18n';
+import { useI18nT } from '@/hooks';
 
 const emit = defineEmits<{
   (event: 'open-modal', component: ChatModal): void;
 }>();
 
-const { t } = useI18n<I18n, Langs>();
+const { t } = useI18nT();
 const { currentChat, currentChatId } = storeToRefs(useChatStore());
 const type = computed(() => currentChat.value?.type || 'dialog');
 

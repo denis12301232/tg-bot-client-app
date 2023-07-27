@@ -51,15 +51,14 @@
 
 <script setup lang="ts">
 import FormAssistance from '~/FormAssistance.vue';
-import type { AssistanceResponse, I18n, Langs } from '@/types';
+import type { AssistanceResponse } from '@/types';
 import { onMounted, computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { useFetch } from '@/hooks';
+import { useFetch, useI18nT } from '@/hooks';
 import { AssistanceService } from '@/api/services';
 import { Util } from '@/util';
-import { useI18n } from 'vue-i18n';
 
-const { t } = useI18n<I18n, Langs>();
+const { t } = useI18nT();
 const router = useRouter();
 const route = useRoute();
 const formId = computed(() => String(route.params.id));

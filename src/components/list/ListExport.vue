@@ -41,18 +41,18 @@
 </template>
 
 <script setup lang="ts">
-import type { I18n, Langs } from '@/types';
+import type { Langs } from '@/types';
 import { ref } from 'vue';
 import { AssistanceService } from '@/api/services';
-import { useI18n } from 'vue-i18n';
 import { useStore } from '@/stores';
+import { useI18nT } from '@/hooks';
 
 const props = defineProps<{
   ids: string[];
 }>();
 
 const store = useStore();
-const { t, locale } = useI18n<I18n, Langs>();
+const { t, locale } = useI18nT();
 const type = ref<'xlsx' | 'csv' | 'google-sheets' | null>(null);
 const url = ref('');
 const isLoading = ref(false);

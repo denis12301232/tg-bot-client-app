@@ -24,13 +24,11 @@
 </template>
 
 <script setup lang="ts">
-import type { I18n, Langs } from '@/types';
 import { reactive, computed } from 'vue';
-import { useFetch } from '@/hooks';
+import { useFetch, useI18nT } from '@/hooks';
 import { ToolsService } from '@/api/services';
-import { useI18n } from 'vue-i18n';
 
-const { t } = useI18n<I18n, Langs>();
+const { t } = useI18nT();
 const google = reactive({
   serviceUser: '',
   servicePrivateKey: '',

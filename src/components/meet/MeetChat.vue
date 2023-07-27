@@ -49,12 +49,12 @@
 </template>
 
 <script setup lang="ts">
-import type { IAbonent, IUser, I18n, Langs } from '@/types';
+import type { IAbonent, IUser } from '@/types';
 import type { QScrollArea } from 'quasar';
 import { computed, ref, watch } from 'vue';
 import { useStore } from '@/stores';
 import { WebRtcDto } from '@/api/dto';
-import { useI18n } from 'vue-i18n';
+import { useI18nT } from '@/hooks';
 
 const props = defineProps<{
   abonents: Map<string, IAbonent>;
@@ -64,7 +64,7 @@ const emit = defineEmits<{
   (event: 'my-msg', msg: { user_id: string; msg: string }): void;
 }>();
 
-const { t } = useI18n<I18n, Langs>();
+const { t } = useI18nT();
 const store = useStore();
 const msg = ref('');
 const scrollRef = ref<QScrollArea | null>(null);

@@ -24,19 +24,17 @@
 </template>
 
 <script setup lang="ts">
-import type { I18n, Langs } from '@/types';
 import { ref, onMounted, watch, computed, shallowRef } from 'vue';
 import Chart from 'chart.js/auto';
 import { AssistanceService } from '@/api/services';
-import { useFetch } from '@/hooks';
-import { useI18n } from 'vue-i18n';
+import { useFetch, useI18nT } from '@/hooks';
 
 const props = defineProps<{
   label: string;
   by: 'month' | 'year';
 }>();
 
-const { t, messages, locale } = useI18n<I18n, Langs>();
+const { t, messages, locale } = useI18nT();
 const date = ref('');
 const chartRef = ref<HTMLCanvasElement | null>(null);
 const chart = shallowRef<Chart>();

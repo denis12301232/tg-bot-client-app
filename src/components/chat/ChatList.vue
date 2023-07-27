@@ -60,15 +60,15 @@
 </template>
 
 <script setup lang="ts">
-import type { IMessage, I18n, Langs } from '@/types';
+import type { IMessage } from '@/types';
 import UserAvatar from '~/UserAvatar.vue';
 import { storeToRefs } from 'pinia';
 import { useChatStore, useStore } from '@/stores';
 import { Time } from '@/util';
 import { ChatService } from '@/api/services';
-import { useI18n } from 'vue-i18n';
+import { useI18nT } from '@/hooks';
 
-const { t } = useI18n<I18n, Langs>();
+const { t } = useI18nT();
 const { user, currentTheme } = storeToRefs(useStore());
 const { currentChatId, sortedChats } = storeToRefs(useChatStore());
 

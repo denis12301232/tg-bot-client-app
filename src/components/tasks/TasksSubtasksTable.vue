@@ -40,11 +40,9 @@
 </template>
 
 <script setup lang="ts">
-import type { I18n, Langs } from '@/types';
 import type { QTable } from 'quasar';
 import { ref, computed } from 'vue';
-import { useI18n } from 'vue-i18n';
-import { useVModel } from '@/hooks';
+import { useI18nT, useVModel } from '@/hooks';
 
 type Subtask = { title: string; description: string };
 
@@ -55,7 +53,7 @@ defineEmits<{
   'update:subtasks': [value: Subtask[]];
 }>();
 
-const { t } = useI18n<I18n, Langs>();
+const { t } = useI18nT();
 const select = ref<(Subtask & { id: number })[]>([]);
 const pagination = ref({ rowsPerPage: 0 });
 // eslint-disable-next-line vue/no-dupe-keys

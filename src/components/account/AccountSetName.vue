@@ -33,13 +33,11 @@
 import type { QForm } from 'quasar';
 import { ref, watch, computed } from 'vue';
 import { useStore } from '@/stores';
-import { useFetch } from '@/hooks';
+import { useFetch, useI18nT } from '@/hooks';
 import { Validate } from '@/util';
 import { ToolsService } from '@/api/services';
-import { useI18n } from 'vue-i18n';
-import type { I18n, Langs } from '@/types';
 
-const { t } = useI18n<I18n, Langs>();
+const { t } = useI18nT();
 const store = useStore();
 const name = ref(store.user?.name || '');
 const valid = ref(false);

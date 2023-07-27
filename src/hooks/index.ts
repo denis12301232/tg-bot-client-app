@@ -9,3 +9,4 @@ export { default as useVoice } from './useVoice';
 export { default as useTelegram } from './useTelegram';
 export { default as useVModel } from './useVModel';
 export { default as useAssistanceFormOptions } from './useAssistanceFormOptions';
+export { default as useI18nT } from './useI18nT';

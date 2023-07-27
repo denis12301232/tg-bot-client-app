@@ -58,10 +58,8 @@
 </template>
 
 <script setup lang="ts">
-import type { I18n, Langs } from '@/types';
 import { computed, watch } from 'vue';
-import { useI18n } from 'vue-i18n';
-import { useVModel } from '@/hooks';
+import { useI18nT, useVModel } from '@/hooks';
 
 const props = defineProps<{
   query: {
@@ -81,7 +79,7 @@ defineEmits<{
   'update:criterias': [critery: typeof props.criterias];
 }>();
 
-const { t, locale, messages } = useI18n<I18n, Langs>();
+const { t, locale, messages } = useI18nT();
 // eslint-disable-next-line vue/no-dupe-keys
 const query = useVModel<typeof props.query>('query');
 // eslint-disable-next-line vue/no-dupe-keys

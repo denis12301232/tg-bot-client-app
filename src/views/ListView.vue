@@ -600,17 +600,16 @@ import ListExport from '~/list/ListExport.vue';
 import ListImport from '~/list/ListImport.vue';
 import ListFilters from '~/list/ListFilters.vue';
 import type { QTable } from 'quasar';
-import type { AssistanceResponse, I18n, Langs } from '@/types';
+import type { AssistanceResponse } from '@/types';
 import { onMounted, ref, computed } from 'vue';
-import { useRequest, useFetch, useAssistanceFormOptions } from '@/hooks';
+import { useRequest, useFetch, useAssistanceFormOptions, useI18nT } from '@/hooks';
 import { AssistanceService } from '@/api/services';
 import { Util, Rules } from '@/util';
-import { useI18n } from 'vue-i18n';
 
 type T = { acknowledged: boolean; deletedCount: number };
 type S = (typeof AssistanceService)['deleteForms'];
 
-const { t, messages, locale } = useI18n<I18n, Langs>();
+const { t, messages, locale } = useI18nT();
 const rules = Rules.assistance(t);
 const { districtOptions, yesNoOptions, kidsAgeOptions, getStreetOptions } = useAssistanceFormOptions();
 const {

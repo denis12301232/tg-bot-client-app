@@ -47,12 +47,10 @@
 </template>
 
 <script setup lang="ts">
-import type { I18n, Langs } from '@/types';
 import type { QForm } from 'quasar';
 import { ref, watch } from 'vue';
 import { Validate } from '@/util';
-import { useI18n } from 'vue-i18n';
-import { useVModel } from '@/hooks';
+import { useI18nT, useVModel } from '@/hooks';
 
 defineProps<{
   title: string;
@@ -64,7 +62,7 @@ const emit = defineEmits<{
   valid: [value: boolean];
 }>();
 
-const { t } = useI18n<I18n, Langs>();
+const { t } = useI18nT();
 const formRef = ref<QForm | null>(null);
 const tag = ref('');
 // eslint-disable-next-line vue/no-dupe-keys

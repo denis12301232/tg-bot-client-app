@@ -26,16 +26,14 @@
 </template>
 
 <script setup lang="ts">
-import type { I18n, Langs } from '@/types';
 import type { QForm } from 'quasar';
 import { ref, watch, computed } from 'vue';
 import { useRoute } from 'vue-router';
-import { useFetch } from '@/hooks';
+import { useFetch, useI18nT } from '@/hooks';
 import { Validate } from '@/util';
 import { AuthService } from '@/api/services';
-import { useI18n } from 'vue-i18n';
 
-const { t } = useI18n<I18n, Langs>();
+const { t } = useI18nT();
 const route = useRoute();
 const password = ref('');
 const formRef = ref<QForm | null>(null);

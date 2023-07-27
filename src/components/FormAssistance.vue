@@ -214,13 +214,12 @@
 </template>
 
 <script setup lang="ts">
-import type { AssistanceResponse, I18n, Langs } from '@/types';
+import type { AssistanceResponse } from '@/types';
 import type { QForm } from 'quasar';
 import FormAssistanceGroup from '~/FormAssistanceGroup.vue';
 import { ref, watch } from 'vue';
-import { useAssistanceFormOptions, useVModel } from '@/hooks';
+import { useAssistanceFormOptions, useI18nT, useVModel } from '@/hooks';
 import { Rules } from '@/util';
-import { useI18n } from 'vue-i18n';
 
 const props = defineProps<{
   modelValue: Omit<AssistanceResponse, '_id' | 'sector'>;
@@ -232,7 +231,7 @@ const emit = defineEmits<{
   (event: 'submit'): void;
 }>();
 
-const { t, messages, locale } = useI18n<I18n, Langs>();
+const { t, messages, locale } = useI18nT();
 const { districtOptions, kidsAgeOptions, yesNoOptions, getStreetOptions } = useAssistanceFormOptions();
 const rules = Rules.assistance(t);
 // eslint-disable-next-line vue/no-dupe-keys
