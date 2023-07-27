@@ -31,37 +31,35 @@
     >
       <template #top>
         <div class="row justify-between full-width">
-          <div class="row">
-            <div>
-              <QBtn color="white" round flat dense icon="eva-plus-outline">
-                <QMenu auto-close>
-                  <QList>
-                    <QItem clickable @click="openModal('import')">
-                      <QItemSection avatar>
-                        <QIcon color="green" name="eva-cloud-upload-outline" />
-                      </QItemSection>
-                      <QItemSection>{{ t('list.msgs.import') }}</QItemSection>
-                    </QItem>
-                    <QItem clickable @click="openModal('export')">
-                      <QItemSection avatar>
-                        <QIcon color="red" name="eva-cloud-download-outline" />
-                      </QItemSection>
-                      <QItemSection>{{ t('list.msgs.export') }}</QItemSection>
-                    </QItem>
-                  </QList>
-                </QMenu>
-              </QBtn>
-            </div>
-            <div class="text-h5 q-ml-md">{{ t('list.title') }}</div>
-          </div>
-          <div class="row items-center">
-            <div class="q-mr-sm">
-              <QBtn icon="eva-options-outline" dense flat @click="openModal('filters')">
-                <QTooltip class="bg-white text-black" :offset="[10, 10]" :delay="1000">
-                  {{ t('list.hints.filter') }}
-                </QTooltip>
-              </QBtn>
-            </div>
+          <div class="text-h5 q-ml-md">{{ t('list.title') }}</div>
+          <QBtnGroup flat>
+            <QBtn color="green" icon="eva-cloud-upload-outline" dense flat @click="openModal('import')">
+              <QTooltip class="bg-white text-black" :offset="[10, 10]" :delay="1000">
+                {{ t('list.msgs.import') }}
+              </QTooltip>
+            </QBtn>
+            <QBtn color="orange" dense flat icon="eva-cloud-download-outline" @click="openModal('export')">
+              <QTooltip class="bg-white text-black" :offset="[10, 10]" :delay="1000">
+                {{ t('list.msgs.export') }}
+              </QTooltip>
+            </QBtn>
+            <QBtn color="deep-orange" icon="eva-options-outline" dense flat @click="openModal('filters')">
+              <QTooltip class="bg-white text-black" :offset="[10, 10]" :delay="1000">
+                {{ t('list.hints.filter') }}
+              </QTooltip>
+            </QBtn>
+            <QBtn
+              v-if="visibleColumns.length"
+              dense
+              round
+              flat
+              icon="eva-trash"
+              color="negative"
+              :disable="loading || isDelLoading || !select.length"
+              @click="onDelete(ids)"
+            >
+              <QTooltip class="bg-indigo" :offset="[10, 10]" :delay="1000">{{ t('list.hints.delete') }}</QTooltip>
+            </QBtn>
             <QBtn icon="eva-more-horizontal-outline" dense flat>
               <QTooltip class="bg-white text-black" :offset="[10, 10]" :delay="1000">
                 {{ t('list.hints.columns') }}
@@ -74,23 +72,11 @@
                 </QList>
               </QMenu>
             </QBtn>
-          </div>
+          </QBtnGroup>
         </div>
       </template>
       <template #header-selection="scope">
         <QCheckbox v-model="scope.selected" dark />
-        <QBtn
-          v-if="visibleColumns.length"
-          dense
-          round
-          flat
-          icon="eva-trash"
-          color="negative"
-          :disable="loading || isDelLoading || !select.length"
-          @click="onDelete(ids)"
-        >
-          <QTooltip class="bg-indigo" :offset="[10, 10]" :delay="1000">{{ t('list.hints.delete') }}</QTooltip>
-        </QBtn>
       </template>
       <template #body="scope: { row: AssistanceResponse, rowIndex: number, selected: boolean }">
         <QTr :key="scope.row._id">

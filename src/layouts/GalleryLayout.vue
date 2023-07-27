@@ -6,7 +6,7 @@
         <QToolbarTitle>{{ t('gallery.layout.title') }}</QToolbarTitle>
         <QBtnGroup v-if="store.isAdmin" flat>
           <GalleryImageDelete :selected="selected" />
-          <QBtn icon="eva-upload-outline" dense flat round color="indigo" @click="openModal" />
+          <QBtn icon="eva-upload-outline" dense flat round color="green" @click="openModal" />
         </QBtnGroup>
       </QToolbar>
     </QHeader>
