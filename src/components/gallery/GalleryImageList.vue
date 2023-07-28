@@ -12,10 +12,10 @@
         @visibility="onVisible"
       >
         <QCard
-          :class="['q-ma-sm', 'non-selectable', { 'red-border': selected.has(image.fileId) }]"
+          :class="['q-ma-sm', 'non-selectable', { 'red-border': selected.has(image._id) }]"
           flat
           bordered
-          @click="onClick($event, image.fileId, index)"
+          @click="onClick($event, image._id, index)"
         >
           <div class="image-block">
             <QImg class="image_item" fit="cover" :src="image.link">

@@ -1,10 +1,6 @@
 <template>
   <div :class="$style.change_avatar">
-    <SetAvatar
-      v-model="settings.avatar"
-      :src="group?.avatar && `${ENV.SERVER_URL}/avatars/${group.avatar}`"
-      size="200px"
-    />
+    <SetAvatar v-model="settings.avatar" :src="group?.avatar" size="200px" />
     <QInput
       v-model="settings.title"
       class="q-mt-md full-width"
@@ -25,12 +21,7 @@
       :disable="!valid || loading"
       class="q-mt-md"
       color="primary"
-      @click="
-        updateGroup({
-          formData,
-          params: { group_id: group!._id, title: settings.title, about: settings.about },
-        })
-      "
+      @click="updateGroup({ formData, params })"
     >
       {{ t('chat.groupSettings.buttons.submit') }}
     </QBtn>
@@ -45,7 +36,6 @@ import { storeToRefs } from 'pinia';
 import { useChatStore } from '@/stores';
 import { useFetch, useI18nT } from '@/hooks';
 import { ChatService } from '@/api/services';
-import { ENV } from '@/util';
 
 const { t } = useI18nT();
 const { currentChat } = storeToRefs(useChatStore());
@@ -57,13 +47,19 @@ const settings = reactive({
 const formData = new FormData();
 const group = computed(() => currentChat.value?.group);
 const valid = computed(() => Boolean(settings.title || settings.avatar || settings.about));
+const params = computed(() => ({
+  group_id: group.value?._id || '',
+  title: settings.title ? settings.title : undefined,
+  about: settings.about ? settings.about : undefined,
+}));
 const { request: updateGroup, loading } = useFetch<ChatResponse['group'], typeof ChatService.updateGroup>(
   ChatService.updateGroup,
   {
     afterSuccess: ({ data }) => {
-      currentChat.value!.group = { ...currentChat.value!.group, ...data.value };
+      if (currentChat.value?.group) {
+        currentChat.value.group = data.value;
+      }
       settings.avatar = null;
-      settings.title = '';
     },
     alert: true,
     successMsg: t('chat.groupSettings.msgs.updated'),

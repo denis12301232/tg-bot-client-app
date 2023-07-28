@@ -64,7 +64,7 @@
               <QTooltip class="bg-white text-black" :offset="[10, 10]" :delay="1000">
                 {{ t('list.hints.columns') }}
               </QTooltip>
-              <QMenu>
+              <QMenu max-width="200px">
                 <QList>
                   <QItem v-for="column in columns" :key="(column.field as string)">
                     <QToggle v-model="visibleColumns" :val="column.field" :label="column.label" />

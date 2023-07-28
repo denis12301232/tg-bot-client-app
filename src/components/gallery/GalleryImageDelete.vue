@@ -24,7 +24,7 @@ const { selected, images, total } = inject<ImageInjected>('data')!;
 const { t } = useI18nT();
 const { request, loading } = useFetch<string[], typeof ImageService.deleteImages>(ImageService.deleteImages, {
   afterSuccess: ({ data }) => {
-    images.value = images.value.filter((img) => !data.value?.includes(img.fileId));
+    images.value = images.value.filter((img) => !data.value?.includes(img._id));
     selected.value.clear();
     total.value = total.value - data.value.length;
   },

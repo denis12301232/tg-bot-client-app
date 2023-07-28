@@ -47,7 +47,7 @@ export default class ChatService {
     params,
   }: {
     formData?: FormData;
-    params: { group_id: string; title: string; about: string };
+    params: { group_id: string; title?: string; about?: string };
   }) {
     return $api.patch('chat/update_group', { body: formData, searchParams: params });
   }

@@ -47,8 +47,9 @@ export interface ImagesResponse {
   images: {
     _id: string;
     link: string;
-    fileId: string;
+    fileName: string;
     description: string;
+    mimetype: string;
   }[];
   count: number;
 }
