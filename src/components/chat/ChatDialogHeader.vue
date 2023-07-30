@@ -31,12 +31,13 @@
         dense
         flat
         round
+        color="green"
         icon="eva-person-add-outline"
         @click="emit('open-modal', 'modal:group-add-user')"
       >
         <QTooltip class="bg-indigo" :offset="[10, 10]" :delay="1000">{{ t('chat.hints.add') }}</QTooltip>
       </QBtn>
-      <QBtnDropdown dropdown-icon="eva-more-vertical-outline" rounded dense flat>
+      <QBtnDropdown dropdown-icon="eva-more-vertical-outline" color="indigo" rounded dense flat>
         <QList separator>
           <QItem v-if="type === 'dialog'" v-ripple v-close-popup class="q-pa-sm" clickable @click="deleteChat">
             <QItemSection avatar class="q-pr-sm" style="min-width: 0">

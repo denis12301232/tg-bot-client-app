@@ -1,23 +1,30 @@
 <template>
-  <div :class="[$style.images, { [$style.images_many]: images.length > 1 }]">
+  <div :class="[$style.images, { [$style.images_many]: filenames.length > 1 }]">
     <QImg
-      v-for="(img, index) in images"
+      v-for="(filename, index) in filenames"
       :key="index"
-      :fit="images.length > 1 ? 'cover' : 'scale-down'"
+      :fit="filenames.length > 1 ? 'cover' : 'scale-down'"
       :class="$style.img"
-      :src="img"
-      @click="emit('open', img)"
+      :src="imgs[index].src"
+      @click="emit('open', imgs[index].src)"
     />
   </div>
 </template>
 
 <script setup lang="ts">
-defineProps<{
-  images: string[];
+import { useGetTempUrl } from '@/hooks';
+import { ref, onMounted } from 'vue';
+
+const props = defineProps<{
+  filenames: string[];
 }>();
 const emit = defineEmits<{
-  (event: 'open', link: string): void;
+  open: [link: string];
 }>();
+
+const imgs = ref(props.filenames.map((filename) => useGetTempUrl(filename, 'image/*')));
+
+onMounted(() => imgs.value.forEach((img) => img.getUrl()));
 </script>
 
 <style module lang="scss">

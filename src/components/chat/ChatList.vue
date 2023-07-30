@@ -74,8 +74,8 @@ const { currentChatId, sortedChats } = storeToRefs(useChatStore());
 
 function showLastMessageText(msg: IMessage | undefined) {
   if (msg?.text) return msg.text;
-  if (msg?.attachments?.at(0)?.type === 'audio') return t('chat.msg.audio');
-  if (msg?.attachments?.at(0)?.type === 'image') return t('chat.msg.image');
+  if (msg?.attachments?.at(0)?.ext === 'webm') return t('chat.msg.audio');
+  if (msg?.attachments?.at(0)?.mime.includes('image')) return t('chat.msg.image');
 }
 
 function onOpenChat(chat_id: string) {

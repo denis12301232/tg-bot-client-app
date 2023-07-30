@@ -51,4 +51,8 @@ export default class ChatService {
   }) {
     return $api.patch('chat/update_group', { body: formData, searchParams: params });
   }
+
+  static getFileFromS3(filename: string) {
+    return $api.get('chat/get_file_from_s3', { searchParams: { filename } });
+  }
 }

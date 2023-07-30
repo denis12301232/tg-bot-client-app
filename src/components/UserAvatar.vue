@@ -5,7 +5,7 @@
       <span :class="$style.user_name">{{ avatar ? '' : name?.slice(0, 1) }}</span>
       <QImg
         v-if="avatar"
-        :src="avatar"
+        :src="ENV.IMAGE_URL + '/' + avatar"
         fit="cover"
         width="100%"
         height="100%"
@@ -19,6 +19,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
+import { ENV } from '@/util';
 
 const props = withDefaults(
   defineProps<{

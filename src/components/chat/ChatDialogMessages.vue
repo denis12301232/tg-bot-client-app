@@ -47,12 +47,12 @@
           <div :class="{ [$style.msg]: msg.attachments?.length }">
             <span v-if="msg.text" style="font-size: 1.2em">{{ msg.text }}</span>
             <Chat.MessageVoice
-              v-if="msg.attachments?.at(0)?.type === 'audio'"
-              :src="`${ENV.SERVER_URL}/audio/${msg.attachments.at(0)?.name}`"
+              v-if="msg.attachments?.at(0)?.ext === 'webm'"
+              :filename="`${msg.attachments.at(0)?.name}.${msg.attachments.at(0)?.ext}`"
             />
             <Chat.MessageImage
-              v-else-if="msg.attachments?.at(0)?.type === 'image'"
-              :images="msg.attachments.map((msg) => `${ENV.SERVER_URL}/media/${msg?.name}`)"
+              v-else-if="msg.attachments?.at(0)?.mime.includes('image/')"
+              :filenames="msg.attachments.map((attachment) => `${attachment?.name}.${attachment?.ext}`)"
               @open="onOpenImage"
             />
           </div>
@@ -70,7 +70,7 @@ import Chat from '~/chat';
 import { ref, computed, watch, nextTick } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useStore, useChatStore } from '@/stores';
-import { Time, ENV } from '@/util';
+import { Time } from '@/util';
 
 defineProps<{
   type: 'dialog' | 'group';

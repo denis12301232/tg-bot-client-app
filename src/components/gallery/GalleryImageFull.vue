@@ -5,7 +5,12 @@
       <QBtn v-close-popup icon="eva-close" dense flat round color="negative" size="15px" />
     </div>
     <div class="row justify-center items-center" style="flex: 1 1 auto">
-      <QImg class="img" :src="imgs[index]?.link" spinner-color="primary" fit="scale-down">
+      <QImg
+        class="img"
+        :src="`${ENV.IMAGE_URL}/${imgs[index].fileName}.${imgs[index].ext}`"
+        spinner-color="primary"
+        fit="scale-down"
+      >
         <template #loading>
           <LoaderWheel size="35px" />
         </template>
@@ -44,6 +49,7 @@ import { onMounted, onUnmounted, nextTick } from 'vue';
 import { ImageService } from '@/api/services';
 import { useStore } from '@/stores';
 import { useI18nT, useVModel } from '@/hooks';
+import { ENV } from '@/util';
 
 const props = defineProps<{
   currentIndex: number;

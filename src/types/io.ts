@@ -28,7 +28,6 @@ interface ClientToServerEvents {
     text: string;
     chatId: string;
     attachments: File[] | null;
-    type: 'audio' | 'image' | null;
   }) => void;
   'chat:typing': (chat_id: string, user_name: string, user_id: string) => void;
   'chat:call': (chatId: string) => void;

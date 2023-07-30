@@ -46,10 +46,10 @@ export type UploadImagesResponse = { link: string; fileId: string; description: 
 export interface ImagesResponse {
   images: {
     _id: string;
-    link: string;
     fileName: string;
     description: string;
     mimetype: string;
+    ext: string;
   }[];
   count: number;
 }

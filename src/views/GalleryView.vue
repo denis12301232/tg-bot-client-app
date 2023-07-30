@@ -1,7 +1,7 @@
 <template>
   <div>
     <QDialog v-model="uploadModal">
-      <GalleryImageUpload />
+      <GalleryImageUpload @modal="hideUploadModal" />
     </QDialog>
     <QDialog v-model="modal" maximized no-refocus>
       <GalleryImageFull
@@ -47,5 +47,9 @@ watch(data, () => {
 function onOpenImage(index: number) {
   currentIndex.value = index;
   modal.value = true;
+}
+
+function hideUploadModal(value: boolean) {
+  uploadModal.value = value;
 }
 </script>

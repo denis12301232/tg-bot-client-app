@@ -9,19 +9,19 @@
             <QItemSection avatar>
               <QIcon name="eva-home-outline" color="primary" />
             </QItemSection>
-            <QItemSection>{{ t('chat.menu.home') }}</QItemSection>
+            <QItemSection class="text-uppercase">{{ t('chat.menu.home') }}</QItemSection>
           </QItem>
           <QItem v-ripple clickable tag="a" to="/account">
             <QItemSection avatar>
               <QIcon name="eva-person-outline" color="primary" />
             </QItemSection>
-            <QItemSection>{{ t('chat.menu.account') }}</QItemSection>
+            <QItemSection class="text-uppercase">{{ t('chat.menu.account') }}</QItemSection>
           </QItem>
           <QItem v-ripple v-close-popup clickable @click="emit('openModal', 'modal:group-create')">
             <QItemSection avatar>
               <QIcon name="eva-plus-square-outline" color="primary" />
             </QItemSection>
-            <QItemSection>{{ t('chat.menu.group') }}</QItemSection>
+            <QItemSection class="text-uppercase">{{ t('chat.menu.group') }}</QItemSection>
           </QItem>
         </QList>
       </QCard>

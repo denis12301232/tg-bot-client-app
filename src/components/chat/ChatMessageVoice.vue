@@ -8,6 +8,7 @@
       no-caps
       size="20px"
       :icon="isPlaying ? 'eva-stop-circle' : 'eva-play-circle'"
+      :loading="loading"
       @click="playOrStop"
     />
     <div :class="$style.audio_info">
@@ -20,35 +21,43 @@
 <script setup lang="ts">
 import type { QLinearProgress } from 'quasar';
 import { ref, onMounted, onBeforeUnmount, watch } from 'vue';
-import { useAudioDuration } from '@/hooks';
+import { useAudioDuration, useGetTempUrl } from '@/hooks';
 
 const props = defineProps<{
-  src: string;
+  filename: string;
 }>();
 
-const duration = useAudioDuration(props.src);
-const audio = new Audio(props.src);
+let audio: HTMLAudioElement | null = null;
+const { src, loading, getUrl } = useGetTempUrl(props.filename, 'audio/webm');
+const duration = ref(0);
 const barRef = ref<QLinearProgress | null>(null);
 const isPlaying = ref(false);
 const progress = ref(0);
 const currentTime = ref<string | number>('0:00');
 const durationString = ref<string | number>(0);
 
+onMounted(getUrl);
+
+const stop = watch(src, () => {
+  if (src.value) {
+    audio = new Audio(src.value);
+    audio.addEventListener('play', onPlay);
+    audio.addEventListener('pause', onPause);
+    audio.addEventListener('loadedmetadata', onLoadedMetadata);
+    audio.addEventListener('timeupdate', onTimeUpdate);
+    audio.addEventListener('ended', onEnded);
+    useAudioDuration(src.value, duration);
+    stop();
+  }
+});
+
 const unwatch = watch(duration, () => {
   durationString.value = (duration.value / 100).toFixed(2).replace('.', ':');
   unwatch();
 });
 
-onMounted(() => {
-  audio.addEventListener('play', onPlay);
-  audio.addEventListener('pause', onPause);
-  audio.addEventListener('loadedmetadata', onLoadedMetadata);
-  audio.addEventListener('timeupdate', onTimeUpdate);
-  audio.addEventListener('ended', onEnded);
-});
-
 function playOrStop() {
-  isPlaying.value ? audio.pause() : audio.play();
+  isPlaying.value ? audio?.pause() : audio?.play();
 }
 
 function onPlay() {
@@ -83,11 +92,11 @@ function onRewindAudio(this: HTMLElement, event: MouseEvent) {
 }
 
 onBeforeUnmount(() => {
-  audio.removeEventListener('play', onPlay);
-  audio.removeEventListener('pause', onPause);
-  audio.removeEventListener('loadedmetadata', onLoadedMetadata);
-  audio.removeEventListener('timeupdate', onTimeUpdate);
-  audio.removeEventListener('ended', onEnded);
+  audio?.removeEventListener('play', onPlay);
+  audio?.removeEventListener('pause', onPause);
+  audio?.removeEventListener('loadedmetadata', onLoadedMetadata);
+  audio?.removeEventListener('timeupdate', onTimeUpdate);
+  audio?.removeEventListener('ended', onEnded);
   barRef.value?.$el.removeEventListener('click', onRewindAudio);
 });
 </script>

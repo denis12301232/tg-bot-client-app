@@ -1,6 +1,6 @@
 <template>
   <form class="column items-center" type="submit" @submit.prevent="request(formData)">
-    <SetAvatar v-model="avatar" size="200px" :src="store.user?.avatar && `${store.user.avatar}`" />
+    <SetAvatar v-model="avatar" size="200px" :src="store.user?.avatar && `${ENV.IMAGE_URL}/${store.user.avatar}`" />
     <QBtn class="q-mt-sm" color="primary" :disable="!avatar || loading" type="submit" :loading="loading">
       {{ label }}
     </QBtn>
@@ -16,6 +16,7 @@ import { ref, watch } from 'vue';
 import { useStore } from '@/stores';
 import { useFetch } from '@/hooks';
 import { ToolsService } from '@/api/services';
+import { ENV } from '@/util';
 
 const props = defineProps<{
   label: string;

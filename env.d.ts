@@ -6,6 +6,7 @@ interface ImportMetaEnv {
   readonly VITE_SOCKET_URl: string;
   readonly VITE_STUN_SERVERS: string;
   readonly VITE_TITLE: string;
+  readonly VITE_IMAGE_URL: string;
 }
 
 interface ImportMeta {

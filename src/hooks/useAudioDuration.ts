@@ -1,7 +1,6 @@
-import { ref } from 'vue';
+import type { Ref } from 'vue';
 
-export default function useAudioDuration(src: string) {
-  const duration = ref(0);
+export default function useAudioDuration(src: string, duration: Ref<number>) {
   const audio = new Audio(src);
 
   function onDurationChange(this: HTMLAudioElement) {
@@ -15,6 +14,4 @@ export default function useAudioDuration(src: string) {
   audio.load();
   audio.currentTime = 1e101;
   audio.remove();
-
-  return duration;
 }

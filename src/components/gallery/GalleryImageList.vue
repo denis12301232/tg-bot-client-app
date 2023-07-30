@@ -18,7 +18,7 @@
           @click="onClick($event, image._id, index)"
         >
           <div class="image-block">
-            <QImg class="image_item" fit="cover" :src="image.link">
+            <QImg class="image_item" fit="cover" :src="`${ENV.IMAGE_URL}/${image.fileName}.${image.ext}`">
               <template #loading>
                 <LoaderWheel size="35px" />
               </template>
@@ -40,6 +40,7 @@ import type { ImageInjected } from '@/types';
 import { onMounted, inject } from 'vue';
 import { useStore } from '@/stores';
 import { useI18nT } from '@/hooks';
+import { ENV } from '@/util';
 
 const props = defineProps<{
   loading: boolean;

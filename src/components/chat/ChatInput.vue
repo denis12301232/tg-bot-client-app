@@ -3,15 +3,15 @@
     v-model="message"
     ref="inputRef"
     class="input"
-    standout="bg-indigo text-white"
-    :input-class="{ ['text-white']: focused || currentTheme === 'dark' }"
+    :loading="loading"
+    filled
     label-slot
-    :readonly="isRecording || !!voiceMessage"
+    :readonly="isRecording || !!voiceMessage || loading"
     square
     :on-focus="() => setFocus(true)"
     :on-blur="() => setFocus(false)"
     :="$attrs"
-    @keyup.enter="saveMessage()"
+    @keyup.enter="saveMessage"
   >
     <template #label>
       <div v-if="voiceMessage">{{ t('chat.playsholders.voice') }}</div>
@@ -57,7 +57,7 @@
         :color="currentTheme === 'dark' ? 'white' : ''"
         icon="eva-paper-plane-outline"
         style="transform: rotate(41deg)"
-        @click="saveMessage(voiceMessage ? 'audio' : null)"
+        @click="saveMessage"
       />
     </template>
   </QInput>
@@ -84,10 +84,23 @@ const fileInput = ref<HTMLInputElement | null>(null);
 const focused = ref(false);
 const { voiceMessage, isRecording, error, startRecording, stopRecording } = useVoice();
 const onTypingDebounce = Util.debounceDecorator(onTyping, 1000);
+const loading = ref(false);
 
-watch(message, () => {
-  onTypingDebounce();
-});
+watch(
+  () => chatStore.currentChat?.messages.length,
+  () => {
+    loading.value = false;
+  }
+);
+
+watch(
+  () => chatStore.currentChatId,
+  () => {
+    message.value = '';
+  }
+);
+
+watch(message, () => onTypingDebounce());
 
 watch(error, () => {
   error.value && store.addAlert('error', 'Нет доступа к микрофону!');
@@ -101,7 +114,7 @@ watch(voiceMessage, () => {
 
 watch(files, () => {
   if (files.value && !voiceMessage.value) {
-    saveMessage('image');
+    saveMessage();
   }
 });
 
@@ -109,12 +122,15 @@ watch(isRecording, () => {
   inputRef.value?.blur();
 });
 
-function saveMessage(type: 'audio' | 'image' | null = null) {
+function saveMessage() {
+  if (!files.value && !message.value) {
+    return;
+  }
+  loading.value = true;
   chatStore.socket.emit('chat:message', {
     text: message.value!,
     chatId: chatStore.currentChatId!,
     attachments: files.value,
-    type: type,
   });
   message.value = '';
   files.value = null;

@@ -127,4 +127,8 @@ export const routes: RouteRecordRaw[] = [
     props: { code: 404, message: 'Not found' },
     meta: { layout: 'VoidLayout' },
   },
+  {
+    path: '/test',
+    component: () => import('@/views/TestView.vue'),
+  },
 ];

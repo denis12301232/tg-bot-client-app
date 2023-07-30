@@ -4,4 +4,5 @@ export default class Env {
   static readonly SOCKET_URL = import.meta.env.VITE_SOCKET_URL;
   static readonly STUN_SERVERS = import.meta.env.VITE_STUN_SERVERS.split(' ');
   static readonly TITLE = import.meta.env.VITE_TITLE;
+  static readonly IMAGE_URL = import.meta.env.VITE_IMAGE_URL;
 }

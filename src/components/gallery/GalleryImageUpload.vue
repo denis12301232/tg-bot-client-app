@@ -24,6 +24,9 @@ import { inject } from 'vue';
 import { ImageService } from '@/api/services';
 import { useI18nT } from '@/hooks';
 
+const emit = defineEmits<{
+  modal: [value: boolean];
+}>();
 const { t } = useI18nT();
 const { images, total } = inject<ImageInjected>('data')!;
 
@@ -31,6 +34,7 @@ function onUploaded(info: { files: readonly File[]; xhr: XMLHttpRequest }) {
   const data = JSON.parse(info.xhr.response) as ImagesResponse['images'];
   images.value = [...data, ...images.value];
   total.value = data.length + total.value;
+  emit('modal', false);
 }
 
 function checkFileType(files: readonly File[] | FileList) {

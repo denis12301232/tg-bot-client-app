@@ -16,7 +16,7 @@ export default function useVoice() {
       mediaRecorder.value.onstop = () => (isRecording.value = false);
       mediaRecorder.value.ondataavailable = (event) => {
         voiceMessage.value = new File([event.data], 'audio.ogg', {
-          type: mediaRecorder.value?.mimeType,
+          type: 'audio/webm',
         });
       };
       mediaRecorder.value.start();
