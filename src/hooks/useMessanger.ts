@@ -10,6 +10,8 @@ export default function useMessanger(socket: SocketTyped) {
     () =>
       new Map([...chats.value.entries()].sort((a, b) => (new Date(a[1].updatedAt) > new Date(b[1].updatedAt) ? -1 : 1)))
   );
+  const unread = computed(() => [...chats.value.entries()].reduce((sum, [, chat]) => (chat.unread ? ++sum : sum), 0));
+    
   useMessangerEvents({ chats, currentChatId }).forEach((func, event) => socket.on(event, func));
 
   watchEffect(() => {
@@ -40,7 +42,7 @@ export default function useMessanger(socket: SocketTyped) {
     chats.value = data.reduce((map, chat) => map.set(chat._id, chat), new Map<string, ChatResponse>());
   }
 
-  return { chats, currentChatId, currentChat, sortedChats, onGetUserChats, onOpenChat };
+  return { chats, currentChatId, currentChat, sortedChats, onGetUserChats, onOpenChat, unread };
 }
 
 function useMessangerEvents({

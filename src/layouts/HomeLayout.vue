@@ -63,7 +63,9 @@
         </QItem>
         <QItem v-if="store.isAuth" v-ripple clickable tag="a" to="/chat">
           <QItemSection avatar>
-            <QIcon color="primary" name="eva-message-circle-outline" />
+            <QIcon color="primary" name="eva-message-circle-outline">
+              <QBadge v-show="unread" color="positive" floating rounded>{{ unread }}</QBadge>
+            </QIcon>
           </QItemSection>
           <QItemSection>{{ t('home.drawers.left.chat') }}</QItemSection>
         </QItem>
@@ -134,15 +136,17 @@ import UserAvatar from '~/UserAvatar.vue';
 import SetLang from '~/SetLang.vue';
 import { ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
-import { useStore } from '@/stores';
+import { useStore, useChatStore } from '@/stores';
 import { useI18nT, useTelegram } from '@/hooks';
 import { ENV } from '@/util';
+import { storeToRefs } from 'pinia';
 
 const icon = new URL('../../public/icon.jpg', import.meta.url).href;
 const { t } = useI18nT();
 const { isOpenedFromTg } = useTelegram();
 const store = useStore();
 const route = useRoute();
+const { unread } = storeToRefs(useChatStore());
 const leftDrawerOpen = ref(false);
 const rightDrawerOpen = ref(false);
 const modal = ref(false);
