@@ -14,7 +14,7 @@
 </template>
 
 <script setup lang="ts">
-import AlertList from '~/AlertList.vue';
+import AlertList from '~/alert/AlertList.vue';
 import LoaderPage from '~/LoaderPage.vue';
 import { onMounted, watch } from 'vue';
 import { useStore, useChatStore } from '@/stores';

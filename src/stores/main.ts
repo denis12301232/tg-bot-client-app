@@ -3,8 +3,8 @@ import { ref, computed, watchEffect } from 'vue';
 import { defineStore } from 'pinia';
 import { useQuasar } from 'quasar';
 import { AuthService, ToolsService } from '@/api/services';
-import { Alert } from '@/util';
 import { useI18n } from 'vue-i18n';
+import { Alert } from '@/models';
 
 export const useStore = defineStore('main', () => {
   const $q = useQuasar();
