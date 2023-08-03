@@ -58,7 +58,9 @@
               :disable="loading || isDelLoading || !select.length"
               @click="onDelete(ids)"
             >
-              <QTooltip class="bg-indigo" :offset="[10, 10]" :delay="1000">{{ t('list.hints.delete') }}</QTooltip>
+              <QTooltip class="bg-white text-black" :offset="[10, 10]" :delay="1000">
+                {{ t('list.hints.delete') }}
+              </QTooltip>
             </QBtn>
             <QBtn icon="eva-more-horizontal-outline" dense flat>
               <QTooltip class="bg-white text-black" :offset="[10, 10]" :delay="1000">

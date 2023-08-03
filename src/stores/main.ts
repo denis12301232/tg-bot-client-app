@@ -4,7 +4,7 @@ import { defineStore } from 'pinia';
 import { useQuasar } from 'quasar';
 import { AuthService, ToolsService } from '@/api/services';
 import { useI18n } from 'vue-i18n';
-import { Alert } from '@/models';
+import { Alert, ChatAlert } from '@/models';
 
 export const useStore = defineStore('main', () => {
   const $q = useQuasar();
@@ -13,7 +13,7 @@ export const useStore = defineStore('main', () => {
   const theme = ref(localStorage.getItem('theme') as ITheme);
   const isPageLoading = ref(false);
   const lang = ref((localStorage.getItem('lang') as Langs) || 'ru');
-  const alerts = ref<Alert[]>([]);
+  const alerts = ref<(Alert |  ChatAlert)[]>([]);
   const isAuth = computed(() => !!user.value);
   const isAdmin = computed(() => user.value?.roles.includes('admin') || false);
   const currentTheme = computed(() => {

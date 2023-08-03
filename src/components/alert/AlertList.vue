@@ -14,12 +14,12 @@
 
 <script setup lang="ts">
 import AlertMessage from './AlertMessage.vue';
-import type { Alert } from '@/models';
+import type { Alert, ChatAlert } from '@/models';
 import { watch } from 'vue';
 import { useVModel } from '@/hooks';
 
 defineProps<{
-  modelValue: Alert[];
+  modelValue: (Alert | ChatAlert)[];
 }>();
 defineEmits<{
   'update:modelValue': [alerts: Alert[]];

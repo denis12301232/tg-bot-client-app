@@ -1,5 +1,6 @@
 <template>
   <div
+    v-if="!(alert instanceof ChatAlert)"
     :class="[$style.alert, $style[alert.type], 'q-pa-sm', 'row', 'q-mt-sm', 'items-center', 'no-wrap']"
     @click="emit('hideById', alert.id)"
   >
@@ -8,19 +9,49 @@
     </div>
     <div class="text-body1">{{ alert.message }}</div>
   </div>
+  <div
+    v-else-if="alert instanceof ChatAlert"
+    :class="[$style.alert, $style.chat, 'q-mt-sm']"
+    @click="emit('hideById', alert.id)"
+  >
+    <QItem v-ripple clickable>
+      <QItemSection avatar>
+        <QIcon name="eva-message-square-outline" color="white" />
+      </QItemSection>
+      <QItemSection>
+        <QItemLabel class="text-subtitle2">
+          {{ alert.group?.title ? `${alert.author.name} in ${alert.group?.title}` : alert.author.name }}
+        </QItemLabel>
+        <QItemLabel class="text-body1" lines="2">{{ message }}</QItemLabel>
+      </QItemSection>
+    </QItem>
+  </div>
 </template>
 
 <script setup lang="ts">
-import type { Alert } from '@/models';
+import { ChatAlert, type Alert } from '@/models';
+import { computed } from 'vue';
 
-defineProps<{
-  alert: Alert;
+const props = defineProps<{
+  alert: Alert | ChatAlert;
   icon: string;
 }>();
 
 const emit = defineEmits<{
   hideById: [id: string];
 }>();
+
+const message = computed(() => {
+  let message = props.alert.message;
+  if (props.alert instanceof ChatAlert) {
+    if (props.alert.attachments.at(0)?.mime.includes('image')) {
+      message = 'Изображение';
+    } else if (props.alert.attachments.length) {
+      message = 'Аудиосообщение';
+    }
+  }
+  return message;
+});
 </script>
 
 <style lang="scss" module>
@@ -36,6 +67,14 @@ const emit = defineEmits<{
     margin-left: 5px;
     font-size: 1.1rem;
     overflow-wrap: break-word;
+  }
+}
+
+.chat {
+  background-color: $indigo;
+
+  &:hover {
+    background-color: $indigo-6;
   }
 }
 
