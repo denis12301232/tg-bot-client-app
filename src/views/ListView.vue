@@ -12,7 +12,7 @@
       :columns="columns"
       :rows="forms"
       :loading="loading || isDelLoading || isUpdating"
-      :rows-per-page-options="[5, 10, 20, 50]"
+      :rows-per-page-options="[5, 10, 20, 50, 100, 1000]"
       binary-state-sort
       :pagination-label="(f, l, a) => `${f}-${l} ${t('table.of')} ${a}`"
       :loading-label="t('table.loading')"
@@ -38,7 +38,14 @@
                 {{ t('list.msgs.import') }}
               </QTooltip>
             </QBtn>
-            <QBtn color="orange" dense flat icon="eva-cloud-download-outline" @click="openModal('export')">
+            <QBtn
+              color="orange"
+              dense
+              flat
+              icon="eva-cloud-download-outline"
+              :disable="!select.length"
+              @click="openModal('export')"
+            >
               <QTooltip class="bg-white text-black" :offset="[10, 10]" :delay="1000">
                 {{ t('list.msgs.export') }}
               </QTooltip>
