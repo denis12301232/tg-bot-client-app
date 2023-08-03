@@ -15,7 +15,7 @@
 <script setup lang="ts">
 import type { ChatModal } from '@/types';
 import Chat from '~/chat';
-import { type Component, ref, shallowRef, watch } from 'vue';
+import { type Component, ref, shallowRef, watch, onBeforeUnmount } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useChatStore } from '@/stores';
 
@@ -26,6 +26,8 @@ const modal = ref(false);
 const name = ref<ChatModal | null>(null);
 const content = shallowRef<ModalContent | null>(null);
 const maximized = ['modal:group-info', 'modal:group-settings', 'modal:open-image'];
+
+onBeforeUnmount(() => (currentChatId.value = null));
 
 watch(name, () => {
   switch (name.value) {
