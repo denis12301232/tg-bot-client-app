@@ -31,7 +31,7 @@
             :icon="videos.get(user._id)?.mute.video ? 'eva-video-off-outline' : 'eva-video-outline'"
             @click="toggleTrackMuteAndRelay('video')"
           >
-            <QTooltip class="bg-indigo" :offset="[10, 10]" :delay="1000">{{ t('meetId.hints.cam') }}</QTooltip>
+            <QTooltip class="bg-indigo" :offset="[10, 10]" :delay="1000">{{ t('meetId.hints.camera') }}</QTooltip>
           </QBtn>
           <QBtn class="share" icon="eva-cast-outline" :disable="streams.screen.has(user._id)" @click="shareMyScreen">
             <QTooltip class="bg-indigo" :offset="[10, 10]" :delay="1000">{{ t('meetId.hints.share') }}</QTooltip>
@@ -74,10 +74,11 @@ import {
   computed,
 } from 'vue';
 import { useStore, useChatStore } from '@/stores';
-import { useNavigation, useWebRtc, useFetch, useI18nT } from '@/hooks';
+import { useNavigation, useWebRtc, useFetch } from '@/hooks';
 import { useRoute } from 'vue-router';
 import { WebRtcDto } from '@/api/dto';
 import { MeetService } from '@/api/services';
+import { useI18n } from 'vue-i18n';
 
 type T = { title: string; roles: { admin: string[] } };
 type S = typeof MeetService.getMeetInfo;
@@ -88,7 +89,7 @@ interface RightDrawer {
   props: { [name: string]: any };
 }
 
-const { t } = useI18nT();
+const { t } = useI18n();
 const route = useRoute();
 const store = useStore();
 const { socket } = useChatStore();

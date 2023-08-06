@@ -28,7 +28,7 @@
         v-model="msg"
         class="full-width"
         hide-bottom-space
-        :label="t('meetId.chat.playsholder')"
+        :label="t('meetId.chat.send.placeholder')"
         standout
         @keyup.enter="sendMessage"
       >
@@ -54,7 +54,7 @@ import type { QScrollArea } from 'quasar';
 import { computed, ref, watch } from 'vue';
 import { useStore } from '@/stores';
 import { WebRtcDto } from '@/api/dto';
-import { useI18nT } from '@/hooks';
+import { useI18n } from 'vue-i18n';
 
 const props = defineProps<{
   abonents: Map<string, IAbonent>;
@@ -64,7 +64,7 @@ const emit = defineEmits<{
   (event: 'my-msg', msg: { user_id: string; msg: string }): void;
 }>();
 
-const { t } = useI18nT();
+const { t } = useI18n();
 const store = useStore();
 const msg = ref('');
 const scrollRef = ref<QScrollArea | null>(null);

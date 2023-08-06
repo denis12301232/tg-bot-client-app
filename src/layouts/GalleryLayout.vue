@@ -6,7 +6,9 @@
         <QToolbarTitle>{{ t('gallery.layout.title') }}</QToolbarTitle>
         <QBtnGroup v-if="store.isAdmin" flat>
           <GalleryImageDelete :selected="selected" />
-          <QBtn icon="eva-upload-outline" dense flat round color="green" @click="openModal" />
+          <QBtn icon="eva-upload-outline" dense flat round color="green" @click="openModal">
+            <QTooltip class="bg-indigo" :offset="[10, 10]" :delay="1000">{{ t('gallery.hints.upload') }}</QTooltip>
+          </QBtn>
         </QBtnGroup>
       </QToolbar>
     </QHeader>
@@ -21,9 +23,9 @@ import GalleryImageDelete from '~/gallery/GalleryImageDelete.vue';
 import type { ImagesResponse } from '@/types';
 import { ref, provide, computed } from 'vue';
 import { useStore } from '@/stores';
-import { useI18nT } from '@/hooks';
+import { useI18n } from 'vue-i18n';
 
-const { t } = useI18nT();
+const { t } = useI18n();
 const store = useStore();
 const images = ref<ImagesResponse['images']>([]);
 const total = ref(0);

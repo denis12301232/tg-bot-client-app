@@ -5,14 +5,14 @@
       v-model="settings.title"
       class="q-mt-md full-width"
       clearable
-      :label="t('chat.groupSettings.placeholders.title')"
+      :label="t('chat.groupSettings.form.fields.title.placeholder')"
       standout="text-white bg-indigo"
     />
     <QInput
       v-model="settings.about"
       class="q-mt-md full-width"
       type="textarea"
-      :label="t('chat.groupSettings.placeholders.about')"
+      :label="t('chat.groupSettings.form.fields.about.placeholder')"
       autogrow
       standout="text-white bg-indigo"
     />
@@ -23,7 +23,7 @@
       color="primary"
       @click="updateGroup({ formData, params })"
     >
-      {{ t('chat.groupSettings.buttons.submit') }}
+      {{ t('chat.groupSettings.form.buttons.submit') }}
     </QBtn>
   </div>
 </template>
@@ -34,10 +34,11 @@ import SetAvatar from '~/SetAvatar.vue';
 import { reactive, computed, watchEffect } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useChatStore } from '@/stores';
-import { useFetch, useI18nT } from '@/hooks';
+import { useFetch } from '@/hooks';
 import { ChatService } from '@/api/services';
+import { useI18n } from 'vue-i18n';
 
-const { t } = useI18nT();
+const { t } = useI18n();
 const { currentChat } = storeToRefs(useChatStore());
 const settings = reactive({
   avatar: null as File | null,
@@ -62,8 +63,8 @@ const { request: updateGroup, loading } = useFetch<ChatResponse['group'], typeof
       settings.avatar = null;
     },
     alert: true,
-    successMsg: t('chat.groupSettings.msgs.updated'),
-    errorMsg: t('chat.groupSettings.msgs.updateFailed'),
+    successMsg: t('chat.groupSettings.messages.updated'),
+    errorMsg: t('chat.groupSettings.messages.failed'),
   }
 );
 watchEffect((onCleanup) => {

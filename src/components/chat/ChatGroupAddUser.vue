@@ -7,11 +7,11 @@
       <QInput
         v-model="search"
         debounce="300"
-        :label="t('chat.addUser.playsholder')"
+        :label="t('chat.addUser.form.fields.name.placeholder')"
         filled
         clearable
         :error="!users?.length && !!search"
-        :error-message="t('chat.addUser.errors.none')"
+        :error-message="t('chat.search.errors.none')"
         :loading="isUsersLoading"
       />
     </QCardSection>
@@ -37,7 +37,7 @@
         color="primary"
         :disable="!userToAdd?._id"
         :loading="isAddUserLoading"
-        :label="t('chat.addUser.button')"
+        :label="t('chat.addUser.form.buttons.add')"
         @click="addUser(currentChatId!, userToAdd!._id)"
       />
     </QCardActions>
@@ -50,10 +50,11 @@ import UserAvatar from '~/UserAvatar.vue';
 import { ref, watch } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useChatStore } from '@/stores';
-import { useFetch, useI18nT } from '@/hooks';
+import { useFetch } from '@/hooks';
 import { ChatService } from '@/api/services';
+import { useI18n } from 'vue-i18n';
 
-const { t } = useI18nT();
+const { t } = useI18n();
 const { chats, currentChatId } = storeToRefs(useChatStore());
 const search = ref('');
 const userToAdd = ref<IUser | null>(null);
@@ -72,8 +73,8 @@ const { request: addUser, loading: isAddUserLoading } = useFetch(ChatService.add
     }
   },
   alert: true,
-  successMsg: t('chat.addUser.msgs.added'),
-  errorMsg: t('chat.addUser.msgs.alreadyAdded'),
+  successMsg: t('chat.addUser.messages.added'),
+  errorMsg: t('chat.addUser.messages.error'),
 });
 watch(search, (n) => {
   if (n) {

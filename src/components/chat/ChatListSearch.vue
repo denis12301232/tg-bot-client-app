@@ -1,6 +1,6 @@
 <template>
   <QList>
-    <h6 v-if="!users?.length" class="text-center text-negative q-mt-lg">{{ t('chat.errors.search') }}</h6>
+    <h6 v-if="!users?.length" class="text-center text-negative q-mt-lg">{{ t('chat.search.errors.none') }}</h6>
     <QItem v-for="user in users" v-ripple :key="user._id" clickable @click="openOrCreateChat(user._id)">
       <QItemSection avatar>
         <UserAvatar :name="user.name" :avatar="user.avatar" />
@@ -19,8 +19,7 @@ import UserAvatar from '~/UserAvatar.vue';
 import { onMounted, onUnmounted } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useStore, useChatStore } from '@/stores';
-
-import { useI18nT } from '@/hooks';
+import { useI18n } from 'vue-i18n';
 
 defineProps<{
   users?: IUser[];
@@ -29,7 +28,7 @@ const emit = defineEmits<{
   (event: 'update:search', value: string): void;
 }>();
 
-const { t } = useI18nT();
+const { t } = useI18n();
 const { user } = storeToRefs(useStore());
 const chatStore = useChatStore();
 const { chats, currentChatId } = storeToRefs(chatStore);

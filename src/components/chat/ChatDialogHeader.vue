@@ -17,11 +17,11 @@
       </QItemLabel>
       <QItemLabel caption>
         <div v-if="!Object.values(typing || {}).at(0)" class="text-cut">
-          {{ type === 'group' ? currentChat?.members_count + ` ${t('chat.msg.people')}` : companion?.status }}
+          {{ type === 'group' ? currentChat?.members_count + ` ${t('chat.messages.people')}` : companion?.status }}
         </div>
         <div v-else class="text-cut">
           <QSpinnerDots size="1rem" />
-          {{ Object.values(currentChat?.typing || {}).at(0) + ' печатает' }}
+          {{ Object.values(currentChat?.typing || {}).at(0) + ` ${t('chat.messages.typing')}` }}
         </div>
       </QItemLabel>
     </QItemSection>
@@ -43,7 +43,7 @@
             <QItemSection avatar class="q-pr-sm" style="min-width: 0">
               <QIcon name="eva-trash" color="red" />
             </QItemSection>
-            <QItemSection>{{ t('chat.menu.leaveChat') }}</QItemSection>
+            <QItemSection>{{ t('chat.menu.group.leave') }}</QItemSection>
           </QItem>
           <QItem
             v-if="type === 'group'"
@@ -55,7 +55,7 @@
             <QItemSection avatar class="q-pr-sm" style="min-width: 0">
               <QIcon color="primary" name="eva-info-outline" />
             </QItemSection>
-            <QItemSection>{{ t('chat.menu.info') }}</QItemSection>
+            <QItemSection>{{ t('chat.menu.group.info') }}</QItemSection>
           </QItem>
           <QItem
             v-if="type === 'group' && isGroupAdmin"
@@ -67,13 +67,13 @@
             <QItemSection avatar class="q-pr-sm" style="min-width: 0">
               <QIcon color="primary" name="eva-settings-outline" />
             </QItemSection>
-            <QItemSection>{{ t('chat.menu.settings') }}</QItemSection>
+            <QItemSection>{{ t('chat.menu.group.tools') }}</QItemSection>
           </QItem>
           <QItem v-if="type === 'group'" v-ripple v-close-popup clickable @click="leaveGroup">
             <QItemSection avatar class="q-pr-sm" style="min-width: 0">
               <QIcon name="eva-log-out-outline" color="primary" />
             </QItemSection>
-            <QItemSection>{{ t('chat.menu.leave') }}</QItemSection>
+            <QItemSection>{{ t('chat.menu.group.leave') }}</QItemSection>
           </QItem>
         </QList>
       </QBtnDropdown>
@@ -88,7 +88,7 @@ import { computed } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useStore, useChatStore } from '@/stores';
 import { ChatService } from '@/api/services';
-import { useI18nT } from '@/hooks';
+import { useI18n } from 'vue-i18n';
 
 defineProps<{
   type: 'dialog' | 'group';
@@ -97,7 +97,7 @@ const emit = defineEmits<{
   'open-modal': [name: ChatModal];
 }>();
 
-const { t } = useI18nT();
+const { t } = useI18n();
 const { user } = storeToRefs(useStore());
 const { chats, currentChatId, currentChat } = storeToRefs(useChatStore());
 const companion = computed(() => currentChat.value?.companion);

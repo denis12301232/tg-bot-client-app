@@ -4,7 +4,7 @@
       v-model="title"
       class="q-mt-sm"
       standout
-      :label="t('tasks.create.first.placeholders.title')"
+      :label="t('tasks.create.first.form.fields.title.placeholder')"
       counter
       lazy-rules
       :rules="rules.title"
@@ -15,7 +15,7 @@
       v-model="tag"
       class="q-mt-sm"
       standout
-      :label="t('tasks.create.first.placeholders.tags')"
+      :label="t('tasks.create.first.form.fields.tags.placeholder')"
       lazy-rules
       :rules="rules.tags"
       :readonly="tags.length >= 3"
@@ -50,7 +50,8 @@
 import type { QForm } from 'quasar';
 import { ref, watch } from 'vue';
 import { Validate } from '@/util';
-import { useI18nT, useVModel } from '@/hooks';
+import { useVModel } from '@/hooks';
+import { useI18n } from 'vue-i18n';
 
 defineProps<{
   title: string;
@@ -62,7 +63,7 @@ const emit = defineEmits<{
   valid: [value: boolean];
 }>();
 
-const { t } = useI18nT();
+const { t } = useI18n();
 const formRef = ref<QForm | null>(null);
 const tag = ref('');
 // eslint-disable-next-line vue/no-dupe-keys
@@ -71,8 +72,10 @@ const title = useVModel<string>('title');
 const tags = useVModel<string[]>('tags');
 
 const rules = {
-  title: [(v: string) => Validate.required(v) || t('tasks.create.first.errors.title.required')],
-  tags: [() => Validate.lengthInterval(1, 3)(tags.value) || t('tasks.create.first.errors.tags.lengthInterval')],
+  title: [(v: string) => Validate.required(v) || t('tasks.create.first.form.fields.title.errors.required')],
+  tags: [
+    () => Validate.lengthInterval(1, 3)(tags.value) || t('tasks.create.first.form.fields.tags.errors.lengthInterval'),
+  ],
 };
 
 watch([title, () => tags.value.length], () => {

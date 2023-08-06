@@ -22,12 +22,12 @@
 import type { ImagesResponse, ImageInjected } from '@/types';
 import { inject } from 'vue';
 import { ImageService } from '@/api/services';
-import { useI18nT } from '@/hooks';
+import { useI18n } from 'vue-i18n';
 
 const emit = defineEmits<{
   modal: [value: boolean];
 }>();
-const { t } = useI18nT();
+const { t } = useI18n();
 const { images, total } = inject<ImageInjected>('data')!;
 
 function onUploaded(info: { files: readonly File[]; xhr: XMLHttpRequest }) {

@@ -69,14 +69,13 @@ import type { ChatResponse } from '@/types';
 import SetAvatar from '~/SetAvatar.vue';
 import { ref, reactive, onMounted, onUnmounted } from 'vue';
 import { useStore, useChatStore } from '@/stores';
-
-import { useI18nT } from '@/hooks';
+import { useI18n } from 'vue-i18n';
 
 const props = defineProps<{
   onCloseModal: () => void;
 }>();
 
-const { t } = useI18nT();
+const { t } = useI18n();
 const store = useStore();
 const chatStore = useChatStore();
 const step = ref(1);

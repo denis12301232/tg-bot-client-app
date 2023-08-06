@@ -14,12 +14,12 @@
       :loading="loading || isDelLoading || isUpdating"
       :rows-per-page-options="[5, 10, 20, 50, 100, 1000]"
       binary-state-sort
-      :pagination-label="(f, l, a) => `${f}-${l} ${t('table.of')} ${a}`"
-      :loading-label="t('table.loading')"
-      :no-data-label="t('table.noData')"
-      :rows-per-page-label="t('table.show')"
-      :no-results-label="t('table.notFound')"
-      :selected-rows-label="(n) => `${t('table.selected')} ${n}`"
+      :pagination-label="(f, l, a) => `${f}-${l} ${t('extra.table.of')} ${a}`"
+      :loading-label="t('extra.table.loading')"
+      :no-data-label="t('extra.table.noData')"
+      :rows-per-page-label="t('extra.table.show')"
+      :no-results-label="t('extra.table.notFound')"
+      :selected-rows-label="(n) => `${t('extra.table.selected')} ${n}`"
       :filter="filter"
       row-key="_id"
       separator="cell"
@@ -31,11 +31,11 @@
     >
       <template #top>
         <div class="row justify-between full-width">
-          <div class="text-h5 q-ml-md">{{ t('list.title') }}</div>
+          <div class="text-h5 q-ml-md">{{ t('list.table.title') }}</div>
           <QBtnGroup flat>
             <QBtn color="green" icon="eva-cloud-upload-outline" dense flat @click="openModal('import')">
               <QTooltip class="bg-white text-black" :offset="[10, 10]" :delay="1000">
-                {{ t('list.msgs.import') }}
+                {{ t('list.hints.import') }}
               </QTooltip>
             </QBtn>
             <QBtn
@@ -47,7 +47,7 @@
               @click="openModal('export')"
             >
               <QTooltip class="bg-white text-black" :offset="[10, 10]" :delay="1000">
-                {{ t('list.msgs.export') }}
+                {{ t('list.hints.export') }}
               </QTooltip>
             </QBtn>
             <QBtn color="deep-orange" icon="eva-options-outline" dense flat @click="openModal('filters')">
@@ -92,16 +92,18 @@
           <QTd v-if="visibleColumns.length">
             <QCheckbox v-model="scope.selected" />
           </QTd>
-          <QTd v-if="visibleColumns.includes('number')" class="text-center" auto-width key="number">
-            {{ scope.rowIndex + 1 }}
-          </QTd>
           <QTd :props="scope" key="sector">
             <QPopupEdit
               v-model="scope.row.sector"
               #default="props"
               @update:model-value="updateForm(scope.row, scope.row._id)"
             >
-              <QInput v-model.trim="props.value" :label="t('assistance.fields.sector')" maxlength="100" counter />
+              <QInput
+                v-model.trim="props.value"
+                :label="t('home.form.fields.sector.placeholder')"
+                maxlength="100"
+                counter
+              />
               <div class="row justify-between">
                 <QBtn icon="eva-checkmark-outline" dense flat round color="positive" @click="props.set" />
                 <QBtn icon="eva-close-outline" dense flat round color="negative" @click="props.cancel" />
@@ -121,7 +123,7 @@
                   dense
                   autofocus
                   counter
-                  :label="t('home.form.placeholders.surname')"
+                  :label="t('home.form.fields.surname.placeholder')"
                   :rules="rules.surname"
                   lazy-rules
                   maxlength="100"
@@ -147,7 +149,7 @@
                   dense
                   autofocus
                   counter
-                  :label="t('home.form.placeholders.name')"
+                  :label="t('home.form.fields.name.placeholder')"
                   :rules="rules.name"
                   lazy-rules
                   maxlength="100"
@@ -173,7 +175,7 @@
                   dense
                   autofocus
                   counter
-                  :label="t('home.form.placeholders.patronymic')"
+                  :label="t('home.form.fields.patronymic.placeholder')"
                   :rules="rules.patronymic"
                   lazy-rules
                   maxlength="100"
@@ -196,7 +198,7 @@
               <QForm @submit="props.set">
                 <QInput
                   v-model="props.value"
-                  :label="t('home.form.placeholders.phone')"
+                  :label="t('home.form.fields.phone.placeholder')"
                   :rules="rules.phone"
                   type="tel"
                   mask="(###) ### - ####"
@@ -223,7 +225,7 @@
               <QForm @submit="props.set">
                 <QInput
                   v-model="props.value"
-                  :label="t('home.form.placeholders.birth')"
+                  :label="t('home.form.fields.birth.placeholder')"
                   mask="date"
                   :rules="rules.birth"
                   lazy-rules
@@ -237,7 +239,7 @@
                           emit-immediately
                           default-year-month="2000/12"
                           color="primary"
-                          :locale="messages[locale].calendar"
+                          :locale="messages[locale].extra.calendar"
                         >
                           <div class="row items-center justify-end">
                             <QBtn v-close-popup label="Закрыть" color="primary" flat />
@@ -264,7 +266,7 @@
               <QForm @submit="props.set">
                 <QSelect
                   v-model="props.value"
-                  :label="t('home.form.placeholders.district')"
+                  :label="t('home.form.fields.district.placeholder')"
                   :rules="rules.district"
                   :options="districtOptions"
                   lazy-rules
@@ -289,7 +291,7 @@
               <QForm @submit="props.set">
                 <QSelect
                   v-model.trim="props.value"
-                  :label="t('home.form.placeholders.street')"
+                  :label="t('home.form.fields.street.placeholder')"
                   :rules="rules.street"
                   :options="getStreetOptions(scope.row.district)"
                   lazy-rules
@@ -320,7 +322,7 @@
               <QForm @submit="props.set">
                 <QInput
                   v-model.trim="props.value"
-                  :label="t('home.form.placeholders.house')"
+                  :label="t('home.form.fields.house.placeholder')"
                   :rules="rules.house"
                   lazy-rules
                   maxlength="50"
@@ -344,7 +346,7 @@
               <QForm @submit="props.set">
                 <QInput
                   v-model.trim="props.value"
-                  :label="t('home.form.placeholders.flat')"
+                  :label="t('home.form.fields.flat.placeholder')"
                   :rules="rules.flat"
                   lazy-rules
                   maxlength="50"
@@ -359,17 +361,17 @@
             </QPopupEdit>
             {{ Util.formatAssistanceValue(scope.row.flat, 'flat', t) }}
           </QTd>
-          <QTd :props="scope" key="people_num">
+          <QTd :props="scope" key="peopleCount">
             <QPopupEdit
-              v-model="scope.row.people_num"
+              v-model="scope.row.peopleCount"
               #default="props"
               @update:model-value="updateForm(scope.row, scope.row._id)"
             >
               <QForm @submit="props.set">
                 <QInput
                   v-model.trim="props.value"
-                  :label="t('home.form.placeholders.peopleNum')"
-                  :rules="rules.people_num"
+                  :label="t('home.form.fields.peopleCount.placeholder')"
+                  :rules="rules.peopleCount"
                   lazy-rules
                   maxlength="2"
                   counter
@@ -381,20 +383,20 @@
                 </div>
               </QForm>
             </QPopupEdit>
-            {{ Util.formatAssistanceValue(scope.row.people_num, 'people_num', t) }}
+            {{ Util.formatAssistanceValue(scope.row.peopleCount, 'peopleCount', t) }}
           </QTd>
-          <QTd :props="scope" key="people_fio">
+          <QTd :props="scope" key="peopleFio">
             <QPopupEdit
-              v-if="Number(scope.row.people_num) > 1"
-              v-model="scope.row.people_fio"
+              v-if="scope.row.peopleCount > 1"
+              v-model="scope.row.peopleFio"
               #default="props"
               @update:model-value="updateForm(scope.row, scope.row._id)"
             >
               <QInput
-                v-for="i in Number(scope.row.people_num) - 1 > 10 ? 10 : Number(scope.row.people_num) - 1"
+                v-for="i in scope.row.peopleCount - 1 > 10 ? 10 : scope.row.peopleCount - 1"
                 v-model.trim="props.value[i - 1]"
                 :key="i"
-                :label="`${t('home.form.placeholders.peopleFio')} ${i}-го`"
+                :label="`${t('home.form.fields.peopleFio.placeholder')} ${i}-го`"
                 maxlength="100"
                 counter
               />
@@ -403,7 +405,7 @@
                 <QBtn icon="eva-close-outline" dense flat round color="negative" @click="props.cancel" />
               </div>
             </QPopupEdit>
-            {{ Util.formatAssistanceValue(scope.row.people_fio, 'people_fio', t) }}
+            {{ Util.formatAssistanceValue(scope.row.peopleFio, 'peopleFio', t) }}
           </QTd>
           <QTd :props="scope" key="invalids">
             <QPopupEdit
@@ -433,10 +435,10 @@
             </QPopupEdit>
             {{ Util.formatAssistanceValue(scope.row.kids, 'kids', t) }}
           </QTd>
-          <QTd :props="scope" key="kids_age">
+          <QTd :props="scope" key="kidsAge">
             <QPopupEdit
               v-if="scope.row.kids"
-              v-model="scope.row.kids_age"
+              v-model="scope.row.kidsAge"
               #default="props"
               @update:model-value="updateForm(scope.row, scope.row._id)"
             >
@@ -446,7 +448,7 @@
                 <QBtn icon="eva-close-outline" dense flat round color="negative" @click="props.cancel" />
               </div>
             </QPopupEdit>
-            {{ Util.formatAssistanceValue(scope.row.kids_age, 'kids_age', t) }}
+            {{ Util.formatAssistanceValue(scope.row.kidsAge, 'kidsAge', t) }}
           </QTd>
           <QTd :props="scope" key="food">
             <QPopupEdit
@@ -490,16 +492,16 @@
             </QPopupEdit>
             {{ Util.formatAssistanceValue(scope.row.medicines, 'medicines', t) }}
           </QTd>
-          <QTd :props="scope" key="medicines_info">
+          <QTd :props="scope" key="medicinesInfo">
             <QPopupEdit
               v-if="scope.row.medicines"
-              v-model="scope.row.medicines_info"
+              v-model="scope.row.medicinesInfo"
               #default="props"
               @update:model-value="updateForm(scope.row, scope.row._id)"
             >
               <QInput
                 v-model.trim="props.value"
-                :label="t('home.form.placeholders.medicinesInfo')"
+                :label="t('home.form.fields.medicinesInfo.placeholder')"
                 maxlength="500"
                 counter
               />
@@ -508,7 +510,7 @@
                 <QBtn icon="eva-close-outline" dense flat round color="negative" @click="props.cancel" />
               </div>
             </QPopupEdit>
-            {{ Util.formatAssistanceValue(scope.row.medicines_info, 'medicines_info', t) }}
+            {{ Util.formatAssistanceValue(scope.row.medicinesInfo, 'medicinesInfo', t) }}
           </QTd>
           <QTd :props="scope" key="hygiene">
             <QPopupEdit
@@ -524,16 +526,16 @@
             </QPopupEdit>
             {{ Util.formatAssistanceValue(scope.row.hygiene, 'hygiene', t) }}
           </QTd>
-          <QTd :props="scope" key="hygiene_info">
+          <QTd :props="scope" key="hygieneInfo">
             <QPopupEdit
               v-if="scope.row.hygiene"
-              v-model="scope.row.hygiene_info"
+              v-model="scope.row.hygieneInfo"
               #default="props"
               @update:model-value="updateForm(scope.row, scope.row._id)"
             >
               <QInput
                 v-model.trim="props.value"
-                :label="t('home.form.placeholders.hygieneInfo')"
+                :label="t('home.form.fields.hygieneInfo.placeholder')"
                 maxlength="500"
                 counter
               />
@@ -542,7 +544,7 @@
                 <QBtn icon="eva-close-outline" dense flat round color="negative" @click="props.cancel" />
               </div>
             </QPopupEdit>
-            {{ Util.formatAssistanceValue(scope.row.hygiene_info, 'hygiene_info', t) }}
+            {{ Util.formatAssistanceValue(scope.row.hygieneInfo, 'hygieneInfo', t) }}
           </QTd>
           <QTd :props="scope" key="pampers">
             <QPopupEdit
@@ -558,16 +560,16 @@
             </QPopupEdit>
             {{ Util.formatAssistanceValue(scope.row.pampers, 'pampers', t) }}
           </QTd>
-          <QTd :props="scope" key="pampers_info">
+          <QTd :props="scope" key="pampersInfo">
             <QPopupEdit
               v-if="scope.row.pampers"
-              v-model="scope.row.pampers_info"
+              v-model="scope.row.pampersInfo"
               #default="props"
               @update:model-value="updateForm(scope.row, scope.row._id)"
             >
               <QInput
                 v-model.trim="props.value"
-                :label="t('home.form.placeholders.pampersInfo')"
+                :label="t('home.form.fields.pampersInfo.placeholder')"
                 maxlength="500"
                 counter
               />
@@ -576,27 +578,32 @@
                 <QBtn icon="eva-close-outline" dense flat round color="negative" @click="props.cancel" />
               </div>
             </QPopupEdit>
-            {{ Util.formatAssistanceValue(scope.row.pampers_info, 'pampers_info', t) }}
+            {{ Util.formatAssistanceValue(scope.row.pampersInfo, 'pampersInfo', t) }}
           </QTd>
-          <QTd :props="scope" key="diet">
+          <QTd :props="scope" key="extraInfo">
             <QPopupEdit
-              v-model="scope.row.diet"
+              v-model="scope.row.extraInfo"
               #default="props"
               @update:model-value="updateForm(scope.row, scope.row._id)"
             >
-              <QInput v-model.trim="props.value" :label="t('home.form.placeholders.diet')" maxlength="500" counter />
+              <QInput
+                v-model.trim="props.value"
+                :label="t('home.form.fields.extraInfo.placeholder')"
+                maxlength="500"
+                counter
+              />
               <div class="row justify-between">
                 <QBtn icon="eva-checkmark-outline" dense flat round color="positive" @click="props.set" />
                 <QBtn icon="eva-close-outline" dense flat round color="negative" @click="props.cancel" />
               </div>
             </QPopupEdit>
-            {{ Util.formatAssistanceValue(scope.row.diet, 'diet', t) }}
+            {{ Util.formatAssistanceValue(scope.row.extraInfo, 'extraInfo', t) }}
           </QTd>
-          <QTd :props="scope" key="pers_data_agreement">
-            {{ Util.formatAssistanceValue(scope.row.pers_data_agreement, 'pers_data_agreement', t) }}
+          <QTd :props="scope" key="personalDataAgreement">
+            {{ Util.formatAssistanceValue(scope.row.personalDataAgreement, 'personalDataAgreement', t) }}
           </QTd>
-          <QTd :props="scope" key="photo_agreement">
-            {{ Util.formatAssistanceValue(scope.row.photo_agreement, 'photo_agreement', t) }}
+          <QTd :props="scope" key="photoAgreement">
+            {{ Util.formatAssistanceValue(scope.row.photoAgreement, 'photoAgreement', t) }}
           </QTd>
         </QTr>
       </template>
@@ -611,14 +618,15 @@ import ListFilters from '~/list/ListFilters.vue';
 import type { QTable } from 'quasar';
 import type { AssistanceResponse } from '@/types';
 import { onMounted, ref, computed } from 'vue';
-import { useRequest, useFetch, useAssistanceFormOptions, useI18nT } from '@/hooks';
+import { useRequest, useFetch, useAssistanceFormOptions } from '@/hooks';
 import { AssistanceService } from '@/api/services';
 import { Util, Rules } from '@/util';
+import { useI18n } from 'vue-i18n';
 
 type T = { acknowledged: boolean; deletedCount: number };
 type S = (typeof AssistanceService)['deleteForms'];
 
-const { t, messages, locale } = useI18nT();
+const { t, messages, locale } = useI18n();
 const rules = Rules.assistance(t);
 const { districtOptions, yesNoOptions, kidsAgeOptions, getStreetOptions } = useAssistanceFormOptions();
 const {
@@ -645,7 +653,6 @@ const select = ref<AssistanceResponse[]>([]);
 const modal = ref(false);
 const is = ref<'import' | 'export' | 'filters'>('export');
 const visibleColumns = ref([
-  'number',
   'sector',
   'name',
   'surname',
@@ -656,35 +663,28 @@ const visibleColumns = ref([
   'street',
   'house',
   'flat',
-  'people_num',
-  'people_fio',
+  'peopleCount',
+  'peopleFio',
   'invalids',
   'kids',
-  'kids_age',
+  'kidsAge',
   'food',
   'water',
   'medicines',
-  'medicines_info',
+  'medicinesInfo',
   'hygiene',
-  'hygiene_info',
+  'hygieneInfo',
   'pampers',
-  'pampers_info',
-  'diet',
-  'pers_data_agreement',
-  'photo_agreement',
+  'pampersInfo',
+  'extraInfo',
+  'personalDataAgreement',
+  'photoAgreement',
 ]);
 const ids = computed(() => select.value.map((item) => item._id));
 const columns = computed<QTable['columns']>(() => [
   {
-    name: 'number',
-    label: t('list.table.columns.number'),
-    align: 'center',
-    field: 'number',
-    headerStyle: 'font-size: 1.1em;',
-  },
-  {
     name: 'sector',
-    label: t('assistance.fields.sector'),
+    label: t('home.form.fields.sector.value'),
     align: 'center',
     field: 'sector',
     headerStyle: 'font-size: 1.1em;',
@@ -692,7 +692,7 @@ const columns = computed<QTable['columns']>(() => [
   },
   {
     name: 'surname',
-    label: t('assistance.fields.surname'),
+    label: t('home.form.fields.surname.value'),
     align: 'center',
     field: 'surname',
     headerStyle: 'font-size: 1.1em;',
@@ -700,7 +700,7 @@ const columns = computed<QTable['columns']>(() => [
   },
   {
     name: 'name',
-    label: t('assistance.fields.name'),
+    label: t('home.form.fields.name.value'),
     align: 'center',
     field: 'name',
     headerStyle: 'font-size: 1.1em;',
@@ -708,7 +708,7 @@ const columns = computed<QTable['columns']>(() => [
   },
   {
     name: 'patronymic',
-    label: t('assistance.fields.patronymic'),
+    label: t('home.form.fields.patronymic.value'),
     align: 'center',
     field: 'patronymic',
     headerStyle: 'font-size: 1.1em;',
@@ -716,7 +716,7 @@ const columns = computed<QTable['columns']>(() => [
   },
   {
     name: 'phone',
-    label: t('assistance.fields.phone'),
+    label: t('home.form.fields.phone.value'),
     align: 'center',
     field: 'phone',
     headerStyle: 'font-size: 1.1em;',
@@ -724,7 +724,7 @@ const columns = computed<QTable['columns']>(() => [
   },
   {
     name: 'birth',
-    label: t('assistance.fields.birth'),
+    label: t('home.form.fields.birth.value'),
     align: 'center',
     field: 'birth',
     headerStyle: 'font-size: 1.1em;',
@@ -732,7 +732,7 @@ const columns = computed<QTable['columns']>(() => [
   },
   {
     name: 'district',
-    label: t('assistance.fields.district'),
+    label: t('home.form.fields.district.value'),
     align: 'center',
     field: 'district',
     headerStyle: 'font-size: 1.1em;',
@@ -740,7 +740,7 @@ const columns = computed<QTable['columns']>(() => [
   },
   {
     name: 'street',
-    label: t('assistance.fields.street'),
+    label: t('home.form.fields.street.value'),
     align: 'center',
     field: 'street',
     headerStyle: 'font-size: 1.1em;',
@@ -748,128 +748,128 @@ const columns = computed<QTable['columns']>(() => [
   },
   {
     name: 'house',
-    label: t('assistance.fields.house'),
+    label: t('home.form.fields.house.value'),
     align: 'center',
     field: 'house',
     headerStyle: 'font-size: 1.1em;',
   },
   {
     name: 'flat',
-    label: t('assistance.fields.flat'),
+    label: t('home.form.fields.flat.value'),
     align: 'center',
     field: 'flat',
     headerStyle: 'font-size: 1.1em;',
   },
   {
-    name: 'people_num',
-    label: t('assistance.fields.people_num'),
+    name: 'peopleCount',
+    label: t('home.form.fields.peopleCount.value'),
     align: 'center',
-    field: 'people_num',
+    field: 'peopleCount',
     headerStyle: 'font-size: 1.1em;',
   },
   {
-    name: 'people_fio',
-    label: t('assistance.fields.people_fio'),
+    name: 'peopleFio',
+    label: t('home.form.fields.peopleFio.value'),
     align: 'center',
-    field: 'people_fio',
+    field: 'peopleFio',
     headerStyle: 'font-size: 1.1em;',
   },
   {
     name: 'invalids',
-    label: t('assistance.fields.invalids'),
+    label: t('home.form.fields.invalids.value'),
     align: 'center',
     field: 'invalids',
     headerStyle: 'font-size: 1.1em;',
   },
   {
     name: 'kids',
-    label: t('assistance.fields.kids'),
+    label: t('home.form.fields.kids.value'),
     align: 'center',
     field: 'kids',
     headerStyle: 'font-size: 1.1em;',
   },
   {
-    name: 'kids_age',
-    label: t('assistance.fields.kids_age'),
+    name: 'kidsAge',
+    label: t('home.form.fields.kidsAge.value'),
     align: 'center',
-    field: 'kids_age',
+    field: 'kidsAge',
     headerStyle: 'font-size: 1.1em;',
   },
   {
     name: 'food',
-    label: t('assistance.fields.food'),
+    label: t('home.form.fields.food.value'),
     align: 'center',
     field: 'food',
     headerStyle: 'font-size: 1.1em;',
   },
   {
     name: 'water',
-    label: t('assistance.fields.water'),
+    label: t('home.form.fields.water.value'),
     align: 'center',
     field: 'water',
     headerStyle: 'font-size: 1.1em;',
   },
   {
     name: 'medicines',
-    label: t('assistance.fields.medicines'),
+    label: t('home.form.fields.medicines.value'),
     align: 'center',
     field: 'medicines',
     headerStyle: 'font-size: 1.1em;',
   },
   {
-    name: 'medicines_info',
-    label: t('assistance.fields.medicines_info'),
+    name: 'medicinesInfo',
+    label: t('home.form.fields.medicinesInfo.value'),
     align: 'center',
-    field: 'medicines_info',
+    field: 'medicinesInfo',
     headerStyle: 'font-size: 1.1em;',
   },
   {
     name: 'hygiene',
-    label: t('assistance.fields.hygiene'),
+    label: t('home.form.fields.hygiene.value'),
     align: 'center',
     field: 'hygiene',
     headerStyle: 'font-size: 1.1em;',
   },
   {
-    name: 'hygiene_info',
-    label: t('assistance.fields.hygiene_info'),
+    name: 'hygieneInfo',
+    label: t('home.form.fields.hygieneInfo.value'),
     align: 'center',
-    field: 'hygiene_info',
+    field: 'hygieneInfo',
     headerStyle: 'font-size: 1.1em;',
   },
   {
     name: 'pampers',
-    label: t('assistance.fields.pampers'),
+    label: t('home.form.fields.pampers.value'),
     align: 'center',
     field: 'pampers',
     headerStyle: 'font-size: 1.1em;',
   },
   {
-    name: 'pampers_info',
-    label: t('assistance.fields.pampers_info'),
+    name: 'pampersInfo',
+    label: t('home.form.fields.pampersInfo.value'),
     align: 'center',
-    field: 'pampers_info',
+    field: 'pampersInfo',
     headerStyle: 'font-size: 1.1em;',
   },
   {
-    name: 'diet',
-    label: t('assistance.fields.diet'),
+    name: 'extraInfo',
+    label: t('home.form.fields.extraInfo.value'),
     align: 'center',
-    field: 'diet',
+    field: 'extraInfo',
     headerStyle: 'font-size: 1.1em;',
   },
   {
-    name: 'pers_data_agreement',
-    label: t('assistance.fields.pers_data_agreement'),
+    name: 'personalDataAgreement',
+    label: t('home.form.fields.personalDataAgreement.value'),
     align: 'center',
-    field: 'pers_data_agreement',
+    field: 'personalDataAgreement',
     headerStyle: 'font-size: 1.1em;',
   },
   {
-    name: 'photo_agreement',
-    label: t('assistance.fields.photo_agreement'),
+    name: 'photoAgreement',
+    label: t('home.form.fields.photoAgreement.value'),
     align: 'center',
-    field: 'photo_agreement',
+    field: 'photoAgreement',
     headerStyle: 'font-size: 1.1em;',
   },
 ]);

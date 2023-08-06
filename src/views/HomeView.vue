@@ -31,10 +31,11 @@ import FormReg from '~/FormReg.vue';
 import FormLog from '~/FormLog.vue';
 import { ref, watch, shallowRef } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { useFetch, useI18nT, useTelegram } from '@/hooks';
+import { useFetch, useTelegram } from '@/hooks';
 import { AssistanceService, BotService } from '@/api/services';
+import { useI18n } from 'vue-i18n';
 
-const { t } = useI18nT();
+const { t } = useI18n();
 const { tg, isOpenedFromTg } = useTelegram();
 const router = useRouter();
 const route = useRoute();
@@ -46,35 +47,35 @@ const form = ref({
   patronymic: '',
   phone: '',
   birth: '',
-  district: '',
-  street: '',
+  district: null,
+  street: null,
   house: '',
-  flat: '',
-  people_num: 1,
-  people_fio: [],
+  flat: null,
+  peopleCount: 1,
+  peopleFio: [],
   invalids: false,
   kids: false,
-  kids_age: [],
+  kidsAge: [],
   food: false,
   water: false,
   medicines: false,
-  medicines_info: '',
+  medicinesInfo: '',
   hygiene: false,
-  hygiene_info: '',
+  hygieneInfo: '',
   pampers: false,
-  pampers_info: '',
-  diet: '',
-  pers_data_agreement: false,
-  photo_agreement: false,
+  pampersInfo: '',
+  extraInfo: '',
+  personalDataAgreement: false,
+  photoAgreement: false,
 });
 const { request, loading } = useFetch<AssistanceResponse, (typeof AssistanceService)['saveForm']>(
   AssistanceService.saveForm,
   {
     alert: true,
-    successMsg: t('home.msgs.save'),
+    successMsg: t('home.messages.save'),
     errorMsg: 'Error',
     afterResponse() {
-      isOpenedFromTg && BotService.assistance(tg.initDataUnsafe.query_id || '', t('home.msgs.save'));
+      isOpenedFromTg && BotService.assistance(tg.initDataUnsafe.query_id || '', t('home.messages.save'));
     },
   }
 );

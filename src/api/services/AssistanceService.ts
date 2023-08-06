@@ -21,7 +21,7 @@ export default class AssistanceService {
     return $api.get('assistance/id', { searchParams: { id: formId } });
   }
 
-  static saveFormsToSheet(locale: Langs, ids: string[]) {
+  static saveFormsToSheet(locale: string, ids: string[]) {
     return $api.post('assistance/sheet', { json: { locale, ids } });
   }
 
@@ -33,7 +33,7 @@ export default class AssistanceService {
     return $api.patch('assistance', { json: { form, id } });
   }
 
-  static createReport(locale: Langs, type: 'xlsx' | 'csv' | 'google-sheets', ids: string[]) {
+  static createReport(locale:string, type: 'xlsx' | 'csv' | 'google-sheets', ids: string[]) {
     return $api.post('assistance/report', { json: { locale, type, ids } });
   }
 

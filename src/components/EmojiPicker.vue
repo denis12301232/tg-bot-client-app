@@ -39,15 +39,15 @@
 </template>
 
 <script setup lang="ts">
-import { useI18nT } from '@/hooks';
+import { useI18n } from 'vue-i18n';
 
 const emit = defineEmits<{
   (event: 'pick', emoji: string): void;
 }>();
 
-const { t } = useI18nT();
+const { t } = useI18n();
 const emoji = {
-  [t('emoji.smiles')]: {
+  [t('extra.emoji.smiles')]: {
     smile: '😄',
     smiley: '😃',
     grinning: '😀',
@@ -227,7 +227,7 @@ const emoji = {
     speech_balloon: '💬',
     footprints: '👣',
   },
-  [t('emoji.nature')]: {
+  [t('extra.emoji.nature')]: {
     dog: '🐶',
     wolf: '🐺',
     cat: '🐱',
@@ -308,7 +308,7 @@ const emoji = {
     rainbow: '🌈',
     ocean: '🌊',
   },
-  [t('emoji.nature')]: {
+  [t('extra.emoji.nature')]: {
     bamboo: '🎍',
     gift_heart: '💝',
     dolls: '🎎',
@@ -512,7 +512,7 @@ const emoji = {
     tomato: '🍅',
     corn: '🌽',
   },
-  [t('emoji.places')]: {
+  [t('extra.emoji.places')]: {
     house: '🏠',
     house_with_garden: '🏡',
     school: '🏫',
@@ -579,7 +579,7 @@ const emoji = {
     round_pushpin: '📍',
     triangular_flag_on_post: '🚩',
   },
-  [t('emoji.objects')]: {
+  [t('extra.emoji.objects')]: {
     keycap_ten: '🔟',
     '1234': '🔢',
     symbols: '🔣',

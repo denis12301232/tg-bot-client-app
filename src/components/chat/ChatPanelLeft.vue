@@ -2,26 +2,26 @@
   <Transition name="menu">
     <div v-if="menu" class="menu">
       <QCard class="full-height" square>
-        <QCardSection class="text-center text-h5">{{ t('chat.menu.title') }}</QCardSection>
+        <QCardSection class="text-center text-h5">{{ t('chat.menu.left.title') }}</QCardSection>
         <QSeparator />
         <QList class="q-px-sm q-pt-sm">
           <QItem v-ripple clickable tag="a" to="/">
             <QItemSection avatar>
               <QIcon name="eva-home-outline" color="primary" />
             </QItemSection>
-            <QItemSection class="text-uppercase">{{ t('chat.menu.home') }}</QItemSection>
+            <QItemSection class="text-uppercase">{{ t('chat.menu.left.home') }}</QItemSection>
           </QItem>
           <QItem v-ripple clickable tag="a" to="/account">
             <QItemSection avatar>
               <QIcon name="eva-person-outline" color="primary" />
             </QItemSection>
-            <QItemSection class="text-uppercase">{{ t('chat.menu.account') }}</QItemSection>
+            <QItemSection class="text-uppercase">{{ t('chat.menu.left.account') }}</QItemSection>
           </QItem>
           <QItem v-ripple v-close-popup clickable @click="emit('openModal', 'modal:group-create')">
             <QItemSection avatar>
               <QIcon name="eva-plus-square-outline" color="primary" />
             </QItemSection>
-            <QItemSection class="text-uppercase">{{ t('chat.menu.group') }}</QItemSection>
+            <QItemSection class="text-uppercase">{{ t('chat.menu.left.group') }}</QItemSection>
           </QItem>
         </QList>
       </QCard>
@@ -32,7 +32,7 @@
       v-model="search"
       class="full-width"
       debounce="300"
-      :label="t('chat.playsholders.search')"
+      :label="t('chat.search.placeholder')"
       :loading="loading"
       clearable
       hide-bottom-space
@@ -59,14 +59,15 @@
 import type { IUser, ChatModal } from '@/types';
 import Chat from '~/chat';
 import { ref, onMounted, onUnmounted, watchEffect } from 'vue';
-import { useFetch, useI18nT } from '@/hooks';
+import { useFetch } from '@/hooks';
 import { ChatService } from '@/api/services';
+import { useI18n } from 'vue-i18n';
 
 const emit = defineEmits<{
   openModal: [name: ChatModal];
 }>();
 
-const { t } = useI18nT();
+const { t } = useI18n();
 const menu = ref(false);
 const search = ref('');
 const {

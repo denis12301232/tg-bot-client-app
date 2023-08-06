@@ -6,7 +6,7 @@
         class="q-mt-sm"
         v-model="title"
         standout
-        :label="t('tasks.create.second.placeholders.title')"
+        :label="t('tasks.create.second.form.fields.title.placeholder')"
         counter
         maxlength="30"
         :rules="rules.title"
@@ -15,7 +15,7 @@
         class="q-mt-sm"
         v-model="description"
         standout=""
-        :label="t('tasks.create.second.placeholders.description')"
+        :label="t('tasks.create.second.form.fields.about.placeholder')"
         type="textarea"
         autogrow
         counter
@@ -26,7 +26,7 @@
         class="q-mt-sm"
         color="primary"
         :disable="!valid"
-        :label="t('tasks.create.second.buttons.add')"
+        :label="t('tasks.create.second.form.buttons.add')"
         @click="addSubtask"
       />
     </QForm>
@@ -37,7 +37,8 @@
 import type { QForm } from 'quasar';
 import { ref, watch } from 'vue';
 import { Validate } from '@/util';
-import { useI18nT, useVModel } from '@/hooks';
+import { useVModel } from '@/hooks';
+import { useI18n } from 'vue-i18n';
 
 type Subtasks = { title: string; description: string }[];
 
@@ -52,7 +53,7 @@ defineEmits<{
   'update:subtasks': [value: Subtasks];
 }>();
 
-const { t } = useI18nT();
+const { t } = useI18n();
 const formRef = ref<QForm | null>(null);
 const valid = ref(false);
 // eslint-disable-next-line vue/no-dupe-keys
@@ -63,8 +64,8 @@ const description = useVModel<string>('description');
 const subtasks = useVModel<Subtasks>('subtasks');
 
 const rules = {
-  title: [(v: string) => Validate.required(v) || t('tasks.create.second.errors.title.required')],
-  description: [(v: string) => Validate.required(v) || t('tasks.create.second.errors.description.required')],
+  title: [(v: string) => Validate.required(v) || t('tasks.create.second.form.fields.title.errors.required')],
+  description: [(v: string) => Validate.required(v) || t('tasks.create.second.form.fields.about.errors.required')],
 };
 
 watch([title, description], () => {

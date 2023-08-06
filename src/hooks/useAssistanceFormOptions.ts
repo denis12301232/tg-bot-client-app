@@ -6,28 +6,31 @@ export default function useAssistanceFormOptions() {
   const { messages, locale } = useI18n<I18n, Langs>();
 
   const districtOptions = computed(() =>
-    Object.entries(messages.value[locale.value].assistance.districts).map(([key, value]) => ({
-      label: value,
-      value: key,
+    messages.value[locale.value].extra.districts.map((item, index) => ({
+      label: item,
+      value: index,
     }))
   );
 
-  function getStreetOptions(district: string) {
-    return district
-      ? Object.entries(messages.value[locale.value].assistance.streets[district as '1'])
-          .map(([key, value]) => ({ label: value, value: key }))
+  function getStreetOptions(district: number | null) {
+    return district?.toString().length
+      ? messages.value[locale.value].extra.streets[district]
+          .map((item, index) => ({
+            label: item,
+            value: index,
+          }))
           .sort((a, b) => a.label.localeCompare(b.label))
       : [];
   }
   const yesNoOptions = computed(() => [
-    { label: messages.value[locale.value].assistance.checkboxes.yesNo.yes, value: true },
-    { label: messages.value[locale.value].assistance.checkboxes.yesNo.no, value: false },
+    { label: messages.value[locale.value].home.form.checkboxes.yesNo[0], value: true },
+    { label: messages.value[locale.value].home.form.checkboxes.yesNo[1], value: false },
   ]);
 
   const kidsAgeOptions = computed(() =>
-    Object.entries(messages.value[locale.value].assistance.checkboxes.kidsAge).map(([key, value]) => ({
-      label: value,
-      value: key,
+    ['0-1', '1-3', '3-9', '9-18'].map((item, index) => ({
+      label: messages.value[locale.value].home.form.checkboxes.kidsAge[index],
+      value: item,
     }))
   );
 

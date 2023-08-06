@@ -40,10 +40,11 @@ import type { ITask } from '@/types';
 import Tasks from '~/tasks';
 import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
-import { useFetch, useI18nT } from '@/hooks';
+import { useFetch } from '@/hooks';
 import { TaskService } from '@/api/services';
+import { useI18n } from 'vue-i18n';
 
-const { t } = useI18nT();
+const { t } = useI18n();
 const route = useRoute();
 const tab = ref('task');
 const splitterModel = ref(150);

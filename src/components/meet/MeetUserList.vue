@@ -25,13 +25,13 @@ import type { IAbonent } from '@/types';
 import UserAvatar from '~/UserAvatar.vue';
 import { computed } from 'vue';
 import { useStore } from '@/stores';
-import { useI18nT } from '@/hooks';
+import { useI18n } from 'vue-i18n';
 
 const props = defineProps<{
   abonents: Map<string, IAbonent>;
 }>();
 
-const { t } = useI18nT();
+const { t } = useI18n();
 const store = useStore();
 const users = computed(() => [store.user, ...Array.from(props.abonents.values()).map((a) => a.info)]);
 </script>

@@ -16,7 +16,7 @@
       <QInput v-model="google.folderId" class="q-mb-md" standout clearable label="Folder ID" />
       <div class="row justify-center">
         <QBtn type="submit" :loading="loading" :disable="!valid || loading" color="primary">
-          {{ t('tools.google.buttons.save') }}
+          {{ t('tools.google.form.buttons.save') }}
         </QBtn>
       </div>
     </form>
@@ -25,10 +25,11 @@
 
 <script setup lang="ts">
 import { reactive, computed } from 'vue';
-import { useFetch, useI18nT } from '@/hooks';
+import { useFetch } from '@/hooks';
 import { ToolsService } from '@/api/services';
+import { useI18n } from 'vue-i18n';
 
-const { t } = useI18nT();
+const { t } = useI18n();
 const google = reactive({
   serviceUser: '',
   servicePrivateKey: '',
@@ -39,8 +40,8 @@ const valid = computed(() => !!Object.values(google).reduce((sum, item) => (sum 
 const { request, loading } = useFetch(ToolsService.setGoogleServiceAccountSettings, {
   afterResponse: () => Object.keys(google).forEach((key) => (google[key as keyof typeof google] = '')),
   alert: true,
-  successMsg: t('tools.google.msgs.success'),
-  errorMsg: t('tools.google.msgs.error'),
+  successMsg: t('tools.google.messages.success'),
+  errorMsg: t('tools.google.messages.error'),
 });
 </script>
 

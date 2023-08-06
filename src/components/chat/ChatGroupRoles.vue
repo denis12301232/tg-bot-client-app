@@ -5,12 +5,12 @@
       :rows="currentChat?.users"
       :loading="loading"
       :rows-per-page-options="[5, 10]"
-      :pagination-label="(f, l, a) => `${f}-${l} ${t('table.of')} ${a}`"
-      :loading-label="t('table.loading')"
-      :no-data-label="t('table.noData')"
-      :rows-per-page-label="t('table.show')"
-      :no-results-label="t('table.notFound')"
-      :selected-rows-label="(n) => `${t('table.selected')} ${n}`"
+      :pagination-label="(f, l, a) => `${f}-${l} ${t('extra.table.of')} ${a}`"
+      :loading-label="t('extra.table.loading')"
+      :no-data-label="t('extra.table.noData')"
+      :rows-per-page-label="t('extra.table.show')"
+      :no-results-label="t('extra.table.notFound')"
+      :selected-rows-label="(n) => `${t('extra.table.selected')} ${n}`"
       binary-state-sort
       separator="cell"
       bordered
@@ -18,7 +18,7 @@
       <template #header>
         <QTr>
           <QTh colspan="3">
-            <h6 class="q-py-sm">{{ t('chat.groupSettings.roles.table.title') }}</h6>
+            <h6 class="q-py-sm">{{ t('chat.groupSettings.table.title') }}</h6>
           </QTh>
         </QTr>
       </template>
@@ -32,7 +32,7 @@
                 v-model="hasAdminRights"
                 class="q-pr-sm"
                 :val="row._id"
-                :label="t('chat.groupSettings.roles.table.checkboxes.admin')"
+                :label="t('chat.groupSettings.table.checkboxes[0]')"
                 @update:model-value="request(currentChat!.group._id, 'admin', hasAdminRights)"
               />
             </div>
@@ -47,18 +47,19 @@
 import type { QTable } from 'quasar';
 import type { IUser } from '@/types';
 import { ref } from 'vue';
-import { useFetch, useI18nT } from '@/hooks';
+import { useFetch } from '@/hooks';
 import { ChatService } from '@/api/services';
 import { storeToRefs } from 'pinia';
 import { useChatStore } from '@/stores';
+import { useI18n } from 'vue-i18n';
 
-const { t } = useI18nT();
+const { t } = useI18n();
 const { currentChat } = storeToRefs(useChatStore());
 const hasAdminRights = ref(currentChat.value?.group.roles.admin || []);
 const { request, loading } = useFetch(ChatService.updateRolesInGroup, {
   alert: true,
-  successMsg: t('chat.groupSettings.msgs.updatedRoles'),
-  errorMsg: t('chat.groupSettings.msgs.updatedRolesFailed'),
+  successMsg: t('chat.groupSettings.messages.updated'),
+  errorMsg: t('chat.groupSettings.messages.failed'),
 });
 
 const columns: QTable['columns'] = [

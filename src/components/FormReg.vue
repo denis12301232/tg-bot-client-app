@@ -1,11 +1,11 @@
 <template>
   <QCard :class="[$style.card, 'q-py-md', 'q-px-lg', 'text-center']">
     <QForm ref="formRef" class="q-pb-md" no-error-focus @submit.prevent="request(form)">
-      <h4 class="q-py-lg q-mb-sm">{{ t('registration.title') }}</h4>
+      <h4 class="q-py-lg q-mb-sm">{{ t('registration.form.title') }}</h4>
       <QInput
         v-model.trim="form.name"
         class="q-mb-sm"
-        :label="t('registration.placeholders.name')"
+        :label="t('registration.form.fields.name.placeholder')"
         standout
         counter
         maxlength="30"
@@ -14,7 +14,7 @@
       <QInput
         v-model.trim="form.login"
         class="q-mb-sm"
-        :label="t('registration.placeholders.login')"
+        :label="t('registration.form.fields.login.placeholder')"
         standout
         counter
         maxlength="30"
@@ -25,7 +25,7 @@
       <QInput
         v-model.trim="form.email"
         class="q-mb-sm"
-        :label="t('registration.placeholders.email')"
+        :label="t('registration.form.fields.email.placeholder')"
         type="email"
         standout
         counter
@@ -37,7 +37,7 @@
       <QInput
         v-model.trim="form.password"
         class="q-mb-sm"
-        :label="t('registration.placeholders.password')"
+        :label="t('registration.form.fields.password.placeholder')"
         :type="isPasswordVisible ? 'text' : 'password'"
         standout
         counter
@@ -51,12 +51,12 @@
       </QInput>
       <div class="row justify-center q-my-md">
         <QBtn type="submit" color="primary" :disable="!valid || loading">
-          {{ t('registration.buttons.registration') }}
+          {{ t('registration.form.buttons.registration') }}
         </QBtn>
       </div>
       <div :class="$style.swap">
-        {{ t('registration.alreadyReg') }}
-        <span @click="$router.push('/login')">{{ t('registration.buttons.alreadyReg') }}</span>
+        {{ t('registration.form.messages.alreadyReg') }}
+        <span @click="$router.push('/login')">{{ t('registration.form.buttons.login') }}</span>
       </div>
     </QForm>
   </QCard>
@@ -69,7 +69,8 @@ import { ref, reactive, watch } from 'vue';
 import { useStore } from '@/stores';
 import { Rules } from '@/util';
 import { AuthService } from '@/api/services';
-import { useFetch, useI18nT } from '@/hooks';
+import { useFetch } from '@/hooks';
+import { useI18n } from 'vue-i18n';
 
 type T = LoginResponse;
 type S = (typeof AuthService)['registration'];
@@ -78,7 +79,7 @@ const emit = defineEmits<{
   close: [];
 }>();
 
-const { t } = useI18nT();
+const { t } = useI18n();
 const store = useStore();
 const valid = ref(false);
 const isPasswordVisible = ref(false);

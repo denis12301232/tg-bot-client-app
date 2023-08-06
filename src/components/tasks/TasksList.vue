@@ -9,12 +9,12 @@
       :filter="filter"
       :loading="loading || isTaskStatusLoading || isSetUserLoading"
       :rows-per-page-options="[5, 10, 20]"
-      :pagination-label="(f, l, a) => `${f}-${l} ${t('table.of')} ${a}`"
-      :loading-label="t('table.loading')"
-      :no-data-label="t('table.noData')"
-      :rows-per-page-label="t('table.show')"
-      :no-results-label="t('table.notFound')"
-      :selected-rows-label="(n) => `${t('table.selected')} ${n}`"
+      :pagination-label="(f, l, a) => `${f}-${l} ${t('extra.table.of')} ${a}`"
+      :loading-label="t('extra.table.loading')"
+      :no-data-label="t('extra.table.noData')"
+      :rows-per-page-label="t('extra.table.show')"
+      :no-results-label="t('extra.table.notFound')"
+      :selected-rows-label="(n) => `${t('extra.table.selected')} ${n}`"
       separator="cell"
       row-key="_id"
       binary-state-sort
@@ -26,7 +26,7 @@
           class="full-width"
           borderless
           dense
-          :label="t('tasks.list.table.filter')"
+          :label="t('tasks.list.table.filter.placeholder')"
           :options="options"
           emit-value
           map-options
@@ -141,15 +141,16 @@ import type { QTable } from 'quasar';
 import type { ITask } from '@/types';
 import { computed, onMounted } from 'vue';
 import { useStore } from '@/stores';
-import { useFetch, useI18nT, useRequest } from '@/hooks';
+import { useFetch, useRequest } from '@/hooks';
 import { TaskService } from '@/api/services';
 import { Util } from '@/util';
+import { useI18n } from 'vue-i18n';
 
 type T = { message: string; taskId: string };
 type S = typeof TaskService.setUserForTask;
 
 const store = useStore();
-const { t } = useI18nT();
+const { t } = useI18n();
 const { request: updateTaskStatus, loading: isTaskStatusLoading } = useFetch(TaskService.updateTaskStatus);
 const { request: setUserForTask, loading: isSetUserLoading } = useFetch<T, S>(TaskService.setUserForTask, {
   afterResponse: ({ data }) => {
@@ -211,8 +212,8 @@ const columns = computed<QTable['columns']>(() => [
   },
 ]);
 const options = computed(() => [
-  { label: t('tasks.list.table.checkbox.all'), value: 'all' },
-  { label: t('tasks.list.table.checkbox.mine'), value: 'my' },
+  { label: t('tasks.list.table.filter.options[0]'), value: 'all' },
+  { label: t('tasks.list.table.filter.options[1]'), value: 'my' },
 ]);
 
 onMounted(() => request({ pagination: pagination.value }));

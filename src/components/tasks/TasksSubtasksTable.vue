@@ -11,19 +11,19 @@
     row-key="id"
     virtual-scroll
     :rows-per-page-options="[0]"
-    :pagination-label="(f, l, a) => `${f}-${l} ${t('table.of')} ${a}`"
-    :loading-label="t('table.loading')"
-    :no-data-label="t('table.noData')"
-    :rows-per-page-label="t('table.show')"
-    :no-results-label="t('table.notFound')"
-    :selected-rows-label="(n) => `${t('table.selected')} ${n}`"
+    :pagination-label="(f, l, a) => `${f}-${l} ${t('extra.table.of')} ${a}`"
+    :loading-label="t('extra.table.loading')"
+    :no-data-label="t('extra.table.noData')"
+    :rows-per-page-label="t('extra.table.show')"
+    :no-results-label="t('extra.table.notFound')"
+    :selected-rows-label="(n) => `${t('extra.table.selected')} ${n}`"
     selection="multiple"
     separator="cell"
   >
     <template #header-selection>
-      <QBtn dense round flat icon="eva-trash" color="negative" @click="removeSubtask">
+      <QBtn dense round flat icon="eva-trash" color="negative" :disable="!select.length" @click="removeSubtask">
         <QTooltip class="bg-indigo" :offset="[10, 10]" :delay="1000">
-          {{ t('tasks.byId.subtasks.hints.delete') }}
+          {{ t('tasks.create.hinst.delete') }}
         </QTooltip>
       </QBtn>
     </template>
@@ -42,7 +42,8 @@
 <script setup lang="ts">
 import type { QTable } from 'quasar';
 import { ref, computed } from 'vue';
-import { useI18nT, useVModel } from '@/hooks';
+import { useVModel } from '@/hooks';
+import { useI18n } from 'vue-i18n';
 
 type Subtask = { title: string; description: string };
 
@@ -53,7 +54,7 @@ defineEmits<{
   'update:subtasks': [value: Subtask[]];
 }>();
 
-const { t } = useI18nT();
+const { t } = useI18n();
 const select = ref<(Subtask & { id: number })[]>([]);
 const pagination = ref({ rowsPerPage: 0 });
 // eslint-disable-next-line vue/no-dupe-keys

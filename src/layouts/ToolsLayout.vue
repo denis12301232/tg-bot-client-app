@@ -6,8 +6,8 @@
         <QToolbarTitle>{{ t('tools.layout.title') }}</QToolbarTitle>
       </QToolbar>
       <QTabs align="left" active-color="primary">
-        <QRouteTab to="/tools/roles" :label="t('tools.layout.tabs.roles')" />
-        <QRouteTab to="/tools/google" :label="t('tools.layout.tabs.google')" />
+        <QRouteTab to="/tools/roles" :label="t('tools.tabs.roles')" />
+        <QRouteTab to="/tools/google" :label="t('tools.tabs.google')" />
       </QTabs>
     </QHeader>
     <QPageContainer class="window-height">
@@ -17,9 +17,9 @@
 </template>
 
 <script setup lang="ts">
-import { useI18nT } from '@/hooks';
+import { useI18n } from 'vue-i18n';
 
-const { t } = useI18nT();
+const { t } = useI18n();
 </script>
 
 <style lang="scss" scoped></style>

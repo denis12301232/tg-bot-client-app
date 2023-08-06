@@ -18,26 +18,26 @@ export interface AssistanceResponse {
   patronymic: string;
   phone: string;
   birth: string;
-  district: string;
-  street: string;
+  district: number | null;
+  street: number | null;
   house: string;
-  flat: string;
-  people_num: number;
-  people_fio: string[];
+  flat: number | null;
+  peopleCount: number;
+  peopleFio: string[];
   invalids: boolean;
   kids: boolean;
-  kids_age: string[];
+  kidsAge: string[];
   food: boolean;
   water: boolean;
   medicines: boolean;
-  medicines_info: string;
+  medicinesInfo: string;
   hygiene: boolean;
-  hygiene_info: string;
+  hygieneInfo: string;
   pampers: boolean;
-  pampers_info: string;
-  diet: string;
-  pers_data_agreement: boolean;
-  photo_agreement: boolean;
+  pampersInfo: string;
+  extraInfo: string;
+  personalDataAgreement: boolean;
+  photoAgreement: boolean;
   sector: string;
 }
 

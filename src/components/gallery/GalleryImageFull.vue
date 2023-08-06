@@ -21,7 +21,7 @@
     <div class="q-pa-sm text-center row justify-center" style="height: 50px">
       <div class="row items-center">
         <div class="text-body1 text-justify text-indigo">
-          {{ imgs[index]?.description || t('gallery.msgs.noDescription') }}
+          {{ imgs[index]?.description || t('gallery.messages.about') }}
         </div>
         <QPopupEdit v-if="imgs.length >= index + 1 && store.isAdmin" v-model="imgs[index].description" #="scope">
           <QInput v-model="scope.value" filled dense autofocus counter maxlength="50" />
@@ -48,8 +48,9 @@ import type { ImagesResponse } from '@/types';
 import { onMounted, onUnmounted, nextTick } from 'vue';
 import { ImageService } from '@/api/services';
 import { useStore } from '@/stores';
-import { useI18nT, useVModel } from '@/hooks';
+import { useVModel } from '@/hooks';
 import { ENV } from '@/util';
+import { useI18n } from 'vue-i18n';
 
 const props = defineProps<{
   currentIndex: number;
@@ -66,7 +67,7 @@ const emit = defineEmits<{
   'update:images': [value: ImagesResponse['images']];
 }>();
 const store = useStore();
-const { t } = useI18nT();
+const { t } = useI18n();
 const index = useVModel<number>('currentIndex');
 const imgs = useVModel<ImagesResponse['images']>('images');
 

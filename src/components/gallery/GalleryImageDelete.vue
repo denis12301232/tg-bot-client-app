@@ -17,11 +17,12 @@
 <script setup lang="ts">
 import type { ImageInjected } from '@/types';
 import { inject } from 'vue';
-import { useFetch, useI18nT } from '@/hooks';
+import { useFetch } from '@/hooks';
 import { ImageService } from '@/api/services';
+import { useI18n } from 'vue-i18n';
 
 const { selected, images, total } = inject<ImageInjected>('data')!;
-const { t } = useI18nT();
+const { t } = useI18n();
 const { request, loading } = useFetch<string[], typeof ImageService.deleteImages>(ImageService.deleteImages, {
   afterSuccess: ({ data }) => {
     images.value = images.value.filter((img) => !data.value?.includes(img._id));

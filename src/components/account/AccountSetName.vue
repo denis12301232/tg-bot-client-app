@@ -3,7 +3,7 @@
     <QInput
       class="q-mt-sm"
       v-model="name"
-      :label="t('account.placeholders.name')"
+      :label="t('account.form.fields.name.placeholder')"
       standout
       :rules="rules"
       :error="!!error"
@@ -33,11 +33,12 @@
 import type { QForm } from 'quasar';
 import { ref, watch, computed } from 'vue';
 import { useStore } from '@/stores';
-import { useFetch, useI18nT } from '@/hooks';
+import { useFetch } from '@/hooks';
 import { Validate } from '@/util';
 import { ToolsService } from '@/api/services';
+import { useI18n } from 'vue-i18n';
 
-const { t } = useI18nT();
+const { t } = useI18n();
 const store = useStore();
 const name = ref(store.user?.name || '');
 const valid = ref(false);
@@ -46,11 +47,11 @@ const equal = computed(() => store.user?.name === name.value);
 const { request, loading, error } = useFetch(ToolsService.setNewName, {
   afterResponse: () => store.user?.name && (store.user.name = name.value),
   alert: true,
-  successMsg: t('account.msgs.nameSuccess'),
+  successMsg: t('account.messages.name'),
 });
 const rules = [
-  (v: string) => Validate.required(v) || t('account.errors.name.required'),
-  (v: string) => Validate.lengthInterval(3, 30)(v) || t('account.errors.name.lengthInterval'),
+  (v: string) => Validate.required(v) || t('account.form.fields.name.errors.required'),
+  (v: string) => Validate.lengthInterval(3, 30)(v) || t('account.form.fields.name.errors.lengthInterval'),
 ];
 
 watch(name, () => {

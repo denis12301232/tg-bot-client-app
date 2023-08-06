@@ -25,7 +25,7 @@
         }"
       >
         <div :class="$style.content">
-          <h5 class="text-center q-my-lg">{{ t('tools.forms.title') }}</h5>
+          <h5 class="text-center q-my-lg">{{ t('list.import.title') }}</h5>
           <QSelect v-model="lang" class="q-mb-md" emit-value map-options label="Language" standout :options="options" />
           <QFile v-model="file" class="full-width" standout label="CSV" accept="text/csv" clearable>
             <template #prepend>
@@ -45,11 +45,11 @@
           </QFile>
           <div v-if="data" class="q-py-sm">
             <div>
-              <span class="text-subtitle1 text-positive">{{ t('tools.forms.msgs.uploaded') }}:</span>
+              <span class="text-subtitle1 text-positive">{{ t('list.import.messages.uploaded') }}:</span>
               {{ data.created }}
             </div>
             <div>
-              <span class="text-subtitle1 text-negative">{{ t('tools.forms.msgs.errors') }}:</span>
+              <span class="text-subtitle1 text-negative">{{ t('list.import.messages.errors') }}:</span>
               {{ data.errors.length }}
             </div>
           </div>
@@ -58,29 +58,22 @@
           class="q-my-md"
           color="pink-9"
           :icon="help ? 'eva-arrow-up-outline' : 'eva-arrow-down-outline'"
-          :label="t('tools.forms.msgs.help')"
+          :label="t('list.import.messages.help')"
           @click="showHelp"
         />
         <QCard v-if="help" style="width: 100%; max-width: 800px">
-          <QCardSection>
-            <QList>
-              <QItem v-for="how of messages[locale].tools.forms.msgs.how.length" :key="how">
-                {{ how + '. ' + t(`tools.forms.msgs.how.${how - 1}`) }}.
-              </QItem>
-            </QList>
-          </QCardSection>
           <QMarkupTable>
             <tbody>
               <tr>
                 <th
-                  v-for="field of messages[locale].assistance.fields"
-                  :key="field"
+                  v-for="field of messages[locale].home.form.fields"
+                  :key="field.value"
                   class="text-center"
                   style="max-width: 100px"
                 >
                   <div class="text-cut">
-                    {{ field }}
-                    <QTooltip>{{ field }}</QTooltip>
+                    {{ field.value }}
+                    <QTooltip>{{ field.value }}</QTooltip>
                   </div>
                 </th>
               </tr>
@@ -101,23 +94,23 @@
 </template>
 
 <script setup lang="ts">
-import type { Langs } from '@/types';
 import { ref, watchEffect } from 'vue';
-import { useFetch, useI18nT } from '@/hooks';
+import { useFetch } from '@/hooks';
 import { AssistanceService } from '@/api/services';
 import { QIcon } from 'quasar';
+import { useI18n } from 'vue-i18n';
 
 type T = { created: number; errors: { message: string; row: number }[] };
 type S = typeof AssistanceService.uploadFormsListCSV;
 
 const formData = new FormData();
-const { t, locale, messages } = useI18nT();
+const { t, locale, messages } = useI18n();
 const file = ref<File | null>(null);
 const help = ref(false);
-const lang = ref<Langs>('uk');
+const lang = ref('uk');
 const { request, loading, data } = useFetch<T, S>(AssistanceService.uploadFormsListCSV, {
   alert: true,
-  successMsg: t('tools.forms.msgs.success'),
+  successMsg: t('list.import.messages.success'),
   afterSuccess: () => (file.value = null),
 });
 const options = [

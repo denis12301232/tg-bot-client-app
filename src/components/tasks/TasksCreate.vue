@@ -1,13 +1,13 @@
 <template>
   <div class="column items-center q-mt-lg">
     <QStepper v-model="step" vertical flat color="primary" animated :class="$style.stepper">
-      <QStep :name="1" :title="t('tasks.create.first.title')" icon="task_alt" :done="step > 1">
+      <QStep :name="1" :title="t('tasks.create.first.form.title')" icon="task_alt" :done="step > 1">
         <Tasks.CreateFirstStep v-model:title="task.title" v-model:tags="task.tags" @valid="setFirstStepValid" />
         <QStepperNavigation>
           <QBtn
             flat
             color="primary"
-            :label="t('tasks.create.first.buttons.next')"
+            :label="t('tasks.create.first.form.buttons.next')"
             :loading="loading"
             :disable="!valid.first"
             @click="step++"
@@ -16,8 +16,8 @@
       </QStep>
       <QStep
         :name="2"
-        :title="t('tasks.create.second.title')"
-        :caption="t('tasks.create.second.subtitle')"
+        :title="t('tasks.create.second.form.title')"
+        :caption="t('tasks.create.second.form.subtitle')"
         icon="eva-list"
         :done="step > 2"
       >
@@ -34,11 +34,17 @@
           <QBtn
             flat
             color="primary"
-            :label="t('tasks.create.second.buttons.create')"
+            :label="t('tasks.create.second.form.buttons.create')"
             :disable="!task.subtasks.length"
             @click="request(task)"
           />
-          <QBtn class="q-ml-sm" flat color="primary" :label="t('tasks.create.second.buttons.back')" @click="step--" />
+          <QBtn
+            class="q-ml-sm"
+            flat
+            color="primary"
+            :label="t('tasks.create.second.form.buttons.back')"
+            @click="step--"
+          />
         </QStepperNavigation>
       </QStep>
     </QStepper>
@@ -48,11 +54,12 @@
 <script setup lang="ts">
 import Tasks from '~/tasks';
 import { ref, reactive } from 'vue';
-import { useFetch, useI18nT } from '@/hooks';
+import { useFetch } from '@/hooks';
 import { TaskService } from '@/api/services';
 import { useRouter } from 'vue-router';
+import { useI18n } from 'vue-i18n';
 
-const { t } = useI18nT();
+const { t } = useI18n();
 const router = useRouter();
 const step = ref(1);
 const valid = reactive({ first: false, second: false });

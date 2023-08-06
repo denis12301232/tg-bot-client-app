@@ -22,15 +22,15 @@
         <QBtn v-else dense flat round icon="eva-person" @click="toggleRightDrawer" />
       </QToolbar>
       <QTabs :class="$style.tabs" align="left" active-color="primary">
-        <QRouteTab to="/" :label="t('home.tabs.home')" />
+        <QRouteTab to="/" :label="t('home.tabs.form')" />
         <QRouteTab v-if="store.isAdmin" to="/list" :label="t('home.tabs.list')" />
-        <QRouteTab v-if="store.isAdmin" to="/info" :label="t('home.tabs.info')" />
+        <QRouteTab v-if="store.isAdmin" to="/info" :label="t('home.tabs.search')" />
       </QTabs>
     </QHeader>
     <QDrawer v-model="leftDrawerOpen" side="left" bordered>
       <QCard square flat>
         <QCardSection>
-          <h6 class="text-center">{{ t('home.drawers.left.title') }}</h6>
+          <h6 class="text-center">{{ t('home.menu.left.title') }}</h6>
         </QCardSection>
       </QCard>
       <QSeparator></QSeparator>
@@ -40,7 +40,7 @@
             <QItemSection avatar>
               <QIcon color="primary" name="eva-home-outline" />
             </QItemSection>
-            <QItemSection>{{ t('home.tabs.home') }}</QItemSection>
+            <QItemSection>{{ t('home.tabs.form') }}</QItemSection>
           </QItem>
           <QItem v-if="store.isAdmin" v-ripple clickable tag="a" to="/list">
             <QItemSection avatar>
@@ -52,14 +52,14 @@
             <QItemSection avatar>
               <QIcon color="primary" name="eva-search-outline" />
             </QItemSection>
-            <QItemSection>{{ t('home.tabs.info') }}</QItemSection>
+            <QItemSection>{{ t('home.tabs.search') }}</QItemSection>
           </QItem>
         </template>
         <QItem v-ripple clickable tag="a" to="/gallery">
           <QItemSection avatar>
             <QIcon color="primary" name="eva-image-outline" />
           </QItemSection>
-          <QItemSection>{{ t('home.drawers.left.gallery') }}</QItemSection>
+          <QItemSection>{{ t('home.menu.left.gallery') }}</QItemSection>
         </QItem>
         <QItem v-if="store.isAuth" v-ripple clickable tag="a" to="/chat">
           <QItemSection avatar>
@@ -67,25 +67,25 @@
               <QBadge v-show="unread" color="positive" floating rounded>{{ unread }}</QBadge>
             </QIcon>
           </QItemSection>
-          <QItemSection>{{ t('home.drawers.left.chat') }}</QItemSection>
+          <QItemSection>{{ t('home.menu.left.chat') }}</QItemSection>
         </QItem>
         <QItem v-if="store.isAuth" v-ripple clickable tag="a" to="tasks">
           <QItemSection avatar>
             <QIcon color="primary" name="eva-checkmark-circle-outline" />
           </QItemSection>
-          <QItemSection>{{ t('home.drawers.left.tasks') }}</QItemSection>
+          <QItemSection>{{ t('home.menu.left.tasks') }}</QItemSection>
         </QItem>
         <QItem v-if="store.isAuth" v-ripple clickable tag="a" to="/meets">
           <QItemSection avatar>
             <QIcon color="primary" name="eva-people-outline" />
           </QItemSection>
-          <QItemSection>{{ t('home.drawers.left.meets') }}</QItemSection>
+          <QItemSection>{{ t('home.menu.left.meets') }}</QItemSection>
         </QItem>
         <QItem v-if="store.isAdmin" v-ripple clickable tag="a" to="/stats">
           <QItemSection avatar>
             <QIcon color="primary" name="eva-percent-outline" />
           </QItemSection>
-          <QItemSection>{{ t('home.drawers.left.stats') }}</QItemSection>
+          <QItemSection>{{ t('home.menu.left.stats') }}</QItemSection>
         </QItem>
       </QList>
     </QDrawer>
@@ -109,19 +109,19 @@
           <QItemSection avatar>
             <QIcon color="primary" name="eva-person-outline" />
           </QItemSection>
-          <QItemSection>{{ t('home.drawers.right.account') }}</QItemSection>
+          <QItemSection>{{ t('home.menu.right.account') }}</QItemSection>
         </QItem>
         <QItem v-if="store.isAdmin" v-ripple clickable tag="a" to="/tools">
           <QItemSection avatar>
             <QIcon color="primary" name="eva-settings-outline" />
           </QItemSection>
-          <QItemSection>{{ t('home.drawers.right.settings') }}</QItemSection>
+          <QItemSection>{{ t('home.menu.right.tools') }}</QItemSection>
         </QItem>
         <QItem v-ripple clickable @click="[store.logout(), toggleRightDrawer(), $router.push('/')]">
           <QItemSection avatar>
             <QIcon color="primary" name="eva-log-out-outline" />
           </QItemSection>
-          <QItemSection>{{ t('home.drawers.right.logout') }}</QItemSection>
+          <QItemSection>{{ t('home.menu.right.logout') }}</QItemSection>
         </QItem>
       </QList>
     </QDrawer>
@@ -137,12 +137,13 @@ import SetLang from '~/SetLang.vue';
 import { ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { useStore, useChatStore } from '@/stores';
-import { useI18nT, useTelegram } from '@/hooks';
+import { useTelegram } from '@/hooks';
 import { ENV } from '@/util';
 import { storeToRefs } from 'pinia';
+import { useI18n } from 'vue-i18n';
 
-const icon = new URL('../../public/icon.jpg', import.meta.url).href;
-const { t } = useI18nT();
+const icon = new URL('/icon.jpg', import.meta.url).href;
+const { t } = useI18n();
 const { isOpenedFromTg } = useTelegram();
 const store = useStore();
 const route = useRoute();

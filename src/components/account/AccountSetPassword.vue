@@ -3,7 +3,7 @@
     <QInput
       v-model="password.old.value"
       class="q-mt-sm"
-      :label="t('account.placeholders.oldPassword')"
+      :label="t('account.form.fields.oldPassword.placeholder')"
       standout
       :type="password.old.visible ? 'text' : 'password'"
       lazy-rules
@@ -21,7 +21,7 @@
     <QInput
       v-model="password.new.value"
       class="q-mt-sm"
-      :label="t('account.placeholders.newPassword')"
+      :label="t('account.form.fields.newPassword.placeholder')"
       standout
       :type="password.new.visible ? 'text' : 'password'"
       :rules="rules"
@@ -44,7 +44,7 @@
       color="primary"
       :loading="loading"
       :disable="!valid"
-      :label="t('account.buttons.set')"
+      :label="t('account.form.buttons.password')"
     />
   </QForm>
 </template>
@@ -52,11 +52,12 @@
 <script setup lang="ts">
 import type { QForm } from 'quasar';
 import { ref, reactive, watch } from 'vue';
-import { useFetch, useI18nT } from '@/hooks';
+import { useFetch } from '@/hooks';
 import { ToolsService } from '@/api/services';
 import { Validate } from '@/util';
+import { useI18n } from 'vue-i18n';
 
-const { t } = useI18nT();
+const { t } = useI18n();
 const formRef = ref<QForm | null>(null);
 const valid = ref(false);
 const password = reactive({
@@ -72,11 +73,11 @@ const { request, loading, error } = useFetch(ToolsService.setNewPassword, {
     error.value = '';
   },
   alert: true,
-  successMsg: t('account.msgs.passwordSuccess'),
+  successMsg: t('account.messages.password'),
 });
 const rules = [
-  (v: string) => Validate.required(v) || t('account.errors.password.required'),
-  (v: string) => Validate.lengthInterval(6, 20)(v) || t('account.errors.password.lengthInterval'),
+  (v: string) => Validate.required(v) || t('account.form.fields.newPassword.errors.required'),
+  (v: string) => Validate.lengthInterval(6, 20)(v) || t('account.form.fields.newPassword.errors.lengthInterval'),
 ];
 
 watch([() => password.new.value], () => {

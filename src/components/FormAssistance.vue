@@ -4,7 +4,7 @@
     <FormAssistanceGroup class="q-mt-sm" :title="t('home.form.sections.fio')">
       <QInput
         v-model.trim="form.surname"
-        :label="t('home.form.placeholders.surname')"
+        :label="t('home.form.fields.surname.placeholder')"
         :rules="rules.surname"
         lazy-rules
         maxlength="100"
@@ -12,7 +12,7 @@
       />
       <QInput
         v-model.trim="form.name"
-        :label="t('home.form.placeholders.name')"
+        :label="t('home.form.fields.name.placeholder')"
         :rules="rules.name"
         lazy-rules
         maxlength="100"
@@ -20,7 +20,7 @@
       />
       <QInput
         v-model.trim="form.patronymic"
-        :label="t('home.form.placeholders.patronimyc')"
+        :label="t('home.form.fields.patronymic.placeholder')"
         :rules="rules.patronymic"
         lazy-rules
         maxlength="100"
@@ -30,7 +30,7 @@
     <FormAssistanceGroup :title="t('home.form.sections.phone')">
       <QInput
         v-model="form.phone"
-        :label="t('home.form.placeholders.phone')"
+        :label="t('home.form.fields.phone.placeholder')"
         :rules="rules.phone"
         type="tel"
         mask="(###) ### - ####"
@@ -43,7 +43,7 @@
     <FormAssistanceGroup :title="t('home.form.sections.birth')">
       <QInput
         v-model="form.birth"
-        :label="t('home.form.placeholders.birth')"
+        :label="t('home.form.fields.birth.placeholder')"
         mask="date"
         :rules="rules.birth"
         lazy-rules
@@ -56,10 +56,10 @@
                 emit-immediately
                 default-year-month="2000/12"
                 color="primary"
-                :locale="messages[locale].calendar"
+                :locale="messages[locale].extra.calendar"
               >
                 <div class="row items-center justify-end">
-                  <QBtn v-close-popup label="Закрыть" color="primary" flat />
+                  <QBtn v-close-popup :label="t('extra.calendar.close')" color="primary" flat />
                 </div>
               </QDate>
             </QPopupProxy>
@@ -67,10 +67,10 @@
         </template>
       </QInput>
     </FormAssistanceGroup>
-    <FormAssistanceGroup :title="t('home.form.sections.adres')">
+    <FormAssistanceGroup :title="t('home.form.sections.address')">
       <QSelect
         v-model="form.district"
-        :label="t('home.form.placeholders.district')"
+        :label="t('home.form.fields.district.placeholder')"
         :rules="rules.district"
         :options="districtOptions"
         lazy-rules
@@ -79,7 +79,7 @@
       />
       <QSelect
         v-model.trim="form.street"
-        :label="t('home.form.placeholders.street')"
+        :label="t('home.form.fields.street.placeholder')"
         :rules="rules.street"
         :options="getStreetOptions(form.district)"
         lazy-rules
@@ -88,13 +88,13 @@
       >
         <template #no-option>
           <QItem>
-            <QItemSection class="text-negative">{{ t('assistance.msgs.selectDistrict') }}</QItemSection>
+            <QItemSection class="text-negative">{{ t('home.form.fields.street.errors.district') }}</QItemSection>
           </QItem>
         </template>
       </QSelect>
       <QInput
         v-model.trim="form.house"
-        :label="t('home.form.placeholders.house')"
+        :label="t('home.form.fields.house.placeholder')"
         :rules="rules.house"
         lazy-rules
         maxlength="50"
@@ -102,29 +102,29 @@
       />
       <QInput
         v-model.trim="form.flat"
-        :label="t('home.form.placeholders.flat')"
+        :label="t('home.form.fields.flat.placeholder')"
         :rules="rules.flat"
         lazy-rules
         maxlength="50"
         counter
       />
     </FormAssistanceGroup>
-    <FormAssistanceGroup :title="t('home.form.sections.peopleNum')">
+    <FormAssistanceGroup :title="t('home.form.sections.peopleCount')">
       <QInput
-        v-model.trim="form.people_num"
-        :label="t('home.form.placeholders.peopleNum')"
-        :rules="rules.people_num"
+        v-model.trim="form.peopleCount"
+        :label="t('home.form.fields.peopleCount.placeholder')"
+        :rules="rules.peopleCount"
         lazy-rules
         maxlength="2"
         counter
       />
     </FormAssistanceGroup>
-    <FormAssistanceGroup v-if="Number(form.people_num) > 1" :title="t('home.form.sections.peopleFio')">
+    <FormAssistanceGroup v-if="form.peopleCount > 1" :title="t('home.form.sections.peopleFio')">
       <QInput
-        v-for="i in Number(form.people_num) - 1 > 10 ? 10 : Number(form.people_num) - 1"
-        v-model.trim="form.people_fio[i - 1]"
+        v-for="i in form.peopleCount - 1 > 10 ? 10 : form.peopleCount - 1"
+        v-model.trim="form.peopleFio[i - 1]"
         :key="i"
-        :label="`${t('home.form.placeholders.peopleFio')} ${i}-го`"
+        :label="`${t('home.form.fields.peopleFio.placeholder')} ${i}-го`"
         lazy-rules
         maxlength="100"
         counter
@@ -138,7 +138,7 @@
     </FormAssistanceGroup>
     <FormAssistanceGroup v-if="form.kids" :title="t('home.form.sections.kidsAge')">
       <QOptionGroup
-        v-model="form.kids_age"
+        v-model="form.kidsAge"
         type="checkbox"
         :options="kidsAgeOptions"
         style="margin-left: -16px"
@@ -156,8 +156,8 @@
     </FormAssistanceGroup>
     <FormAssistanceGroup v-if="form.medicines" :title="t('home.form.sections.medicinesInfo')">
       <QInput
-        v-model.trim="form.medicines_info"
-        :label="t('home.form.placeholders.medicinesInfo')"
+        v-model.trim="form.medicinesInfo"
+        :label="t('home.form.fields.medicinesInfo.placeholder')"
         lazy-rules
         maxlength="500"
         counter
@@ -168,8 +168,8 @@
     </FormAssistanceGroup>
     <FormAssistanceGroup v-if="form.hygiene" :title="t('home.form.sections.hygieneInfo')">
       <QInput
-        v-model.trim="form.hygiene_info"
-        :label="t('home.form.placeholders.hygieneInfo')"
+        v-model.trim="form.hygieneInfo"
+        :label="t('home.form.fields.hygieneInfo.placeholder')"
         lazy-rules
         maxlength="500"
         counter
@@ -180,28 +180,34 @@
     </FormAssistanceGroup>
     <FormAssistanceGroup v-if="form.pampers" :title="t('home.form.sections.pampersInfo')">
       <QInput
-        v-model.trim="form.pampers_info"
-        :abel="t('home.form.placeholders.pampersInfo')"
+        v-model.trim="form.pampersInfo"
+        :label="t('home.form.fields.pampersInfo.placeholder')"
         lazy-rules
         maxlength="500"
         counter
       />
     </FormAssistanceGroup>
-    <FormAssistanceGroup :title="t('home.form.sections.diet')">
-      <QInput v-model.trim="form.diet" :label="t('home.form.placeholders.diet')" lazy-rules maxlength="500" counter />
+    <FormAssistanceGroup :title="t('home.form.sections.extraInfo')">
+      <QInput
+        v-model.trim="form.extraInfo"
+        :label="t('home.form.fields.extraInfo.placeholder')"
+        lazy-rules
+        maxlength="500"
+        counter
+      />
     </FormAssistanceGroup>
-    <FormAssistanceGroup :title="t('home.form.sections.persDataAgreement')">
+    <FormAssistanceGroup :title="t('home.form.sections.personalDataAgreement')">
       <QCheckbox
-        v-model="form.pers_data_agreement"
-        :label="t('home.form.placeholders.persDataAgreement')"
+        v-model="form.personalDataAgreement"
+        :label="t('home.form.fields.personalDataAgreement.checkbox')"
         style="margin-left: -8px"
         color="indigo"
       />
     </FormAssistanceGroup>
     <FormAssistanceGroup :title="t('home.form.sections.photoAgreement')">
       <QCheckbox
-        v-model="form.photo_agreement"
-        :label="t('home.form.placeholders.photoAgreement')"
+        v-model="form.photoAgreement"
+        :label="t('home.form.fields.photoAgreement.checkbox')"
         style="margin-left: -8px"
         color="indigo"
       />
@@ -218,8 +224,9 @@ import type { AssistanceResponse } from '@/types';
 import type { QForm } from 'quasar';
 import FormAssistanceGroup from '~/FormAssistanceGroup.vue';
 import { ref, watch } from 'vue';
-import { useAssistanceFormOptions, useI18nT, useVModel } from '@/hooks';
+import { useAssistanceFormOptions, useVModel } from '@/hooks';
 import { Rules } from '@/util';
+import { useI18n } from 'vue-i18n';
 
 const props = defineProps<{
   modelValue: Omit<AssistanceResponse, '_id' | 'sector'>;
@@ -231,7 +238,7 @@ const emit = defineEmits<{
   (event: 'submit'): void;
 }>();
 
-const { t, messages, locale } = useI18nT();
+const { t, messages, locale } = useI18n();
 const { districtOptions, kidsAgeOptions, yesNoOptions, getStreetOptions } = useAssistanceFormOptions();
 const rules = Rules.assistance(t);
 // eslint-disable-next-line vue/no-dupe-keys
@@ -244,7 +251,9 @@ watch(
   () => {
     formRef.value
       ?.validate()
-      .then((v) => (valid.value = v && form.value.pers_data_agreement && form.value.photo_agreement && !props.loading));
+      .then(
+        (v) => (valid.value = v && form.value.personalDataAgreement && form.value.photoAgreement && !props.loading)
+      );
   },
   { deep: true }
 );

@@ -16,7 +16,7 @@
       </thead>
       <tbody>
         <tr v-for="(value, key) of form" :key="key">
-          <td>{{ t(`assistance.fields.${key}`) }}</td>
+          <td>{{ t(`home.form.fields.${key}.value`) }}</td>
           <td>{{ Util.formatAssistanceValue(value, key, t, form?.district) }}</td>
         </tr>
       </tbody>
@@ -54,11 +54,12 @@ import FormAssistance from '~/FormAssistance.vue';
 import type { AssistanceResponse } from '@/types';
 import { onMounted, computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { useFetch, useI18nT } from '@/hooks';
+import { useFetch } from '@/hooks';
 import { AssistanceService } from '@/api/services';
 import { Util } from '@/util';
+import { useI18n } from 'vue-i18n';
 
-const { t } = useI18nT();
+const { t } = useI18n();
 const router = useRouter();
 const route = useRoute();
 const formId = computed(() => String(route.params.id));

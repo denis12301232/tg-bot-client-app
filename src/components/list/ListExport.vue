@@ -11,10 +11,10 @@
         :content-active-style="{ position: 'relative', overflow: 'hidden', display: 'flex', justifyContent: 'center' }"
       >
         <form :class="$style.form" @submit.prevent="createReport(locale, type || 'xlsx')">
-          <h5 class="q-pa-lg text-center">{{ t('tools.sheets.title') }}</h5>
+          <h5 class="q-pa-lg text-center">{{ t('list.export.title') }}</h5>
           <QSelect
             v-model="type"
-            :label="t('tools.sheets.type')"
+            :label="t('list.export.type.placeholder')"
             :options="typeOptions"
             map-options
             emit-value
@@ -28,10 +28,10 @@
               :loading="isLoading"
               :disable="!type || isLoading || !props.ids.length"
             >
-              {{ t('tools.sheets.buttons.save') }}
+              {{ t('list.export.buttons.save') }}
             </QBtn>
             <a v-if="url" :class="[$style.link, 'q-mt-sm']" target="_blank" :href="url">
-              {{ t('tools.sheets.link') }}
+              {{ t('list.export.messages.link') }}
             </a>
           </div>
         </form>
@@ -41,18 +41,17 @@
 </template>
 
 <script setup lang="ts">
-import type { Langs } from '@/types';
 import { ref } from 'vue';
 import { AssistanceService } from '@/api/services';
 import { useStore } from '@/stores';
-import { useI18nT } from '@/hooks';
+import { useI18n } from 'vue-i18n';
 
 const props = defineProps<{
   ids: string[];
 }>();
 
 const store = useStore();
-const { t, locale } = useI18nT();
+const { t, locale } = useI18n();
 const type = ref<'xlsx' | 'csv' | 'google-sheets' | null>(null);
 const url = ref('');
 const isLoading = ref(false);
@@ -62,7 +61,7 @@ const typeOptions = [
   { label: 'GOOGLE SHEETS', value: 'google-sheets' },
 ];
 
-async function createReport(locale: Langs, fileType: 'xlsx' | 'csv' | 'google-sheets') {
+async function createReport(locale: string, fileType: 'xlsx' | 'csv' | 'google-sheets') {
   try {
     isLoading.value = true;
     if (type.value === 'google-sheets') {

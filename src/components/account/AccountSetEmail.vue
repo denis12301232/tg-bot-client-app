@@ -3,7 +3,7 @@
     <QInput
       class="q-mt-sm"
       v-model="email"
-      :label="t('account.placeholders.email')"
+      :label="t('account.form.fields.email.placeholder')"
       standout
       :rules="rules"
       :error="!!error"
@@ -33,11 +33,12 @@
 import type { QForm } from 'quasar';
 import { ref, watch, computed } from 'vue';
 import { useStore } from '@/stores';
-import { useFetch, useI18nT } from '@/hooks';
+import { useI18n } from 'vue-i18n';
+import { useFetch } from '@/hooks';
 import { Validate } from '@/util';
 import { ToolsService } from '@/api/services';
 
-const { t } = useI18nT();
+const { t } = useI18n();
 const store = useStore();
 const email = ref(store.user?.email || '');
 const valid = ref(false);
@@ -46,11 +47,11 @@ const equal = computed(() => store.user?.email === email.value);
 const { request, loading, error } = useFetch(ToolsService.setNewEmail, {
   afterResponse: () => store.user?.email && (store.user.email = email.value),
   alert: true,
-  successMsg: t('account.msgs.emailSuccess'),
+  successMsg: t('account.messages.email'),
 });
 const rules = [
-  (v: string) => Validate.required(v) || t('account.errors.email.required'),
-  (v: string) => Validate.isEmail(v) || t('account.errors.email.isEmail'),
+  (v: string) => Validate.required(v) || t('account.form.fields.email.errors.required'),
+  (v: string) => Validate.isEmail(v) || t('account.form.fields.email.errors.isEmail'),
 ];
 
 watch(email, () => {

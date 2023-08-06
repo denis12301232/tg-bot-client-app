@@ -14,9 +14,9 @@
     @keyup.enter="saveMessage"
   >
     <template #label>
-      <div v-if="voiceMessage">{{ t('chat.playsholders.voice') }}</div>
-      <div v-else-if="!isRecording">{{ t('chat.playsholders.send') }}</div>
-      <div class="recording" v-else>{{ t('chat.playsholders.recording') }}</div>
+      <div v-if="voiceMessage">{{ t('chat.send.voice') }}</div>
+      <div v-else-if="!isRecording">{{ t('chat.send.placeholder') }}</div>
+      <div class="recording" v-else>{{ t('chat.send.recording') }}</div>
     </template>
     <template #prepend>
       <EmojiPicker :color="currentTheme === 'dark' ? 'white' : ''" @pick="onPickEmoji" @hide="inputRef?.$el.focus()" />
@@ -70,10 +70,11 @@ import EmojiPicker from '~/EmojiPicker.vue';
 import { ref, watch } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useStore, useChatStore } from '@/stores';
-import { useI18nT, useVoice } from '@/hooks';
+import { useVoice } from '@/hooks';
 import { Util } from '@/util';
+import { useI18n } from 'vue-i18n';
 
-const { t } = useI18nT();
+const { t } = useI18n();
 const store = useStore();
 const { user, currentTheme } = storeToRefs(store);
 const chatStore = useChatStore();

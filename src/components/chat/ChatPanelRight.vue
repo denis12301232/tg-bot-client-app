@@ -1,7 +1,7 @@
 <template>
   <div v-if="!currentChatId" class="header"></div>
   <div v-if="!currentChatId" class="full-height column justify-center items-center text-indigo text-bold text-h6">
-    {{ t('chat.write.select') }}
+    {{ t('chat.messages.select') }}
   </div>
   <div v-else :class="[$style.container]">
     <Chat.DialogHeader :type="type" @open-modal="onOpenModal" />
@@ -16,13 +16,13 @@ import Chat from '~/chat';
 import { computed } from 'vue';
 import { useChatStore } from '@/stores';
 import { storeToRefs } from 'pinia';
-import { useI18nT } from '@/hooks';
+import { useI18n } from 'vue-i18n';
 
 const emit = defineEmits<{
   (event: 'open-modal', component: ChatModal): void;
 }>();
 
-const { t } = useI18nT();
+const { t } = useI18n();
 const { currentChat, currentChatId } = storeToRefs(useChatStore());
 const type = computed(() => currentChat.value?.type || 'dialog');
 

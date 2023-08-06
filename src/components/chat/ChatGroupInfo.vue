@@ -13,20 +13,25 @@
         </QItemSection>
         <QItemSection>
           <QItemLabel class="text-h6 text-cut">{{ name }}</QItemLabel>
-          <QItemLabel caption>{{ currentChat?.members_count }} {{ t('chat.msg.people') }}</QItemLabel>
+          <QItemLabel caption>{{ currentChat?.members_count }} {{ t('chat.messages.people') }}</QItemLabel>
         </QItemSection>
       </QItem>
     </QCardSection>
     <QCardSection class="row justify-center q-pb-none">
       <div style="max-width: 500px; min-width: 150px">
-        <h6 class="q-mt-sm text-center">{{ t('chat.aboutGroup.subtitles.about') }}</h6>
+        <h6 class="q-mt-sm text-center">{{ t('chat.aboutGroup.labels.about') }}</h6>
         <div class="text-body1 q-mt-sm text-italic text-justify text-weight-thin">{{ currentChat?.group.about }}</div>
       </div>
     </QCardSection>
     <QCardSection class="column items-center">
       <div class="users">
-        <h6 class="text-center">{{ t('chat.aboutGroup.subtitles.people') }}</h6>
-        <QInput v-model="filter" class="q-mb-sm full-width" :label="t('chat.aboutGroup.placeholder')" clearable />
+        <h6 class="text-center">{{ t('chat.aboutGroup.labels.people') }}</h6>
+        <QInput
+          v-model="filter"
+          class="q-mb-sm full-width"
+          :label="t('chat.aboutGroup.search.placeholder')"
+          clearable
+        />
         <div v-if="loading" class="row justify-center q-mt-md">
           <QSpinner size="50px" color="primary" />
         </div>
@@ -60,7 +65,7 @@
         </QVirtualScroll>
         <QItem v-if="!loading && !filteredUsers?.length">
           <QItemSection class="text-center text-subtitle2 text-negative">
-            {{ t('chat.aboutGroup.errors.none') }}
+            {{ t('chat.aboutGroup.search.errors.none') }}
           </QItemSection>
         </QItem>
       </div>
@@ -74,10 +79,11 @@ import UserAvatar from '~/UserAvatar.vue';
 import { ref, onMounted, computed, watch } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useStore, useChatStore } from '@/stores';
-import { useFetch, useI18nT } from '@/hooks';
+import { useFetch } from '@/hooks';
 import { ChatService } from '@/api/services';
+import { useI18n } from 'vue-i18n';
 
-const { t } = useI18nT();
+const { t } = useI18n();
 const { user } = storeToRefs(useStore());
 const { currentChat, currentChatId } = storeToRefs(useChatStore());
 const filter = ref('');

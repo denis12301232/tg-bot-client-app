@@ -4,7 +4,7 @@
       v-model="show"
       :class="[$style.input, 'q-mb-sm']"
       :options="options"
-      :label="t('stats.labels.interval')"
+      :label="t('stats.form.fields.interval.placeholder')"
       standout
     />
     <StatsAssistance class="full-width" :by="show.value" :label="show.label" />
@@ -14,18 +14,18 @@
 <script setup lang="ts">
 import StatsAssistance from '~/stats/StatsAssistance.vue';
 import { ref, computed } from 'vue';
-import { useI18nT } from '@/hooks';
+import { useI18n } from 'vue-i18n';
 
 interface Show {
   label: string;
   value: 'year' | 'month';
 }
 
-const { t } = useI18nT();
-const show = ref<Show>({ label: t('stats.opts.interval.year'), value: 'year' });
+const { t } = useI18n();
+const show = ref<Show>({ label: t('stats.form.fields.interval.options[0]'), value: 'year' });
 const options = computed(() => [
-  { label: t('stats.opts.interval.year'), value: 'year' },
-  { label: t('stats.opts.interval.month'), value: 'month' },
+  { label: t('stats.form.fields.interval.options[0]'), value: 'year' },
+  { label: t('stats.form.fields.interval.options[1]'), value: 'month' },
 ]);
 </script>
 

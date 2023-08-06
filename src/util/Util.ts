@@ -1,4 +1,4 @@
-import type { ITask, AssistanceResponse, I18n, Langs } from '@/types';
+import type { ITask, AssistanceResponse } from '@/types';
 import type { ComposerTranslation } from 'vue-i18n';
 
 export default class Util {
@@ -73,17 +73,17 @@ export default class Util {
     }
   }
 
-  static formatAssistanceValue(value: any, key: any, t: ComposerTranslation<I18n, Langs>, district?: string) {
+  static formatAssistanceValue(value: any, key: any, t: ComposerTranslation, district?: number | null) {
     if (key === 'district') {
-      return t(`assistance.districts.${value}`);
+      return t(`extra.districts.${value}`);
     } else if (key === 'street') {
-      return t(`assistance.streets.${district}.${value}`);
+      return t(`extra.streets[${district}][${value}]`);
     } else if (Array.isArray(value)) {
       return value.length ? value.join(',') : '-';
     } else if (value === true) {
-      return t('assistance.checkboxes.yesNo.yes');
+      return t('home.form.checkboxes.yesNo[0]');
     } else if (value === false) {
-      return t('assistance.checkboxes.yesNo.no');
+      return t('home.form.checkboxes.yesNo[1]');
     } else if (!value) {
       return '-';
     } else {

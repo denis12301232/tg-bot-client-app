@@ -1,13 +1,13 @@
 <template>
   <QCard :class="[$style.card, 'q-pa-lg', 'column', 'items-center']">
-    <h5 class="q-mb-sm">{{ t('list.msgs.filter') }}</h5>
+    <h5 class="q-mb-sm">{{ t('list.filter.title') }}</h5>
     <QOptionGroup v-model="criterias" class="criterias q-py-sm" type="checkbox" :options="options" inline />
     <div class="full-width">
       <div v-if="criterias.includes('birth')">
-        <h6 class="q-mt-md q-mb-sm text-center">{{ t('tools.sheets.checkbox.year') }}</h6>
+        <h6 class="q-mt-md q-mb-sm text-center">{{ t('list.filter.form.checkboxes[0]') }}</h6>
         <QBadge color="indigo">
           {{
-            `${t('tools.sheets.year.placeholders.min')} ${query.birth.min} ${t('tools.sheets.year.placeholders.max')} ${
+            `${t('list.filter.form.fields.year.min')} ${query.birth.min} ${t('list.filter.form.fields.year.max')} ${
               query.birth.max
             }`
           }}
@@ -15,42 +15,42 @@
         <QRange v-model="query.birth" :min="1920" :max="new Date().getFullYear()" color="secondary" />
       </div>
       <div v-if="criterias.includes('district')">
-        <h6 class="q-mt-md q-mb-sm text-center">{{ t('tools.sheets.checkbox.district') }}</h6>
+        <h6 class="q-mt-md q-mb-sm text-center">{{ t('list.filter.form.checkboxes[1]') }}</h6>
         <QSelect
           v-model="query.district"
           class="full-width"
           :options="districtOptions"
           standout
-          :label="t('tools.sheets.district.placeholder')"
+          :label="t('list.filter.form.fields.district.placeholder')"
           map-options
           emit-value
         />
       </div>
       <div v-if="criterias.includes('street')">
-        <h6 class="q-mt-md q-mb-sm text-center">{{ t('tools.sheets.checkbox.street') }}</h6>
+        <h6 class="q-mt-md q-mb-sm text-center">{{ t('list.filter.form.checkboxes[2]') }}</h6>
         <QSelect
           v-model="query.street"
           class="full-width"
           :options="streetOptions"
           standout
-          :label="t('tools.sheets.street.placeholder')"
+          :label="t('list.filter.form.fields.street.placeholder')"
           map-options
           emit-value
         >
           <template #no-option>
             <QItem>
-              <QItemSection class="text-negative">{{ t('assistance.msgs.selectDistrict') }}</QItemSection>
+              <QItemSection class="text-negative">{{ t('list.filter.messages.district') }}</QItemSection>
             </QItem>
           </template>
         </QSelect>
       </div>
       <div v-if="criterias.includes('sector')">
-        <h6 class="q-mt-md q-mb-sm text-center">{{ t('tools.sheets.checkbox.sector') }}</h6>
-        <QInput v-model="query.sector" standout :label="t('tools.sheets.sector.placeholder')" />
+        <h6 class="q-mt-md q-mb-sm text-center">{{ t('list.filter.form.checkboxes[3]') }}</h6>
+        <QInput v-model="query.sector" standout :label="t('list.filter.form.fields.sector.placeholder')" />
       </div>
       <div v-if="criterias.length" class="column items-center">
         <QBtn v-close-popup class="q-mt-md" color="primary">
-          {{ t('tools.sheets.buttons.save') }}
+          {{ t('list.filter.form.buttons.set') }}
         </QBtn>
       </div>
     </div>
@@ -59,7 +59,8 @@
 
 <script setup lang="ts">
 import { computed, watch } from 'vue';
-import { useI18nT, useVModel } from '@/hooks';
+import { useVModel } from '@/hooks';
+import { useI18n } from 'vue-i18n';
 
 const props = defineProps<{
   query: {
@@ -79,27 +80,27 @@ defineEmits<{
   'update:criterias': [critery: typeof props.criterias];
 }>();
 
-const { t, locale, messages } = useI18nT();
+const { t, locale, messages } = useI18n();
 // eslint-disable-next-line vue/no-dupe-keys
 const query = useVModel<typeof props.query>('query');
 // eslint-disable-next-line vue/no-dupe-keys
 const criterias = useVModel<typeof props.criterias>('criterias');
 const options = computed(() => [
-  { label: t('tools.sheets.checkbox.year'), value: 'birth' },
-  { label: t('tools.sheets.checkbox.district'), value: 'district' },
-  { label: t('tools.sheets.checkbox.street'), value: 'street' },
-  { label: t('tools.sheets.checkbox.sector'), value: 'sector' },
+  { label: t('list.filter.form.checkboxes[0]'), value: 'birth' },
+  { label: t('list.filter.form.checkboxes[1]'), value: 'district' },
+  { label: t('list.filter.form.checkboxes[2]'), value: 'street' },
+  { label: t('list.filter.form.checkboxes[3]'), value: 'sector' },
 ]);
 
 const districtOptions = computed(() =>
-  Object.entries(messages.value[locale.value].assistance.districts).map(([key, value]) => ({
+  Object.entries(messages.value[locale.value].extra.districts).map(([key, value]) => ({
     label: value,
     value: key,
   }))
 );
 const streetOptions = computed(() =>
   query.value.district
-    ? Object.entries(messages.value[locale.value].assistance.streets[query.value.district as '1'])
+    ? Object.entries(messages.value[locale.value].extra.streets[query.value.district as '1'])
         .map(([key, value]) => ({ label: value, value: key }))
         .sort((a, b) => a.label.localeCompare(b.label))
     : []

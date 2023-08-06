@@ -47,7 +47,7 @@ export const routes: RouteRecordRaw[] = [
     path: '/info/:id',
     name: 'infoId',
     component: () => import('@/views/InfoByIdView.vue'),
-    meta: { layout: 'HomeLayout' },
+    meta: { layout: 'SimpleLayout', layoutProps: { title: 'infoById.layout.title' } },
     beforeEnter: [RouteMiddlewares.useAuthGuard, RouteMiddlewares.useRoleGuard(['admin'])],
   },
   {
@@ -104,7 +104,7 @@ export const routes: RouteRecordRaw[] = [
     path: '/meets',
     name: 'meets',
     component: () => import('@/views/MeetView.vue'),
-    meta: { layout: 'SimpleLayout', layoutProps: { title: 'meets.title' } },
+    meta: { layout: 'SimpleLayout', layoutProps: { title: 'meets.layout.title' } },
     beforeEnter: [RouteMiddlewares.useAuthGuard],
   },
   {

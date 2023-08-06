@@ -1,4 +1,4 @@
-import type { IUser, Langs, I18n, IAlertType, ITheme } from '@/types';
+import type { IUser, IAlertType, ITheme } from '@/types';
 import { ref, computed, watchEffect } from 'vue';
 import { defineStore } from 'pinia';
 import { useQuasar } from 'quasar';
@@ -8,12 +8,12 @@ import { Alert, ChatAlert } from '@/models';
 
 export const useStore = defineStore('main', () => {
   const $q = useQuasar();
-  const { messages, locale, availableLocales, setLocaleMessage } = useI18n<I18n, Langs>();
+  const { locale, availableLocales, setLocaleMessage } = useI18n();
   const user = ref<IUser | null>(null);
   const theme = ref(localStorage.getItem('theme') as ITheme);
   const isPageLoading = ref(false);
-  const lang = ref((localStorage.getItem('lang') as Langs) || 'ru');
-  const alerts = ref<(Alert |  ChatAlert)[]>([]);
+  const lang = ref(localStorage.getItem('lang') || 'ru');
+  const alerts = ref<(Alert | ChatAlert)[]>([]);
   const isAuth = computed(() => !!user.value);
   const isAdmin = computed(() => user.value?.roles.includes('admin') || false);
   const currentTheme = computed(() => {
@@ -62,9 +62,9 @@ export const useStore = defineStore('main', () => {
     }
   }
 
-  async function setLocale(lang: Langs) {
+  async function setLocale(lang: string) {
     if (!availableLocales.includes(lang)) {
-      const msgs = await ToolsService.fetchLocale(lang).json<(typeof messages.value)['ru']>();
+      const msgs = await ToolsService.fetchLocale(lang);
       availableLocales.push(lang);
       if (msgs === undefined) {
         return;

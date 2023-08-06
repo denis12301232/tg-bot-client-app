@@ -1,4 +1,3 @@
-import type { Langs } from '@/types/i18n';
 import { $api } from '@/api';
 
 export default class ToolsService {
@@ -35,17 +34,16 @@ export default class ToolsService {
     return $api.post('tools/setroles', { json: { _id, roles } });
   }
 
-  static fetchLocale(locale: Langs) {
-    return $api.get('tools/locale', { searchParams: { locale } });
-    // return fetch(`./locales/${locale}.json`)
-    //   .then((response) => {
-    //     if (response.ok) {
-    //       return response.json();
-    //     }
-    //     throw new Error('Something went wrong!');
-    //   })
-    //   .catch((error) => {
-    //     console.error(error);
-    //   });
+  static fetchLocale(locale: string) {
+    return fetch(`/locales/${locale}.json`)
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        }
+        throw new Error('Something went wrong!');
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   }
 }

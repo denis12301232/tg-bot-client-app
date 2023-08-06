@@ -11,7 +11,7 @@
     </QCardSection>
     <QCardSection>
       <div class="row justify-center">
-        <QBtn color="teal" @click="openModal">{{ t('chat.groupSettings.buttons.roles') }}</QBtn>
+        <QBtn color="teal" @click="openModal">{{ t('chat.groupSettings.form.buttons.roles') }}</QBtn>
       </div>
     </QCardSection>
   </QCard>
@@ -21,9 +21,9 @@
 import ChatGroupUpdate from '~/chat/ChatGroupUpdate.vue';
 import ChatGroupRoles from '~/chat/ChatGroupRoles.vue';
 import { ref } from 'vue';
-import { useI18nT } from '@/hooks';
+import { useI18n } from 'vue-i18n';
 
-const { t } = useI18nT();
+const { t } = useI18n();
 const modal = ref(false);
 
 function openModal() {

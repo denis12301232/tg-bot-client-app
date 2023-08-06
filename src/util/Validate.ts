@@ -1,6 +1,6 @@
 export default class Validate {
   static required(value: string) {
-    return !!value;
+    return !!String(value).length;
   }
 
   static isEmail(value: string) {

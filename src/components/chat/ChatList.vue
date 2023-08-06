@@ -24,14 +24,14 @@
         </QItemLabel>
         <QItemLabel caption lines="2">
           <div v-if="!Object.values(chat.typing || {}).at(0)" class="text-cut" style="max-width: 90%">
-            {{ chat.messages?.length ? showLastMessageText(chat.messages.at(-1)) : t('chat.msg.none') }}
+            {{ chat.messages?.length ? showLastMessageText(chat.messages.at(-1)) : t('chat.messages.none') }}
           </div>
           <div v-else>
             <QSpinnerDots size="1rem" />
             {{
               chat.type === 'group'
-                ? Object.values(chat.typing || {}).at(0) + ` ${t('chat.writing')}`
-                : ` ${t('chat.writing')}`
+                ? Object.values(chat.typing || {}).at(0) + ` ${t('chat.messages.typing')}`
+                : ` ${t('chat.messages.typing')}`
             }}
           </div>
         </QItemLabel>
@@ -66,16 +66,16 @@ import { storeToRefs } from 'pinia';
 import { useChatStore, useStore } from '@/stores';
 import { Time } from '@/util';
 import { ChatService } from '@/api/services';
-import { useI18nT } from '@/hooks';
+import { useI18n } from 'vue-i18n';
 
-const { t } = useI18nT();
+const { t } = useI18n();
 const { user, currentTheme } = storeToRefs(useStore());
 const { currentChatId, sortedChats } = storeToRefs(useChatStore());
 
 function showLastMessageText(msg: IMessage | undefined) {
   if (msg?.text) return msg.text;
-  if (msg?.attachments?.at(0)?.ext === 'webm') return t('chat.msg.audio');
-  if (msg?.attachments?.at(0)?.mime.includes('image')) return t('chat.msg.image');
+  if (msg?.attachments?.at(0)?.ext === 'webm') return t('chat.messages.audio');
+  if (msg?.attachments?.at(0)?.mime.includes('image')) return t('chat.messages.image');
 }
 
 function onOpenChat(chat_id: string) {

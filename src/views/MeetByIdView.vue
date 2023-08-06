@@ -52,7 +52,7 @@
           </QCardSection>
           <QSeparator />
           <QCardSection class="text-center text-subtitle2 text-indigo text-bold">
-            {{ id === user?._id ? t('meetId.msgs.screen') : abonents.get(id)?.info?.name }}
+            {{ id === user?._id ? t('meetId.messages.screen') : abonents.get(id)?.info?.name }}
           </QCardSection>
         </QCard>
       </div>
@@ -61,15 +61,15 @@
 </template>
 
 <script setup lang="ts">
-import type {  RTCInjected } from '@/types';
+import type { RTCInjected } from '@/types';
 import CustomVideo from '~/CustomVideo.vue';
 import UserAvatar from '~/UserAvatar.vue';
 import { type ComponentPublicInstance, inject } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useStore } from '@/stores';
-import { useI18nT } from '@/hooks';
+import { useI18n } from 'vue-i18n';
 
-const { t } = useI18nT();
+const { t } = useI18n();
 const { user } = storeToRefs(useStore());
 const { videos, abonents, streams } = inject<RTCInjected>('rtc')!;
 

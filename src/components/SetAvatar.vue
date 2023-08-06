@@ -24,6 +24,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
+import { ENV } from '@/util';
 
 const props = withDefaults(
   defineProps<{
@@ -40,7 +41,7 @@ const emit = defineEmits<{
   (event: 'update:modelValue', file: File | null): void;
 }>();
 const fileRef = ref<HTMLInputElement | null>(null);
-const avatarTempUrl = ref(props.src);
+const avatarTempUrl = ref(ENV.IMAGE_URL + '/' + props.src);
 
 function onChange(event: Event) {
   const target = event.target as HTMLInputElement;

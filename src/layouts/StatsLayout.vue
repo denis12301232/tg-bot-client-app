@@ -3,7 +3,7 @@
     <QHeader class="header" reveal elevated height-hint="98">
       <QToolbar>
         <QBtn dense flat round icon="eva-arrow-back" color="primary" @click="$router.push('/')" />
-        <QToolbarTitle>{{ t('stats.title') }}</QToolbarTitle>
+        <QToolbarTitle>{{ t('stats.layout.title') }}</QToolbarTitle>
       </QToolbar>
     </QHeader>
     <QPageContainer class="window-height">
@@ -13,9 +13,9 @@
 </template>
 
 <script setup lang="ts">
-import { useI18nT } from '@/hooks';
+import { useI18n } from 'vue-i18n';
 
-const { t } = useI18nT();
+const { t } = useI18n();
 </script>
 
 <style lang="scss" scoped></style>

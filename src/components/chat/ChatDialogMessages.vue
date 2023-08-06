@@ -3,7 +3,7 @@
     <Chat.ModalImage :src="src" />
   </QDialog>
   <div v-if="!messages.length" class="row justify-center items-center text-indigo text-bold text-h6">
-    Здесь пусто...
+    {{ t('chat.messages.none') }}
   </div>
   <QScrollArea v-else ref="scroll" class="fit q-pt-sm" :thumb-style="{ width: '7px' }">
     <QInfiniteScroll reverse :key="String(currentChatId)" :offset="10" :initial-index="initialIndex" @load="onLoad">
@@ -21,7 +21,9 @@
         text-color="white"
       >
         <template #name v-if="type === 'group'">
-          <div class="text-bold text-deep-orange">{{ msg.author === user?._id ? 'Я' : getAuthor(msg)?.name }}</div>
+          <div class="text-bold text-deep-orange">
+            {{ msg.author === user?._id ? t('chat.messages.me') : getAuthor(msg)?.name }}
+          </div>
         </template>
         <template #avatar v-if="type === 'group'">
           <UserAvatar
@@ -71,11 +73,13 @@ import { ref, computed, watch, nextTick } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useStore, useChatStore } from '@/stores';
 import { Time } from '@/util';
+import { useI18n } from 'vue-i18n';
 
 defineProps<{
   type: 'dialog' | 'group';
 }>();
 
+const { t } = useI18n();
 const chatStore = useChatStore();
 const { user } = storeToRefs(useStore());
 const { currentChatId, currentChat } = storeToRefs(chatStore);

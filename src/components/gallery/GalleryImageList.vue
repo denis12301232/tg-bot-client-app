@@ -39,8 +39,8 @@ import LoaderWheel from '~/LoaderWheel.vue';
 import type { ImageInjected } from '@/types';
 import { onMounted, inject } from 'vue';
 import { useStore } from '@/stores';
-import { useI18nT } from '@/hooks';
 import { ENV } from '@/util';
+import { useI18n } from 'vue-i18n';
 
 const props = defineProps<{
   loading: boolean;
@@ -52,7 +52,7 @@ const emit = defineEmits<{
 }>();
 const { images, total, selected } = inject<ImageInjected>('data')!;
 const store = useStore();
-const { t } = useI18nT();
+const { t } = useI18n();
 
 onMounted(() => emit('request'));
 

@@ -9,12 +9,12 @@
       :rows-per-page-options="[5, 10]"
       :filter="filter"
       :loading="isUsersLoading || loading"
-      :pagination-label="(f, l, a) => `${f}-${l} ${t('table.of')} ${a}`"
-      :loading-label="t('table.loading')"
-      :no-data-label="t('table.noData')"
-      :rows-per-page-label="t('table.show')"
-      :no-results-label="t('table.notFound')"
-      :selected-rows-label="(n) => `${t('table.selected')} ${n}`"
+      :pagination-label="(f, l, a) => `${f}-${l} ${t('extra.table.of')} ${a}`"
+      :loading-label="t('extra.table.loading')"
+      :no-data-label="t('extra.table.noData')"
+      :rows-per-page-label="t('extra.table.show')"
+      :no-results-label="t('extra.table.notFound')"
+      :selected-rows-label="(n) => `${t('extra.table.selected')} ${n}`"
       binary-state-sort
       separator="cell"
       row-key="_id"
@@ -30,7 +30,7 @@
           borderless
           dense
           clearable
-          :label="t('tools.roles.table.search')"
+          :label="t('tools.roles.table.search.placeholder')"
         >
           <template #append>
             <QIcon name="eva-search" />
@@ -63,13 +63,14 @@
 import type { QTable } from 'quasar';
 import type { IUser } from '@/types';
 import { onMounted, computed } from 'vue';
-import { useRequest, useFetch, useI18nT } from '@/hooks';
+import { useRequest, useFetch } from '@/hooks';
 import { ToolsService } from '@/api/services';
+import { useI18n } from 'vue-i18n';
 
-const { t } = useI18nT();
+const { t } = useI18n();
 const { request, loading } = useFetch(ToolsService.updateRoles, {
   alert: true,
-  successMsg: t('tools.roles.msgs.update'),
+  successMsg: t('tools.roles.messages.update'),
 });
 const {
   request: getUsers,
@@ -84,8 +85,8 @@ const columns = computed<QTable['columns']>(() => [
   { name: 'roles', label: t('tools.roles.table.columns.role'), align: 'center', field: 'roles' },
 ]);
 const options = computed(() => [
-  { label: t('tools.roles.table.columns.checkbox.user'), value: 'user', disable: true },
-  { label: t('tools.roles.table.columns.checkbox.admin'), value: 'admin' },
+  { label: t('tools.roles.table.checkboxes.user'), value: 'user', disable: true },
+  { label: t('tools.roles.table.checkboxes.admin'), value: 'admin' },
 ]);
 
 onMounted(() => getUsers({ pagination: pagination.value }));

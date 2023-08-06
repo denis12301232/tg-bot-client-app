@@ -18,10 +18,10 @@
 
 <script setup lang="ts">
 import { useStore } from '@/stores';
-import { useI18nT } from '@/hooks';
+import { useI18n } from 'vue-i18n';
 
 const store = useStore();
-const { t } = useI18nT();
+const { t } = useI18n();
 </script>
 
 <style lang="scss" scoped></style>

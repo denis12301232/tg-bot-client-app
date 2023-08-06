@@ -1,11 +1,11 @@
 <template>
   <QCard :class="[$style.card, 'q-py-md', 'q-px-lg', 'text-center']">
     <QForm ref="formRef" class="q-pb-md" no-error-focus @submit.prevent="request(form.loginOrEmail, form.password)">
-      <h4 class="q-py-lg q-mb-sm">{{ t('login.title') }}</h4>
+      <h4 class="q-py-lg q-mb-sm">{{ t('login.form.title') }}</h4>
       <QInput
         v-model.trim="form.loginOrEmail"
         class="q-mb-md"
-        :label="t('login.placeholders.loginOrEmail')"
+        :label="t('login.form.fields.loginOrEmail.placeholder')"
         standout
         counter
         maxlength="30"
@@ -16,7 +16,7 @@
       <QInput
         v-model.trim="form.password"
         class="q-mb-md"
-        :label="t('login.placeholders.password')"
+        :label="t('login.form.fields.password.placeholder')"
         :type="isPasswordVisible ? 'text' : 'password'"
         standout
         counter
@@ -31,15 +31,17 @@
         </template>
       </QInput>
       <div class="row justify-center q-my-md">
-        <QBtn type="submit" :loading="loading" :disable="!valid" color="primary">{{ t('login.buttons.login') }}</QBtn>
+        <QBtn type="submit" :loading="loading" :disable="!valid" color="primary">
+          {{ t('login.form.buttons.login') }}
+        </QBtn>
       </div>
       <div :class="$style.swap">
-        {{ t('login.notRegister') }}
-        <span @click="$router.push('/registration')">{{ t('login.buttons.notRegister') }}</span>
+        {{ t('login.form.messages.notRegister') }}
+        <span @click="$router.push('/registration')">{{ t('login.form.buttons.registration') }}</span>
       </div>
       <div :class="$style.swap">
-        {{ t('login.restore') }}
-        <span @click="$router.push('/restore')">{{ t('login.buttons.restore') }}</span>
+        {{ t('login.form.messages.restore') }}
+        <span @click="$router.push('/restore')">{{ t('login.form.buttons.restore') }}</span>
       </div>
     </QForm>
   </QCard>
@@ -52,7 +54,8 @@ import { ref, reactive, watch } from 'vue';
 import { useStore } from '@/stores';
 import { Rules } from '@/util';
 import { AuthService } from '@/api/services';
-import { useFetch, useI18nT } from '@/hooks';
+import { useFetch } from '@/hooks';
+import { useI18n } from 'vue-i18n';
 
 type T = LoginResponse;
 type S = (typeof AuthService)['login'];
@@ -61,7 +64,7 @@ const emit = defineEmits<{
   close: [];
 }>();
 
-const { t } = useI18nT();
+const { t } = useI18n();
 const store = useStore();
 const valid = ref(false);
 const isPasswordVisible = ref(false);

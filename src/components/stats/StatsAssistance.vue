@@ -1,6 +1,13 @@
 <template>
   <div class="column items-center">
-    <QInput v-model="date" class="input" :label="t('stats.labels.period')" mask="date" :loading="loading" standout>
+    <QInput
+      v-model="date"
+      class="input"
+      :label="t('stats.form.fields.period.placeholder')"
+      mask="date"
+      :loading="loading"
+      standout
+    >
       <template #append>
         <QIcon class="cursor-pointer" name="eva-calendar">
           <QPopupProxy cover transition-show="scale" transition-hide="scale">
@@ -9,10 +16,10 @@
               emit-immediately
               default-year-month="2023/05"
               color="primary"
-              :locale="messages[locale].calendar"
+              :locale="messages[locale].extra.calendar"
             >
               <div class="row items-center justify-end">
-                <QBtn v-close-popup label="Закрыть" color="primary" flat />
+                <QBtn v-close-popup :label="t('extra.calendar.close')" color="primary" flat />
               </div>
             </QDate>
           </QPopupProxy>
@@ -27,14 +34,15 @@
 import { ref, onMounted, watch, computed, shallowRef } from 'vue';
 import Chart from 'chart.js/auto';
 import { AssistanceService } from '@/api/services';
-import { useFetch, useI18nT } from '@/hooks';
+import { useFetch } from '@/hooks';
+import { useI18n } from 'vue-i18n';
 
 const props = defineProps<{
   label: string;
   by: 'month' | 'year';
 }>();
 
-const { t, messages, locale } = useI18nT();
+const { t, messages, locale } = useI18n();
 const date = ref('');
 const chartRef = ref<HTMLCanvasElement | null>(null);
 const chart = shallowRef<Chart>();
@@ -42,7 +50,7 @@ const timestamp = computed(() => {
   const data = date.value?.split('/');
   return !date.value ? Date.now() : new Date(+data.at(0)!, +data.at(1)! - 1, +data.at(2)!).getTime();
 });
-const monthes = computed(() => Object.values(messages.value[locale.value].calendar.monthsShort));
+const monthes = computed(() => Object.values(messages.value[locale.value].extra.calendar.monthsShort));
 const {
   request: getStats,
   data: stats,
