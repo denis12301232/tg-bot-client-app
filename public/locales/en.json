@@ -295,9 +295,6 @@
         }
     },
     "account": {
-        "layout": {
-            "title": "Account Settings"
-        },
         "title": "Your account",
         "form": {
             "fields": {
@@ -759,14 +756,11 @@
         }
     },
     "restore": {
-        "layout": {
-            "title": "Restore"
-        },
         "messages": {
             "link": "Password change link sent to"
         },
         "form": {
-            "title": "Restoration",
+            "title": "Your's e-mail",
             "fields": {
                 "email": {
                     "placeholder": "email",

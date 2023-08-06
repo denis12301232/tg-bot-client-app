@@ -11,22 +11,22 @@ export const routes: RouteRecordRaw[] = [
   {
     path: '/login',
     name: 'login',
-    component: () => import('@/views/HomeView.vue'),
-    meta: { layout: 'HomeLayout' },
+    component: () => import('@/views/LoginView.vue'),
+    meta: { layout: 'SimpleLayout', layoutProps: { elevated: false } },
     beforeEnter: [RouteMiddlewares.useNotAuthOnly],
   },
   {
     path: '/registration',
     name: 'registration',
-    component: () => import('@/views/HomeView.vue'),
-    meta: { layout: 'HomeLayout' },
+    component: () => import('@/views/RegistrationView.vue'),
+    meta: { layout: 'SimpleLayout', layoutProps: { elevated: false } },
     beforeEnter: [RouteMiddlewares.useNotAuthOnly],
   },
   {
     path: '/restore',
     name: 'restore',
     component: () => import('@/views/RestoreView.vue'),
-    meta: { layout: 'SimpleLayout', layoutProps: { title: 'restore.layout.title' } },
+    meta: { layout: 'SimpleLayout', layoutProps: { elevated: false } },
     beforeEnter: [RouteMiddlewares.useNotAuthOnly],
   },
   {
@@ -47,7 +47,7 @@ export const routes: RouteRecordRaw[] = [
     path: '/info/:id',
     name: 'infoId',
     component: () => import('@/views/InfoByIdView.vue'),
-    meta: { layout: 'SimpleLayout', layoutProps: { title: 'infoById.layout.title' } },
+    meta: { layout: 'SimpleLayout', layoutProps: { elevated: false, title: 'infoById.layout.title' } },
     beforeEnter: [RouteMiddlewares.useAuthGuard, RouteMiddlewares.useRoleGuard(['admin'])],
   },
   {

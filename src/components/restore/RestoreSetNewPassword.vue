@@ -1,6 +1,6 @@
 <template>
   <QForm ref="formRef" :class="$style.settings" @submit.prevent="request(password, link)">
-    <h5 class="q-pa-lg text-center">{{ t('restore.link.form.title') }}</h5>
+    <h4 class="q-pa-lg text-center">{{ t('restore.link.form.title') }}</h4>
     <QInput
       v-model="password"
       standout

@@ -1,8 +1,5 @@
 <template>
   <div class="column items-center q-pa-sm">
-    <QDialog v-model="modal" no-route-dismiss @before-hide="$router.push('/')">
-      <component :is="component" @close="onClose" />
-    </QDialog>
     <FormAssistance
       v-model="form"
       :class="$style.form"
@@ -27,20 +24,13 @@
 <script setup lang="ts">
 import type { AssistanceResponse } from '@/types';
 import FormAssistance from '~/FormAssistance.vue';
-import FormReg from '~/FormReg.vue';
-import FormLog from '~/FormLog.vue';
-import { ref, watch, shallowRef } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
+import { ref } from 'vue';
 import { useFetch, useTelegram } from '@/hooks';
 import { AssistanceService, BotService } from '@/api/services';
 import { useI18n } from 'vue-i18n';
 
 const { t } = useI18n();
 const { tg, isOpenedFromTg } = useTelegram();
-const router = useRouter();
-const route = useRoute();
-const modal = ref(false);
-const component = shallowRef<typeof FormLog | typeof FormReg>(FormLog);
 const form = ref({
   name: '',
   surname: '',
@@ -79,22 +69,6 @@ const { request, loading } = useFetch<AssistanceResponse, (typeof AssistanceServ
     },
   }
 );
-
-watch(
-  () => route.name,
-  () => {
-    if (route.name === 'login' || route.name === 'registration') {
-      modal.value = true;
-      route.name === 'login' ? (component.value = FormLog) : (component.value = FormReg);
-    }
-  },
-  { immediate: true }
-);
-
-function onClose() {
-  modal.value = false;
-  router.push('/');
-}
 </script>
 
 <style lang="scss" module>

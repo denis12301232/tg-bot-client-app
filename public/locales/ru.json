@@ -295,9 +295,6 @@
         }
     },
     "account": {
-        "layout": {
-            "title": "Настройки аккаунта"
-        },
         "title": "Ваш аккаунт",
         "form": {
             "fields": {
@@ -759,14 +756,11 @@
         }
     },
     "restore": {
-        "layout": {
-            "title": "Восстановить"
-        },
         "messages": {
             "link": "Ссылка для смены пароля отправлена на"
         },
         "form": {
-            "title": "Восстановление",
+            "title": "Ваш e-mail",
             "fields": {
                 "email": {
                     "placeholder": "E-mail",

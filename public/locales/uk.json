@@ -295,9 +295,6 @@
         }
     },
     "account": {
-        "layout": {
-            "title": "Налаштування облікового запису"
-        },
         "title": "Ваш обліковий запис",
         "form": {
             "fields": {
@@ -759,14 +756,11 @@
         }
     },
     "restore": {
-        "layout": {
-            "title": "Відновити"
-        },
         "messages": {
             "link": "Посилання для зміни пароля відправлено на"
         },
         "form": {
-            "title": "Відновлення",
+            "title": "Ваш e-mail",
             "fields": {
                 "email": {
                     "placeholder": "E-mail",

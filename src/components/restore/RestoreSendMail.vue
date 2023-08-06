@@ -1,6 +1,6 @@
 <template>
   <QForm ref="formRef" :class="$style.settings" @submit="sendMail(email)">
-    <h5 class="q-pa-lg text-center">{{ t('restore.form.title') }}</h5>
+    <h4 class="q-pa-lg text-center">{{ t('restore.form.title') }}</h4>
     <QInput
       v-model="email"
       class="full-width"

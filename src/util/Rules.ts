@@ -1,9 +1,8 @@
-import type { I18n, Langs } from '@/types';
 import type { ComposerTranslation } from 'vue-i18n';
 import Validate from './Validate';
 
 export default class Rules {
-  static assistance(t: ComposerTranslation<I18n, Langs>) {
+  static assistance(t: ComposerTranslation) {
     return {
       surname: [(v: string) => Validate.required(v) || t('home.form.fields.surname.errors.required')],
       name: [(v: string) => Validate.required(v) || t('home.form.fields.name.errors.required')],
@@ -31,14 +30,14 @@ export default class Rules {
     };
   }
 
-  static login(t: ComposerTranslation<I18n, Langs>) {
+  static login(t: ComposerTranslation) {
     return {
       loginOrEmail: [(v: string) => Validate.required(v) || t('login.form.fields.loginOrEmail.errors.required')],
       password: [(v: string) => Validate.required(v) || t('login.form.fields.password.errors.required')],
     };
   }
 
-  static registration(t: ComposerTranslation<I18n, Langs>) {
+  static registration(t: ComposerTranslation) {
     return {
       name: [
         (v: string) => Validate.required(v) || t('registration.form.fields.name.errors.required'),

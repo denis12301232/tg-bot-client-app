@@ -134,8 +134,7 @@
 <script setup lang="ts">
 import UserAvatar from '~/UserAvatar.vue';
 import SetLang from '~/SetLang.vue';
-import { ref, watch } from 'vue';
-import { useRoute } from 'vue-router';
+import { ref } from 'vue';
 import { useStore, useChatStore } from '@/stores';
 import { useTelegram } from '@/hooks';
 import { ENV } from '@/util';
@@ -146,17 +145,9 @@ const icon = new URL('/icon.jpg', import.meta.url).href;
 const { t } = useI18n();
 const { isOpenedFromTg } = useTelegram();
 const store = useStore();
-const route = useRoute();
 const { unread } = storeToRefs(useChatStore());
 const leftDrawerOpen = ref(false);
 const rightDrawerOpen = ref(false);
-const modal = ref(false);
-
-watch([() => route.name], () => {
-  if (route.name === 'login' || route.name === 'registration') {
-    modal.value = true;
-  }
-});
 
 function toggleLeftDrawer() {
   leftDrawerOpen.value = !leftDrawerOpen.value;

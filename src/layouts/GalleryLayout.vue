@@ -1,6 +1,6 @@
 <template>
   <QLayout view="hHh lpR fFf">
-    <QHeader class="header" reveal elevated height-hint="98">
+    <QHeader class="header" reveal bordered height-hint="98">
       <QToolbar>
         <QBtn dense flat round icon="eva-arrow-back" color="primary" @click="$router.push('/')" />
         <QToolbarTitle>{{ t('gallery.layout.title') }}</QToolbarTitle>

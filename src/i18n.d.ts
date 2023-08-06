@@ -286,9 +286,6 @@ declare module 'vue-i18n' {
       };
     };
     account: {
-      layout: {
-        title: string;
-      };
       title: string;
       form: {
         fields: {
@@ -742,9 +739,6 @@ declare module 'vue-i18n' {
       };
     };
     restore: {
-      layout: {
-        title: string;
-      };
       messages: {
         link: string;
       };
