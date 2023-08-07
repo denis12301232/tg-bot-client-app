@@ -521,6 +521,46 @@
             "untaken": "Not selected"
         }
     },
+    "taskId": {
+        "layout": {
+            "title": "Task"
+        },
+        "tabs": {
+            "task": "Task",
+            "subtasks": "Subtasks"
+        },
+        "task": {
+            "card": {
+                "title": "Title",
+                "tags": "tags",
+                "status": "Status",
+                "date": "Date created",
+                "takenBy": "Taken the task"
+            }
+        },
+        "subtasks": {
+            "table": {
+                "title": "List",
+                "columns": {
+                    "title": "Title",
+                    "description": "Description",
+                    "status": "Status",
+                    "extraInfo": "Extra Info"
+                }
+            },
+            "move": {
+                "title": "Tasks"
+            }
+        },
+        "messages": {
+            "untaken": "Not selected"
+        },
+        "hints": {
+            "download": "Download",
+            "move": "Move selected",
+            "delete": "Delete selected"
+        }
+    },
     "meets": {
         "layout": {
             "title": "Meetings"

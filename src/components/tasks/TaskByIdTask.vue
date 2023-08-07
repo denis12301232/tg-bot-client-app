@@ -5,11 +5,11 @@
     </QCard>
     <QCard v-else :class="[$style.card, 'q-mt-lg']">
       <QCardSection class="q-pb-none">
-        <h6 class="text-center text-subtitle">{{ t('tasks.byId.task.title') }}</h6>
+        <h6 class="text-center text-subtitle">{{ t('taskId.task.card.title') }}</h6>
         <div class="text-center q-my-sm text-bold text-indigo">{{ task.title }}</div>
       </QCardSection>
       <QCardSection class="q-pa-none">
-        <h6 class="text-center text-subtitle">{{ t('tasks.byId.task.tags') }}</h6>
+        <h6 class="text-center text-subtitle">{{ t('taskId.task.card.tags') }}</h6>
         <div class="row justify-center q-my-sm">
           <QChip
             v-for="(tag, index) in task.tags"
@@ -25,20 +25,20 @@
         </div>
       </QCardSection>
       <QCardSection class="q-pa-none">
-        <h6 class="text-center text-subtitle">{{ t('tasks.byId.task.status') }}</h6>
+        <h6 class="text-center text-subtitle">{{ t('taskId.task.card.status') }}</h6>
         <div class="row justify-center q-my-sm">
-          <QBadge :label="task.status" :color="Util.setStatusColor(task.status)" />
+          <QBadge :label="t(`tasks.statuses.${task.status}`)" :color="Util.setStatusColor(task.status)" />
         </div>
       </QCardSection>
       <QCardSection class="q-pa-none">
-        <h6 class="text-center text-subtitle">{{ t('tasks.byId.task.date') }}</h6>
+        <h6 class="text-center text-subtitle">{{ t('taskId.task.card.date') }}</h6>
         <div class="text-center q-my-sm">{{ new Date(task.createdAt || '').toLocaleDateString() }}</div>
       </QCardSection>
       <QCardSection class="q-pt-none">
-        <h6 class="text-center text-subtitle">{{ t('tasks.byId.task.take') }}</h6>
+        <h6 class="text-center text-subtitle">{{ t('taskId.task.card.takenBy') }}</h6>
         <div class="text-center q-my-sm text-bold text-positive">
           {{ task?.user && task.user.name }}
-          <span v-if="!task.user" class="text-negative text-bold">Не взята</span>
+          <span v-if="!task.user" class="text-negative text-bold">{{ t('taskId.messages.untaken') }}</span>
         </div>
       </QCardSection>
     </QCard>

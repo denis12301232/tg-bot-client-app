@@ -7,22 +7,22 @@
       :loading="loading || isMoving"
       :columns="columns"
       :rows="tasks"
-      :pagination-label="(f, l, a) => `${f}-${l} ${t('table.of')} ${a}`"
-      :loading-label="t('table.loading')"
-      :no-data-label="t('table.noData')"
-      :rows-per-page-label="t('table.show')"
-      :no-results-label="t('table.notFound')"
-      :selected-rows-label="(n) => `${t('table.selected')} ${n}`"
+      :pagination-label="(f, l, a) => `${f}-${l} ${t('extra.table.of')} ${a}`"
+      :loading-label="t('extra.table.loading')"
+      :no-data-label="t('extra.table.noData')"
+      :rows-per-page-label="t('extra.table.show')"
+      :no-results-label="t('extra.table.notFound')"
+      :selected-rows-label="(n) => `${t('extra.table.selected')} ${n}`"
       selection="single"
       row-key="_id"
-      title="Задачи"
+      :title="t('taskId.subtasks.move.title')"
       separator="cell"
       @request="request"
     >
       <template #header="scope">
         <QTr>
-          <QTh
-            ><QBtn
+          <QTh>
+            <QBtn
               :disable="!selected.length"
               round
               dense
@@ -31,7 +31,7 @@
               color="teal"
               @click="moveSubtask(subtaskId, taskId, selected.at(0)?._id || '')"
             >
-              <QTooltip class="bg-indigo" :offset="[10, 10]" :delay="1000">Переместить</QTooltip>
+              <QTooltip class="bg-indigo" :offset="[10, 10]" :delay="1000">{{ t('taskId.hints.move') }}</QTooltip>
             </QBtn>
           </QTh>
           <QTh v-for="col in scope.cols" :key="col.label" :style="col.headerStyle">{{ col.label }}</QTh>
@@ -39,7 +39,7 @@
       </template>
       <template #body="scope: { row: ITask, selected: boolean, expand: boolean }">
         <QTr :key="scope.row._id">
-          <QTd>
+          <QTd auto-width>
             <QCheckbox v-model="scope.selected" :disable="scope.row._id === taskId" />
           </QTd>
           <QTd>{{ scope.row.title }}</QTd>
@@ -55,7 +55,7 @@
           </QTd>
           <QTd>
             <div class="row justify-center">
-              <QBadge :label="scope.row.status" :color="Util.setStatusColor(scope.row.status)" />
+              <QBadge :label="t(`tasks.statuses.${scope.row.status}`)" :color="Util.setStatusColor(scope.row.status)" />
             </div>
           </QTd>
         </QTr>
@@ -112,9 +112,9 @@ const { request: moveSubtask, loading: isMoving } = useFetch(TaskService.moveSub
   afterResponse: () => emit('move', props.subtaskId),
 });
 const columns: QTable['columns'] = [
-  { name: 'title', required: true, label: 'Название', align: 'center', field: 'title' },
-  { name: 'tags', label: 'Теги', align: 'center', field: 'tags' },
-  { name: 'status', label: 'Статус', align: 'center', field: 'status' },
+  { name: 'title', required: true, label: t('taskId.task.card.title'), align: 'center', field: 'title' },
+  { name: 'tags', label: t('taskId.task.card.tags'), align: 'center', field: 'tags' },
+  { name: 'status', label: t('taskId.task.card.status'), align: 'center', field: 'status' },
 ];
 
 onMounted(() => request({ pagination: pagination.value }));

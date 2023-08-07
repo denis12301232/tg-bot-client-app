@@ -85,7 +85,7 @@ export const routes: RouteRecordRaw[] = [
     path: '/task/:id',
     name: 'taskById',
     component: () => import('@/views/TaskByIdView.vue'),
-    meta: { layout: 'SimpleLayout', layoutProps: { title: 'tasks.byId.title' } },
+    meta: { layout: 'SimpleLayout', layoutProps: { title: 'taskId.layout.title', elevated: false } },
     beforeEnter: [RouteMiddlewares.useAuthGuard],
   },
   {

@@ -506,6 +506,46 @@ declare module 'vue-i18n' {
         untaken: string;
       };
     };
+    taskId: {
+      layout: {
+        title: string;
+      };
+      tabs: {
+        task: string;
+        subtasks: string;
+      };
+      task: {
+        card: {
+          title: string;
+          tags: string;
+          status: string;
+          date: string;
+          takenBy: string;
+        };
+      };
+      subtasks: {
+        table: {
+          title: string;
+          columns: {
+            title: string;
+            description: string;
+            status: string;
+            extraInfo: string;
+          };
+        };
+        move: {
+          title: string;
+        };
+      };
+      messages: {
+        untaken: string;
+      };
+      hints: {
+        download: string;
+        move: string;
+        delete: string;
+      };
+    };
     meets: {
       layout: {
         title: string;

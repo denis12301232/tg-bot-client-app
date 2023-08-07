@@ -521,6 +521,46 @@
             "untaken": "Не выбрана"
         }
     },
+    "taskId": {
+        "layout": {
+            "title": "Задача"
+        },
+        "tabs": {
+            "task": "Задача",
+            "subtasks": "Подзадачи"
+        },
+        "task": {
+            "card": {
+                "title": "Название",
+                "tags": "Теги",
+                "status": "Статус",
+                "date": "Дата создания",
+                "takenBy": "Взял задачу"
+            }
+        },
+        "subtasks": {
+            "table": {
+                "title": "Список",
+                "columns": {
+                    "title": "Название",
+                    "description": "Описание",
+                    "status": "Статус",
+                    "extraInfo": "Дополнительная информация"
+                }
+            },
+            "move": {
+                "title": "Задачи"
+            }
+        },
+        "messages": {
+            "untaken": "Не выбрана"
+        },
+        "hints": {
+            "download": "Скачать",
+            "move": "Переместить выбранные",
+            "delete": "Удалить выбранные"
+        }
+    },
     "meets": {
         "layout": {
             "title": "Встречи"

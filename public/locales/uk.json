@@ -521,6 +521,46 @@
             "untaken": "Не вибрано"
         }
     },
+    "taskId": {
+        "layout": {
+            "title": "Завдання"
+        },
+        "tabs": {
+            "task": "Завдання",
+            "subtasks": "Підзавдання"
+        },
+        "task": {
+            "card": {
+                "title": "Назва",
+                "tags": "Теги",
+                "status": "Статус",
+                "date": "Дата створення",
+                "takenBy": "Взяв завдання"
+            }
+        },
+        "subtasks": {
+            "table": {
+                "title": "Список",
+                "columns": {
+                    "title": "Назва",
+                    "description": "Опис",
+                    "status": "Статус",
+                    "extraInfo": "Додаткова інформація"
+                }
+            },
+            "move": {
+                "title": "Завдання"
+            }
+        },
+        "messages": {
+            "untaken": "Не вибрано"
+        },
+        "hints": {
+            "download": "Завантажити",
+            "move": "Перемістити вибрані",
+            "delete": "Видалити вибрані"
+        }
+    },
     "meets": {
         "layout": {
             "title": "Зустрічі"

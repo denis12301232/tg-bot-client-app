@@ -12,63 +12,58 @@
       :loading="isUpdating || isDeleting"
       row-key="_id"
       separator="cell"
-      :pagination-label="(f, l, a) => `${f}-${l} ${t('table.of')} ${a}`"
-      :loading-label="t('table.loading')"
-      :no-data-label="t('table.noData')"
-      :rows-per-page-label="t('table.show')"
-      :no-results-label="t('table.notFound')"
-      :selected-rows-label="(n) => `${t('table.selected')} ${n}`"
+      :pagination-label="(f, l, a) => `${f}-${l} ${t('extra.table.of')} ${a}`"
+      :loading-label="t('extra.table.loading')"
+      :no-data-label="t('extra.table.noData')"
+      :rows-per-page-label="t('extra.table.show')"
+      :no-results-label="t('extra.table.notFound')"
+      :selected-rows-label="(n) => `${t('extra.table.selected')} ${n}`"
       title="Список"
-      selection="single"
+      selection="multiple"
     >
       <template #top-right>
-        <QBtn
-          v-if="subtasks.length"
-          :loading="isCsvCreating"
-          color="teal"
-          icon-right="eva-download-outline"
-          label="CSV"
-          no-caps
-          @click="createTaskCsv(taskId)"
-        />
+        <QBtnGroup flat>
+          <QBtn
+            icon="eva-download-outline"
+            round
+            dense
+            flat
+            color="positive"
+            :disable="!subtasks.length || isCsvCreating"
+            @click="createTaskCsv(taskId)"
+          >
+            <QTooltip class="bg-indigo" :offset="[10, 10]" :delay="1000">
+              {{ t('taskId.hints.download') }}
+            </QTooltip>
+          </QBtn>
+          <QBtn
+            :disable="!selected.length"
+            round
+            dense
+            flat
+            icon="eva-diagonal-arrow-right-up-outline"
+            color="deep-orange"
+            @click="openModal"
+          >
+            <QTooltip class="bg-indigo" :offset="[10, 10]" :delay="1000">
+              {{ t('taskId.hints.move') }}
+            </QTooltip>
+          </QBtn>
+          <QBtn :disable="!selected.length" round dense flat icon="eva-trash" color="negative" @click="onDeleteSubtask">
+            <QTooltip class="bg-indigo" :offset="[10, 10]" :delay="1000">
+              {{ t('taskId.hints.delete') }}
+            </QTooltip>
+          </QBtn>
+        </QBtnGroup>
       </template>
-      <template #header="scope">
-        <QTr>
-          <QTh>
-            <QBtn
-              :disable="!selected.length"
-              round
-              dense
-              flat
-              icon="eva-diagonal-arrow-right-up-outline"
-              color="teal"
-              @click="openModal"
-            >
-              <QTooltip class="bg-indigo" :offset="[10, 10]" :delay="1000">
-                {{ t('tasks.byId.subtasks.hints.move') }}
-              </QTooltip>
-            </QBtn>
-            <QBtn
-              :disable="!selected.length"
-              round
-              dense
-              flat
-              icon="eva-trash"
-              color="negative"
-              @click="onDeleteSubtask"
-            >
-              <QTooltip class="bg-indigo" :offset="[10, 10]" :delay="1000">{{
-                t('tasks.byId.subtasks.hints.delete')
-              }}</QTooltip>
-            </QBtn>
-          </QTh>
-          <QTh v-for="col in scope.cols" :key="col.label" :style="col.headerStyle">{{ col.label }}</QTh>
-        </QTr>
+      <template #header-selection="scope">
+        <QCheckbox v-model="scope.selected" />
       </template>
+
       <template #body="scope: { row: ISubtask, selected: boolean }">
         <QTr :key="scope.row._id">
           <QTd auto-width>
-            <div class="row justify-center"><QCheckbox v-model="scope.selected" /></div>
+            <QCheckbox v-model="scope.selected" />
           </QTd>
           <QTd :class="$style.cut_text">{{ scope.row.title }}</QTd>
           <QTd :class="$style.cut_text">{{ scope.row.description }}</QTd>
@@ -76,7 +71,7 @@
             <QPopupEdit
               v-model="scope.row.status"
               #="data"
-              :title="t('tasks.byId.subtasks.table.edit.status')"
+              :title="t('taskId.subtasks.table.columns.status')"
               @save="(v) => updateSubtask({ subtask_id: scope.row._id, status: v })"
             >
               <QSelect
@@ -103,7 +98,7 @@
             <QPopupEdit
               v-model="scope.row.cause"
               #="data"
-              :title="t('tasks.byId.subtasks.table.edit.cause')"
+              :title="t('taskId.subtasks.table.columns.extraInfo')"
               @save="(v) => updateSubtask({ subtask_id: scope.row._id, cause: v })"
             >
               <QInput
@@ -170,28 +165,28 @@ const { request: deleteSubtask, loading: isDeleting } = useFetch(TaskService.del
 const columns = computed<QTable['columns']>(() => [
   {
     name: 'title',
-    label: t('tasks.byId.subtasks.table.columns.title'),
+    label: t('taskId.subtasks.table.columns.title'),
     align: 'center',
     field: 'title',
     headerStyle: 'font-size: 1.1em;',
   },
   {
     name: 'description',
-    label: t('tasks.byId.subtasks.table.columns.description'),
+    label: t('taskId.subtasks.table.columns.description'),
     align: 'center',
     field: 'description',
     headerStyle: 'font-size: 1.1em;',
   },
   {
     name: 'status',
-    label: t('tasks.byId.subtasks.table.columns.status'),
+    label: t('taskId.subtasks.table.columns.status'),
     align: 'center',
     field: 'status',
     headerStyle: 'font-size: 1.1em;',
   },
   {
     name: 'cause',
-    label: t('tasks.byId.subtasks.table.columns.cause'),
+    label: t('taskId.subtasks.table.columns.extraInfo'),
     align: 'center',
     field: 'cause',
     headerStyle: 'font-size: 1.1em;',
