@@ -37,13 +37,13 @@ export default class Time {
     if (nowT.year === dateT.year && nowT.month === dateT.month && nowT.day === dateT.day) {
       return `${this.convertHours(dateT.hours)}:${this.convertMinutes(dateT.minutes)}`;
     } else if (nowT.year === dateT.year) {
-      return `${this.convertDay(dateT.day)}.${this.convertMonth(dateT.month)}, в ${this.convertHours(
+      return `${this.convertDay(dateT.day)}.${this.convertMonth(dateT.month)} ${this.convertHours(
         dateT.hours
       )}:${this.convertMinutes(dateT.minutes)}`;
     } else {
       return `${this.convertDay(dateT.day)}.${this.convertMonth(dateT.month)}.${this.convertYear(
         dateT.year
-      )}, в ${this.convertHours(dateT.hours)}:${this.convertMinutes(dateT.minutes)} `;
+      )} ${this.convertHours(dateT.hours)}:${this.convertMinutes(dateT.minutes)} `;
     }
   }
 

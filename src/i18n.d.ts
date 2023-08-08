@@ -632,6 +632,8 @@ declare module 'vue-i18n' {
         me: string;
         audio: string;
         image: string;
+        deleteMessage: string;
+        copyMessage: string;
       };
       search: {
         placeholder: string;

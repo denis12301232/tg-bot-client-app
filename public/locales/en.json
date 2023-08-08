@@ -646,7 +646,9 @@
             "typing": "typing",
             "me": "I",
             "audio": "Audio message",
-            "image": "Photo"
+            "image": "Photo",
+            "deleteMessage": "Delete message",
+            "copyMessage": "Copy text"
         },
         "search": {
             "placeholder": "Search",

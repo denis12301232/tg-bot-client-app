@@ -15,17 +15,17 @@
       <div v-for="msg in messages" :class="{ [$style.selected]: selectedMessages.has(msg._id) }" :key="msg._id">
         <QMenu touch-position context-menu @before-show="onShowContext(msg._id)" @before-hide="onHideContext(msg._id)">
           <QList class="q-pa-sm" dense style="min-width: 100px">
-            <QItem :class="$style.menu_item" clickable v-close-popup>
-              <QItemSection avatar>
-                <QIcon color="indigo" name="eva-copy" />
+            <QItem :class="$style.menu_item" clickable v-close-popup @click="Util.copyTextToClipboard(msg.text)">
+              <QItemSection avatar class="q-px-sm" style="min-width: 20px">
+                <QIcon name="eva-copy" />
               </QItemSection>
-              <QItemSection>Copy</QItemSection>
+              <QItemSection>{{ t('chat.messages.copyMessage') }}</QItemSection>
             </QItem>
-            <QItem :class="$style.menu_item" clickable v-close-popup>
-              <QItemSection avatar>
+            <QItem v-if="!currentChat?.group" v-close-popup :class="$style.menu_item" clickable @click="onDelete">
+              <QItemSection avatar class="q-px-sm" style="min-width: 20px">
                 <QIcon color="negative" name="eva-trash" />
               </QItemSection>
-              <QItemSection>Delete</QItemSection>
+              <QItemSection>{{ t('chat.messages.deleteMessage') }}</QItemSection>
             </QItem>
           </QList>
         </QMenu>
@@ -82,7 +82,7 @@ import Chat from '~/chat';
 import { ref, computed, watch, nextTick } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useStore, useChatStore } from '@/stores';
-import { Time } from '@/util';
+import { Time, Util } from '@/util';
 import { useI18n } from 'vue-i18n';
 
 defineProps<{
@@ -113,7 +113,7 @@ watch(
 async function onLoad(index: number, done: (stop?: boolean | undefined) => void) {
   if (currentChat.value && currentChat.value.total > messages.value.length) {
     loading.value = true;
-    await chatStore.onOpenChat(currentChatId.value!, index, limit);
+    await chatStore.getChatMessages(currentChatId.value!, limit);
     loading.value = false;
     return done();
   }
@@ -135,11 +135,17 @@ function isSended(author: string) {
 
 function onShowContext(id: string) {
   selectedMessages.value.add(id);
-  console.log('open', id);
 }
 
 function onHideContext(id: string) {
   selectedMessages.value.delete(id);
+}
+
+function onDelete() {
+  if (currentChatId.value) {
+    const data = { chatId: currentChatId.value, msgIds: Array.from(selectedMessages.value) };
+    chatStore.socket.emit('chat:messages-delete', data);
+  }
 }
 </script>
 
@@ -151,6 +157,7 @@ function onHideContext(id: string) {
 
 .menu_item {
   border-radius: 10px;
+  padding: 0 !important;
 }
 
 .selected {

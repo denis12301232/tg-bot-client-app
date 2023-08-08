@@ -11,7 +11,7 @@ export default function useMessanger(socket: SocketTyped) {
       new Map([...chats.value.entries()].sort((a, b) => (new Date(a[1].updatedAt) > new Date(b[1].updatedAt) ? -1 : 1)))
   );
   const unread = computed(() => [...chats.value.entries()].reduce((sum, [, chat]) => (chat.unread ? ++sum : sum), 0));
-    
+
   useMessangerEvents({ chats, currentChatId }).forEach((func, event) => socket.on(event, func));
 
   watchEffect(() => {
@@ -21,20 +21,16 @@ export default function useMessanger(socket: SocketTyped) {
     }
   });
 
-  async function onOpenChat(chat_id: string, page: number = 1, limit: number = 5) {
-    currentChatId.value = chat_id;
-    if (currentChat.value) {
-      const length = currentChat.value.messages.length;
-      const slice = currentChat.value.total > length && length < limit ? length : 0;
-      const data = await ChatService.openChat(chat_id, page, limit).json<{
-        messages: IMessage[];
-        chat_id: string;
-      }>();
-      const chat = chats.value.get(chat_id);
-      if (chat) {
-        chat.messages.splice(0, slice, ...data.messages);
-      }
+  async function getChatMessages(chatId: string, limit: number = 10) {
+    const chat = chats.value.get(chatId);
+
+    if (!chat) {
+      return;
     }
+
+    const skip = chat.messages.length;
+    const messages = await ChatService.getChatMessages(chatId, skip, limit).json<IMessage[]>();
+    chat.messages.splice(0, 0, ...messages);
   }
 
   async function onGetUserChats() {
@@ -42,7 +38,7 @@ export default function useMessanger(socket: SocketTyped) {
     chats.value = data.reduce((map, chat) => map.set(chat._id, chat), new Map<string, ChatResponse>());
   }
 
-  return { chats, currentChatId, currentChat, sortedChats, onGetUserChats, onOpenChat, unread };
+  return { chats, currentChatId, currentChat, sortedChats, onGetUserChats, unread, getChatMessages };
 }
 
 function useMessangerEvents({
@@ -55,6 +51,7 @@ function useMessangerEvents({
   const timers = new Map<string, number>();
   const list = {
     'chat:message': onNewMessage,
+    'chat:messages-delete': onMessagesDelete,
     'chat:read-message': onReadMessage,
     'chat:user-status': onUpdateStatus,
     'chat:invite-to-group': onInviteToGroup,
@@ -73,6 +70,14 @@ function useMessangerEvents({
     } else {
       const data = await ChatService.getUserChatById(message.chat_id).json<ChatResponse>();
       chats.value.set(data._id, data);
+    }
+  }
+
+  function onMessagesDelete(chatId: string, msgIds: string[]) {
+    const chat = chats.value.get(chatId);
+    if (chat) {
+      chat.total = chat.total - msgIds.length;
+      chat.messages = chat.messages.filter((msg) => !msgIds.includes(msg._id));
     }
   }
 
@@ -105,7 +110,7 @@ function useMessangerEvents({
     if (chat) {
       clearTimeout(timers.get(chat_id));
       !Object.prototype.hasOwnProperty.call(chat.typing, user_id) && (chat.typing[user_id] = user_name);
-      const timer = setTimeout(() => delete chat.typing[user_id], 2000);
+      const timer = setTimeout(() => delete chat.typing[user_id], 1000);
       timers.set(chat_id, timer);
     }
   }

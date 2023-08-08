@@ -1,10 +1,8 @@
 import { $api } from '@/api';
 
 export default class ChatService {
-  static openChat(chat_id: string, page: number, limit: number = 10) {
-    return $api.get('chat/open_chat', {
-      searchParams: { chat_id, page, limit },
-    });
+  static getChatMessages(chatId: string, skip: number, limit: number = 10) {
+    return $api.get('chat/messages', { searchParams: { chatId, skip, limit } });
   }
 
   static getUserChats() {
