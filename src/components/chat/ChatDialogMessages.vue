@@ -6,60 +6,70 @@
     {{ t('chat.messages.none') }}
   </div>
   <QScrollArea v-else ref="scroll" class="fit q-pt-sm" :thumb-style="{ width: '7px' }">
-    <QInfiniteScroll reverse :key="String(currentChatId)" :offset="10" :initial-index="initialIndex" @load="onLoad">
+    <QInfiniteScroll reverse :key="`${currentChatId}`" :offset="10" :initial-index="initialIndex" @load="onLoad">
       <template #loading>
         <div v-if="currentChat?.total || 0 > messages.length" class="row justify-center q-my-md">
           <QSpinner color="primary" name="dots" size="40px" />
         </div>
       </template>
-      <QChatMessage
-        class="q-px-md"
-        v-for="msg in messages"
-        :sent="msg.author === user?._id"
-        :key="msg._id"
-        :bg-color="msg.author === user?._id ? 'indigo-6' : 'blue-grey'"
-        text-color="white"
-      >
-        <template #name v-if="type === 'group'">
-          <div class="text-bold text-deep-orange">
-            {{ msg.author === user?._id ? t('chat.messages.me') : getAuthor(msg)?.name }}
-          </div>
-        </template>
-        <template #avatar v-if="type === 'group'">
-          <UserAvatar
-            :name="getAuthor(msg)?.name"
-            :avatar="getAuthor(msg)?.avatar"
-            :class="[
-              'q-message-avatar',
-              msg.author === user?._id ? 'q-message-avatar--sent' : 'q-message-avatar--received',
-            ]"
-            size="30px"
-          />
-        </template>
-        <template #stamp>
-          <div class="row justify-between items-center q-mt-sm cursor-pointer">
-            <div class="q-pr-md">{{ Time.showFilteredDate(new Date(msg.createdAt)) }}</div>
-            <QIcon
-              v-if="msg.author === user?._id"
-              :name="msg.read.length > 1 ? 'eva-done-all-outline' : 'eva-checkmark-outline'"
-            />
-          </div>
-        </template>
-        <template #default>
-          <div :class="{ [$style.msg]: msg.attachments?.length }">
-            <span v-if="msg.text" style="font-size: 1.2em">{{ msg.text }}</span>
-            <Chat.MessageVoice
-              v-if="msg.attachments?.at(0)?.ext === 'webm'"
-              :filename="`${msg.attachments.at(0)?.name}.${msg.attachments.at(0)?.ext}`"
-            />
-            <Chat.MessageImage
-              v-else-if="msg.attachments?.at(0)?.mime.includes('image/')"
-              :filenames="msg.attachments.map((attachment) => `${attachment?.name}.${attachment?.ext}`)"
-              @open="onOpenImage"
-            />
-          </div>
-        </template>
-      </QChatMessage>
+      <div v-for="msg in messages" :class="{ [$style.selected]: selectedMessages.has(msg._id) }" :key="msg._id">
+        <QMenu touch-position context-menu @before-show="onShowContext(msg._id)" @before-hide="onHideContext(msg._id)">
+          <QList class="q-pa-sm" dense style="min-width: 100px">
+            <QItem :class="$style.menu_item" clickable v-close-popup>
+              <QItemSection avatar>
+                <QIcon color="indigo" name="eva-copy" />
+              </QItemSection>
+              <QItemSection>Copy</QItemSection>
+            </QItem>
+            <QItem :class="$style.menu_item" clickable v-close-popup>
+              <QItemSection avatar>
+                <QIcon color="negative" name="eva-trash" />
+              </QItemSection>
+              <QItemSection>Delete</QItemSection>
+            </QItem>
+          </QList>
+        </QMenu>
+        <QChatMessage
+          class="q-px-md"
+          :sent="isSended(msg.author)"
+          :bg-color="isSended(msg.author) ? 'indigo-6' : 'blue-grey'"
+          text-color="white"
+        >
+          <template #name v-if="type === 'group'">
+            <div class="text-bold text-deep-orange">
+              {{ isSended(msg.author) ? t('chat.messages.me') : getAuthor(msg)?.name }}
+            </div>
+          </template>
+          <template #avatar v-if="type === 'group'">
+            <div :class="msg.author === user?._id ? 'q-pl-sm' : 'q-pr-sm'">
+              <UserAvatar :name="getAuthor(msg)?.name" :avatar="getAuthor(msg)?.avatar" size="50px" />
+            </div>
+          </template>
+          <template #stamp>
+            <div class="row justify-between items-center q-mt-sm cursor-pointer">
+              <div class="q-pr-md">{{ Time.showFilteredDate(new Date(msg.createdAt)) }}</div>
+              <QIcon
+                v-if="isSended(msg.author)"
+                :name="msg.read.length > 1 ? 'eva-done-all-outline' : 'eva-checkmark-outline'"
+              />
+            </div>
+          </template>
+          <template #default>
+            <div :class="{ [$style.msg]: msg.attachments?.length }">
+              <span v-if="msg.text" style="font-size: 1.2em">{{ msg.text }}</span>
+              <Chat.MessageVoice
+                v-if="msg.attachments?.at(0)?.mime.includes('webm')"
+                :filename="`${msg.attachments.at(0)?.name}.${msg.attachments.at(0)?.ext}`"
+              />
+              <Chat.MessageImage
+                v-else-if="msg.attachments?.at(0)?.mime.includes('image/')"
+                :filenames="msg.attachments.map((attachment) => `${attachment?.name}.${attachment?.ext}`)"
+                @open="onOpenImage"
+              />
+            </div>
+          </template>
+        </QChatMessage>
+      </div>
     </QInfiniteScroll>
   </QScrollArea>
 </template>
@@ -87,14 +97,16 @@ const modal = ref(false);
 const src = ref('');
 const scroll = ref<QScrollArea | null>(null);
 const loading = ref(false);
+const selectedMessages = ref<Set<string>>(new Set());
 const messages = computed(() => currentChat.value?.messages || []);
 const initialIndex = computed(() => (messages.value.length > limit ? Math.ceil(messages.value.length / limit) : 0));
 const limit = 10;
 
 watch(
   () => currentChat.value?.total,
-  () => {
-    nextTick().then(() => setTimeout(() => scroll.value?.setScrollPercentage('vertical', 1), 0));
+  async () => {
+    await nextTick();
+    setTimeout(() => scroll.value?.setScrollPercentage('vertical', 1));
   }
 );
 
@@ -109,14 +121,25 @@ async function onLoad(index: number, done: (stop?: boolean | undefined) => void)
 }
 
 function getAuthor(msg: IMessage) {
-  return msg.author === user.value?._id
-    ? user.value
-    : currentChat.value?.users.find((user) => user._id === msg.author)!;
+  return isSended(msg.author) ? user.value : currentChat.value?.users.find((user) => user._id === msg.author);
 }
 
 function onOpenImage(source: string) {
   modal.value = true;
   src.value = source;
+}
+
+function isSended(author: string) {
+  return author === user.value?._id;
+}
+
+function onShowContext(id: string) {
+  selectedMessages.value.add(id);
+  console.log('open', id);
+}
+
+function onHideContext(id: string) {
+  selectedMessages.value.delete(id);
 }
 </script>
 
@@ -124,5 +147,13 @@ function onOpenImage(source: string) {
 .msg {
   max-width: 200px;
   width: 200px;
+}
+
+.menu_item {
+  border-radius: 10px;
+}
+
+.selected {
+  background-color: $grey-10;
 }
 </style>

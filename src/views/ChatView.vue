@@ -3,7 +3,7 @@
     <component v-if="content?.component" :is="content.component" :="content?.props" />
   </QDialog>
   <div class="window-height row no-wrap">
-    <div :class="[$style.contacts, currentChatId ? $style.hide : $style.not_hide]">
+    <div :class="[$style.contacts, 'divider', 'left', currentChatId ? $style.hide : $style.not_hide]">
       <Chat.LeftPanel @open-modal="onOpenModal" />
     </div>
     <div :class="[$style.dialog, currentChatId ? $style.not_hide : $style.hide]">
@@ -81,6 +81,27 @@ function onCloseModal() {
   .not_hide {
     display: block;
     max-width: 100%;
+  }
+}
+</style>
+
+<style scoped lang="scss">
+html.dark {
+  .divider {
+    border-right: 1px solid #636363;
+  }
+
+  .left {
+    background-color: $blue-grey-10;
+  }
+}
+
+html.light {
+  .divider {
+    border-right: 1px solid #ccc;
+  }
+  .left {
+    background-color: $blue-grey-1;
   }
 }
 </style>

@@ -1,10 +1,10 @@
 <template>
-  <div :class="[$style.images, { [$style.images_many]: filenames.length > 1 }]">
+  <div :class="[$style.images]">
     <QImg
       v-for="(filename, index) in filenames"
       :key="index"
       :fit="filenames.length > 1 ? 'cover' : 'scale-down'"
-      :class="$style.img"
+      :class="[$style.img, { [$style.image_one]: filenames.length === 1 }]"
       :src="imgs[index].src"
       @click="emit('open', imgs[index].src)"
     />
@@ -29,12 +29,14 @@ onMounted(() => imgs.value.forEach((img) => img.getUrl()));
 
 <style module lang="scss">
 .images {
-  display: grid;
-  gap: 4px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 16px;
 }
 
-.images_many {
-  grid-template-columns: repeat(2, 1fr);
+.image_one {
+  flex: 0 0 100% !important;
 }
 
 .img {
@@ -42,6 +44,7 @@ onMounted(() => imgs.value.forEach((img) => img.getUrl()));
   overflow: hidden;
   max-width: 100%;
   height: auto;
+  flex: 0 0 calc(50% - 8px);
   cursor: pointer;
   &:hover {
     transform: scale(1.01);

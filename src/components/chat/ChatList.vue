@@ -5,17 +5,18 @@
       v-for="chat in sortedChats.values()"
       v-ripple
       :key="chat._id"
-      class="non-selectable"
+      class="non-selectable list-item"
       style="flex-wrap: wrap"
       clickable
       :active="currentChatId === chat._id"
-      :active-class="currentTheme === 'light' ? 'bg-indigo-1 text-grey-8' : 'bg-blue-grey-9 text-white'"
+      :active-class="currentTheme === 'light' ? 'bg-blue-grey-3 text-grey-8' : 'bg-blue-grey-9 text-white'"
       @click="onOpenChat(chat._id)"
     >
       <QItemSection avatar>
         <UserAvatar
           :name="chat.type === 'dialog' ? chat.companion.name : chat.group?.title"
           :avatar="chat.type === 'dialog' ? chat.companion.avatar : chat.group?.avatar"
+          size="50px"
         />
       </QItemSection>
       <QItemSection>
@@ -86,6 +87,10 @@ function onOpenChat(chat_id: string) {
 
 <style scoped lang="scss">
 .list {
-  padding: 5px 2px;
+  padding: 5px 5px;
+}
+
+.list-item {
+  border-radius: 10px;
 }
 </style>

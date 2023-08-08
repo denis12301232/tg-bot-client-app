@@ -45,7 +45,7 @@
     </QInput>
   </div>
   <QScrollArea
-    class="fit divider"
+    class="fit "
     :thumb-style="{ width: '7px' }"
     :content-style="{ position: 'relative', overflow: 'hidden' }"
     :content-active-style="{ position: 'relative', overflow: 'hidden' }"
@@ -108,10 +108,6 @@ html.dark {
   .header {
     background-color: $blue-grey-10;
     height: 61px;
-  }
-
-  .divider {
-    border-right: 1px solid #636363;
   }
 }
 

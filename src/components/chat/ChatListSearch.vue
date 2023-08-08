@@ -1,7 +1,14 @@
 <template>
-  <QList>
+  <QList class="list">
     <h6 v-if="!users?.length" class="text-center text-negative q-mt-lg">{{ t('chat.search.errors.none') }}</h6>
-    <QItem v-for="user in users" v-ripple :key="user._id" clickable @click="openOrCreateChat(user._id)">
+    <QItem
+      v-for="user in users"
+      v-ripple
+      class="list-item"
+      :key="user._id"
+      clickable
+      @click="openOrCreateChat(user._id)"
+    >
       <QItemSection avatar>
         <UserAvatar :name="user.name" :avatar="user.avatar" />
       </QItemSection>
@@ -50,3 +57,13 @@ async function openOrCreateChat(userId: string) {
   chatStore.socket.emit('chat:create', user.value!._id, [user.value!._id, userId]);
 }
 </script>
+
+<style lang="scss" scoped>
+.list {
+  padding: 5px 5px;
+}
+
+.list-item {
+  border-radius: 10px;
+}
+</style>
