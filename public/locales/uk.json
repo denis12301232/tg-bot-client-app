@@ -725,6 +725,35 @@
                     "Адмін"
                 ]
             }
+        },
+        "createGroup": {
+            "title": "Створити групу",
+            "first": {
+                "form": {
+                    "title": "Назва та опис",
+                    "fields": {
+                        "title": {
+                            "placeholder": "Назва"
+                        },
+                        "about": {
+                            "placeholder": "Опис"
+                        }
+                    },
+                    "buttons": {
+                        "next": "Далі"
+                    }
+                }
+            },
+            "second": {
+                "form": {
+                    "title": "Аватар",
+                    "subtitle": "Не обов'язково",
+                    "buttons": {
+                        "back": "Назад",
+                        "create": "Створити"
+                    }
+                }
+            }
         }
     },
     "login": {

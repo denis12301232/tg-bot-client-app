@@ -41,7 +41,7 @@ const emit = defineEmits<{
   (event: 'update:modelValue', file: File | null): void;
 }>();
 const fileRef = ref<HTMLInputElement | null>(null);
-const avatarTempUrl = ref(ENV.IMAGE_URL + '/' + props.src);
+const avatarTempUrl = ref(props.src && ENV.IMAGE_URL + '/' + props.src);
 
 function onChange(event: Event) {
   const target = event.target as HTMLInputElement;

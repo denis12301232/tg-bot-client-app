@@ -725,6 +725,35 @@
                     "Admin"
                 ]
             }
+        },
+        "createGroup": {
+            "title": "Create a group",
+            "first": {
+                "form": {
+                    "title": "Title and description",
+                    "fields": {
+                        "title": {
+                            "placeholder": "Name"
+                        },
+                        "about": {
+                            "placeholder": "Description"
+                        }
+                    },
+                    "buttons": {
+                        "next": "next"
+                    }
+                }
+            },
+            "second": {
+                "form": {
+                    "title": "Avatar",
+                    "subtitle": "Optional",
+                    "buttons": {
+                        "back": "Back",
+                        "create": "Create"
+                    }
+                }
+            }
         }
     },
     "login": {

@@ -725,6 +725,35 @@
                     "Админ"
                 ]
             }
+        },
+        "createGroup": {
+            "title": "Создать группу",
+            "first": {
+                "form": {
+                    "title": "Название и описание",
+                    "fields": {
+                        "title": {
+                            "placeholder": "Название"
+                        },
+                        "about": {
+                            "placeholder": "Описание"
+                        }
+                    },
+                    "buttons": {
+                        "next": "Дальше"
+                    }
+                }
+            },
+            "second": {
+                "form": {
+                    "title": "Аватар",
+                    "subtitle": "Не обязательно",
+                    "buttons": {
+                        "back": "Назад",
+                        "create": "Создать"
+                    }
+                }
+            }
         }
     },
     "login": {

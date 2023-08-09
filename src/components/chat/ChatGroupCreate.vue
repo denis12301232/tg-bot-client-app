@@ -7,14 +7,14 @@
         <QStep
           class="overflow-hidden"
           :name="1"
-          :title="t('chat.createGroup.first.title')"
+          :title="t('chat.createGroup.first.form.title')"
           icon="eva-settings"
           :done="step > 1"
         >
           <QInput
             v-model="group.title"
             standout
-            :label="t('chat.createGroup.placeholders.title')"
+            :label="t('chat.createGroup.first.form.fields.title.placeholder')"
             counter
             maxlength="30"
           />
@@ -22,7 +22,7 @@
             v-model="group.about"
             class="q-mt-sm"
             standout
-            :label="t('chat.createGroup.placeholders.about')"
+            :label="t('chat.createGroup.first.form.fields.about.placeholder')"
             type="textarea"
             autogrow
             counter
@@ -31,7 +31,7 @@
           <QStepperNavigation>
             <QBtn
               color="primary"
-              :label="t('chat.createGroup.buttons.next')"
+              :label="t('chat.createGroup.first.form.buttons.next')"
               :disable="!group.title"
               @click="setStep(2)"
             />
@@ -40,20 +40,20 @@
         <QStep
           class="overflow-hidden"
           :name="2"
-          :title="t('chat.createGroup.second.title')"
-          caption="Не обязательно"
+          :title="t('chat.createGroup.second.form.title')"
+          :caption="t('chat.createGroup.second.form.subtitle')"
           icon="eva-image-outline"
           :done="step > 2"
         >
-          <div class="row justify-center q-pt-lg">
-            <SetAvatar v-model="group.avatar" class="q-mr-lg" size="120px" />
+          <div class="row justify-center q-pt-md">
+            <SetAvatar v-model="group.avatar" size="120px" />
           </div>
           <QStepperNavigation>
-            <QBtn color="primary" :label="t('chat.createGroup.buttons.create')" @click="createGroup" />
+            <QBtn color="primary" :label="t('chat.createGroup.second.form.buttons.create')" @click="createGroup" />
             <QBtn
               flat
               color="primary"
-              :label="t('chat.createGroup.buttons.back')"
+              :label="t('chat.createGroup.second.form.buttons.back')"
               class="q-ml-sm"
               @click="setStep(1)"
             />

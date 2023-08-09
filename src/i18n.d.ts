@@ -709,6 +709,35 @@ declare module 'vue-i18n' {
           checkboxes: string[];
         };
       };
+      createGroup:{
+        title: string;
+        first: {
+          form: {
+            title: string;
+            fields: {
+              title: {
+                placeholder: string;
+              };
+              about: {
+                placeholder: string;
+              }
+            },
+            buttons: {
+              next: string;
+            }
+          }
+        };
+        second: {
+          form: {
+            title: string;
+            subtitle: string;
+            buttons:{
+              back: string;
+              create: string;
+            }
+          }
+        };
+      }
     };
     login: {
       form: {
