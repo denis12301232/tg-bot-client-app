@@ -37,6 +37,7 @@ export interface IMessage {
   attachments: IAttachment[];
   read: string[];
   createdAt: string;
+  reactions: { [name: string]: string[] };
 }
 
 export interface IAttachment {

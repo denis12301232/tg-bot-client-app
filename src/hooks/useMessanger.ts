@@ -57,6 +57,7 @@ function useMessangerEvents({
     'chat:invite-to-group': onInviteToGroup,
     'chat:kick-from-group': onKickFromGroup,
     'chat:typing': onTyping,
+    'chat:message-reactions': onMessageReactions,
   };
 
   async function onNewMessage(message: IMessage) {
@@ -114,6 +115,14 @@ function useMessangerEvents({
       timers.set(chat_id, timer);
     }
   }
+
+  function onMessageReactions(chatId: string, msgId: string, reactions: { [name: string]: string[] }) {
+      const message = chats.value.get(chatId)?.messages.find((msg) => msgId === msg._id);
+      if(!message){
+        return;
+      }
+      message.reactions = reactions;
+  } 
 
   return new Map<keyof typeof list, (typeof list)[keyof typeof list]>(Object.entries(list) as any);
 }

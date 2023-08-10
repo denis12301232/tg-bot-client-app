@@ -208,6 +208,7 @@ const emoji = {
     ribbon: '🎀',
     closed_umbrella: '🌂',
     lipstick: '💄',
+    heart: '❤️',
     yellow_heart: '💛',
     blue_heart: '💙',
     purple_heart: '💜',

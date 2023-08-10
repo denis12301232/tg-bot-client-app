@@ -14,6 +14,19 @@
       </template>
       <div v-for="msg in messages" :class="{ [$style.selected]: selectedMessages.has(msg._id) }" :key="msg._id">
         <QMenu touch-position context-menu @before-show="onShowContext(msg._id)" @before-hide="onHideContext(msg._id)">
+          <div class="row justify-center q-pa-sm">
+            <QBtn
+              v-for="reaction of reactions"
+              v-close-popup
+              round
+              flat
+              dense
+              :key="reaction"
+              @click="setReaction(msg._id, reaction)"
+            >
+              {{ reaction }}
+            </QBtn>
+          </div>
           <QList class="q-pa-sm" dense style="min-width: 100px">
             <QItem :class="$style.menu_item" clickable v-close-popup @click="Util.copyTextToClipboard(msg.text)">
               <QItemSection avatar class="q-px-sm" style="min-width: 20px">
@@ -47,6 +60,17 @@
           </template>
           <template #stamp>
             <div class="row justify-between items-center q-mt-sm cursor-pointer">
+              <div class="q-pr-sm">
+                <QChip
+                  v-for="(ids, reaction) of msg.reactions"
+                  v-show="ids.length"
+                  :key="reaction"
+                  clickable
+                  @click="setReaction(msg._id, reaction as string)"
+                >
+                  {{ reaction + ' ' + ids.length }}
+                </QChip>
+              </div>
               <div class="q-pr-md">{{ Time.showFilteredDate(new Date(msg.createdAt)) }}</div>
               <QIcon
                 v-if="isSended(msg.author)"
@@ -101,6 +125,7 @@ const selectedMessages = ref<Set<string>>(new Set());
 const messages = computed(() => currentChat.value?.messages || []);
 const initialIndex = computed(() => (messages.value.length > limit ? Math.ceil(messages.value.length / limit) : 0));
 const limit = 10;
+const reactions = ref(['👍', '👎', '😊', '😂', '❤️']);
 
 watch(
   () => currentChat.value?.total,
@@ -146,6 +171,10 @@ function onDelete() {
     const data = { chatId: currentChatId.value, msgIds: Array.from(selectedMessages.value) };
     chatStore.socket.emit('chat:messages-delete', data);
   }
+}
+
+function setReaction(msgId: string, reaction: string) {
+  chatStore.socket.emit('chat:message-reactions', { msgId, reaction });
 }
 </script>
 
