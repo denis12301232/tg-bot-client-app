@@ -49,7 +49,7 @@
                   : 'eva-checkmark-outline'
               "
             />
-            <div>{{ Time.showDialogListDate(new Date(chat.updatedAt)) }}</div>
+            <div>{{ showDate(chat.updatedAt) }}</div>
           </div>
           <div v-if="Number(chat.unread)" class="row justify-end items-end q-mt-sm">
             <QBadge rounded :label="chat.unread" color="blue-grey-3" />
@@ -65,11 +65,10 @@ import type { IMessage } from '@/types';
 import UserAvatar from '~/UserAvatar.vue';
 import { storeToRefs } from 'pinia';
 import { useChatStore, useStore } from '@/stores';
-import { Time } from '@/util';
 import { ChatService } from '@/api/services';
 import { useI18n } from 'vue-i18n';
 
-const { t } = useI18n();
+const { t, d } = useI18n();
 const { user, currentTheme } = storeToRefs(useStore());
 const { currentChatId, sortedChats } = storeToRefs(useChatStore());
 
@@ -82,6 +81,23 @@ function showLastMessageText(msg: IMessage | undefined) {
 function onOpenChat(chat_id: string) {
   currentChatId.value = chat_id;
   ChatService.updateRead(chat_id);
+}
+
+function showDate(dateString: string) {
+  const now = new Date();
+  const date = new Date(dateString);
+
+  if (
+    now.getDay() === date.getDay() &&
+    now.getMonth() === date.getMonth() &&
+    now.getFullYear() === date.getFullYear()
+  ) {
+    return d(dateString, 'time');
+  } else if (now.getMonth() === date.getMonth() && now.getFullYear() === date.getFullYear()) {
+    return d(dateString, 'MMDD');
+  } else {
+    return d(dateString, 'YYYYMMDD');
+  }
 }
 </script>
 

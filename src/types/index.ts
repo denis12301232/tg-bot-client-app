@@ -1,3 +1,4 @@
+import type { QScrollArea } from 'quasar';
 export * from './models';
 export * from './http';
 export * from './io';
@@ -12,6 +13,18 @@ export interface Pagination {
   descending: boolean;
   page: number;
   rowsPerPage: number;
+}
+
+export interface QScrollEvent {
+  ref: QScrollArea;
+  verticalPosition: number;
+  verticalPercentage: number;
+  verticalSize: number;
+  verticalContainerSize: number;
+  horizontalPosition: number;
+  horizontalPercentage: number;
+  horizontalSize: number;
+  horizontalContainerSize: number;
 }
 
 export interface PaginationRequest<T = any> {

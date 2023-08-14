@@ -709,7 +709,7 @@ declare module 'vue-i18n' {
           checkboxes: string[];
         };
       };
-      createGroup:{
+      createGroup: {
         title: string;
         first: {
           form: {
@@ -720,24 +720,24 @@ declare module 'vue-i18n' {
               };
               about: {
                 placeholder: string;
-              }
-            },
+              };
+            };
             buttons: {
               next: string;
-            }
-          }
+            };
+          };
         };
         second: {
           form: {
             title: string;
             subtitle: string;
-            buttons:{
+            buttons: {
               back: string;
               create: string;
-            }
-          }
+            };
+          };
         };
-      }
+      };
     };
     login: {
       form: {
@@ -883,12 +883,25 @@ declare module 'vue-i18n' {
   }
 
   export interface DefineDateTimeFormat {
+    time: {
+      hour: 'numeric';
+      minute: 'numeric';
+    };
     short: {
       hour: 'numeric';
       minute: 'numeric';
       second: 'numeric';
       timeZoneName: 'short';
       timezone: string;
+    };
+    MMDD: {
+      month: 'numeric';
+      day: 'numeric';
+    };
+    YYYYMMDD: {
+      year: 'numeric';
+      month: 'numeric';
+      day: 'numeric';
     };
   }
 

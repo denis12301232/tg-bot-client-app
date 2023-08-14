@@ -7,12 +7,12 @@
       rounded
       no-caps
       size="20px"
-      :icon="isPlaying ? 'eva-stop-circle' : 'eva-play-circle'"
+      :icon="isPlaying ? 'eva-stop-circle-outline' : 'eva-play-circle-outline'"
       :loading="loading"
       @click="playOrStop"
     />
     <div :class="$style.audio_info">
-      <QLinearProgress :value="progress" :class="$style.audio_progress" instant-feedback color="amber-6" ref="barRef" />
+      <QLinearProgress :value="progress" :class="$style.audio_progress" instant-feedback color="amber" ref="barRef" />
       <div :class="$style.audio_time">{{ durationString ? currentTime + ' / ' + durationString : '' }}</div>
     </div>
   </div>
@@ -111,6 +111,7 @@ onBeforeUnmount(() => {
 
   & .audio_info {
     width: 100%;
+    padding-right: 8px;
   }
 
   & .audio_time {

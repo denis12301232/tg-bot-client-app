@@ -5,14 +5,102 @@
   <div v-if="!messages.length" class="row justify-center items-center text-indigo text-bold text-h6">
     {{ t('chat.messages.none') }}
   </div>
-  <QScrollArea v-else ref="scroll" class="fit q-pt-sm" :thumb-style="{ width: '7px' }">
+  <QScrollArea v-else ref="scroll" class="fit q-pt-sm" :thumb-style="{ width: '7px' }" @scroll="onScroll">
     <QInfiniteScroll reverse :key="`${currentChatId}`" :offset="10" :initial-index="initialIndex" @load="onLoad">
       <template #loading>
         <div v-if="currentChat?.total || 0 > messages.length" class="row justify-center q-my-md">
           <QSpinner color="primary" name="dots" size="40px" />
         </div>
       </template>
-      <div v-for="msg in messages" :class="{ [$style.selected]: selectedMessages.has(msg._id) }" :key="msg._id">
+      <div v-if="verticalScroll < 1" class="fixed-bottom-right q-pa-md z-max">
+        <QBtn
+          round
+          color="deep-orange"
+          icon="eva-arrow-downward-outline"
+          @click="scroll?.setScrollPercentage('vertical', 1)"
+        />
+      </div>
+      <div
+        v-for="msg in messages"
+        :class="[
+          'row',
+          'q-px-lg',
+          'q-py-sm',
+          { [$style[`selected-${currentTheme}`]]: selectedMessages.has(msg._id) },
+          { 'justify-end': isSended(msg.author) },
+        ]"
+        :key="msg._id"
+      >
+        <Chat.MessageImage
+          v-if="msg.attachments?.at(0)?.mime.includes('image/')"
+          :sent="isSended(msg.author)"
+          :time="msg.createdAt"
+          :images="msg.attachments.map((attachment) => `${attachment?.name}.${attachment?.ext}`)"
+          @open="onOpenImage"
+        >
+          <template #avatar="{ classes }">
+            <UserAvatar
+              v-if="currentChat?.group"
+              :class="classes"
+              :name="getAuthor(msg)?.name"
+              :avatar="getAuthor(msg)?.avatar"
+            />
+          </template>
+          <template #reactions>
+            <div>
+              <template v-for="(users, key) of msg.reactions" :key="key">
+                <QChip
+                  v-if="users.length"
+                  class="shadow-2 text-white"
+                  :label="`${key} ${users.length}`"
+                  :color="isSended(msg.author) ? 'primary' : 'grey-9'"
+                  clickable
+                  dense
+                  @click="setReaction(msg._id, key as string)"
+                />
+              </template>
+            </div>
+          </template>
+        </Chat.MessageImage>
+        <Chat.Message
+          v-else
+          :sent="isSended(msg.author)"
+          :read="msg.read.length > 1"
+          :text="msg.text"
+          :time="msg.createdAt"
+          :color="isSended(msg.author) ? '#1976d2' : '#424242'"
+        >
+          <template #avatar="{ classes }">
+            <UserAvatar
+              v-if="currentChat?.group"
+              :class="classes"
+              :name="getAuthor(msg)?.name"
+              :avatar="getAuthor(msg)?.avatar"
+            />
+          </template>
+          <template #reactions>
+            <div>
+              <template v-for="(users, key) of msg.reactions" :key="key">
+                <QChip
+                  v-if="users.length"
+                  :label="`${key} ${users.length}`"
+                  clickable
+                  dense
+                  class="shadow-2 text-white"
+                  :color="isSended(msg.author) ? 'primary' : 'grey-9'"
+                  @click="setReaction(msg._id, key as string)"
+                />
+              </template>
+            </div>
+          </template>
+          <template #audio>
+            <Chat.MessageVoice
+              v-if="msg.attachments?.at(0)?.mime.includes('webm')"
+              style="width: 200px"
+              :filename="`${msg.attachments.at(0)?.name}.${msg.attachments.at(0)?.ext}`"
+            />
+          </template>
+        </Chat.Message>
         <QMenu touch-position context-menu @before-show="onShowContext(msg._id)" @before-hide="onHideContext(msg._id)">
           <div class="row justify-center q-pa-sm">
             <QBtn
@@ -42,80 +130,30 @@
             </QItem>
           </QList>
         </QMenu>
-        <QChatMessage
-          class="q-px-md"
-          :sent="isSended(msg.author)"
-          :bg-color="isSended(msg.author) ? 'indigo-6' : 'blue-grey'"
-          text-color="white"
-        >
-          <template #name v-if="type === 'group'">
-            <div class="text-bold text-deep-orange">
-              {{ isSended(msg.author) ? t('chat.messages.me') : getAuthor(msg)?.name }}
-            </div>
-          </template>
-          <template #avatar v-if="type === 'group'">
-            <div :class="msg.author === user?._id ? 'q-pl-sm' : 'q-pr-sm'">
-              <UserAvatar :name="getAuthor(msg)?.name" :avatar="getAuthor(msg)?.avatar" size="50px" />
-            </div>
-          </template>
-          <template #stamp>
-            <div class="row justify-between items-center q-mt-sm cursor-pointer">
-              <div class="q-pr-sm">
-                <QChip
-                  v-for="(ids, reaction) of msg.reactions"
-                  v-show="ids.length"
-                  :key="reaction"
-                  clickable
-                  @click="setReaction(msg._id, reaction as string)"
-                >
-                  {{ reaction + ' ' + ids.length }}
-                </QChip>
-              </div>
-              <div class="q-pr-md">{{ Time.showFilteredDate(new Date(msg.createdAt)) }}</div>
-              <QIcon
-                v-if="isSended(msg.author)"
-                :name="msg.read.length > 1 ? 'eva-done-all-outline' : 'eva-checkmark-outline'"
-              />
-            </div>
-          </template>
-          <template #default>
-            <div :class="{ [$style.msg]: msg.attachments?.length }">
-              <span v-if="msg.text" style="font-size: 1.2em">{{ msg.text }}</span>
-              <Chat.MessageVoice
-                v-if="msg.attachments?.at(0)?.mime.includes('webm')"
-                :filename="`${msg.attachments.at(0)?.name}.${msg.attachments.at(0)?.ext}`"
-              />
-              <Chat.MessageImage
-                v-else-if="msg.attachments?.at(0)?.mime.includes('image/')"
-                :filenames="msg.attachments.map((attachment) => `${attachment?.name}.${attachment?.ext}`)"
-                @open="onOpenImage"
-              />
-            </div>
-          </template>
-        </QChatMessage>
       </div>
     </QInfiniteScroll>
   </QScrollArea>
 </template>
 
 <script setup lang="ts">
-import type { IMessage } from '@/types';
+import type { IMessage, QScrollEvent } from '@/types';
 import type { QScrollArea } from 'quasar';
 import UserAvatar from '~/UserAvatar.vue';
 import Chat from '~/chat';
 import { ref, computed, watch, nextTick } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useStore, useChatStore } from '@/stores';
-import { Time, Util } from '@/util';
+import { Util } from '@/util';
 import { useI18n } from 'vue-i18n';
 
 defineProps<{
   type: 'dialog' | 'group';
 }>();
 
+const LIMIT = 10;
 const { t } = useI18n();
 const chatStore = useChatStore();
-const { user } = storeToRefs(useStore());
+const { user, currentTheme } = storeToRefs(useStore());
 const { currentChatId, currentChat } = storeToRefs(chatStore);
 const modal = ref(false);
 const src = ref('');
@@ -123,9 +161,9 @@ const scroll = ref<QScrollArea | null>(null);
 const loading = ref(false);
 const selectedMessages = ref<Set<string>>(new Set());
 const messages = computed(() => currentChat.value?.messages || []);
-const initialIndex = computed(() => (messages.value.length > limit ? Math.ceil(messages.value.length / limit) : 0));
-const limit = 10;
+const initialIndex = computed(() => (messages.value.length > LIMIT ? Math.ceil(messages.value.length / LIMIT) : 0));
 const reactions = ref(['👍', '👎', '😊', '😂', '❤️']);
+const verticalScroll = ref(1);
 
 watch(
   () => currentChat.value?.total,
@@ -138,7 +176,7 @@ watch(
 async function onLoad(index: number, done: (stop?: boolean | undefined) => void) {
   if (currentChat.value && currentChat.value.total > messages.value.length) {
     loading.value = true;
-    await chatStore.getChatMessages(currentChatId.value!, limit);
+    await chatStore.getChatMessages(currentChatId.value!, LIMIT);
     loading.value = false;
     return done();
   }
@@ -176,6 +214,10 @@ function onDelete() {
 function setReaction(msgId: string, reaction: string) {
   chatStore.socket.emit('chat:message-reactions', { msgId, reaction });
 }
+
+function onScroll(info: QScrollEvent) {
+  verticalScroll.value = info.verticalSize < info.verticalContainerSize ? 1 : info.verticalPercentage;
+}
 </script>
 
 <style lang="scss" module>
@@ -189,7 +231,19 @@ function setReaction(msgId: string, reaction: string) {
   padding: 0 !important;
 }
 
-.selected {
+.selected-dark {
+  background-color: $grey-10;
+}
+
+.selected-light {
+  background-color: $grey-12;
+}
+
+.message-sended-dark {
+  background-color: $deep-purple-8;
+}
+
+.message-sended-light {
   background-color: $grey-10;
 }
 </style>

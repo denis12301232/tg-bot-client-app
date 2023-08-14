@@ -12,6 +12,7 @@ import ChatGroupAddUser from './ChatGroupAddUser.vue';
 import ChatGroupInfo from './ChatGroupInfo.vue';
 import ChatGroupCreate from './ChatGroupCreate.vue';
 import ChatGroupSettings from './ChatGroupSettings.vue';
+import ChatMessage from './ChatMessage.vue';
 
 export default class Chat {
   static RightPanel = ChatPanelRight;
@@ -28,4 +29,5 @@ export default class Chat {
   static GroupInfo = ChatGroupInfo;
   static GroupCreate = ChatGroupCreate;
   static GroupSettings = ChatGroupSettings;
+  static Message = ChatMessage;
 }
