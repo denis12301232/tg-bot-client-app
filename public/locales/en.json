@@ -590,6 +590,10 @@
                     "join": "Join"
                 }
             }
+        },
+        "hints": {
+            "noMic": "No access to microphone",
+            "noMeet": "There is no such meeting"
         }
     },
     "meetId": {

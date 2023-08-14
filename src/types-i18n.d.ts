@@ -576,6 +576,10 @@ declare module 'vue-i18n' {
           };
         };
       };
+      hints: {
+        noMic: string;
+        noMeet: string;
+      }
     };
     meetId: {
       layout: {

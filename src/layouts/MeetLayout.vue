@@ -131,7 +131,7 @@ watch(
 
 watch(error, () => {
   goBack();
-  store.addAlert('error', t('meetId.msgs.noMeet'));
+  store.addAlert('error', t('meets.hints.noMeet'));
 });
 
 onMounted(() => {
@@ -141,7 +141,7 @@ onMounted(() => {
       .then(() => socket.emit('meet:join', meetId))
       .catch(() => {
         goBack();
-        store.addAlert('warning', t('meetId.msgs.noMic'));
+        store.addAlert('warning', t('meets.hints.noMic'));
       });
   });
 });
