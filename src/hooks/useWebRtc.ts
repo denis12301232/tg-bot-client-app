@@ -1,10 +1,10 @@
-import type { SocketTyped, IUser } from '@/types';
+import type { SocketTyped, IUser, IAbonent, Streams, Entries } from '@/types';
 import { type Ref, ref, reactive, onMounted, onUnmounted } from 'vue';
 import { ENV } from '@/util';
 import { WebRtcDto } from '@/api/dto';
 
 export default function useWebRtc(socket: SocketTyped, myId: string, opts?: WebRtcOpts) {
-  const abonents = ref<Map<string, Abonent>>(new Map());
+  const abonents = ref<Map<string, IAbonent>>(new Map());
   const streams = reactive<Streams>({ camera: new Map(), screen: new Map() });
   const streamIds: StreamIds = { camera: new Set(), screen: new Set() };
   const events = useWebRtcEvents({ socket, streams, myId, streamIds, abonents, opts });
@@ -136,28 +136,18 @@ function useWebRtcEvents({ socket, myId, abonents, streams, streamIds, opts }: W
     }
   }
 
-  return new Map<keyof typeof events, (typeof events)[keyof typeof events]>(Object.entries(events) as any);
+  return new Map<keyof typeof events, (typeof events)[keyof typeof events]>(
+    Object.entries(events) as Entries<typeof events>
+  );
 }
 
 interface WebRtcEventsOpts {
   socket: SocketTyped;
   myId: string;
-  abonents: Ref<Map<string, Abonent>>;
+  abonents: Ref<Map<string, IAbonent>>;
   streams: Streams;
   streamIds: StreamIds;
   opts?: WebRtcOpts;
-}
-
-interface Abonent {
-  peer?: RTCPeerConnection;
-  channel?: RTCDataChannel;
-  info?: IUser;
-  polite?: boolean;
-}
-
-interface Streams {
-  screen: Map<string, MediaStream>;
-  camera: Map<string, MediaStream>;
 }
 
 interface WebRtcOpts {

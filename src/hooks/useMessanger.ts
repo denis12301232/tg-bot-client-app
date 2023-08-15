@@ -1,4 +1,4 @@
-import type { IMessage, ChatResponse, SocketTyped } from '@/types';
+import type { IMessage, ChatResponse, SocketTyped, Entries } from '@/types';
 import { type Ref, ref, computed, watchEffect } from 'vue';
 import { ChatService } from '@/api/services';
 
@@ -35,7 +35,7 @@ export default function useMessanger(socket: SocketTyped) {
 
   async function onGetUserChats() {
     const data = await ChatService.getUserChats().json<ChatResponse[]>();
-    chats.value = data.reduce((map, chat) => map.set(chat._id, chat), new Map<string, ChatResponse>());
+    data.forEach((chat) => chats.value.set(chat._id, chat));
   }
 
   return { chats, currentChatId, currentChat, sortedChats, onGetUserChats, unread, getChatMessages };
@@ -117,12 +117,12 @@ function useMessangerEvents({
   }
 
   function onMessageReactions(chatId: string, msgId: string, reactions: { [name: string]: string[] }) {
-      const message = chats.value.get(chatId)?.messages.find((msg) => msgId === msg._id);
-      if(!message){
-        return;
-      }
-      message.reactions = reactions;
-  } 
+    const message = chats.value.get(chatId)?.messages.find((msg) => msgId === msg._id);
+    if (!message) {
+      return;
+    }
+    message.reactions = reactions;
+  }
 
-  return new Map<keyof typeof list, (typeof list)[keyof typeof list]>(Object.entries(list) as any);
+  return new Map<keyof typeof list, (typeof list)[keyof typeof list]>(Object.entries(list) as Entries<typeof list>);
 }

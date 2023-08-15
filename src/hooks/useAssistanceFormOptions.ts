@@ -1,9 +1,8 @@
-import type { I18n, Langs } from '@/types';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 export default function useAssistanceFormOptions() {
-  const { messages, locale } = useI18n<I18n, Langs>();
+  const { messages, locale } = useI18n();
 
   const districtOptions = computed(() =>
     messages.value[locale.value].extra.districts.map((item, index) => ({

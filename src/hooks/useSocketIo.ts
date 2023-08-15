@@ -1,11 +1,11 @@
 import type { SocketTyped } from '@/types';
 import { ref, markRaw } from 'vue';
 import { io } from 'socket.io-client';
-import { ENV } from '@/util';
 
-export default function useSocketIo() {
+
+export default function useSocketIo(url: string) {
   const socket = markRaw<SocketTyped>(
-    io(ENV.SOCKET_URL, {
+    io(url, {
       auth: (cb) => cb({ token: localStorage.getItem('token') }),
       autoConnect: false,
       reconnectionAttempts: Infinity,
