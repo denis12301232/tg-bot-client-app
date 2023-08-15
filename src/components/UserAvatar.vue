@@ -1,8 +1,8 @@
 <template>
   <div>
     <QSkeleton v-if="loading" type="QAvatar" :size="size" />
-    <QAvatar v-show="!loading" class="text-white" :size="size" :color="avatar ? '': color" :="$attrs">
-      <span :class="$style.user_name">{{ avatar ? '' : name?.slice(0, 1) }}</span>
+    <QAvatar v-show="!loading" class="text-white" :size="size" :color="colorShow" :="$attrs">
+      <span :class="$style.name">{{ avatar ? '' : name?.slice(0, 1) }}</span>
       <QImg
         v-if="avatar"
         :src="ENV.IMAGE_URL + '/' + avatar"
@@ -18,20 +18,19 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import { ENV } from '@/util';
 
-const props = withDefaults(
-  defineProps<{
-    avatar?: string;
-    name?: string;
-    size?: string;
-    color?: string;
-  }>(),
-  { size: '45px', color: 'primary' }
-);
+interface Props {
+  avatar?: string;
+  name?: string;
+  size?: string;
+  color?: string;
+}
 
+const props = withDefaults(defineProps<Props>(), { size: '45px', color: 'primary' });
 const loading = ref(!!props.avatar);
+const colorShow = computed(() => (props.avatar ? '' : props.color));
 
 function onLoad() {
   loading.value = false;
@@ -39,7 +38,7 @@ function onLoad() {
 </script>
 
 <style module lang="scss">
-.user_name {
+.name {
   &::first-letter {
     text-transform: uppercase;
   }

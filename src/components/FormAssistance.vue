@@ -228,16 +228,15 @@ import { useAssistanceFormOptions, useVModel } from '@/hooks';
 import { Rules } from '@/util';
 import { useI18n } from 'vue-i18n';
 
-const props = defineProps<{
+interface Props {
   modelValue: Omit<AssistanceResponse, '_id' | 'sector'>;
   title: string;
   loading: boolean;
   reset: boolean;
-}>();
-const emit = defineEmits<{
-  (event: 'submit'): void;
-}>();
+}
 
+const props = defineProps<Props>();
+const emit = defineEmits<{ submit: [] }>();
 const { t, messages, locale } = useI18n();
 const { districtOptions, kidsAgeOptions, yesNoOptions, getStreetOptions } = useAssistanceFormOptions();
 const rules = Rules.assistance(t);

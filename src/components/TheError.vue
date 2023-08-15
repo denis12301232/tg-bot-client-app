@@ -9,10 +9,12 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n';
 
-defineProps<{
+interface Props {
   code: number;
   message: string;
-}>();
+}
+
+defineProps<Props>();
 
 const { t } = useI18n();
 </script>

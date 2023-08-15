@@ -5,13 +5,12 @@
 </template>
 
 <script setup lang="ts">
-withDefaults(
-  defineProps<{
-    loading: boolean;
-    color?: string;
-  }>(),
-  { color: '#3f51b5' }
-);
+interface Props {
+  loading: boolean;
+  color?: string;
+}
+
+withDefaults(defineProps<Props>(), { color: '#3f51b5' });
 </script>
 
 <style lang="scss" module>

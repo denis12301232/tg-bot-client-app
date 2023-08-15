@@ -6,7 +6,12 @@
 </template>
 
 <script setup lang="ts">
-withDefaults(defineProps<{ title: string; error?: boolean }>(), { error: false });
+interface Props {
+  title: string;
+  error?: boolean;
+}
+
+withDefaults(defineProps<Props>(), { error: false });
 </script>
 
 <style lang="scss" module>

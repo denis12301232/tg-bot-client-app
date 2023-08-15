@@ -10,7 +10,7 @@
           class="q-pa-sm"
           active-class="text-primary"
           :active="lang.value === store.lang"
-          @click="setLang(lang.value as Langs)"
+          @click="setLang(lang.value)"
         >
           <QItemSection>{{ lang.label }}</QItemSection>
         </QItem>
@@ -20,7 +20,6 @@
 </template>
 
 <script setup lang="ts">
-import type { Langs } from '@/types';
 import { computed } from 'vue';
 import { useStore } from '@/stores';
 
@@ -32,7 +31,7 @@ const options = [
 ];
 const selected = computed(() => options.find((item) => item.value === store.lang)?.label);
 
-function setLang(lang: Langs) {
+function setLang(lang: string) {
   store.lang = lang;
 }
 </script>

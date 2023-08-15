@@ -41,10 +41,7 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n';
 
-const emit = defineEmits<{
-  (event: 'pick', emoji: string): void;
-}>();
-
+const emit = defineEmits<{ pick: [emoji: string] }>();
 const { t } = useI18n();
 const emoji = {
   [t('extra.emoji.smiles')]: {

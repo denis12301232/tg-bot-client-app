@@ -2,12 +2,18 @@
   <QIcon :class="$style.icon" name="eva-loader-outline" />
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+interface Props {
+  duration?: number;
+}
+
+withDefaults(defineProps<Props>(), { duration: 3 });
+</script>
 
 <style lang="scss" module>
 .icon {
   animation-name: rotate;
-  animation-duration: 3s;
+  animation-duration: v-bind(duration) s;
   animation-iteration-count: infinite;
   animation-timing-function: linear;
 }
