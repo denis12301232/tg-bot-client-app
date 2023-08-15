@@ -439,6 +439,12 @@ declare module 'vue-i18n' {
             actions: string;
           };
         };
+        hints: {
+          complete: string;
+          cancel: string;
+          take: string;
+          about: string;
+        }
       };
       create: {
         first: {

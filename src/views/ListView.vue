@@ -30,9 +30,56 @@
       @request="request"
     >
       <template #top>
-        <div class="row justify-between full-width">
+        <div class="row justify-between full-width items-center">
           <div class="text-h5 q-ml-md">{{ t('list.table.title') }}</div>
-          <QBtnGroup flat>
+          <div>
+            <QBtn icon="eva-more-horizontal-outline" flat round>
+              <QTooltip class="bg-white text-black" :offset="[10, 10]" :delay="1000">
+                {{ t('list.hints.columns') }}
+              </QTooltip>
+              <QMenu max-width="200px" anchor="bottom left" self="top middle">
+                <QList>
+                  <QItem v-for="column in columns" :key="(column.field as string)">
+                    <QToggle v-model="visibleColumns" :val="column.field" :label="column.label" />
+                  </QItem>
+                </QList>
+              </QMenu>
+            </QBtn>
+            <QFab direction="down" flat padding="10px" icon="eva-arrow-ios-downward-outline">
+              <QFabAction icon="eva-cloud-upload-outline" color="green" @click="openModal('import')">
+                <QTooltip class="bg-white text-black" :offset="[10, 10]" :delay="1000">
+                  {{ t('list.hints.import') }}
+                </QTooltip>
+              </QFabAction>
+              <QFabAction
+                icon="eva-cloud-download-outline"
+                color="orange"
+                :disable="!select.length"
+                @click="openModal('export')"
+              >
+                <QTooltip class="bg-white text-black" :offset="[10, 10]" :delay="1000">
+                  {{ t('list.hints.export') }}
+                </QTooltip>
+              </QFabAction>
+              <QFabAction icon="eva-options-outline" color="deep-orange" @click="openModal('filters')">
+                <QTooltip class="bg-white text-black" :offset="[10, 10]" :delay="1000">
+                  {{ t('list.hints.filter') }}
+                </QTooltip>
+              </QFabAction>
+              <QFabAction
+                icon="eva-trash"
+                color="negative"
+                :disable="loading || isDelLoading || !select.length"
+                @click="onDelete(ids)"
+              >
+                <QTooltip class="bg-white text-black" :offset="[10, 10]" :delay="1000">
+                  {{ t('list.hints.delete') }}
+                </QTooltip>
+              </QFabAction>
+            </QFab>
+          </div>
+
+          <!-- <QBtnGroup flat>
             <QBtn color="green" icon="eva-cloud-upload-outline" dense flat @click="openModal('import')">
               <QTooltip class="bg-white text-black" :offset="[10, 10]" :delay="1000">
                 {{ t('list.hints.import') }}
@@ -81,7 +128,7 @@
                 </QList>
               </QMenu>
             </QBtn>
-          </QBtnGroup>
+          </QBtnGroup> -->
         </div>
       </template>
       <template #header-selection="scope">

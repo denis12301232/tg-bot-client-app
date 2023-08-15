@@ -15,7 +15,7 @@
       <div v-if="verticalScroll < 1" class="fixed-bottom-right q-pa-md z-max">
         <QBtn
           round
-          color="deep-orange"
+          color="indigo"
           icon="eva-arrow-downward-outline"
           @click="scroll?.setScrollPercentage('vertical', 1)"
         />

@@ -1,7 +1,7 @@
 <template>
   <div>
     <QSkeleton v-if="loading" type="QAvatar" :size="size" />
-    <QAvatar v-show="!loading" class="text-white" :size="size" :color="color" :="$attrs">
+    <QAvatar v-show="!loading" class="text-white" :size="size" :color="avatar ? '': color" :="$attrs">
       <span :class="$style.user_name">{{ avatar ? '' : name?.slice(0, 1) }}</span>
       <QImg
         v-if="avatar"

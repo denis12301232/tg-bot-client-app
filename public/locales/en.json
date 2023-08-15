@@ -453,7 +453,14 @@
                     "date": "Date created",
                     "actions": "Actions"
                 }
+            },
+            "hints": {
+                "complete": "Complete",
+                "cancel": "Cancel",
+                "take": "Take",
+                "about": "About the issue"
             }
+ 
         },
         "create": {
             "first": {
