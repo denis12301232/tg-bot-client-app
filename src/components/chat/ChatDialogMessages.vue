@@ -1,6 +1,6 @@
 <template>
   <QDialog v-model="modal" maximized>
-    <Chat.ModalImage :src="src" />
+    <ModalImage :src="src" />
   </QDialog>
   <div v-if="!messages.length" class="row justify-center items-center text-indigo text-bold text-h6">
     {{ t('chat.messages.none') }}
@@ -32,7 +32,7 @@
         ]"
         :key="msg._id"
       >
-        <Chat.MessageImage
+        <MessageImage
           v-if="msg.attachments?.at(0)?.mime.includes('image/')"
           :sent="isSended(msg.author)"
           :time="msg.createdAt"
@@ -62,8 +62,8 @@
               </template>
             </div>
           </template>
-        </Chat.MessageImage>
-        <Chat.Message
+        </MessageImage>
+        <Message
           v-else
           style="word-break: break-all"
           :sent="isSended(msg.author)"
@@ -96,13 +96,13 @@
             </div>
           </template>
           <template #audio>
-            <Chat.MessageVoice
+            <MessageVoice
               v-if="msg.attachments?.at(0)?.mime.includes('webm')"
               style="width: 200px"
               :filename="`${msg.attachments.at(0)?.name}.${msg.attachments.at(0)?.ext}`"
             />
           </template>
-        </Chat.Message>
+        </Message>
         <QMenu touch-position context-menu @before-show="onShowContext(msg._id)" @before-hide="onHideContext(msg._id)">
           <div class="row justify-center q-pa-sm">
             <QBtn
@@ -141,7 +141,7 @@
 import type { IMessage, Q } from '@/types';
 import type { QScrollArea } from 'quasar';
 import UserAvatar from '~/UserAvatar.vue';
-import Chat from '~/chat';
+import { Message, MessageImage, MessageVoice, ModalImage } from '~/chat';
 import { ref, computed, watch, nextTick } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useStore, useChatStore } from '@/stores';

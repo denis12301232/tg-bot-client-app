@@ -23,34 +23,36 @@
 <script setup lang="ts">
 import type { IUser, Responses } from '@/types';
 import UserAvatar from '~/UserAvatar.vue';
-import { onMounted, onUnmounted } from 'vue';
+import { onMounted, onUnmounted, watchEffect } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useStore, useChatStore } from '@/stores';
 import { useI18n } from 'vue-i18n';
+import { useFetch, useVModel } from '@/hooks';
+import { ChatService } from '@/api/services';
+import { useRouter } from 'vue-router';
 
-defineProps<{
-  users?: IUser[];
-}>();
-const emit = defineEmits<{
-  (event: 'update:search', value: string): void;
-}>();
+interface Props {
+  modelValue: string;
+}
 
+defineProps<Props>();
 const { t } = useI18n();
+const router = useRouter();
+const search = useVModel<string>();
 const { user } = storeToRefs(useStore());
 const chatStore = useChatStore();
-const { chats, currentChatId } = storeToRefs(chatStore);
+const { chats } = storeToRefs(chatStore);
+const { request: searchUsers, data: users } = useFetch<IUser[], typeof ChatService.findUsers>(ChatService.findUsers);
 
 onMounted(() => chatStore.socket.on('chat:create', onChatCreate));
 onUnmounted(() => chatStore.socket.removeListener('chat:create', onChatCreate));
+watchEffect(() => searchUsers(search.value));
 
 function onChatCreate(chat: Responses.Chat) {
-  if (chats.value.has(chat._id)) {
-    currentChatId.value = chat._id;
-  } else {
+  if (!chats.value.has(chat._id)) {
     chats.value.set(chat._id, chat);
   }
-  currentChatId.value = chat._id;
-  emit('update:search', '');
+  router.push(`/chat/${chat._id}`).then(() => (search.value = ''));
 }
 
 async function openOrCreateChat(userId: string) {

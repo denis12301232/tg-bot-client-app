@@ -1,13 +1,13 @@
 <template>
   <QDialog v-model="modal">
-    <ChatGroupRoles />
+    <GroupRoles />
   </QDialog>
   <QCard>
     <QCardSection class="row justify-end">
       <QBtn v-close-popup icon="eva-close" round dense flat color="negative" />
     </QCardSection>
     <QCardSection class="row column items-center">
-      <ChatGroupUpdate />
+      <GroupUpdate />
     </QCardSection>
     <QCardSection>
       <div class="row justify-center">
@@ -18,8 +18,7 @@
 </template>
 
 <script setup lang="ts">
-import ChatGroupUpdate from '~/chat/ChatGroupUpdate.vue';
-import ChatGroupRoles from '~/chat/ChatGroupRoles.vue';
+import { GroupUpdate, GroupRoles } from '@/components/chat';
 import { ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 

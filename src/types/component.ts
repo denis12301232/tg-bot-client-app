@@ -49,3 +49,9 @@ export namespace Q {
     descending: boolean;
   }
 }
+
+export namespace Extra {
+  export namespace Chat {
+    export type ModalName = 'modal:group-create' | 'modal:group-info' | 'modal:group-settings' | 'modal:group-add-user';
+  }
+}

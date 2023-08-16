@@ -65,10 +65,11 @@ import type { IMessage } from '@/types';
 import UserAvatar from '~/UserAvatar.vue';
 import { storeToRefs } from 'pinia';
 import { useChatStore, useStore } from '@/stores';
-import { ChatService } from '@/api/services';
 import { useI18n } from 'vue-i18n';
+import { useRouter } from 'vue-router';
 
 const { t, d } = useI18n();
+const router = useRouter();
 const { user, currentTheme } = storeToRefs(useStore());
 const { currentChatId, sortedChats } = storeToRefs(useChatStore());
 
@@ -78,9 +79,8 @@ function showLastMessageText(msg: IMessage | undefined) {
   if (msg?.attachments?.at(0)?.mime.includes('image')) return t('chat.messages.image');
 }
 
-function onOpenChat(chat_id: string) {
-  currentChatId.value = chat_id;
-  ChatService.updateRead(chat_id);
+function onOpenChat(chatId: string) {
+  router.push(`/chat/${chatId}`);
 }
 
 function showDate(dateString: string) {

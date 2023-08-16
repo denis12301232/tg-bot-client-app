@@ -1,31 +1,29 @@
 <template>
-  <QItem class="header" style="flex-wrap: wrap">
-    <QItemSection avatar>
-      <QBtn dense flat round icon="eva-arrow-back" color="primary" @click="resetCurrentChat" />
-    </QItemSection>
-    <QItemSection avatar>
+  <div class="row justify-between items-center q-pa-sm">
+    <div class="row items-center">
+      <div class="q-mr-sm">
+        <QBtn dense flat round icon="eva-arrow-back" color="primary" @click="$router.push('/chat')" />
+      </div>
       <UserAvatar
-        class="avatar"
+        class="avatar q-mr-sm"
         :name="type === 'group' ? currentChat?.group.title : companion?.name"
         :avatar="type === 'group' ? currentChat?.group.avatar : companion?.avatar"
-        @click="type === 'group' && emit('open-modal', 'modal:group-info')"
+        @click.stop="type === 'group' && emit('modal', 'modal:group-info')"
       />
-    </QItemSection>
-    <QItemSection style="width: 50px">
-      <QItemLabel class="text-h6 text-cut">
-        {{ type === 'group' ? currentChat?.group.title : companion?.name }}
-      </QItemLabel>
-      <QItemLabel caption>
-        <div v-if="!Object.values(typing || {}).at(0)" class="text-cut">
+      <div>
+        <div class="text-h6">
+          {{ type === 'group' ? currentChat?.group.title : companion?.name }}
+        </div>
+        <div v-if="!Object.values(typing || {}).at(0)" class="text-caption">
           {{ type === 'group' ? currentChat?.members_count + ` ${t('chat.messages.people')}` : companion?.status }}
         </div>
-        <div v-else class="text-cut">
+        <div v-else class="text-caption">
           <QSpinnerDots size="1rem" />
           {{ Object.values(currentChat?.typing || {}).at(0) + ` ${t('chat.messages.typing')}` }}
         </div>
-      </QItemLabel>
-    </QItemSection>
-    <QItemSection side style="display: flex; flex-direction: row; align-items: center">
+      </div>
+    </div>
+    <div>
       <QBtn
         v-if="isGroupAdmin"
         dense
@@ -33,7 +31,7 @@
         round
         color="green"
         icon="eva-person-add-outline"
-        @click="emit('open-modal', 'modal:group-add-user')"
+        @click="emit('modal', 'modal:group-add-user')"
       >
         <QTooltip class="bg-indigo" :offset="[10, 10]" :delay="1000">{{ t('chat.hints.add') }}</QTooltip>
       </QBtn>
@@ -45,13 +43,7 @@
             </QItemSection>
             <QItemSection>{{ t('chat.menu.group.leave') }}</QItemSection>
           </QItem>
-          <QItem
-            v-if="type === 'group'"
-            v-ripple
-            v-close-popup
-            clickable
-            @click="emit('open-modal', 'modal:group-info')"
-          >
+          <QItem v-if="type === 'group'" v-ripple v-close-popup clickable @click="emit('modal', 'modal:group-info')">
             <QItemSection avatar class="q-pr-sm" style="min-width: 0">
               <QIcon color="primary" name="eva-info-outline" />
             </QItemSection>
@@ -62,7 +54,7 @@
             v-ripple
             v-close-popup
             clickable
-            @click="emit('open-modal', 'modal:group-settings')"
+            @click="emit('modal', 'modal:group-settings')"
           >
             <QItemSection avatar class="q-pr-sm" style="min-width: 0">
               <QIcon color="primary" name="eva-settings-outline" />
@@ -77,12 +69,12 @@
           </QItem>
         </QList>
       </QBtnDropdown>
-    </QItemSection>
-  </QItem>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
-import type { ChatModal } from '@/types';
+import type { Extra } from '@/types';
 import UserAvatar from '~/UserAvatar.vue';
 import { computed } from 'vue';
 import { storeToRefs } from 'pinia';
@@ -95,17 +87,13 @@ interface Props {
 }
 
 defineProps<Props>();
-const emit = defineEmits<{ 'open-modal': [name: ChatModal] }>();
+const emit = defineEmits<{ modal: [name: Extra.Chat.ModalName] }>();
 const { t } = useI18n();
 const { user } = storeToRefs(useStore());
 const { chats, currentChatId, currentChat } = storeToRefs(useChatStore());
 const companion = computed(() => currentChat.value?.companion);
 const typing = computed(() => currentChat.value?.typing);
 const isGroupAdmin = computed(() => currentChat.value?.group?.roles?.admin?.includes(user.value?._id || ''));
-
-function resetCurrentChat() {
-  currentChatId.value = null;
-}
 
 async function deleteChat() {
   await ChatService.deleteChat(currentChatId.value!);
@@ -123,18 +111,6 @@ async function leaveGroup() {
 </script>
 
 <style scoped lang="scss">
-html.dark {
-  .header {
-    background-color: $blue-grey-10;
-  }
-}
-
-html.light {
-  & .header {
-    background-color: $blue-grey-1;
-  }
-}
-
 .avatar {
   &:hover {
     cursor: pointer;
