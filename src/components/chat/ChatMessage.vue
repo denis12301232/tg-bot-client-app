@@ -11,7 +11,7 @@
       ]"
     >
       <div class="column">
-        <div>{{ text }}</div>
+        <div :class="$style.text">{{ text }}</div>
         <slot name="audio" />
       </div>
 
@@ -82,5 +82,10 @@ const icon = computed(() => (props.read ? 'eva-done-all-outline' : 'eva-checkmar
 .time {
   font-size: 0.8rem;
   line-height: 0.8rem;
+}
+
+.text {
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 </style>

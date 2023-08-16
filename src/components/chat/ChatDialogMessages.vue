@@ -23,6 +23,7 @@
       <div
         v-for="msg in messages"
         :class="[
+          'full-width',
           'row',
           'q-px-lg',
           'q-py-sm',
@@ -64,6 +65,7 @@
         </Chat.MessageImage>
         <Chat.Message
           v-else
+          style="word-break: break-all"
           :sent="isSended(msg.author)"
           :read="msg.read.length > 1"
           :text="msg.text"
@@ -117,13 +119,13 @@
           </div>
           <QList class="q-pa-sm" dense style="min-width: 100px">
             <QItem :class="$style.menu_item" clickable v-close-popup @click="Util.copyTextToClipboard(msg.text)">
-              <QItemSection avatar class="q-px-sm" style="min-width: 20px">
-                <QIcon name="eva-copy" />
+              <QItemSection avatar style="min-width: 20px">
+                <QIcon name="eva-copy" color="indigo" />
               </QItemSection>
               <QItemSection>{{ t('chat.messages.copyMessage') }}</QItemSection>
             </QItem>
             <QItem v-if="!currentChat?.group" v-close-popup :class="$style.menu_item" clickable @click="onDelete">
-              <QItemSection avatar class="q-px-sm" style="min-width: 20px">
+              <QItemSection avatar style="min-width: 20px">
                 <QIcon color="negative" name="eva-trash" />
               </QItemSection>
               <QItemSection>{{ t('chat.messages.deleteMessage') }}</QItemSection>
@@ -229,7 +231,6 @@ function onScroll(info: Q.ScrollEvent) {
 
 .menu_item {
   border-radius: 10px;
-  padding: 0 !important;
 }
 
 .selected-dark {

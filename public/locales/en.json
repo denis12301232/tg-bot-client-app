@@ -658,8 +658,8 @@
             "me": "I",
             "audio": "Audio message",
             "image": "Photo",
-            "deleteMessage": "Delete message",
-            "copyMessage": "Copy text"
+            "deleteMessage": "Delete",
+            "copyMessage": "Copy"
         },
         "search": {
             "placeholder": "Search",

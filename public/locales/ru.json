@@ -657,8 +657,8 @@
             "me": "Я",
             "audio": "Аудиосообщение",
             "image": "Фотография",
-            "deleteMessage": "Удалить сообщение",
-            "copyMessage": "Скопировать текст"
+            "deleteMessage": "Удалить",
+            "copyMessage": "Скопировать"
         },
         "search": {
             "placeholder": "Поиск",

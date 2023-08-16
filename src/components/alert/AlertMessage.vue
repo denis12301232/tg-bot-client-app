@@ -1,7 +1,7 @@
 <template>
   <div
     v-if="!(alert instanceof ChatAlert)"
-    :class="[$style.alert, $style[alert.type], 'q-pa-sm', 'row', 'q-mt-sm', 'items-center', 'no-wrap']"
+    :class="[$style.alert, $style[alert.type], 'q-pa-sm', 'row', 'q-mt-sm', 'items-center', 'no-wrap', 'text-cut']"
     @click="emit('hideById', alert.id)"
   >
     <div class="q-mr-sm">
@@ -22,7 +22,7 @@
         <QItemLabel class="text-subtitle2">
           {{ alert.group?.title ? `${alert.author.name} in ${alert.group?.title}` : alert.author.name }}
         </QItemLabel>
-        <QItemLabel class="text-body1" lines="2">{{ message }}</QItemLabel>
+        <QItemLabel class="text-body2" lines="2">{{ message }}</QItemLabel>
       </QItemSection>
     </QItem>
   </div>
@@ -56,7 +56,6 @@ const message = computed(() => {
 .alert {
   min-height: 50px;
   width: 250px;
-  padding: 5px 5px !important;
   border-radius: 5px;
   color: white;
   cursor: pointer;
