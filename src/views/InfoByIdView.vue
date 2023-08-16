@@ -51,7 +51,7 @@
 
 <script setup lang="ts">
 import FormAssistance from '~/FormAssistance.vue';
-import type { AssistanceResponse } from '@/types';
+import type { Responses } from '@/types';
 import { onMounted, computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useFetch } from '@/hooks';
@@ -64,7 +64,7 @@ const router = useRouter();
 const route = useRoute();
 const formId = computed(() => String(route.params.id));
 const isEditable = computed(() => !!route.query.edit);
-const { request, data: form } = useFetch<Omit<AssistanceResponse, '_id'>, (typeof AssistanceService)['getFormById']>(
+const { request, data: form } = useFetch<Omit<Responses.Assistance, '_id'>, (typeof AssistanceService)['getFormById']>(
   AssistanceService.getFormById
 );
 const { request: updateForm, loading: isUpdating } = useFetch(AssistanceService.updateForm, {

@@ -100,15 +100,15 @@ import { AssistanceService } from '@/api/services';
 import { QIcon } from 'quasar';
 import { useI18n } from 'vue-i18n';
 
-type T = { created: number; errors: { message: string; row: number }[] };
-type S = typeof AssistanceService.uploadFormsListCSV;
-
 const formData = new FormData();
 const { t, locale, messages } = useI18n();
 const file = ref<File | null>(null);
 const help = ref(false);
 const lang = ref('uk');
-const { request, loading, data } = useFetch<T, S>(AssistanceService.uploadFormsListCSV, {
+const { request, loading, data } = useFetch<
+  { created: number; errors: { message: string; row: number }[] },
+  typeof AssistanceService.uploadFormsListCSV
+>(AssistanceService.uploadFormsListCSV, {
   alert: true,
   successMsg: t('list.import.messages.success'),
   afterSuccess: () => (file.value = null),

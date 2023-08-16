@@ -62,7 +62,7 @@ import { computed, watch } from 'vue';
 import { useVModel } from '@/hooks';
 import { useI18n } from 'vue-i18n';
 
-const props = defineProps<{
+interface Props {
   query: {
     district: string;
     street: string;
@@ -73,8 +73,9 @@ const props = defineProps<{
     };
   };
   criterias: ('district' | 'birth' | 'street' | 'sector')[];
-}>();
+}
 
+const props = defineProps<Props>();
 defineEmits<{
   'update:query': [query: typeof props.query];
   'update:criterias': [critery: typeof props.criterias];

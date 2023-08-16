@@ -56,14 +56,13 @@ import { useStore } from '@/stores';
 import { WebRtcDto } from '@/api/dto';
 import { useI18n } from 'vue-i18n';
 
-const props = defineProps<{
+interface Props {
   abonents: Map<string, IAbonent>;
   messages: { user_id: string; msg: string }[];
-}>();
-const emit = defineEmits<{
-  (event: 'my-msg', msg: { user_id: string; msg: string }): void;
-}>();
+}
 
+const props = defineProps<Props>();
+const emit = defineEmits<{ 'my-msg': [msg: { user_id: string; msg: string }] }>();
 const { t } = useI18n();
 const store = useStore();
 const msg = ref('');

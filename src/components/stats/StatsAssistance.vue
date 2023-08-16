@@ -37,11 +37,12 @@ import { AssistanceService } from '@/api/services';
 import { useFetch } from '@/hooks';
 import { useI18n } from 'vue-i18n';
 
-const props = defineProps<{
+interface Props {
   label: string;
   by: 'month' | 'year';
-}>();
+}
 
+const props = defineProps<Props>();
 const { t, messages, locale } = useI18n();
 const date = ref('');
 const chartRef = ref<HTMLCanvasElement | null>(null);

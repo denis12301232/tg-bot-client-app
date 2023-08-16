@@ -15,7 +15,7 @@
 
 <script setup lang="ts">
 import type { IMessage } from './types';
-import AlertList from '~/alert/AlertList.vue';
+import { AlertList } from './components/alert';
 import LoaderPage from '~/LoaderPage.vue';
 import { onMounted, watch } from 'vue';
 import { useStore, useChatStore } from '@/stores';

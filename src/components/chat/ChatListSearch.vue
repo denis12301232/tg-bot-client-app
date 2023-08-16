@@ -21,7 +21,7 @@
 </template>
 
 <script setup lang="ts">
-import type { IUser, ChatResponse } from '@/types';
+import type { IUser, Responses } from '@/types';
 import UserAvatar from '~/UserAvatar.vue';
 import { onMounted, onUnmounted } from 'vue';
 import { storeToRefs } from 'pinia';
@@ -43,7 +43,7 @@ const { chats, currentChatId } = storeToRefs(chatStore);
 onMounted(() => chatStore.socket.on('chat:create', onChatCreate));
 onUnmounted(() => chatStore.socket.removeListener('chat:create', onChatCreate));
 
-function onChatCreate(chat: ChatResponse) {
+function onChatCreate(chat: Responses.Chat) {
   if (chats.value.has(chat._id)) {
     currentChatId.value = chat._id;
   } else {

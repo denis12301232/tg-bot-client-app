@@ -21,10 +21,12 @@
 import { Util } from '@/util';
 import { useI18n } from 'vue-i18n';
 
-defineProps<{
+interface Props {
   link: string;
   title: string;
-}>();
+}
+
+defineProps<Props>();
 
 const { t } = useI18n();
 </script>

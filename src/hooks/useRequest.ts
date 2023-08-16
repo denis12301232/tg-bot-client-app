@@ -1,4 +1,4 @@
-import type { Pagination, PaginationRequest } from '@/types';
+import type {  Q } from '@/types';
 import { type ResponsePromise, HTTPError } from 'ky';
 import { ref, type Ref } from 'vue';
 
@@ -11,7 +11,7 @@ interface Opts {
 }
 
 export default function useRequest<T>(
-  f: (args: PaginationRequest) => ResponsePromise,
+  f: (args: Q.PaginationRequest) => ResponsePromise,
   { limit = 10, page = 1, sort = '', descending = true, filters }: Opts = {}
 ) {
   const loading = ref(false);
@@ -26,7 +26,7 @@ export default function useRequest<T>(
     rowsNumber: 0, // total
   });
   
-  async function request(props: { pagination: Pagination; filter?: any }) {
+  async function request(props: { pagination: Q.Pagination; filter?: any }) {
     try {
       loading.value = true;
       const { page, rowsPerPage, sortBy, descending } = props.pagination;

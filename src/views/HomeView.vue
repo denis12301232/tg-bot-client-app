@@ -22,7 +22,7 @@
 </template>
 
 <script setup lang="ts">
-import type { AssistanceResponse } from '@/types';
+import type { Responses } from '@/types';
 import FormAssistance from '~/FormAssistance.vue';
 import { ref } from 'vue';
 import { useFetch, useTelegram } from '@/hooks';
@@ -58,7 +58,7 @@ const form = ref({
   personalDataAgreement: false,
   photoAgreement: false,
 });
-const { request, loading } = useFetch<AssistanceResponse, (typeof AssistanceService)['saveForm']>(
+const { request, loading } = useFetch<Responses.Assistance, (typeof AssistanceService)['saveForm']>(
   AssistanceService.saveForm,
   {
     alert: true,

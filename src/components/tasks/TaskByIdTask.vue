@@ -50,9 +50,11 @@ import type { ITask } from '@/types';
 import { Util } from '@/util';
 import { useI18n } from 'vue-i18n';
 
-defineProps<{
+interface Props {
   task?: ITask;
-}>();
+}
+
+defineProps<Props>();
 
 const { t } = useI18n();
 </script>

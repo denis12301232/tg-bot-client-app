@@ -45,7 +45,7 @@
     </QInput>
   </div>
   <QScrollArea
-    class="fit "
+    class="fit"
     :thumb-style="{ width: '7px' }"
     :content-style="{ position: 'relative', overflow: 'hidden' }"
     :content-active-style="{ position: 'relative', overflow: 'hidden' }"
@@ -63,10 +63,7 @@ import { useFetch } from '@/hooks';
 import { ChatService } from '@/api/services';
 import { useI18n } from 'vue-i18n';
 
-const emit = defineEmits<{
-  openModal: [name: ChatModal];
-}>();
-
+const emit = defineEmits<{ openModal: [name: ChatModal] }>();
 const { t } = useI18n();
 const menu = ref(false);
 const search = ref('');

@@ -136,7 +136,7 @@
 </template>
 
 <script setup lang="ts">
-import type { IMessage, QScrollEvent } from '@/types';
+import type { IMessage, Q } from '@/types';
 import type { QScrollArea } from 'quasar';
 import UserAvatar from '~/UserAvatar.vue';
 import Chat from '~/chat';
@@ -146,10 +146,11 @@ import { useStore, useChatStore } from '@/stores';
 import { Util } from '@/util';
 import { useI18n } from 'vue-i18n';
 
-defineProps<{
+interface Props {
   type: 'dialog' | 'group';
-}>();
+}
 
+defineProps<Props>();
 const LIMIT = 10;
 const { t } = useI18n();
 const chatStore = useChatStore();
@@ -215,7 +216,7 @@ function setReaction(msgId: string, reaction: string) {
   chatStore.socket.emit('chat:message-reactions', { msgId, reaction });
 }
 
-function onScroll(info: QScrollEvent) {
+function onScroll(info: Q.ScrollEvent) {
   verticalScroll.value = info.verticalSize < info.verticalContainerSize ? 1 : info.verticalPercentage;
 }
 </script>

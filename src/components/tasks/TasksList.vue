@@ -146,13 +146,13 @@ import { TaskService } from '@/api/services';
 import { Util } from '@/util';
 import { useI18n } from 'vue-i18n';
 
-type T = { message: string; taskId: string };
-type S = typeof TaskService.setUserForTask;
-
 const store = useStore();
 const { t } = useI18n();
 const { request: updateTaskStatus, loading: isTaskStatusLoading } = useFetch(TaskService.updateTaskStatus);
-const { request: setUserForTask, loading: isSetUserLoading } = useFetch<T, S>(TaskService.setUserForTask, {
+const { request: setUserForTask, loading: isSetUserLoading } = useFetch<
+  { message: string; taskId: string },
+  typeof TaskService.setUserForTask
+>(TaskService.setUserForTask, {
   afterResponse: ({ data }) => {
     const task = tasks.value?.find((task) => task._id === data.value.taskId);
     if (task) {

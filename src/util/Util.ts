@@ -1,4 +1,4 @@
-import type { ITask, AssistanceResponse } from '@/types';
+import type { ITask, Responses } from '@/types';
 import type { ComposerTranslation } from 'vue-i18n';
 
 export default class Util {
@@ -91,7 +91,7 @@ export default class Util {
     }
   }
 
-  static formatForm(form: AssistanceResponse) {
+  static formatForm(form: Responses.Assistance) {
     const { _id, ...rest } = form;
     return rest;
   }

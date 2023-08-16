@@ -135,13 +135,13 @@ import { TaskService } from '@/api/services';
 import { Util } from '@/util';
 import { useI18n } from 'vue-i18n';
 
-const props = defineProps<{
+interface Props {
   taskId: string;
   subtasks: ISubtask[];
-}>();
-defineEmits<{
-  'update:subtasks': [value: ISubtask[]];
-}>();
+}
+
+const props = defineProps<Props>();
+defineEmits<{ 'update:subtasks': [value: ISubtask[]] }>();
 
 const { t } = useI18n();
 const modal = ref(false);

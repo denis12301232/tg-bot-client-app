@@ -220,7 +220,7 @@
 </template>
 
 <script setup lang="ts">
-import type { AssistanceResponse } from '@/types';
+import type { Responses } from '@/types';
 import type { QForm } from 'quasar';
 import FormAssistanceGroup from '~/FormAssistanceGroup.vue';
 import { ref, watch } from 'vue';
@@ -229,7 +229,7 @@ import { Rules } from '@/util';
 import { useI18n } from 'vue-i18n';
 
 interface Props {
-  modelValue: Omit<AssistanceResponse, '_id' | 'sector'>;
+  modelValue: Omit<Responses.Assistance, '_id' | 'sector'>;
   title: string;
   loading: boolean;
   reset: boolean;
@@ -241,7 +241,7 @@ const { t, messages, locale } = useI18n();
 const { districtOptions, kidsAgeOptions, yesNoOptions, getStreetOptions } = useAssistanceFormOptions();
 const rules = Rules.assistance(t);
 // eslint-disable-next-line vue/no-dupe-keys
-const form = useVModel<Omit<AssistanceResponse, '_id' | 'sector'>>();
+const form = useVModel<Omit<Responses.Assistance, '_id' | 'sector'>>();
 const formRef = ref<QForm | null>(null);
 const valid = ref(false);
 

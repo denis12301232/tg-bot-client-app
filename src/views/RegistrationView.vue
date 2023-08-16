@@ -65,7 +65,7 @@
 </template>
 
 <script setup lang="ts">
-import type { LoginResponse } from '@/types';
+import type { Responses } from '@/types';
 import type { QForm } from 'quasar';
 import { ref, reactive, watch } from 'vue';
 import { useStore } from '@/stores';
@@ -75,9 +75,6 @@ import { useFetch } from '@/hooks';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 
-type T = LoginResponse;
-type S = (typeof AuthService)['registration'];
-
 const { t } = useI18n();
 const store = useStore();
 const router = useRouter();
@@ -86,13 +83,16 @@ const isPasswordVisible = ref(false);
 const formRef = ref<QForm>();
 const errors = reactive({ name: '', login: '', email: '', password: '' });
 const form = reactive({ name: '', login: '', email: '', password: '' });
-const { request, loading, error } = useFetch<T, S>(AuthService.registration, {
-  afterSuccess: ({ data }) => {
-    store.user = data.value.user;
-    localStorage.setItem('token', data.value.accessToken);
-    router.push('/');
-  },
-});
+const { request, loading, error } = useFetch<Responses.Login, (typeof AuthService)['registration']>(
+  AuthService.registration,
+  {
+    afterSuccess: ({ data }) => {
+      store.user = data.value.user;
+      localStorage.setItem('token', data.value.accessToken);
+      router.push('/');
+    },
+  }
+);
 const rules = Rules.registration(t);
 
 watch(form, () => {

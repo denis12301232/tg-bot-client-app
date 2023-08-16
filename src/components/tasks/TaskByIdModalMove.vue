@@ -89,14 +89,13 @@ import { TaskService } from '@/api/services';
 import { Util } from '@/util';
 import { useI18n } from 'vue-i18n';
 
-const props = defineProps<{
+interface Props {
   taskId: string;
   subtaskId: string;
-}>();
-const emit = defineEmits<{
-  move: [id: string];
-}>();
+}
 
+const props = defineProps<Props>();
+const emit = defineEmits<{ move: [id: string] }>();
 const { t } = useI18n();
 const selected = ref<ITask[]>([]);
 const {

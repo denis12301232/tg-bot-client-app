@@ -78,63 +78,12 @@
               </QFabAction>
             </QFab>
           </div>
-
-          <!-- <QBtnGroup flat>
-            <QBtn color="green" icon="eva-cloud-upload-outline" dense flat @click="openModal('import')">
-              <QTooltip class="bg-white text-black" :offset="[10, 10]" :delay="1000">
-                {{ t('list.hints.import') }}
-              </QTooltip>
-            </QBtn>
-            <QBtn
-              color="orange"
-              dense
-              flat
-              icon="eva-cloud-download-outline"
-              :disable="!select.length"
-              @click="openModal('export')"
-            >
-              <QTooltip class="bg-white text-black" :offset="[10, 10]" :delay="1000">
-                {{ t('list.hints.export') }}
-              </QTooltip>
-            </QBtn>
-            <QBtn color="deep-orange" icon="eva-options-outline" dense flat @click="openModal('filters')">
-              <QTooltip class="bg-white text-black" :offset="[10, 10]" :delay="1000">
-                {{ t('list.hints.filter') }}
-              </QTooltip>
-            </QBtn>
-            <QBtn
-              v-if="visibleColumns.length"
-              dense
-              round
-              flat
-              icon="eva-trash"
-              color="negative"
-              :disable="loading || isDelLoading || !select.length"
-              @click="onDelete(ids)"
-            >
-              <QTooltip class="bg-white text-black" :offset="[10, 10]" :delay="1000">
-                {{ t('list.hints.delete') }}
-              </QTooltip>
-            </QBtn>
-            <QBtn icon="eva-more-horizontal-outline" dense flat>
-              <QTooltip class="bg-white text-black" :offset="[10, 10]" :delay="1000">
-                {{ t('list.hints.columns') }}
-              </QTooltip>
-              <QMenu max-width="200px">
-                <QList>
-                  <QItem v-for="column in columns" :key="(column.field as string)">
-                    <QToggle v-model="visibleColumns" :val="column.field" :label="column.label" />
-                  </QItem>
-                </QList>
-              </QMenu>
-            </QBtn>
-          </QBtnGroup> -->
         </div>
       </template>
       <template #header-selection="scope">
         <QCheckbox v-model="scope.selected" dark />
       </template>
-      <template #body="scope: { row: AssistanceResponse, rowIndex: number, selected: boolean }">
+      <template #body="scope: { row: Responses.Assistance, rowIndex: number, selected: boolean }">
         <QTr :key="scope.row._id">
           <QTd v-if="visibleColumns.length">
             <QCheckbox v-model="scope.selected" />
@@ -663,7 +612,7 @@ import ListExport from '~/list/ListExport.vue';
 import ListImport from '~/list/ListImport.vue';
 import ListFilters from '~/list/ListFilters.vue';
 import type { QTable } from 'quasar';
-import type { AssistanceResponse } from '@/types';
+import type { Responses } from '@/types';
 import { onMounted, ref, computed } from 'vue';
 import { useRequest, useFetch, useAssistanceFormOptions } from '@/hooks';
 import { AssistanceService } from '@/api/services';
@@ -682,7 +631,7 @@ const {
   data: forms,
   loading,
   filter,
-} = useRequest<AssistanceResponse[]>(AssistanceService.getForms, {
+} = useRequest<Responses.Assistance[]>(AssistanceService.getForms, {
   sort: '_id',
   descending: true,
   limit: 10,
@@ -696,7 +645,7 @@ const { request: onDelete, loading: isDelLoading } = useFetch<T, S>(AssistanceSe
 });
 const { request: updateForm, loading: isUpdating } = useFetch(AssistanceService.updateForm);
 const criterias = ref<('district' | 'birth' | 'street' | 'sector')[]>([]);
-const select = ref<AssistanceResponse[]>([]);
+const select = ref<Responses.Assistance[]>([]);
 const modal = ref(false);
 const is = ref<'import' | 'export' | 'filters'>('export');
 const visibleColumns = ref([

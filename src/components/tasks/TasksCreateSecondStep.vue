@@ -40,17 +40,17 @@ import { Validate } from '@/util';
 import { useVModel } from '@/hooks';
 import { useI18n } from 'vue-i18n';
 
-type Subtasks = { title: string; description: string }[];
-
-defineProps<{
+interface Props {
   title: string;
   description: string;
-  subtasks: Subtasks;
-}>();
+  subtasks: { title: string; description: string }[];
+}
+
+defineProps<Props>();
 defineEmits<{
   'update:title': [value: string];
   'update:description': [value: string];
-  'update:subtasks': [value: Subtasks];
+  'update:subtasks': [value: Props['subtasks'][0]];
 }>();
 
 const { t } = useI18n();
@@ -61,7 +61,7 @@ const title = useVModel<string>('title');
 // eslint-disable-next-line vue/no-dupe-keys
 const description = useVModel<string>('description');
 // eslint-disable-next-line vue/no-dupe-keys
-const subtasks = useVModel<Subtasks>('subtasks');
+const subtasks = useVModel<Props['subtasks']>('subtasks');
 
 const rules = {
   title: [(v: string) => Validate.required(v) || t('tasks.create.second.form.fields.title.errors.required')],

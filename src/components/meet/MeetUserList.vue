@@ -27,10 +27,11 @@ import { computed } from 'vue';
 import { useStore } from '@/stores';
 import { useI18n } from 'vue-i18n';
 
-const props = defineProps<{
+interface Props {
   abonents: Map<string, IAbonent>;
-}>();
+}
 
+const props = defineProps<Props>();
 const { t } = useI18n();
 const store = useStore();
 const users = computed(() => [store.user, ...Array.from(props.abonents.values()).map((a) => a.info)]);

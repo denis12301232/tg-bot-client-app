@@ -1,9 +1,9 @@
-import type { IMessage, ChatResponse, SocketTyped, Entries } from '@/types';
+import type { IMessage, Responses, SocketTyped, Entries } from '@/types';
 import { type Ref, ref, computed, watchEffect } from 'vue';
 import { ChatService } from '@/api/services';
 
 export default function useMessanger(socket: SocketTyped) {
-  const chats = ref<Map<string, ChatResponse>>(new Map());
+  const chats = ref<Map<string, Responses.Chat>>(new Map());
   const currentChatId = ref<string | null>(null);
   const currentChat = computed(() => (currentChatId.value ? chats.value.get(currentChatId.value) || null : null));
   const sortedChats = computed(
@@ -34,7 +34,7 @@ export default function useMessanger(socket: SocketTyped) {
   }
 
   async function onGetUserChats() {
-    const data = await ChatService.getUserChats().json<ChatResponse[]>();
+    const data = await ChatService.getUserChats().json<Responses.Chat[]>();
     data.forEach((chat) => chats.value.set(chat._id, chat));
   }
 
@@ -45,7 +45,7 @@ function useMessangerEvents({
   chats,
   currentChatId,
 }: {
-  chats: Ref<Map<string, ChatResponse>>;
+  chats: Ref<Map<string, Responses.Chat>>;
   currentChatId: Ref<string | null>;
 }) {
   const timers = new Map<string, number>();
@@ -69,7 +69,7 @@ function useMessangerEvents({
       currentChatId.value !== message.chat_id ? chat.unread++ : ChatService.updateRead(chat._id);
       chat.total++;
     } else {
-      const data = await ChatService.getUserChatById(message.chat_id).json<ChatResponse>();
+      const data = await ChatService.getUserChatById(message.chat_id).json<Responses.Chat>();
       chats.value.set(data._id, data);
     }
   }
@@ -97,7 +97,7 @@ function useMessangerEvents({
     chat && (chat.companion.status = status);
   }
 
-  function onInviteToGroup(chat: ChatResponse) {
+  function onInviteToGroup(chat: Responses.Chat) {
     chats.value.set(chat._id, chat);
   }
 

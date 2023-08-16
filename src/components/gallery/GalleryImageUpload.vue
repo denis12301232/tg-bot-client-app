@@ -19,19 +19,17 @@
 </template>
 
 <script setup lang="ts">
-import type { ImagesResponse, ImageInjected } from '@/types';
+import type { Responses, Injected } from '@/types';
 import { inject } from 'vue';
 import { ImageService } from '@/api/services';
 import { useI18n } from 'vue-i18n';
 
-const emit = defineEmits<{
-  modal: [value: boolean];
-}>();
+const emit = defineEmits<{ modal: [value: boolean] }>();
 const { t } = useI18n();
-const { images, total } = inject<ImageInjected>('data')!;
+const { images, total } = inject<Injected.Image>('data')!;
 
 function onUploaded(info: { files: readonly File[]; xhr: XMLHttpRequest }) {
-  const data = JSON.parse(info.xhr.response) as ImagesResponse['images'];
+  const data = JSON.parse(info.xhr.response) as Responses.Images['images'];
   images.value = [...data, ...images.value];
   total.value = data.length + total.value;
   emit('modal', false);

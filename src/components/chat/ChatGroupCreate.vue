@@ -65,7 +65,7 @@
 </template>
 
 <script setup lang="ts">
-import type { ChatResponse } from '@/types';
+import type {Responses } from '@/types';
 import SetAvatar from '~/SetAvatar.vue';
 import { ref, reactive, onMounted, onUnmounted } from 'vue';
 import { useStore, useChatStore } from '@/stores';
@@ -98,7 +98,7 @@ async function createGroup() {
   });
 }
 
-function onChatCreateGroup(chat: ChatResponse) {
+function onChatCreateGroup(chat: Responses.Chat) {
   chatStore.chats.set(chat._id, chat);
   props.onCloseModal();
 }

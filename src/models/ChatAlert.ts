@@ -1,13 +1,13 @@
-import type { ChatResponse, IAttachment, IMessage, IUser } from '@/types';
+import type { Responses, IAttachment, IMessage, IUser } from '@/types';
 import Alert from './Alert';
 
 export default class ChatAlert extends Alert {
   readonly chatId: string;
   readonly author: IUser;
   readonly attachments: IAttachment[];
-  readonly group: ChatResponse['group'] | null = null;
+  readonly group: Responses.Chat['group'] | null = null;
 
-  constructor(msg: IMessage, author: IUser, chat: ChatResponse) {
+  constructor(msg: IMessage, author: IUser, chat: Responses.Chat) {
     super('info', msg.text);
     this.attachments = msg.attachments;
     this.chatId = msg.chat_id;

@@ -25,15 +25,15 @@
 import GalleryImageFull from '~/gallery/GalleryImageFull.vue';
 import GalleryImageList from '~/gallery/GalleryImageList.vue';
 import GalleryImageUpload from '~/gallery/GalleryImageUpload.vue';
-import type { ImageInjected, ImagesResponse } from '@/types';
+import type { Injected, Responses } from '@/types';
 import { inject, ref, watch } from 'vue';
 import { useFetch } from '@/hooks';
 import { ImageService } from '@/api/services';
 
-const { images, total, skip, uploadModal } = inject<ImageInjected>('data')!;
+const { images, total, skip, uploadModal } = inject<Injected.Image>('data')!;
 const modal = ref(false);
 const currentIndex = ref(0);
-const { request, loading, data, error } = useFetch<ImagesResponse, typeof ImageService.getImages>(
+const { request, loading, data, error } = useFetch<Responses.Images, typeof ImageService.getImages>(
   ImageService.getImages
 );
 

@@ -1,4 +1,4 @@
-import type { LoginResponse } from '@/types';
+import type { Responses } from '@/types';
 import { $auth } from '@/api';
 
 export default class AuthService {
@@ -7,7 +7,7 @@ export default class AuthService {
   }
 
   static refresh() {
-    return $auth.get('auth/refresh').json<LoginResponse>();
+    return $auth.get('auth/refresh').json<Responses.Login>();
   }
 
   static logout() {

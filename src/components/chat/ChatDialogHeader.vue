@@ -90,13 +90,12 @@ import { useStore, useChatStore } from '@/stores';
 import { ChatService } from '@/api/services';
 import { useI18n } from 'vue-i18n';
 
-defineProps<{
+interface Props {
   type: 'dialog' | 'group';
-}>();
-const emit = defineEmits<{
-  'open-modal': [name: ChatModal];
-}>();
+}
 
+defineProps<Props>();
+const emit = defineEmits<{ 'open-modal': [name: ChatModal] }>();
 const { t } = useI18n();
 const { user } = storeToRefs(useStore());
 const { chats, currentChatId, currentChat } = storeToRefs(useChatStore());

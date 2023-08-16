@@ -20,14 +20,14 @@
 
 <script setup lang="ts">
 import GalleryImageDelete from '~/gallery/GalleryImageDelete.vue';
-import type { ImagesResponse } from '@/types';
+import type { Responses } from '@/types';
 import { ref, provide, computed } from 'vue';
 import { useStore } from '@/stores';
 import { useI18n } from 'vue-i18n';
 
 const { t } = useI18n();
 const store = useStore();
-const images = ref<ImagesResponse['images']>([]);
+const images = ref<Responses.Images['images']>([]);
 const total = ref(0);
 const selected = ref(new Set<string>());
 const uploadModal = ref(false);

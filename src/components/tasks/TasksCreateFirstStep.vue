@@ -53,10 +53,12 @@ import { Validate } from '@/util';
 import { useVModel } from '@/hooks';
 import { useI18n } from 'vue-i18n';
 
-defineProps<{
+interface Props {
   title: string;
   tags: string[];
-}>();
+}
+
+defineProps<Props>();
 const emit = defineEmits<{
   'update:title': [title: string];
   'update:tags': [tags: string[]];

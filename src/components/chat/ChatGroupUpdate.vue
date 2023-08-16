@@ -29,7 +29,7 @@
 </template>
 
 <script setup lang="ts">
-import type { ChatResponse } from '@/types';
+import type { Responses } from '@/types';
 import SetAvatar from '~/SetAvatar.vue';
 import { reactive, computed, watchEffect } from 'vue';
 import { storeToRefs } from 'pinia';
@@ -53,7 +53,7 @@ const params = computed(() => ({
   title: settings.title ? settings.title : undefined,
   about: settings.about ? settings.about : undefined,
 }));
-const { request: updateGroup, loading } = useFetch<ChatResponse['group'], typeof ChatService.updateGroup>(
+const { request: updateGroup, loading } = useFetch<Responses.Chat['group'], typeof ChatService.updateGroup>(
   ChatService.updateGroup,
   {
     afterSuccess: ({ data }) => {

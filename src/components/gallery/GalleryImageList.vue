@@ -36,21 +36,23 @@
 
 <script setup lang="ts">
 import LoaderWheel from '~/LoaderWheel.vue';
-import type { ImageInjected } from '@/types';
+import type { Injected } from '@/types';
 import { onMounted, inject } from 'vue';
 import { useStore } from '@/stores';
 import { ENV } from '@/util';
 import { useI18n } from 'vue-i18n';
 
-const props = defineProps<{
+interface Props {
   loading: boolean;
   error: string;
-}>();
+}
+
+const props = defineProps<Props>();
 const emit = defineEmits<{
   open: [index: number];
   request: [];
 }>();
-const { images, total, selected } = inject<ImageInjected>('data')!;
+const { images, total, selected } = inject<Injected.Image>('data')!;
 const store = useStore();
 const { t } = useI18n();
 

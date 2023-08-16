@@ -57,7 +57,7 @@
 </template>
 
 <script setup lang="ts">
-import type { AssistanceResponse } from '@/types';
+import type { Responses } from '@/types';
 import { AssistanceService } from '@/api/services';
 import { ref, watch } from 'vue';
 import { useFetch } from '@/hooks';
@@ -74,7 +74,7 @@ const {
   data: forms,
   loading,
   error,
-} = useFetch<AssistanceResponse[], typeof AssistanceService.findForms>(AssistanceService.findForms, {
+} = useFetch<Responses.Assistance[], typeof AssistanceService.findForms>(AssistanceService.findForms, {
   afterResponse: ({ response }) => {
     total.value = Number(response.headers.get('x-total-count')) || 0;
   },

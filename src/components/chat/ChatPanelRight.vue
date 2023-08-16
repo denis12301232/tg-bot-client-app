@@ -18,10 +18,7 @@ import { useChatStore } from '@/stores';
 import { storeToRefs } from 'pinia';
 import { useI18n } from 'vue-i18n';
 
-const emit = defineEmits<{
-  (event: 'open-modal', component: ChatModal): void;
-}>();
-
+const emit = defineEmits<{ 'open-modal': [component: ChatModal] }>();
 const { t } = useI18n();
 const { currentChat, currentChatId } = storeToRefs(useChatStore());
 const type = computed(() => currentChat.value?.type || 'dialog');

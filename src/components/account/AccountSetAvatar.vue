@@ -17,11 +17,12 @@ import { useStore } from '@/stores';
 import { useFetch } from '@/hooks';
 import { ToolsService } from '@/api/services';
 
-const props = defineProps<{
+interface Props {
   label: string;
   successMsg: string;
-}>();
+}
 
+const props = defineProps<Props>();
 const store = useStore();
 const avatar = ref<File | null>(null);
 const { request, loading, error } = useFetch<{ avatar: string }, typeof ToolsService.setAvatar>(

@@ -15,13 +15,13 @@
 </template>
 
 <script setup lang="ts">
-import type { ImageInjected } from '@/types';
+import type { Injected } from '@/types';
 import { inject } from 'vue';
 import { useFetch } from '@/hooks';
 import { ImageService } from '@/api/services';
 import { useI18n } from 'vue-i18n';
 
-const { selected, images, total } = inject<ImageInjected>('data')!;
+const { selected, images, total } = inject<Injected.Image>('data')!;
 const { t } = useI18n();
 const { request, loading } = useFetch<string[], typeof ImageService.deleteImages>(ImageService.deleteImages, {
   afterSuccess: ({ data }) => {

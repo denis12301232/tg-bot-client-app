@@ -42,7 +42,7 @@ interface Props {
   sent?: boolean;
   color?: string;
 }
-//#E5E5EA
+
 const props = withDefaults(defineProps<Props>(), { read: false, sent: false, color: '#1976d2' });
 const { d } = useI18n();
 const icon = computed(() => (props.read ? 'eva-done-all-outline' : 'eva-checkmark-outline'));

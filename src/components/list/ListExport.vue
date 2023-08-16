@@ -46,10 +46,11 @@ import { AssistanceService } from '@/api/services';
 import { useStore } from '@/stores';
 import { useI18n } from 'vue-i18n';
 
-const props = defineProps<{
+interface Props {
   ids: string[];
-}>();
+}
 
+const props = defineProps<Props>();
 const store = useStore();
 const { t, locale } = useI18n();
 const type = ref<'xlsx' | 'csv' | 'google-sheets' | null>(null);

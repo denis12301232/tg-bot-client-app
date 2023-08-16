@@ -50,7 +50,7 @@
 </template>
 
 <script setup lang="ts">
-import type { LoginResponse } from '@/types';
+import type { Responses } from '@/types';
 import type { QForm } from 'quasar';
 import { ref, reactive, watch } from 'vue';
 import { useStore } from '@/stores';
@@ -59,9 +59,6 @@ import { AuthService } from '@/api/services';
 import { useFetch } from '@/hooks';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
-
-type T = LoginResponse;
-type S = (typeof AuthService)['login'];
 
 const { t } = useI18n();
 const store = useStore();
@@ -72,7 +69,7 @@ const formRef = ref<QForm>();
 const form = reactive({ loginOrEmail: '', password: '' });
 const errors = reactive({ loginOrEmail: '', password: '' });
 const rules = Rules.login(t);
-const { request, loading, error } = useFetch<T, S>(AuthService.login, {
+const { request, loading, error } = useFetch<Responses.Login, (typeof AuthService)['login']>(AuthService.login, {
   afterSuccess: ({ data }) => {
     store.user = data.value.user;
     localStorage.setItem('token', data.value.accessToken);

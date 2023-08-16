@@ -32,15 +32,13 @@
 import { ChatAlert, type Alert } from '@/models';
 import { computed } from 'vue';
 
-const props = defineProps<{
+interface Props {
   alert: Alert | ChatAlert;
   icon: string;
-}>();
+}
 
-const emit = defineEmits<{
-  hideById: [id: string];
-}>();
-
+const props = defineProps<Props>();
+const emit = defineEmits<{ hideById: [id: string] }>();
 const message = computed(() => {
   let message = props.alert.message;
   if (props.alert instanceof ChatAlert) {

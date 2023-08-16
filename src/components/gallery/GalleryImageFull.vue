@@ -44,7 +44,7 @@
 
 <script setup lang="ts">
 import LoaderWheel from '~/LoaderWheel.vue';
-import type { ImagesResponse } from '@/types';
+import type { Responses } from '@/types';
 import { onMounted, onUnmounted, nextTick } from 'vue';
 import { ImageService } from '@/api/services';
 import { useStore } from '@/stores';
@@ -55,7 +55,7 @@ import { useI18n } from 'vue-i18n';
 const props = defineProps<{
   currentIndex: number;
   total: number;
-  images: ImagesResponse['images'];
+  images: Responses.Images['images'];
   loading: boolean;
 }>();
 
@@ -64,12 +64,12 @@ const emit = defineEmits<{
   prev: [];
   request: [];
   'update:currentIndex': [value: number];
-  'update:images': [value: ImagesResponse['images']];
+  'update:images': [value: Responses.Images['images']];
 }>();
 const store = useStore();
 const { t } = useI18n();
 const index = useVModel<number>('currentIndex');
-const imgs = useVModel<ImagesResponse['images']>('images');
+const imgs = useVModel<Responses.Images['images']>('images');
 
 onMounted(() => document.addEventListener('keydown', changeImage));
 onUnmounted(() => document.removeEventListener('keydown', changeImage));

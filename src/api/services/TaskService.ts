@@ -1,8 +1,8 @@
-import type { ITask, PaginationRequest } from '@/types';
+import type { ITask, Q} from '@/types';
 import { $api } from '@/api';
 
 export default class TaskService {
-  static getTasks({ page, limit, sort, descending, filter }: PaginationRequest) {
+  static getTasks({ page, limit, sort, descending, filter }: Q.PaginationRequest) {
     return $api.get('tasks', { searchParams: { page, limit, sort, descending, filter } });
   }
 

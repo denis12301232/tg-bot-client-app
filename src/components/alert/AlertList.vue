@@ -18,9 +18,11 @@ import type { Alert, ChatAlert } from '@/models';
 import { watch } from 'vue';
 import { useVModel } from '@/hooks';
 
-defineProps<{
+interface Props {
   modelValue: (Alert | ChatAlert)[];
-}>();
+}
+
+defineProps<Props>();
 defineEmits<{
   'update:modelValue': [alerts: Alert[]];
 }>();

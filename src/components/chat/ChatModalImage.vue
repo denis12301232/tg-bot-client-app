@@ -6,9 +6,11 @@
 </template>
 
 <script setup lang="ts">
-defineProps<{
+interface Props {
   src: string;
-}>();
+}
+
+defineProps<Props>();
 </script>
 
 <style module lang="scss">
