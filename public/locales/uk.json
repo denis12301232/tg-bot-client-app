@@ -773,13 +773,15 @@
                 "loginOrEmail": {
                     "placeholder": "Логін або e-mail",
                     "errors": {
-                        "required": "Заповніть поле"
+                        "required": "Заповніть поле",
+                        "incorrect": "E-mail невірний"
                     }
                 },
                 "password": {
                     "placeholder": "Пароль",
                     "errors": {
-                        "required": "Заповніть поле"
+                        "required": "Заповніть поле",
+                        "incorrect": "Пароль невірний"
                     }
                 }
             },
@@ -809,14 +811,16 @@
                     "placeholder": "Логін",
                     "errors": {
                         "required": "Заповніть поле",
-                        "isLatinOrUnderscore": "Тільки латиниця або _"
+                        "isLatinOrUnderscore": "Тільки латиниця або _",
+                        "alreadyTaken": "Логiн уже зайнятий"
                     }
                 },
                 "email": {
                     "placeholder": "E-mail",
                     "errors": {
                         "required": "Заповніть поле",
-                        "isEmail": "Введіть коректний e-mail"
+                        "isEmail": "Введіть коректний e-mail",
+                        "alreadyTaken": "E-mail уже зайнятий"
                     }
                 },
                 "password": {

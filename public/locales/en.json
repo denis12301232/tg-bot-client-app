@@ -460,7 +460,6 @@
                 "take": "Take",
                 "about": "About the issue"
             }
- 
         },
         "create": {
             "first": {
@@ -774,13 +773,15 @@
                 "loginOrEmail": {
                     "placeholder": "Username or email",
                     "errors": {
-                        "required": "Fill in the field"
+                        "required": "Fill in the field",
+                        "incorrect": "Login is incorrect"
                     }
                 },
                 "password": {
                     "placeholder": "Password",
                     "errors": {
-                        "required": "Fill in the field"
+                        "required": "Fill in the field",
+                        "incorrect": "Password is incorrect"
                     }
                 }
             },
@@ -810,14 +811,16 @@
                     "placeholder": "Login",
                     "errors": {
                         "required": "Fill in the field",
-                        "isLatinOrUnderscore": "Only Latin or _"
+                        "isLatinOrUnderscore": "Only Latin or _",
+                        "alreadyTaken": "Login already taken"
                     }
                 },
                 "email": {
                     "placeholder": "email",
                     "errors": {
                         "required": "Fill in the field",
-                        "isEmail": "Please enter a valid email"
+                        "isEmail": "Please enter a valid email",
+                        "alreadyTaken": "E-mail already taken"
                     }
                 },
                 "password": {

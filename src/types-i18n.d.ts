@@ -757,12 +757,14 @@ declare module 'vue-i18n' {
             placeholder: string;
             errors: {
               required: string;
+              incorrect: string;
             };
           };
           password: {
             placeholder: string;
             errors: {
               required: string;
+              incorrect: string;
             };
           };
         };
@@ -793,6 +795,7 @@ declare module 'vue-i18n' {
             errors: {
               required: string;
               isLatinOrUnderscore: string;
+              alreadyTaken: string;
             };
           };
           email: {
@@ -800,6 +803,7 @@ declare module 'vue-i18n' {
             errors: {
               required: string;
               isEmail: string;
+              alreadyTaken: string;
             };
           };
           password: {

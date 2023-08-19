@@ -1,6 +1,7 @@
 <template>
   <div class="row justify-center items-center" style="height: calc(100vh - 50px)">
-    <QCard :class="[$style.card, 'text-center', 'relative-position']" style="top: -50px">
+    <QResizeObserver @resize="onResize" />
+    <QCard :class="[$style.card, 'text-center', 'relative-position']" :flat="width < 450" style="top: -50px">
       <QForm ref="formRef" class="q-pa-lg" no-error-focus @submit.prevent="request(form.loginOrEmail, form.password)">
         <h4 class="q-pb-lg q-mb-sm">{{ t('login.form.title') }}</h4>
         <QInput
@@ -66,6 +67,7 @@ const router = useRouter();
 const valid = ref(false);
 const isPasswordVisible = ref(false);
 const formRef = ref<QForm>();
+const width = ref(0);
 const form = reactive({ loginOrEmail: '', password: '' });
 const errors = reactive({ loginOrEmail: '', password: '' });
 const rules = Rules.login(t);
@@ -85,13 +87,17 @@ watch(form, () => {
 watch(error, () => {
   if (typeof error.value === 'object') {
     error.value.errors.includes('login')
-      ? (errors.loginOrEmail = t('login.errors.loginOrEmail.incorrect'))
-      : (errors.password = t('login.errors.password.incorrect'));
+      ? (errors.loginOrEmail = t('login.form.fields.loginOrEmail.errors.incorrect'))
+      : (errors.password = t('login.form.fields.password.errors.incorrect'));
   }
 });
 
 function showPassword() {
   isPasswordVisible.value = !isPasswordVisible.value;
+}
+
+function onResize(size: { height: number; width: number }) {
+  width.value = size.width;
 }
 </script>
 

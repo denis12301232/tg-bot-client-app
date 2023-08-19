@@ -773,13 +773,15 @@
                 "loginOrEmail": {
                     "placeholder": "Логин или e-mail",
                     "errors": {
-                        "required": "Заполните поле"
+                        "required": "Заполните поле",
+                        "incorrect": "Неверный e-mail"
                     }
                 },
                 "password": {
                     "placeholder": "Пароль",
                     "errors": {
-                        "required": "Заполните поле"
+                        "required": "Заполните поле",
+                        "incorrect": "Неверный пароль"
                     }
                 }
             },
@@ -809,14 +811,16 @@
                     "placeholder": "Логин",
                     "errors": {
                         "required": "Заполните поле",
-                        "isLatinOrUnderscore": "Только латиница или _"
+                        "isLatinOrUnderscore": "Только латиница или _",
+                        "alreadyTaken": "Логин уже занят"
                     }
                 },
                 "email": {
                     "placeholder": "E-mail",
                     "errors": {
                         "required": "Заполните поле",
-                        "isEmail": "Введите корректный e-mail"
+                        "isEmail": "Введите корректный e-mail",
+                        "alreadyTaken": "E-mail уже занят"
                     }
                 },
                 "password": {

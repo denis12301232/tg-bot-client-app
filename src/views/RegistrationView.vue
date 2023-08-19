@@ -1,6 +1,7 @@
 <template>
   <div class="row justify-center items-center" style="height: calc(100vh - 50px)">
-    <QCard :class="[$style.card, 'text-center', 'relative-position']" style="top: -50px">
+    <QResizeObserver @resize="onResize" />
+    <QCard :class="[$style.card, 'text-center', 'relative-position']" :flat="width < 450" style="top: -50px">
       <QForm ref="formRef" class="q-pa-lg" no-error-focus @submit.prevent="request(form)">
         <h4 class="q-pb-lg q-mb-sm">{{ t('registration.form.title') }}</h4>
         <QInput
@@ -81,6 +82,7 @@ const router = useRouter();
 const valid = ref(false);
 const isPasswordVisible = ref(false);
 const formRef = ref<QForm>();
+const width = ref(0);
 const errors = reactive({ name: '', login: '', email: '', password: '' });
 const form = reactive({ name: '', login: '', email: '', password: '' });
 const { request, loading, error } = useFetch<Responses.Login, (typeof AuthService)['registration']>(
@@ -102,13 +104,18 @@ watch(form, () => {
 });
 watch(error, () => {
   if (typeof error.value === 'object') {
-    if (error.value.errors.includes('login')) errors.login = 'Уже занят';
-    else if (error.value.errors.includes('email')) errors.email = 'Уже занят';
+    if (error.value.errors.includes('login')) errors.login = t('registration.form.fields.login.errors.alreadyTaken');
+    else if (error.value.errors.includes('email'))
+      errors.email = t('registration.form.fields.email.errors.alreadyTaken');
   }
 });
 
 function showPassword() {
   isPasswordVisible.value = !isPasswordVisible.value;
+}
+
+function onResize(size: { height: number; width: number }) {
+  width.value = size.width;
 }
 </script>
 
