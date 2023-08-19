@@ -8,7 +8,7 @@
       color="indigo"
       multiple
       batch
-      :label="t('gallery.msgs.imgs')"
+      :label="t('gallery.messages.upload')"
       :max-file-size="10e6"
       :filter="checkFileType"
       :factory="ImageService.uploadImages"

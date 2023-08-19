@@ -414,6 +414,7 @@ declare module 'vue-i18n' {
       };
       messages: {
         about: string;
+        upload: string;
       };
     };
     tasks: {

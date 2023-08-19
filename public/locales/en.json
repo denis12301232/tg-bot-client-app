@@ -425,7 +425,8 @@
             "none": "No photos"
         },
         "messages": {
-            "about": "No description"
+            "about": "No description",
+            "upload": "Upload"
         }
     },
     "tasks": {
