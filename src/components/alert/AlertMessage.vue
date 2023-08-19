@@ -68,10 +68,10 @@ const message = computed(() => {
 }
 
 .chat {
-  background-color: $indigo;
+  background-color: $grey-13;
 
   &:hover {
-    background-color: $indigo-6;
+    background-color: $grey-6;
   }
 }
 

@@ -18,7 +18,7 @@ import type { IMessage } from './types';
 import { AlertList } from './components/alert';
 import LoaderPage from '~/LoaderPage.vue';
 import { onMounted, watch } from 'vue';
-import { useStore, useChatStore } from '@/stores';
+import { useStore, useChatStore, useAlertStore } from '@/stores';
 import { storeToRefs } from 'pinia';
 import { useTelegram } from '@/hooks';
 import { ChatAlert } from './models';
@@ -26,7 +26,9 @@ import { useRoute } from 'vue-router';
 
 const store = useStore();
 const chatStore = useChatStore();
-const { isAuth, alerts } = storeToRefs(store);
+const alertStore = useAlertStore();
+const { isAuth } = storeToRefs(store);
+const { alerts } = storeToRefs(alertStore);
 const { tg, isOpenedFromTg, theme, locale } = useTelegram();
 const route = useRoute();
 
@@ -36,8 +38,7 @@ onMounted(() => {
   localStorage.getItem('token') && store.refresh();
   tg.ready();
   if (isOpenedFromTg) {
-    store.theme = theme;
-    store.lang = locale;
+    store.$patch({ theme: theme, lang: locale });
   }
 });
 
@@ -56,8 +57,9 @@ function showNewMessage(msg: IMessage) {
   if (chat) {
     const user = msg.author !== store.user?._id ? chat.users.find((user) => user._id === msg.author) : null;
     if (user && route.name !== 'chat') {
-      const alert = new ChatAlert(msg, user, chat);
-      store.alerts.push(alert);
+      alerts.value.push(new ChatAlert(msg, user, chat));
+      alertStore.addNotice(user.name, msg.text);
+      alertStore.sendPushNotification(user.name, { body: msg.text, image: 'icon.jpg' });
     }
   }
 }

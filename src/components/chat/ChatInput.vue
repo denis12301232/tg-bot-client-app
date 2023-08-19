@@ -69,7 +69,7 @@ import type { QInput } from 'quasar';
 import EmojiPicker from '~/EmojiPicker.vue';
 import { ref, watch } from 'vue';
 import { storeToRefs } from 'pinia';
-import { useStore, useChatStore } from '@/stores';
+import { useStore, useChatStore, useAlertStore } from '@/stores';
 import { useVoice } from '@/hooks';
 import { Util } from '@/util';
 import { useI18n } from 'vue-i18n';
@@ -78,6 +78,7 @@ const { t } = useI18n();
 const store = useStore();
 const { user, currentTheme } = storeToRefs(store);
 const chatStore = useChatStore();
+const alertStore = useAlertStore();
 const message = ref('');
 const files = ref<File[] | null>(null);
 const inputRef = ref<QInput | null>(null);
@@ -104,7 +105,7 @@ watch(
 watch(message, () => onTypingDebounce());
 
 watch(error, () => {
-  error.value && store.addAlert('error', 'Нет доступа к микрофону!');
+  error.value && alertStore.addAlert('error', 'Нет доступа к микрофону!');
 });
 
 watch(voiceMessage, () => {

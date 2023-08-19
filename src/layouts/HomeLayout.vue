@@ -2,10 +2,10 @@
   <QLayout view="hHh LpR fFf">
     <QHeader v-if="!isOpenedFromTg" reveal elevated class="header" height-hint="98">
       <QToolbar>
-        <QBtn dense flat round icon="eva-menu" @click="toggleLeftDrawer" />
+        <QBtn dense flat round icon="eva-menu" @click="toggleDrawer('left')" />
         <QToolbarTitle>
           <QAvatar>
-            <img :src="icon" />
+            <img src="icon.jpg" />
           </QAvatar>
           {{ ENV.TITLE }}
         </QToolbarTitle>
@@ -18,8 +18,19 @@
           color="yellow"
           @click="store.setTheme()"
         />
+        <QBtn
+          v-if="store.isAuth"
+          :icon="muted ? 'eva-bell-off' : 'eva-bell'"
+          color="deep-orange"
+          dense
+          flat
+          round
+          @click="[toggleDrawer('right'), setIs('notices')]"
+        >
+          <QBadge v-if="notices.length" color="positive" floating rounded>{{ notices.length }}</QBadge>
+        </QBtn>
         <QBtn v-if="!store.isAuth" dense flat round icon="eva-log-in-outline" @click="$router.push('/login')" />
-        <QBtn v-else dense flat round icon="eva-person" @click="toggleRightDrawer" />
+        <QBtn v-else dense flat round icon="eva-person" @click="[toggleDrawer('right'), setIs('menu')]" />
       </QToolbar>
       <QTabs :class="$style.tabs" align="left" active-color="primary">
         <QRouteTab to="/" :label="t('home.tabs.form')" />
@@ -27,7 +38,7 @@
         <QRouteTab v-if="store.isAdmin" to="/info" :label="t('home.tabs.search')" />
       </QTabs>
     </QHeader>
-    <QDrawer v-model="leftDrawerOpen" side="left" bordered>
+    <QDrawer v-model="drawers.left" side="left" bordered>
       <QCard square flat>
         <QCardSection>
           <h6 class="text-center">{{ t('home.menu.left.title') }}</h6>
@@ -89,41 +100,45 @@
         </QItem>
       </QList>
     </QDrawer>
-    <QDrawer v-model="rightDrawerOpen" side="right" bordered>
-      <QCard class="user_info" square flat>
-        <QCardSection>
-          <QItem class="q-pa-none">
-            <QItemSection top avatar>
-              <UserAvatar :name="store.user?.name" :avatar="store.user?.avatar" size="50px" />
+    <QDrawer v-model="drawers.right" side="right" bordered>
+      <template v-if="is === 'menu'">
+        <QCard class="user_info" square flat>
+          <QCardSection>
+            <QItem class="q-pa-none">
+              <QItemSection top avatar>
+                <UserAvatar :name="store.user?.name" :avatar="store.user?.avatar" size="50px" />
+              </QItemSection>
+              <QItemSection>
+                <QItemLabel>{{ store.user?.name }}</QItemLabel>
+                <QItemLabel caption>{{ store.user?.status }}</QItemLabel>
+              </QItemSection>
+            </QItem>
+          </QCardSection>
+        </QCard>
+        <QSeparator />
+        <QList class="q-pa-sm text-uppercase">
+          <QItem v-ripple clickable tag="a" to="/account">
+            <QItemSection avatar>
+              <QIcon color="primary" name="eva-person-outline" />
             </QItemSection>
-            <QItemSection>
-              <QItemLabel>{{ store.user?.name }}</QItemLabel>
-              <QItemLabel caption>{{ store.user?.status }}</QItemLabel>
-            </QItemSection>
+            <QItemSection>{{ t('home.menu.right.account') }}</QItemSection>
           </QItem>
-        </QCardSection>
-      </QCard>
-      <QSeparator />
-      <QList class="q-pa-sm text-uppercase">
-        <QItem v-ripple clickable tag="a" to="/account">
-          <QItemSection avatar>
-            <QIcon color="primary" name="eva-person-outline" />
-          </QItemSection>
-          <QItemSection>{{ t('home.menu.right.account') }}</QItemSection>
-        </QItem>
-        <QItem v-if="store.isAdmin" v-ripple clickable tag="a" to="/tools">
-          <QItemSection avatar>
-            <QIcon color="primary" name="eva-settings-outline" />
-          </QItemSection>
-          <QItemSection>{{ t('home.menu.right.tools') }}</QItemSection>
-        </QItem>
-        <QItem v-ripple clickable @click="[store.logout(), toggleRightDrawer(), $router.push('/')]">
-          <QItemSection avatar>
-            <QIcon color="primary" name="eva-log-out-outline" />
-          </QItemSection>
-          <QItemSection>{{ t('home.menu.right.logout') }}</QItemSection>
-        </QItem>
-      </QList>
+          <QItem v-if="store.isAdmin" v-ripple clickable tag="a" to="/tools">
+            <QItemSection avatar>
+              <QIcon color="primary" name="eva-settings-outline" />
+            </QItemSection>
+            <QItemSection>{{ t('home.menu.right.tools') }}</QItemSection>
+          </QItem>
+          <QItem v-ripple clickable @click="[store.logout(), toggleDrawer('right'), $router.push('/')]">
+            <QItemSection avatar>
+              <QIcon color="primary" name="eva-log-out-outline" />
+            </QItemSection>
+            <QItemSection>{{ t('home.menu.right.logout') }}</QItemSection>
+          </QItem>
+        </QList>
+      </template>
+
+      <NoticesList v-else :notices="notices" />
     </QDrawer>
     <QPageContainer class="window-height">
       <slot />
@@ -134,27 +149,28 @@
 <script setup lang="ts">
 import UserAvatar from '~/UserAvatar.vue';
 import SetLang from '~/SetLang.vue';
-import { ref } from 'vue';
-import { useStore, useChatStore } from '@/stores';
+import NoticesList from '~/NoticesList.vue';
+import { reactive, ref } from 'vue';
+import { useStore, useChatStore, useAlertStore } from '@/stores';
 import { useTelegram } from '@/hooks';
 import { ENV } from '@/util';
 import { storeToRefs } from 'pinia';
 import { useI18n } from 'vue-i18n';
 
-const icon = new URL('/icon.jpg', import.meta.url).href;
 const { t } = useI18n();
 const { isOpenedFromTg } = useTelegram();
 const store = useStore();
 const { unread } = storeToRefs(useChatStore());
-const leftDrawerOpen = ref(false);
-const rightDrawerOpen = ref(false);
+const { notices, muted } = storeToRefs(useAlertStore());
+const drawers = reactive({ right: false, left: false });
+const is = ref<'menu' | 'notices'>('menu');
 
-function toggleLeftDrawer() {
-  leftDrawerOpen.value = !leftDrawerOpen.value;
+function toggleDrawer(drawer: keyof typeof drawers) {
+  drawers[drawer] = !drawers[drawer];
 }
 
-function toggleRightDrawer() {
-  rightDrawerOpen.value = !rightDrawerOpen.value;
+function setIs(name: typeof is.value) {
+  is.value = name;
 }
 </script>
 

@@ -73,7 +73,7 @@ import {
   watch,
   computed,
 } from 'vue';
-import { useStore, useChatStore } from '@/stores';
+import { useStore, useChatStore, useAlertStore } from '@/stores';
 import { useNavigation, useWebRtc, useFetch } from '@/hooks';
 import { useRoute } from 'vue-router';
 import { WebRtcDto } from '@/api/dto';
@@ -93,6 +93,7 @@ const { t } = useI18n();
 const route = useRoute();
 const store = useStore();
 const { socket } = useChatStore();
+const { addAlert } = useAlertStore();
 const { goBack } = useNavigation();
 const user = computed(() => store.user || ({} as IUser));
 const { abonents, streams, streamIds, captureMyStream } = useWebRtc(socket, user.value._id, { setChannelEvents });
@@ -131,7 +132,7 @@ watch(
 
 watch(error, () => {
   goBack();
-  store.addAlert('error', t('meets.hints.noMeet'));
+  addAlert('error', t('meets.hints.noMeet'));
 });
 
 onMounted(() => {
@@ -141,7 +142,7 @@ onMounted(() => {
       .then(() => socket.emit('meet:join', meetId))
       .catch(() => {
         goBack();
-        store.addAlert('warning', t('meets.hints.noMic'));
+        addAlert('warning', t('meets.hints.noMic'));
       });
   });
 });

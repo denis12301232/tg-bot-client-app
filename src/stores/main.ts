@@ -1,10 +1,9 @@
-import type { IUser, IAlertType, ITheme } from '@/types';
+import type { IUser, ITheme } from '@/types';
 import { ref, computed, watchEffect } from 'vue';
 import { defineStore } from 'pinia';
 import { useQuasar } from 'quasar';
 import { AuthService, ToolsService } from '@/api/services';
 import { useI18n } from 'vue-i18n';
-import { Alert, ChatAlert } from '@/models';
 
 export const useStore = defineStore('main', () => {
   const $q = useQuasar();
@@ -13,7 +12,6 @@ export const useStore = defineStore('main', () => {
   const theme = ref(localStorage.getItem('theme') as ITheme);
   const isPageLoading = ref(false);
   const lang = ref(localStorage.getItem('lang') || 'ru');
-  const alerts = ref<(Alert | ChatAlert)[]>([]);
   const isAuth = computed(() => !!user.value);
   const isAdmin = computed(() => user.value?.roles.includes('admin') || false);
   const currentTheme = computed(() => {
@@ -35,11 +33,6 @@ export const useStore = defineStore('main', () => {
 
   function setTheme() {
     currentTheme.value === 'dark' ? (theme.value = 'light') : (theme.value = 'dark');
-  }
-
-  function addAlert(type: IAlertType, message: string) {
-    const alert = new Alert(type, message);
-    alerts.value.push(alert);
   }
 
   async function refresh() {
@@ -85,7 +78,5 @@ export const useStore = defineStore('main', () => {
     setTheme,
     refresh,
     logout,
-    alerts,
-    addAlert,
   };
 });

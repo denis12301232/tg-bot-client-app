@@ -1,6 +1,6 @@
 import { ref, type Ref } from 'vue';
 import { HTTPError, type ResponsePromise, type KyResponse } from 'ky';
-import { useStore } from '@/stores';
+import { useAlertStore } from '@/stores';
 import type { IAlertType } from '@/types';
 
 interface Opts<T> {
@@ -57,6 +57,6 @@ export default function useFetch<T, S extends (...args: Parameters<S>) => Respon
 }
 
 function ifAlert(type: IAlertType, msg: string) {
-  const { addAlert } = useStore();
+  const { addAlert } = useAlertStore();
   addAlert(type, msg);
 }

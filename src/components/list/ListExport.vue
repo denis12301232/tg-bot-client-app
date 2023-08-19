@@ -43,7 +43,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { AssistanceService } from '@/api/services';
-import { useStore } from '@/stores';
+import { useAlertStore } from '@/stores';
 import { useI18n } from 'vue-i18n';
 
 interface Props {
@@ -51,7 +51,7 @@ interface Props {
 }
 
 const props = defineProps<Props>();
-const store = useStore();
+const { addAlert } = useAlertStore();
 const { t, locale } = useI18n();
 const type = ref<'xlsx' | 'csv' | 'google-sheets' | null>(null);
 const url = ref('');
@@ -75,9 +75,9 @@ async function createReport(locale: string, fileType: 'xlsx' | 'csv' | 'google-s
       });
       url.value = URL.createObjectURL(file);
     }
-    store.addAlert('success', t('tools.sheets.msgs.success'));
+    addAlert('success', t('tools.sheets.msgs.success'));
   } catch (e) {
-    store.addAlert('error', t('tools.sheets.msgs.error'));
+    addAlert('error', t('tools.sheets.msgs.error'));
   } finally {
     isLoading.value = false;
   }

@@ -26,7 +26,7 @@
         <slot name="reactions" />
       </div>
 
-      <slot name="avatar" :classes="sent ? 'q-ml-sm' : 'q-mr-sm'" />
+      <slot name="avatar" :classes="sent ? 'q-ml-md' : 'q-mr-md'" />
     </div>
   </div>
 </template>
