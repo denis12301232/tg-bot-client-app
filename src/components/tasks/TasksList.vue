@@ -56,7 +56,7 @@
               <QBadge :label="t(`tasks.statuses.${scope.row.status}`)" :color="Util.setStatusColor(scope.row.status)" />
             </div>
           </QTd>
-          <QTd class="text-center">{{ new Date(scope.row.createdAt).toLocaleDateString() }}</QTd>
+          <QTd class="text-center">{{ d(scope.row.createdAt, 'YYYYMMDD') }}</QTd>
           <QTd>
             <div class="row justify-center">
               <QBtnGroup flat>
@@ -87,7 +87,7 @@
                   </QTooltip>
                 </QBtn>
                 <QBtn
-                  v-if="scope.row.status !== 'completed' && scope.row.status !== 'canceled' && store.isAdmin"
+                  v-if="scope.row.status !== 'completed' && scope.row.status !== 'canceled' && isAdmin"
                   round
                   dense
                   flat
@@ -145,9 +145,10 @@ import { useFetch, useRequest } from '@/hooks';
 import { TaskService } from '@/api/services';
 import { Util } from '@/util';
 import { useI18n } from 'vue-i18n';
+import { storeToRefs } from 'pinia';
 
-const store = useStore();
-const { t } = useI18n();
+const { t, d } = useI18n();
+const { user, isAdmin } = storeToRefs(useStore());
 const { request: updateTaskStatus, loading: isTaskStatusLoading } = useFetch(TaskService.updateTaskStatus);
 const { request: setUserForTask, loading: isSetUserLoading } = useFetch<
   { message: string; taskId: string },
@@ -157,7 +158,7 @@ const { request: setUserForTask, loading: isSetUserLoading } = useFetch<
     const task = tasks.value?.find((task) => task._id === data.value.taskId);
     if (task) {
       task.status = 'performed';
-      (task.user as unknown as any) = store.user?._id;
+      (task.user as unknown as any) = user.value?._id;
     }
   },
 });
