@@ -5,7 +5,7 @@
         <QBtn dense flat round icon="eva-menu" @click="toggleDrawer('left')" />
         <QToolbarTitle>
           <QAvatar>
-            <img src="icon.jpg" />
+            <img :src="icon" />
           </QAvatar>
           {{ ENV.TITLE }}
         </QToolbarTitle>
@@ -157,6 +157,7 @@ import { ENV } from '@/util';
 import { storeToRefs } from 'pinia';
 import { useI18n } from 'vue-i18n';
 
+const icon = new URL('/icon.jpg', import.meta.url).href;
 const { t } = useI18n();
 const { isOpenedFromTg } = useTelegram();
 const store = useStore();

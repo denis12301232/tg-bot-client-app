@@ -10,3 +10,4 @@ export { default as useTelegram } from './useTelegram';
 export { default as useVModel } from './useVModel';
 export { default as useAssistanceFormOptions } from './useAssistanceFormOptions';
 export { default as useGetTempUrl } from './useGetTempUrl';
+export { default as useAudioAlert } from './useAudioAlert';

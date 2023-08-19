@@ -59,7 +59,7 @@ function showNewMessage(msg: IMessage) {
     if (user && route.name !== 'chat') {
       alerts.value.push(new ChatAlert(msg, user, chat));
       alertStore.addNotice(user.name, msg.text);
-      alertStore.sendPushNotification(user.name, { body: msg.text, image: 'icon.jpg' });
+      alertStore.sendPushNotification(user.name, { body: msg.text, image: new URL('/icon.jpg', import.meta.url).href });
     }
   }
 }

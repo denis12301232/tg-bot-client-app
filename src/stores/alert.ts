@@ -2,8 +2,10 @@ import type { IAlertType } from '@/types';
 import { onMounted, onUnmounted, ref, watchEffect } from 'vue';
 import { defineStore } from 'pinia';
 import { Alert, ChatAlert, Notice } from '@/models';
+import { useAudioAlert } from '@/hooks';
 
 export const useAlertStore = defineStore('alert', () => {
+  const { play } = useAudioAlert('/new-message.mp3');
   const muted = ref(false);
   const alerts = ref<Array<Alert | ChatAlert>>([]);
   const notices = ref<Notice[]>(JSON.parse(localStorage.getItem('notices') || '') || []);
@@ -26,10 +28,12 @@ export const useAlertStore = defineStore('alert', () => {
 
   function addNotice(title: string, text: string) {
     notices.value.push(new Notice(title, text));
+    play();
   }
 
   function addAlert(type: IAlertType, message: string) {
     alerts.value.push(new Alert(type, message));
+    play();
   }
 
   function sendPushNotification(title: string, opts?: NotificationOptions) {
