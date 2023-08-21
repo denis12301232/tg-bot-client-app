@@ -659,7 +659,8 @@
             "audio": "Аудиосообщение",
             "image": "Фотография",
             "deleteMessage": "Удалить",
-            "copyMessage": "Скопировать"
+            "copyMessage": "Скопировать",
+            "dialogs": "Список диалогов пуст"
         },
         "search": {
             "placeholder": "Поиск",

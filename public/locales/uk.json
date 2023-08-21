@@ -659,7 +659,8 @@
             "audio": "Аудіоповідомлення",
             "image": "Фотографія",
             "deleteMessage": "Видалити",
-            "copyMessage": "Скопіювати"
+            "copyMessage": "Скопіювати",
+            "dialogs": "Список діалогів пуст"
         },
         "search": {
             "placeholder": "Пошук",

@@ -659,7 +659,8 @@
             "audio": "Audio message",
             "image": "Photo",
             "deleteMessage": "Delete",
-            "copyMessage": "Copy"
+            "copyMessage": "Copy",
+            "dialogs": "Dialog list is empty"
         },
         "search": {
             "placeholder": "Search",

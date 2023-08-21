@@ -645,6 +645,7 @@ declare module 'vue-i18n' {
         image: string;
         deleteMessage: string;
         copyMessage: string;
+        dialogs: string;
       };
       search: {
         placeholder: string;

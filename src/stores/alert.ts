@@ -28,12 +28,12 @@ export const useAlertStore = defineStore('alert', () => {
 
   function addNotice(title: string, text: string) {
     notices.value.push(new Notice(title, text));
-    play();
+    !muted.value && play();
   }
 
   function addAlert(type: IAlertType, message: string) {
     alerts.value.push(new Alert(type, message));
-    play();
+    !muted.value && play();
   }
 
   function sendPushNotification(title: string, opts?: NotificationOptions) {

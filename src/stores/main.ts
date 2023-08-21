@@ -40,7 +40,7 @@ export const useStore = defineStore('main', () => {
       const response = await AuthService.refresh();
       localStorage.setItem('token', response.accessToken);
       user.value = response.user;
-    } catch (e: any) {
+    } catch (e: unknown) {
       console.error(e);
     }
   }
@@ -50,7 +50,7 @@ export const useStore = defineStore('main', () => {
       const response = await AuthService.logout();
       localStorage.removeItem('token');
       user.value = response;
-    } catch (e: any) {
+    } catch (e: unknown) {
       console.error(e);
     }
   }
