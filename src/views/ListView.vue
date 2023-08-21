@@ -613,7 +613,7 @@ import ListImport from '~/list/ListImport.vue';
 import ListFilters from '~/list/ListFilters.vue';
 import type { QTable } from 'quasar';
 import type { Responses } from '@/types';
-import { onMounted, ref, computed } from 'vue';
+import { onMounted, ref, computed, watch } from 'vue';
 import { useRequest, useFetch, useAssistanceFormOptions } from '@/hooks';
 import { AssistanceService } from '@/api/services';
 import { Util, Rules } from '@/util';
@@ -648,34 +648,36 @@ const criterias = ref<('district' | 'birth' | 'street' | 'sector')[]>([]);
 const select = ref<Responses.Assistance[]>([]);
 const modal = ref(false);
 const is = ref<'import' | 'export' | 'filters'>('export');
-const visibleColumns = ref([
-  'sector',
-  'name',
-  'surname',
-  'patronymic',
-  'phone',
-  'birth',
-  'district',
-  'street',
-  'house',
-  'flat',
-  'peopleCount',
-  'peopleFio',
-  'invalids',
-  'kids',
-  'kidsAge',
-  'food',
-  'water',
-  'medicines',
-  'medicinesInfo',
-  'hygiene',
-  'hygieneInfo',
-  'pampers',
-  'pampersInfo',
-  'extraInfo',
-  'personalDataAgreement',
-  'photoAgreement',
-]);
+const visibleColumns = ref(
+  JSON.parse(localStorage.getItem('listTableColumns')!) || [
+    'sector',
+    'name',
+    'surname',
+    'patronymic',
+    'phone',
+    'birth',
+    'district',
+    'street',
+    'house',
+    'flat',
+    'peopleCount',
+    'peopleFio',
+    'invalids',
+    'kids',
+    'kidsAge',
+    'food',
+    'water',
+    'medicines',
+    'medicinesInfo',
+    'hygiene',
+    'hygieneInfo',
+    'pampers',
+    'pampersInfo',
+    'extraInfo',
+    'personalDataAgreement',
+    'photoAgreement',
+  ]
+);
 const ids = computed(() => select.value.map((item) => item._id));
 const columns = computed<QTable['columns']>(() => [
   {
@@ -871,6 +873,7 @@ const columns = computed<QTable['columns']>(() => [
 ]);
 
 onMounted(() => request({ pagination: pagination.value, filter: filter.value }));
+watch(visibleColumns, () => localStorage.setItem('listTableColumns', JSON.stringify(visibleColumns.value)));
 
 function openModal(name: 'import' | 'export' | 'filters') {
   is.value = name;
