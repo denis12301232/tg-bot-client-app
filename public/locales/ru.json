@@ -660,7 +660,8 @@
             "image": "Фотография",
             "deleteMessage": "Удалить",
             "copyMessage": "Скопировать",
-            "dialogs": "Список диалогов пуст"
+            "dialogs": "Список диалогов пуст",
+            "deleteChat": "Удалить чат"
         },
         "search": {
             "placeholder": "Поиск",

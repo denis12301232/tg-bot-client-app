@@ -445,7 +445,7 @@ declare module 'vue-i18n' {
           cancel: string;
           take: string;
           about: string;
-        }
+        };
       };
       create: {
         first: {
@@ -586,7 +586,7 @@ declare module 'vue-i18n' {
       hints: {
         noMic: string;
         noMeet: string;
-      }
+      };
     };
     meetId: {
       layout: {
@@ -646,6 +646,7 @@ declare module 'vue-i18n' {
         deleteMessage: string;
         copyMessage: string;
         dialogs: string;
+        deleteChat: string;
       };
       search: {
         placeholder: string;

@@ -660,7 +660,8 @@
             "image": "Photo",
             "deleteMessage": "Delete",
             "copyMessage": "Copy",
-            "dialogs": "Dialog list is empty"
+            "dialogs": "Dialog list is empty",
+            "deleteChat": "Delete chat"
         },
         "search": {
             "placeholder": "Search",

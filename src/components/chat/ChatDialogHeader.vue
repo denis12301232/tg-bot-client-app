@@ -41,7 +41,7 @@
             <QItemSection avatar class="q-pr-sm" style="min-width: 0">
               <QIcon name="eva-trash" color="red" />
             </QItemSection>
-            <QItemSection>{{ t('chat.menu.group.leave') }}</QItemSection>
+            <QItemSection>{{ t('chat.messages.deleteChat') }}</QItemSection>
           </QItem>
           <QItem v-if="type === 'group'" v-ripple v-close-popup clickable @click="emit('modal', 'modal:group-info')">
             <QItemSection avatar class="q-pr-sm" style="min-width: 0">
@@ -81,6 +81,7 @@ import { storeToRefs } from 'pinia';
 import { useStore, useChatStore } from '@/stores';
 import { ChatService } from '@/api/services';
 import { useI18n } from 'vue-i18n';
+import { useRouter } from 'vue-router';
 
 interface Props {
   type: 'dialog' | 'group';
@@ -89,6 +90,7 @@ interface Props {
 defineProps<Props>();
 const emit = defineEmits<{ modal: [name: Extra.Chat.ModalName] }>();
 const { t } = useI18n();
+const router = useRouter();
 const { user } = storeToRefs(useStore());
 const { chats, currentChatId, currentChat } = storeToRefs(useChatStore());
 const companion = computed(() => currentChat.value?.companion);
@@ -98,14 +100,14 @@ const isGroupAdmin = computed(() => currentChat.value?.group?.roles?.admin?.incl
 async function deleteChat() {
   await ChatService.deleteChat(currentChatId.value!);
   chats.value.delete(currentChatId.value!);
-  currentChatId.value = null;
+  router.push('/chat');
 }
 
 async function leaveGroup() {
   if (currentChatId.value) {
     await ChatService.deleteChat(currentChatId.value);
     chats.value.delete(currentChatId.value);
-    currentChatId.value = null;
+    router.push('/chat');
   }
 }
 </script>
