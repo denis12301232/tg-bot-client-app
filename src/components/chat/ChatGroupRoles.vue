@@ -50,11 +50,11 @@ import { ref } from 'vue';
 import { useFetch } from '@/hooks';
 import { ChatService } from '@/api/services';
 import { storeToRefs } from 'pinia';
-import { useChatStore } from '@/stores';
+import { useSocketStore } from '@/stores';
 import { useI18n } from 'vue-i18n';
 
 const { t } = useI18n();
-const { currentChat } = storeToRefs(useChatStore());
+const { currentChat } = storeToRefs(useSocketStore());
 const hasAdminRights = ref(currentChat.value?.group.roles.admin || []);
 const { request, loading } = useFetch(ChatService.updateRolesInGroup, {
   alert: true,

@@ -46,11 +46,11 @@
 import type { Extra } from '@/types';
 import { LeftMenu, GroupCreate, GroupInfo, GroupAddUser, GroupSettings } from '@/components/chat';
 import { ref } from 'vue';
-import { useChatStore, useStore } from '@/stores';
+import { useSocketStore, useStore } from '@/stores';
 import { storeToRefs } from 'pinia';
 
 const { currentTheme } = storeToRefs(useStore());
-const { currentChatId } = storeToRefs(useChatStore());
+const { currentChatId } = storeToRefs(useSocketStore());
 const search = ref('');
 const visible = ref(false);
 const modal = ref(false);

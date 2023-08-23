@@ -25,7 +25,7 @@ import type { IUser, Responses } from '@/types';
 import UserAvatar from '~/UserAvatar.vue';
 import { onMounted, onUnmounted, watchEffect } from 'vue';
 import { storeToRefs } from 'pinia';
-import { useStore, useChatStore } from '@/stores';
+import { useStore, useSocketStore } from '@/stores';
 import { useI18n } from 'vue-i18n';
 import { useFetch, useVModel } from '@/hooks';
 import { ChatService } from '@/api/services';
@@ -40,12 +40,12 @@ const { t } = useI18n();
 const router = useRouter();
 const search = useVModel<string>();
 const { user } = storeToRefs(useStore());
-const chatStore = useChatStore();
-const { chats } = storeToRefs(chatStore);
+const socketStore = useSocketStore();
+const { chats } = storeToRefs(socketStore);
 const { request: searchUsers, data: users } = useFetch<IUser[], typeof ChatService.findUsers>(ChatService.findUsers);
 
-onMounted(() => chatStore.socket.on('chat:create', onChatCreate));
-onUnmounted(() => chatStore.socket.removeListener('chat:create', onChatCreate));
+onMounted(() => socketStore.socket.on('chat:create', onChatCreate));
+onUnmounted(() => socketStore.socket.removeListener('chat:create', onChatCreate));
 watchEffect(() => searchUsers(search.value));
 
 function onChatCreate(chat: Responses.Chat) {
@@ -56,7 +56,7 @@ function onChatCreate(chat: Responses.Chat) {
 }
 
 async function openOrCreateChat(userId: string) {
-  chatStore.socket.emit('chat:create', user.value!._id, [user.value!._id, userId]);
+  socketStore.socket.emit('chat:create', user.value!._id, [user.value!._id, userId]);
 }
 </script>
 

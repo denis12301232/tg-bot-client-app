@@ -195,6 +195,9 @@
                 "account": "Аккаунт",
                 "tools": "Настройки",
                 "logout": "Выйти "
+            },
+            "notice": {
+                "newTask": "Новая задача"
             }
         },
         "messages": {

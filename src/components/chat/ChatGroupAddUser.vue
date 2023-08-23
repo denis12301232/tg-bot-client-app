@@ -49,13 +49,13 @@ import type { IUser } from '@/types';
 import UserAvatar from '~/UserAvatar.vue';
 import { ref, watch } from 'vue';
 import { storeToRefs } from 'pinia';
-import { useChatStore } from '@/stores';
+import { useSocketStore } from '@/stores';
 import { useFetch } from '@/hooks';
 import { ChatService } from '@/api/services';
 import { useI18n } from 'vue-i18n';
 
 const { t } = useI18n();
-const { chats, currentChatId } = storeToRefs(useChatStore());
+const { chats, currentChatId } = storeToRefs(useSocketStore());
 const search = ref('');
 const userToAdd = ref<IUser | null>(null);
 const {

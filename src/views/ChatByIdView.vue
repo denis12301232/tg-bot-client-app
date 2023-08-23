@@ -19,7 +19,7 @@
 <script setup lang="ts">
 import { Layout, List, ListSearch, DialogHeader, Messages, Input } from '@/components/chat';
 import { computed, onBeforeUnmount, watch } from 'vue';
-import { useChatStore } from '@/stores';
+import { useSocketStore } from '@/stores';
 import { storeToRefs } from 'pinia';
 import { useRouter } from 'vue-router';
 import { ChatService } from '@/api/services';
@@ -30,7 +30,7 @@ interface Props {
 
 const props = defineProps<Props>();
 const router = useRouter();
-const { chats, currentChat, currentChatId } = storeToRefs(useChatStore());
+const { chats, currentChat, currentChatId } = storeToRefs(useSocketStore());
 const type = computed(() => currentChat.value?.type || 'dialog');
 
 onBeforeUnmount(() => (currentChatId.value = null));

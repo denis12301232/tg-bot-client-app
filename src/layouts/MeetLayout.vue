@@ -73,7 +73,7 @@ import {
   watch,
   computed,
 } from 'vue';
-import { useStore, useChatStore, useAlertStore } from '@/stores';
+import { useStore, useSocketStore, useAlertStore } from '@/stores';
 import { useNavigation, useWebRtc, useFetch } from '@/hooks';
 import { useRoute } from 'vue-router';
 import { WebRtcDto } from '@/api/dto';
@@ -92,7 +92,7 @@ interface RightDrawer {
 const { t } = useI18n();
 const route = useRoute();
 const store = useStore();
-const { socket } = useChatStore();
+const { socket } = useSocketStore();
 const { addAlert } = useAlertStore();
 const { goBack } = useNavigation();
 const user = computed(() => store.user || ({} as IUser));

@@ -192,6 +192,9 @@ declare module 'vue-i18n' {
           tools: string;
           logout: string;
         };
+        notice: {
+          newTask: string;
+        };
       };
       messages: {
         save: string;

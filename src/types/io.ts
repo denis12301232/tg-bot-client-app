@@ -1,5 +1,5 @@
 import type { Socket } from 'socket.io-client';
-import type { Responses, IMessage, IUser } from '@/types';
+import type { Responses, IMessage, IUser, ITask } from '@/types';
 
 export type SocketTyped = Socket<ServerToClientEvents, ClientToServerEvents>;
 
@@ -23,6 +23,7 @@ interface ServerToClientEvents {
   'webrtc:ice': (peerId: string, ice: RTCIceCandidate) => void;
   'meet:create': (meetId: string) => void;
   'error:meet-join': (code: number, message: string) => void;
+  'task:create': (task: ITask) => void;
 }
 
 interface ClientToServerEvents {

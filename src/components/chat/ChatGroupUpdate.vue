@@ -33,13 +33,13 @@ import type { Responses } from '@/types';
 import SetAvatar from '~/SetAvatar.vue';
 import { reactive, computed, watchEffect } from 'vue';
 import { storeToRefs } from 'pinia';
-import { useChatStore } from '@/stores';
+import { useSocketStore } from '@/stores';
 import { useFetch } from '@/hooks';
 import { ChatService } from '@/api/services';
 import { useI18n } from 'vue-i18n';
 
 const { t } = useI18n();
-const { currentChat } = storeToRefs(useChatStore());
+const { currentChat } = storeToRefs(useSocketStore());
 const settings = reactive({
   avatar: null as File | null,
   title: currentChat.value?.group.title || '',

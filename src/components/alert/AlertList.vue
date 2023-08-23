@@ -65,7 +65,7 @@ function hideById(id: string) {
 <style lang="scss" module>
 .container {
   top: 80px;
-  right: 10px;
+  left: 10px;
   overflow: hidden;
 }
 
@@ -79,7 +79,7 @@ function hideById(id: string) {
   }
   &:global(-enter-from),
   &:global(-leave-to) {
-    transform: translateX(30px);
+    transform: translateX(-30px);
     opacity: 0;
   }
 }

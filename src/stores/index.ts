@@ -1,3 +1,3 @@
 export { useStore } from './main';
-export { useChatStore } from './chat';
+export { useSocketStore } from './chat';
 export { useAlertStore } from './alert';

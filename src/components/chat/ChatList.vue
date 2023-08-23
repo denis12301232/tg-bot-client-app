@@ -64,14 +64,14 @@
 import type { IMessage } from '@/types';
 import UserAvatar from '~/UserAvatar.vue';
 import { storeToRefs } from 'pinia';
-import { useChatStore, useStore } from '@/stores';
+import { useSocketStore, useStore } from '@/stores';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 
 const { t, d } = useI18n();
 const router = useRouter();
 const { user, currentTheme } = storeToRefs(useStore());
-const { currentChatId, sortedChats } = storeToRefs(useChatStore());
+const { currentChatId, sortedChats } = storeToRefs(useSocketStore());
 
 function showLastMessageText(msg: IMessage | undefined) {
   if (msg?.text) return msg.text;

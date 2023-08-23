@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.container">
-    <div v-if="notices.length" style="flex: 1 1 auto">
+    <div v-if="alertStore.notices.size" style="flex: 1 1 auto">
       <QScrollArea
         class="fit"
         :thumb-style="{ width: '7px' }"
@@ -8,7 +8,7 @@
         :content-active-style="{ position: 'relative', overflow: 'hidden' }"
       >
         <QList class="q-pa-sm column reverse">
-          <QSlideItem v-for="n in notices" class="q-mb-sm" left-color="transparent" @left="clearOne(n.id)" :key="n.id">
+          <QSlideItem v-for="n in alertStore.notices.values()" class="q-mb-sm" left-color="transparent" @left="clearOne(n.id)" :key="n.id">
             <template v-slot:left> </template>
             <QItem :class="[$style.item, 'shadow-1', 'full-width']" clickable>
               <div class="row items-top justify-between full-width no-wrap">
@@ -37,31 +37,25 @@
         flat
         @click="alertStore.setMuted"
       />
-      <QBtn :disable="Boolean(!notices.length)" color="negative" flat @click="clearAll">Clear</QBtn>
+      <QBtn :disable="Boolean(!alertStore.notices.size)" color="negative" flat @click="clearAll">Clear</QBtn>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import type { Notice } from '@/models';
 import { useAlertStore } from '@/stores';
 import { useI18n } from 'vue-i18n';
 
-interface Props {
-  notices: Notice[];
-}
-
-defineProps<Props>();
 
 const { d } = useI18n();
 const alertStore = useAlertStore();
 
 function clearAll() {
-  alertStore.notices = [];
+  alertStore.notices.clear();
 }
 
 function clearOne(id: string) {
-  alertStore.notices = alertStore.notices.filter((n) => n.id !== id);
+  alertStore.notices.delete(id);
 }
 </script>
 

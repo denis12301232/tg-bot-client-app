@@ -144,7 +144,7 @@ import UserAvatar from '~/UserAvatar.vue';
 import { Message, MessageImage, MessageVoice, ModalImage } from '~/chat';
 import { ref, computed, watch, nextTick } from 'vue';
 import { storeToRefs } from 'pinia';
-import { useStore, useChatStore } from '@/stores';
+import { useStore, useSocketStore } from '@/stores';
 import { Util } from '@/util';
 import { useI18n } from 'vue-i18n';
 
@@ -155,9 +155,9 @@ interface Props {
 defineProps<Props>();
 const LIMIT = 10;
 const { t } = useI18n();
-const chatStore = useChatStore();
+const socketStore = useSocketStore();
 const { user, currentTheme } = storeToRefs(useStore());
-const { currentChatId, currentChat } = storeToRefs(chatStore);
+const { currentChatId, currentChat } = storeToRefs(socketStore);
 const modal = ref(false);
 const src = ref('');
 const scroll = ref<QScrollArea | null>(null);
@@ -179,7 +179,7 @@ watch(
 async function onLoad(index: number, done: (stop?: boolean | undefined) => void) {
   if (currentChat.value && currentChat.value.total > messages.value.length) {
     loading.value = true;
-    await chatStore.getChatMessages(currentChatId.value!, LIMIT);
+    await socketStore.getChatMessages(currentChatId.value!, LIMIT);
     loading.value = false;
     return done();
   }
@@ -210,12 +210,12 @@ function onHideContext(id: string) {
 function onDelete() {
   if (currentChatId.value) {
     const data = { chatId: currentChatId.value, msgIds: Array.from(selectedMessages.value) };
-    chatStore.socket.emit('chat:messages-delete', data);
+    socketStore.socket.emit('chat:messages-delete', data);
   }
 }
 
 function setReaction(msgId: string, reaction: string) {
-  chatStore.socket.emit('chat:message-reactions', { msgId, reaction });
+  socketStore.socket.emit('chat:message-reactions', { msgId, reaction });
 }
 
 function onScroll(info: Q.ScrollEvent) {

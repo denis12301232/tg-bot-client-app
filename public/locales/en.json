@@ -195,6 +195,9 @@
                 "account": "Account",
                 "tools": "Settings",
                 "logout": "Logout"
+            },
+            "notice": {
+                "newTask": "New task"
             }
         },
         "messages": {

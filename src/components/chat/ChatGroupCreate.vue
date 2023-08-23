@@ -65,10 +65,10 @@
 </template>
 
 <script setup lang="ts">
-import type {Responses } from '@/types';
+import type { Responses } from '@/types';
 import SetAvatar from '~/SetAvatar.vue';
 import { ref, reactive, onMounted, onUnmounted } from 'vue';
-import { useStore, useChatStore } from '@/stores';
+import { useStore, useSocketStore } from '@/stores';
 import { useI18n } from 'vue-i18n';
 
 const props = defineProps<{
@@ -77,20 +77,20 @@ const props = defineProps<{
 
 const { t } = useI18n();
 const store = useStore();
-const chatStore = useChatStore();
+const socketStore = useSocketStore();
 const step = ref(1);
 const vertical = ref(false);
 const group = reactive({ title: '', about: '', avatar: null as null | File });
 
-onMounted(() => chatStore.socket.on('chat:create-group', onChatCreateGroup));
-onUnmounted(() => chatStore.socket.removeListener('chat:create-group', onChatCreateGroup));
+onMounted(() => socketStore.socket.on('chat:create-group', onChatCreateGroup));
+onUnmounted(() => socketStore.socket.removeListener('chat:create-group', onChatCreateGroup));
 
 function setStep(value: number) {
   step.value = value;
 }
 
 async function createGroup() {
-  chatStore.socket.emit('chat:create-group', {
+  socketStore.socket.emit('chat:create-group', {
     users: [store.user?._id || ''],
     about: group.about,
     title: group.title,
@@ -99,7 +99,7 @@ async function createGroup() {
 }
 
 function onChatCreateGroup(chat: Responses.Chat) {
-  chatStore.chats.set(chat._id, chat);
+  socketStore.chats.set(chat._id, chat);
   props.onCloseModal();
 }
 

@@ -30,12 +30,12 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue';
 import { useRouter } from 'vue-router';
-import { useChatStore } from '@/stores';
+import { useSocketStore } from '@/stores';
 import { useI18n } from 'vue-i18n';
 
 const { t } = useI18n();
 const router = useRouter();
-const { socket } = useChatStore();
+const { socket } = useSocketStore();
 const meetTitle = ref('');
 const meetId = ref('');
 

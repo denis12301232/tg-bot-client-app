@@ -69,7 +69,7 @@ import type { QInput } from 'quasar';
 import EmojiPicker from '~/EmojiPicker.vue';
 import { ref, watch } from 'vue';
 import { storeToRefs } from 'pinia';
-import { useStore, useChatStore, useAlertStore } from '@/stores';
+import { useStore, useSocketStore, useAlertStore } from '@/stores';
 import { useVoice } from '@/hooks';
 import { Util } from '@/util';
 import { useI18n } from 'vue-i18n';
@@ -77,7 +77,7 @@ import { useI18n } from 'vue-i18n';
 const { t } = useI18n();
 const store = useStore();
 const { user, currentTheme } = storeToRefs(store);
-const chatStore = useChatStore();
+const socketStore = useSocketStore();
 const alertStore = useAlertStore();
 const message = ref('');
 const files = ref<File[] | null>(null);
@@ -89,14 +89,14 @@ const onTypingDebounce = Util.debounceDecorator(onTyping, 1000);
 const loading = ref(false);
 
 watch(
-  () => chatStore.currentChat?.messages.length,
+  () => socketStore.currentChat?.messages.length,
   () => {
     loading.value = false;
   }
 );
 
 watch(
-  () => chatStore.currentChatId,
+  () => socketStore.currentChatId,
   () => {
     message.value = '';
   }
@@ -129,9 +129,9 @@ function saveMessage() {
     return;
   }
   loading.value = true;
-  chatStore.socket.emit('chat:message', {
+  socketStore.socket.emit('chat:message', {
     text: message.value!,
-    chatId: chatStore.currentChatId!,
+    chatId: socketStore.currentChatId!,
     attachments: files.value,
   });
   message.value = '';
@@ -147,7 +147,7 @@ async function onMedia(event: Event) {
 }
 
 function onTyping() {
-  chatStore.socket.emit('chat:typing', chatStore.currentChatId!, user.value!.name, user.value!._id);
+  socketStore.socket.emit('chat:typing', socketStore.currentChatId!, user.value!.name, user.value!._id);
 }
 
 function onPickEmoji(emoji: string) {

@@ -27,7 +27,7 @@
           round
           @click="[toggleDrawer('right'), setIs('notices')]"
         >
-          <QBadge v-if="notices.length" color="positive" floating rounded>{{ notices.length }}</QBadge>
+          <QBadge v-if="notices.size" color="positive" floating rounded>{{ notices.size }}</QBadge>
         </QBtn>
         <QBtn v-if="!store.isAuth" dense flat round icon="eva-log-in-outline" @click="$router.push('/login')" />
         <QBtn v-else dense flat round icon="eva-person" @click="[toggleDrawer('right'), setIs('menu')]" />
@@ -138,7 +138,7 @@
         </QList>
       </template>
 
-      <NoticesList v-else :notices="notices" />
+      <NoticePanel v-else :notices="notices" />
     </QDrawer>
     <QPageContainer class="window-height">
       <slot />
@@ -149,9 +149,9 @@
 <script setup lang="ts">
 import UserAvatar from '~/UserAvatar.vue';
 import SetLang from '~/SetLang.vue';
-import NoticesList from '~/NoticesList.vue';
+import NoticePanel from '~/notice/NoticePanel.vue';
 import { reactive, ref } from 'vue';
-import { useStore, useChatStore, useAlertStore } from '@/stores';
+import { useStore, useSocketStore, useAlertStore } from '@/stores';
 import { useTelegram } from '@/hooks';
 import { ENV } from '@/util';
 import { storeToRefs } from 'pinia';
@@ -161,7 +161,7 @@ const icon = new URL('/icon.jpg', import.meta.url).href;
 const { t } = useI18n();
 const { isOpenedFromTg } = useTelegram();
 const store = useStore();
-const { unread } = storeToRefs(useChatStore());
+const { unread } = storeToRefs(useSocketStore());
 const { notices, muted } = storeToRefs(useAlertStore());
 const drawers = reactive({ right: false, left: false });
 const is = ref<'menu' | 'notices'>('menu');

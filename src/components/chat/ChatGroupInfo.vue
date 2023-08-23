@@ -78,14 +78,14 @@ import type { IUser } from '@/types';
 import UserAvatar from '~/UserAvatar.vue';
 import { ref, onMounted, computed, watch } from 'vue';
 import { storeToRefs } from 'pinia';
-import { useStore, useChatStore } from '@/stores';
+import { useStore, useSocketStore } from '@/stores';
 import { useFetch } from '@/hooks';
 import { ChatService } from '@/api/services';
 import { useI18n } from 'vue-i18n';
 
 const { t } = useI18n();
 const { user } = storeToRefs(useStore());
-const { currentChat, currentChatId } = storeToRefs(useChatStore());
+const { currentChat, currentChatId } = storeToRefs(useSocketStore());
 const filter = ref('');
 const selected = ref('');
 const avatar = computed(() => currentChat.value?.group?.avatar);
