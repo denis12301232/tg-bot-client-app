@@ -8,7 +8,7 @@ export const useAlertStore = defineStore('alert', () => {
   const { play } = useAudioAlert('/new-message.mp3');
   const muted = ref(false);
   const alerts = ref<Array<Alert | ChatAlert>>([]);
-  const notices = ref<Notice[]>(JSON.parse(localStorage.getItem('notices') || '') || []);
+  const notices = ref<Notice[]>(JSON.parse(localStorage.getItem('notices') || '[]'));
   const leaved = ref(false);
 
   onMounted(() => {

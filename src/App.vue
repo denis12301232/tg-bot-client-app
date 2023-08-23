@@ -53,7 +53,7 @@ watch(isAuth, () => {
 });
 
 function showNewMessage(msg: IMessage) {
-  const chat = chatStore.chats.get(msg.chat_id);
+  const chat = chatStore.chats.get(msg.chatId);
   if (chat) {
     const user = msg.author !== store.user?._id ? chat.users.find((user) => user._id === msg.author) : null;
     if (user && route.name !== 'chat') {

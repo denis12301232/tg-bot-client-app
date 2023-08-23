@@ -9,31 +9,31 @@ export default class ChatService {
     return $api.get('chat/get_user_chats');
   }
 
-  static getUserChatById(chat_id: string) {
-    return $api.get('chat/get_user_chat_by_id', { searchParams: { chat_id } });
+  static getUserChatById(chatId: string) {
+    return $api.get('chat/get_user_chat_by_id', { searchParams: { chatId } });
   }
 
-  static updateRead(chat_id: string) {
-    return $api.patch('chat/update_read', { json: { chat_id } });
+  static updateRead(chatId: string) {
+    return $api.patch('chat/update_read', { json: { chatId } });
   }
   static findUsers(loginOrName: string) {
     return $api.get('chat/find_users', { searchParams: { loginOrName } });
   }
 
-  static deleteChat(chat_id: string) {
-    return $api.patch('chat/delete_chat', { json: { chat_id } });
+  static deleteChat(chatId: string) {
+    return $api.patch('chat/delete_chat', { json: { chatId } });
   }
 
-  static addUserToGroup(chat_id: string, user_id: string) {
-    return $api.patch('chat/add_user_to_group', { json: { chat_id, user_id } });
+  static addUserToGroup(chatId: string, user_id: string) {
+    return $api.patch('chat/add_user_to_group', { json: { chatId, user_id } });
   }
 
-  static removeUserFromGroup(chat_id: string, user_id: string) {
-    return $api.patch('chat/remove_user_from_group', { json: { chat_id, user_id } });
+  static removeUserFromGroup(chatId: string, user_id: string) {
+    return $api.patch('chat/remove_user_from_group', { json: { chatId, user_id } });
   }
 
-  static getUsersListInChat(chat_id: string) {
-    return $api.get('chat/get_users_list_in_chat', { searchParams: { chat_id } });
+  static getUsersListInChat(chatId: string) {
+    return $api.get('chat/get_users_list_in_chat', { searchParams: { chatId } });
   }
 
   static updateRolesInGroup(group_id: string, role: string, users: string[]) {

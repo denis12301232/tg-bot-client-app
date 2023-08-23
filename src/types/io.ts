@@ -7,10 +7,10 @@ interface ServerToClientEvents {
   'chat:message': (msg: IMessage) => void;
   'chat:messages-delete': (chatId: string, msgIds: string[]) => void;
   'chat:message-reactions': (chatId: string, msgId: string, reactions: { [name: string]: string[] }) => void;
-  'chat:typing': (chat_id: string, user_name: string, user_id: string) => void;
-  'chat:read-message': (chat_id: string, user_id: string) => void;
+  'chat:typing': (chatId: string, user_name: string, user_id: string) => void;
+  'chat:read-message': (chatId: string, user_id: string) => void;
   'chat:invite-to-group': (chat: Responses.Chat) => void;
-  'chat:kick-from-group': (chat_id: string) => void;
+  'chat:kick-from-group': (chatId: string) => void;
   'chat:user-status': (user_id: string, status: 'online' | 'offline') => void;
   'chat:call': (chatId: string) => void;
   'chat:call-answer': (chatId: string, answer: boolean) => void;
@@ -29,7 +29,7 @@ interface ClientToServerEvents {
   'chat:message': (data: { text: string; chatId: string; attachments: File[] | null }) => void;
   'chat:messages-delete': (data: { chatId: string; msgIds: string[] }) => void;
   'chat:message-reactions': (data: { reaction: string; msgId: string }) => void;
-  'chat:typing': (chat_id: string, user_name: string, user_id: string) => void;
+  'chat:typing': (chatId: string, user_name: string, user_id: string) => void;
   'chat:call': (chatId: string) => void;
   'chat:call-answer': (chatId: string, answer: boolean) => void;
   'chat:call-cancel': (chatId: string) => void;

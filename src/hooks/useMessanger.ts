@@ -61,15 +61,15 @@ function useMessangerEvents({
   };
 
   async function onNewMessage(message: IMessage) {
-    const chat = chats.value.get(message.chat_id);
+    const chat = chats.value.get(message.chatId);
     if (chat) {
       chat.typing[message.author] = '';
       chat.messages.push(message);
       chat.updatedAt = message.createdAt;
-      currentChatId.value !== message.chat_id ? chat.unread++ : ChatService.updateRead(chat._id);
+      currentChatId.value !== message.chatId ? chat.unread++ : ChatService.updateRead(chat._id);
       chat.total++;
     } else {
-      const data = await ChatService.getUserChatById(message.chat_id).json<Responses.Chat>();
+      const data = await ChatService.getUserChatById(message.chatId).json<Responses.Chat>();
       chats.value.set(data._id, data);
     }
   }
@@ -82,8 +82,8 @@ function useMessangerEvents({
     }
   }
 
-  function onReadMessage(chat_id: string, user_id: string) {
-    const chat = chats.value.get(chat_id);
+  function onReadMessage(chatId: string, user_id: string) {
+    const chat = chats.value.get(chatId);
     if (chat) {
       for (let i = chat.messages.length - 1; i >= 0; i--) {
         if (chat.messages[i]?.read.includes(user_id)) break;
@@ -101,18 +101,18 @@ function useMessangerEvents({
     chats.value.set(chat._id, chat);
   }
 
-  function onKickFromGroup(chat_id: string) {
-    chats.value.delete(chat_id);
-    currentChatId.value === chat_id && (currentChatId.value = null);
+  function onKickFromGroup(chatId: string) {
+    chats.value.delete(chatId);
+    currentChatId.value === chatId && (currentChatId.value = null);
   }
 
-  function onTyping(chat_id: string, user_name: string, user_id: string) {
-    const chat = chats.value.get(chat_id);
+  function onTyping(chatId: string, user_name: string, user_id: string) {
+    const chat = chats.value.get(chatId);
     if (chat) {
-      clearTimeout(timers.get(chat_id));
+      clearTimeout(timers.get(chatId));
       !Object.prototype.hasOwnProperty.call(chat.typing, user_id) && (chat.typing[user_id] = user_name);
       const timer = setTimeout(() => delete chat.typing[user_id], 1000);
-      timers.set(chat_id, timer);
+      timers.set(chatId, timer);
     }
   }
 

@@ -31,7 +31,7 @@ export interface ISubtask {
 
 export interface IMessage {
   _id: string;
-  chat_id: string;
+  chatId: string;
   author: string;
   text: string;
   attachments: IAttachment[];

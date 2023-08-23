@@ -10,7 +10,7 @@ export default class ChatAlert extends Alert {
   constructor(msg: IMessage, author: IUser, chat: Responses.Chat) {
     super('info', msg.text);
     this.attachments = msg.attachments;
-    this.chatId = msg.chat_id;
+    this.chatId = msg.chatId;
     this.author = author;
     this.group = chat.group;
   }
