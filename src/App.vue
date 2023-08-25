@@ -1,4 +1,5 @@
 <template>
+  <BannerOffline />
   <AlertList v-model="alerts" />
   <NoticeList v-model="alertStore.notices" />
   <LoaderPage :loading="store.isPageLoading" />
@@ -19,6 +20,7 @@ import type { IMessage, ITask } from './types';
 import { AlertList } from './components/alert';
 import NoticeList from '~/notice/NoticeList.vue';
 import LoaderPage from '~/LoaderPage.vue';
+import BannerOffline from '~/BannerOffline.vue';
 import { onMounted, watch } from 'vue';
 import { useStore, useSocketStore, useAlertStore } from '@/stores';
 import { storeToRefs } from 'pinia';

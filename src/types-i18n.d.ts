@@ -193,7 +193,11 @@ declare module 'vue-i18n' {
           logout: string;
         };
         notice: {
+          title: string;
           newTask: string;
+          buttons: {
+            clear: string;
+          }
         };
       };
       messages: {
@@ -898,6 +902,14 @@ declare module 'vue-i18n' {
         format24h: boolean;
         pluralDay: string;
         close: string;
+      };
+      offline: {
+        messages: {
+          offline: string;
+        };
+        buttons: {
+          close: string;
+        };
       };
     };
   }

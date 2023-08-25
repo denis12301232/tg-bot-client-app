@@ -6,7 +6,7 @@ import { useAudioAlert } from '@/hooks';
 import { Helpers } from '@/util';
 
 export const useAlertStore = defineStore('alert', () => {
-  const { play } = useAudioAlert('/new-message.mp3');
+  const { play } = useAudioAlert('/audio/new-message.mp3');
   const muted = ref(false);
   const alerts = ref<Array<Alert | ChatAlert>>([]);
   const leaved = ref(false);

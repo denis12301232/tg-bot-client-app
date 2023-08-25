@@ -157,7 +157,7 @@ import { ENV } from '@/util';
 import { storeToRefs } from 'pinia';
 import { useI18n } from 'vue-i18n';
 
-const icon = new URL('/icon.jpg', import.meta.url).href;
+const icon = new URL('/icons/logo.jpg', import.meta.url).href;
 const { t } = useI18n();
 const { isOpenedFromTg } = useTelegram();
 const store = useStore();

@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.container">
-    <div v-if="alertStore.notices.size" style="flex: 1 1 auto">
+    <div v-if="alertStore.notices.size" class="flex-auto">
       <QScrollArea
         class="fit"
         :thumb-style="{ width: '7px' }"
@@ -8,7 +8,13 @@
         :content-active-style="{ position: 'relative', overflow: 'hidden' }"
       >
         <QList class="q-pa-sm column reverse">
-          <QSlideItem v-for="n in alertStore.notices.values()" class="q-mb-sm" left-color="transparent" @left="clearOne(n.id)" :key="n.id">
+          <QSlideItem
+            v-for="n in alertStore.notices.values()"
+            class="q-mb-sm"
+            left-color="transparent"
+            @left="clearOne(n.id)"
+            :key="n.id"
+          >
             <template v-slot:left> </template>
             <QItem :class="[$style.item, 'shadow-1', 'full-width']" clickable>
               <div class="row items-top justify-between full-width no-wrap">
@@ -27,7 +33,9 @@
         </QList>
       </QScrollArea>
     </div>
-    <div v-else class="text-center text-h6 q-py-md text-negative">No notifications</div>
+    <div v-else class="text-center text-h6 q-py-md text-negative">
+      {{ t('home.menu.notice.title') }}
+    </div>
     <div class="row justify-between q-pa-sm">
       <QBtn
         :icon="alertStore.muted ? 'eva-bell-off-outline' : 'eva-bell-outline'"
@@ -37,7 +45,9 @@
         flat
         @click="alertStore.setMuted"
       />
-      <QBtn :disable="Boolean(!alertStore.notices.size)" color="negative" flat @click="clearAll">Clear</QBtn>
+      <QBtn :disable="Boolean(!alertStore.notices.size)" color="negative" flat @click="clearAll">
+        {{ t('home.menu.notice.buttons.clear') }}
+      </QBtn>
     </div>
   </div>
 </template>
@@ -46,8 +56,7 @@
 import { useAlertStore } from '@/stores';
 import { useI18n } from 'vue-i18n';
 
-
-const { d } = useI18n();
+const { t, d } = useI18n();
 const alertStore = useAlertStore();
 
 function clearAll() {

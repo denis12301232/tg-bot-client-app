@@ -1,4 +1,4 @@
-import './assets/base.scss';
+import './assets/css/base.scss';
 import { createApp } from 'vue';
 import { createPinia } from 'pinia';
 import { Quasar } from 'quasar';

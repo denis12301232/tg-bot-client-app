@@ -24,9 +24,8 @@ export const useStore = defineStore('main', () => {
     }
   });
   watchEffect(() => {
-    const html = document.querySelector('html');
     currentTheme.value === 'dark' ? $q.dark.set(true) : $q.dark.set(false);
-    html?.setAttribute('class', currentTheme.value);
+    document.documentElement.setAttribute('class', currentTheme.value);
     localStorage.setItem('theme', currentTheme.value);
   });
   watchEffect(() => setLocale(lang.value).then(() => localStorage.setItem('lang', lang.value)));
