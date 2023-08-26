@@ -48,7 +48,7 @@ const rules = [
   (v: string) => Validate.required(v) || t('restore.link.form.fields.password.errors.required'),
   (v: string) => Validate.lengthInterval(6, 20)(v) || t('restore.link.form.fields.password.errors.lengthInterval'),
 ];
-const { request, loading, error } = useFetch(AuthService.restorePassword, {
+const { request, loading, error } = useFetch(AuthService.setPassword, {
   afterResponse: () => {
     password.value = '';
     message.value = t('restore.msgs.set');

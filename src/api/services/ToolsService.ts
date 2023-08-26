@@ -1,20 +1,24 @@
 import { $api } from '@/api';
 
 export default class ToolsService {
-  static setNewName(name: string) {
+  static updateName(name: string) {
     return $api.patch('tools/name', { json: { name } });
   }
 
-  static setNewEmail(email: string) {
+  static updateEmail(email: string) {
     return $api.patch('tools/email', { json: { email } });
   }
 
-  static setNewPassword(newPassword: string, oldPassword: string) {
+  static updatePassword(newPassword: string, oldPassword: string) {
     return $api.patch('tools/password', { json: { newPassword, oldPassword } });
   }
 
-  static setAvatar(formData: FormData) {
-    return $api.post('tools/avatar', { body: formData });
+  static updateAvatar(formData: FormData) {
+    return $api.patch('tools/avatar', { body: formData });
+  }
+
+  static updateRoles(_id: string, roles: string[]) {
+    return $api.patch('tools/roles', { json: { _id, roles } });
   }
 
   static setGoogleServiceAccountSettings(settings: {
@@ -30,10 +34,6 @@ export default class ToolsService {
     return $api.get('tools/users', { searchParams: { limit, page, filter } });
   }
 
-  static updateRoles(_id: string, roles: string[]) {
-    return $api.post('tools/setroles', { json: { _id, roles } });
-  }
-
   static fetchLocale(locale: string) {
     return fetch(`/locales/${locale}.json`)
       .then((response) => {
@@ -42,8 +42,6 @@ export default class ToolsService {
         }
         throw new Error('Something went wrong!');
       })
-      .catch((error) => {
-        console.error(error);
-      });
+      .catch((e) => console.error(e));
   }
 }

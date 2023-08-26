@@ -44,7 +44,7 @@ const email = ref(store.user?.email || '');
 const valid = ref(false);
 const formRef = ref<QForm | null>(null);
 const equal = computed(() => store.user?.email === email.value);
-const { request, loading, error } = useFetch(ToolsService.setNewEmail, {
+const { request, loading, error } = useFetch(ToolsService.updateEmail, {
   afterResponse: () => store.user?.email && (store.user.email = email.value),
   alert: true,
   successMsg: t('account.messages.email'),

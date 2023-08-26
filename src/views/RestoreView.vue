@@ -5,22 +5,22 @@
 </template>
 
 <script setup lang="ts">
-import Restore from '~/restore';
+import { RestorePassword, SetPassword } from '~/restore';
 import { type Component, shallowRef, computed, watch } from 'vue';
 import { useRoute } from 'vue-router';
 
 const route = useRoute();
-const name = computed(() => (route.query.link ? 'setnewpassord' : 'sendmail'));
-const component = shallowRef<Component>(Restore.SendMail);
+const name = computed(() => (route.query.link ? 'setPassword' : 'restorePassword'));
+const component = shallowRef<Component>(RestorePassword);
 
 watch(
   name,
   () => {
     switch (name.value) {
-      case 'sendmail':
-        return (component.value = Restore.SendMail);
-      case 'setnewpassord':
-        return (component.value = Restore.SetNewPassword);
+      case 'restorePassword':
+        return (component.value = RestorePassword);
+      case 'setPassword':
+        return (component.value = SetPassword);
     }
   },
   { immediate: true }

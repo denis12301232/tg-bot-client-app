@@ -5,20 +5,20 @@ export default class AssistanceService {
   static saveForm(form: Omit<Responses.Assistance, '_id' | 'sector'>) {
     return $api.post('assistance', { json: form });
   }
-  static getForms({ page, limit, sort, descending, filter }: Q.PaginationRequest) {
-    return $api.post('assistance/forms', { json: { page, limit, sort, descending, filter } });
+  static getForms(data: Q.PaginationRequest) {
+    return $api.post('assistance/forms', { json: data });
   }
 
   static deleteForms(ids: string[]) {
-    return $api.delete('assistance/forms', { json: ids });
+    return $api.delete('assistance', { json: ids });
   }
 
-  static findForms(nameOrSurname: string, limit: number, page: number) {
-    return $api.get('assistance', { searchParams: { nameOrSurname, limit, page } });
+  static search(nameOrSurname: string, limit: number, page: number) {
+    return $api.get('assistance/search', { searchParams: { nameOrSurname, limit, page } });
   }
 
   static getFormById(formId: string) {
-    return $api.get('assistance/id', { searchParams: { id: formId } });
+    return $api.get(`assistance/${formId}`);
   }
 
   static saveFormsToSheet(locale: string, ids: string[]) {

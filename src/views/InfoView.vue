@@ -74,7 +74,7 @@ const {
   data: forms,
   loading,
   error,
-} = useFetch<Responses.Assistance[], typeof AssistanceService.findForms>(AssistanceService.findForms, {
+} = useFetch<Responses.Assistance[], typeof AssistanceService.search>(AssistanceService.search, {
   afterResponse: ({ response }) => {
     total.value = Number(response.headers.get('x-total-count')) || 0;
   },

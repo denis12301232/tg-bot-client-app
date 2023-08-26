@@ -44,7 +44,7 @@ const name = ref(store.user?.name || '');
 const valid = ref(false);
 const formRef = ref<QForm | null>(null);
 const equal = computed(() => store.user?.name === name.value);
-const { request, loading, error } = useFetch(ToolsService.setNewName, {
+const { request, loading, error } = useFetch(ToolsService.updateName, {
   afterResponse: () => store.user?.name && (store.user.name = name.value),
   alert: true,
   successMsg: t('account.messages.name'),

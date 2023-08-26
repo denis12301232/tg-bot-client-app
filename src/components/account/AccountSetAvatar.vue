@@ -25,8 +25,8 @@ interface Props {
 const props = defineProps<Props>();
 const store = useStore();
 const avatar = ref<File | null>(null);
-const { request, loading, error } = useFetch<{ avatar: string }, typeof ToolsService.setAvatar>(
-  ToolsService.setAvatar,
+const { request, loading, error } = useFetch<{ avatar: string }, typeof ToolsService.updateAvatar>(
+  ToolsService.updateAvatar,
   {
     afterSuccess: ({ data }) => {
       store.user?.avatar && (store.user.avatar = data.value.avatar);

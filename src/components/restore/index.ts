@@ -1,7 +1,4 @@
-import RestoreSendMail from '~/restore/RestoreSendMail.vue';
-import RestoreSetNewPassword from '~/restore/RestoreSetNewPassword.vue';
+import SetPassword from '~/restore/SetPassword.vue';
+import RestorePassword from '~/restore/RestorePassword.vue';
 
-export default class Restore {
-  static SendMail = RestoreSendMail;
-  static SetNewPassword = RestoreSetNewPassword;
-}
+export { SetPassword, RestorePassword };

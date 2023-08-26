@@ -64,7 +64,7 @@ const password = reactive({
   new: { value: '', visible: false },
   old: { value: '', visible: false },
 });
-const { request, loading, error } = useFetch(ToolsService.setNewPassword, {
+const { request, loading, error } = useFetch(ToolsService.updatePassword, {
   afterResponse: () => {
     password.new.value = password.old.value = '';
     setTimeout(() => formRef.value?.reset(), 0);

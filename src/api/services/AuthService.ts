@@ -18,11 +18,11 @@ export default class AuthService {
     return $auth.post('auth/registration', { json: user });
   }
 
-  static sendMail(email: string) {
+  static restorePassword(email: string) {
     return $auth.post('auth/restore/password', { json: { email } });
   }
 
-  static restorePassword(password: string, link: string) {
-    return $auth.post('auth/restore/password/new', { json: { password, link } });
+  static setPassword(password: string, link: string) {
+    return $auth.post('auth/set/password', { json: { password, link } });
   }
 }

@@ -44,7 +44,7 @@ const {
   request: sendMail,
   loading,
   error,
-} = useFetch(AuthService.sendMail, {
+} = useFetch(AuthService.restorePassword, {
   afterResponse: () => {
     message.value = `${t('restore.messages.link')} ${email.value}`;
     email.value = '';
