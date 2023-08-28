@@ -29,6 +29,10 @@ export default class AssistanceService {
     return $api.get('assistance/stats', { searchParams: filters });
   }
 
+  static getStatsPdf(formData: FormData) {
+    return $api.post('assistance/stats/pdf', { body: formData });
+  }
+
   static updateForm(form: Omit<Responses.Assistance, '_id'>, id: string) {
     return $api.patch('assistance', { json: { form, id } });
   }

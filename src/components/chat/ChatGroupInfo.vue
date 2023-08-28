@@ -13,7 +13,9 @@
         </QItemSection>
         <QItemSection>
           <QItemLabel class="text-h6 text-cut">{{ name }}</QItemLabel>
-          <QItemLabel caption>{{ currentChat?.members_count }} {{ t('chat.messages.people') }}</QItemLabel>
+          <QItemLabel caption>
+            {{ t('chat.messages.people', currentChat?.members_count || 0) }}
+          </QItemLabel>
         </QItemSection>
       </QItem>
     </QCardSection>

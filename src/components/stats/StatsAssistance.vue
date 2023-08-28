@@ -27,6 +27,9 @@
       </template>
     </QInput>
     <canvas ref="chartRef" class="chart" />
+    <div class="q-py-md">
+      <QBtn icon="eva-download" color="primary" @click="createPdf">PDF</QBtn>
+    </div>
   </div>
 </template>
 
@@ -105,6 +108,26 @@ function calculateDays() {
     days.push(`${i}`);
   }
   return days;
+}
+
+async function createPdf() {
+  const formData = new FormData();
+  chartRef.value?.toBlob(sendBlob, 'image/png', 1);
+
+  async function sendBlob(blob: Blob | null) {
+    if (!blob) {
+      return;
+    }
+    formData.append('image', blob);
+    const pdf = await AssistanceService.getStatsPdf(formData).blob();
+    const file = new File([pdf], 'chart.pdf', { type: pdf.type });
+
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(file);
+    a.download = file.name;
+    a.click();
+    a.remove();
+  }
 }
 </script>
 

@@ -15,7 +15,7 @@
           {{ type === 'group' ? currentChat?.group.title : companion?.name }}
         </div>
         <div v-if="!Object.values(typing || {}).at(0)" class="text-caption">
-          {{ type === 'group' ? currentChat?.members_count + ` ${t('chat.messages.people')}` : companion?.status }}
+          {{ type === 'group' ? t('chat.messages.people', currentChat?.members_count || 0) : companion?.status }}
         </div>
         <div v-else class="text-caption">
           <QSpinnerDots size="1rem" />

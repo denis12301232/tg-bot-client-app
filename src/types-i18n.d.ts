@@ -693,7 +693,6 @@ declare module 'vue-i18n' {
         title: string;
         labels: {
           about: string;
-          people: string;
         };
         search: {
           placeholder: string;

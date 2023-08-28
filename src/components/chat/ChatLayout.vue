@@ -3,7 +3,16 @@
     <div :class="[$style.left, $style['col-1'], { [$style.hide]: currentChatId, [$style.fullMax]: !currentChatId }]">
       <div :class="[$style.header, 'row', 'no-wrap', 'items-center', 'q-px-sm', 'header', 'q-pt-md', 'q-pb-sm']">
         <QBtn class="q-mr-sm" icon="eva-menu" flat dense round @click.stop="setVisible(true)" />
-        <QInput v-model="search" class="full-width" debounce="500" dense rounded standout clearable label="Search">
+        <QInput
+          v-model="search"
+          class="full-width"
+          debounce="500"
+          dense
+          rounded
+          standout
+          clearable
+          :label="t('chat.search.placeholder')"
+        >
           <template #prepend>
             <QIcon name="eva-search" />
           </template>
@@ -48,7 +57,9 @@ import { LeftMenu, GroupCreate, GroupInfo, GroupAddUser, GroupSettings } from '@
 import { ref } from 'vue';
 import { useSocketStore, useStore } from '@/stores';
 import { storeToRefs } from 'pinia';
+import { useI18n } from 'vue-i18n';
 
+const { t } = useI18n();
 const { currentTheme } = storeToRefs(useStore());
 const { currentChatId } = storeToRefs(useSocketStore());
 const search = ref('');

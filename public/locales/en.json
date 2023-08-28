@@ -641,7 +641,7 @@
     "messages": {
       "none": "No messages",
       "select": "Select a chat",
-      "people": "participants",
+      "people": "{n} participants | {n} participant | {n} participants",
       "typing": "typing",
       "me": "I",
       "audio": "Audio message",
@@ -696,9 +696,6 @@
         "errors": {
           "none": "Not found"
         }
-      },
-      "messages": {
-        "people": "participants"
       }
     },
     "groupSettings": {
