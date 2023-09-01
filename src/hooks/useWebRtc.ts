@@ -3,6 +3,24 @@ import { type Ref, ref, reactive, onMounted, onUnmounted } from 'vue';
 import { ENV } from '@/util';
 import { WebRtcDto } from '@/api/dto';
 
+interface WebRtcEventsOpts {
+  socket: SocketTyped;
+  myId: string;
+  abonents: Ref<Map<string, IAbonent>>;
+  streams: Streams;
+  streamIds: StreamIds;
+  opts?: WebRtcOpts;
+}
+
+interface WebRtcOpts {
+  setChannelEvents?: (channel: RTCDataChannel) => void;
+}
+
+interface StreamIds {
+  screen: Set<string>;
+  camera: Set<string>;
+}
+
 export default function useWebRtc(socket: SocketTyped, myId: string, opts?: WebRtcOpts) {
   const abonents = ref<Map<string, IAbonent>>(new Map());
   const streams = reactive<Streams>({ camera: new Map(), screen: new Map() });
@@ -139,22 +157,4 @@ function useWebRtcEvents({ socket, myId, abonents, streams, streamIds, opts }: W
   return new Map<keyof typeof events, (typeof events)[keyof typeof events]>(
     Object.entries(events) as Entries<typeof events>
   );
-}
-
-interface WebRtcEventsOpts {
-  socket: SocketTyped;
-  myId: string;
-  abonents: Ref<Map<string, IAbonent>>;
-  streams: Streams;
-  streamIds: StreamIds;
-  opts?: WebRtcOpts;
-}
-
-interface WebRtcOpts {
-  setChannelEvents?: (channel: RTCDataChannel) => void;
-}
-
-interface StreamIds {
-  screen: Set<string>;
-  camera: Set<string>;
 }

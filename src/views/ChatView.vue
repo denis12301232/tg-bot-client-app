@@ -5,7 +5,7 @@
       <List v-else />
     </template>
     <template #right-bottom>
-      <div class="row items-center justify-center fit text-h6">{{t('chat.messages.select')+ '...'}}</div>
+      <div class="row items-center justify-center fit text-h6">{{ t('chat.messages.select') + '...' }}</div>
     </template>
   </Layout>
 </template>

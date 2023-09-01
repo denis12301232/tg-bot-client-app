@@ -2,6 +2,11 @@ import type { IMessage, Responses, SocketTyped, Entries } from '@/types';
 import { type Ref, ref, computed, watchEffect } from 'vue';
 import { ChatService } from '@/api/services';
 
+interface MessangerEvents {
+  chats: Ref<Map<string, Responses.Chat>>;
+  currentChatId: Ref<string | null>;
+}
+
 export default function useMessanger(socket: SocketTyped) {
   const chats = ref<Map<string, Responses.Chat>>(new Map());
   const currentChatId = ref<string | null>(null);
@@ -41,13 +46,7 @@ export default function useMessanger(socket: SocketTyped) {
   return { chats, currentChatId, currentChat, sortedChats, onGetUserChats, unread, getChatMessages };
 }
 
-function useMessangerEvents({
-  chats,
-  currentChatId,
-}: {
-  chats: Ref<Map<string, Responses.Chat>>;
-  currentChatId: Ref<string | null>;
-}) {
+function useMessangerEvents({ chats, currentChatId }: MessangerEvents) {
   const timers = new Map<string, number>();
   const list = {
     'chat:message': onNewMessage,

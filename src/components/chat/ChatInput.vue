@@ -71,7 +71,7 @@ import { ref, watch } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useStore, useSocketStore, useAlertStore } from '@/stores';
 import { useVoice } from '@/hooks';
-import { Util } from '@/util';
+import { debounce } from '@/util';
 import { useI18n } from 'vue-i18n';
 
 const { t } = useI18n();
@@ -85,7 +85,7 @@ const inputRef = ref<QInput | null>(null);
 const fileInput = ref<HTMLInputElement | null>(null);
 const focused = ref(false);
 const { voiceMessage, isRecording, error, startRecording, stopRecording } = useVoice();
-const onTypingDebounce = Util.debounceDecorator(onTyping, 1000);
+const onTypingDebounce = debounce(onTyping, 1000);
 const loading = ref(false);
 
 watch(
@@ -101,28 +101,19 @@ watch(
     message.value = '';
   }
 );
-
 watch(message, () => onTypingDebounce());
-
-watch(error, () => {
-  error.value && alertStore.addAlert('error', 'Нет доступа к микрофону!');
-});
-
+watch(error, () => error.value && alertStore.addAlert('error', 'No access to microphone'));
 watch(voiceMessage, () => {
   if (voiceMessage.value) {
     files.value = [voiceMessage.value];
   }
 });
-
 watch(files, () => {
   if (files.value && !voiceMessage.value) {
     saveMessage();
   }
 });
-
-watch(isRecording, () => {
-  inputRef.value?.blur();
-});
+watch(isRecording, () => inputRef.value?.blur());
 
 function saveMessage() {
   if (!files.value && !message.value) {

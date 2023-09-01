@@ -197,7 +197,7 @@ declare module 'vue-i18n' {
           newTask: string;
           buttons: {
             clear: string;
-          }
+          };
         };
       };
       messages: {

@@ -1,4 +1,4 @@
-import type {  Q } from '@/types';
+import type { Q } from '@/types';
 import { type ResponsePromise, HTTPError } from 'ky';
 import { ref, type Ref } from 'vue';
 
@@ -25,7 +25,7 @@ export default function useRequest<T>(
     rowsPerPage: limit, // limit
     rowsNumber: 0, // total
   });
-  
+
   async function request(props: { pagination: Q.Pagination; filter?: any }) {
     try {
       loading.value = true;

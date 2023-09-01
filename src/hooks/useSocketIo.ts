@@ -2,20 +2,17 @@ import type { SocketTyped } from '@/types';
 import { ref, markRaw } from 'vue';
 import { io } from 'socket.io-client';
 
-
 export default function useSocketIo(url: string) {
-  const socket = markRaw<SocketTyped>(
-    io(url, {
-      auth: (cb) => cb({ token: localStorage.getItem('token') }),
-      autoConnect: false,
-      reconnectionAttempts: Infinity,
-      timeout: 10000,
-      transports: ['websocket'],
-      forceNew: true,
-      path: '/socket',
-    })
-  );
   const isConnected = ref(false);
+  const socket = io(url, {
+    auth: (cb) => cb({ token: localStorage.getItem('token') }),
+    autoConnect: false,
+    reconnectionAttempts: Infinity,
+    timeout: 10000,
+    transports: ['websocket'],
+    forceNew: true,
+    path: '/socket',
+  });
 
   function onConnect() {
     isConnected.value = true;
@@ -32,5 +29,5 @@ export default function useSocketIo(url: string) {
   socket.on('connect', onConnect);
   socket.on('disconnect', onDisconnect);
 
-  return { socket, isConnected, connect };
+  return { socket: markRaw<SocketTyped>(socket), isConnected, connect };
 }

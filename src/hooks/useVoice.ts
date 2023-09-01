@@ -7,18 +7,26 @@ export default function useVoice() {
   const isRecording = ref(false);
   const error = ref<string | null>(null);
 
+  function start() {
+    isRecording.value = true;
+  }
+
+  function stop() {
+    isRecording.value = false;
+  }
+
+  function dataavailable(event: BlobEvent) {
+    voiceMessage.value = new File([event.data], 'audio.ogg', { type: 'audio/webm' });
+  }
+
   async function startRecording() {
     try {
       error.value = null;
       stream.value = await navigator.mediaDevices.getUserMedia({ audio: true });
       mediaRecorder.value = new MediaRecorder(stream.value);
-      mediaRecorder.value.onstart = () => (isRecording.value = true);
-      mediaRecorder.value.onstop = () => (isRecording.value = false);
-      mediaRecorder.value.ondataavailable = (event) => {
-        voiceMessage.value = new File([event.data], 'audio.ogg', {
-          type: 'audio/webm',
-        });
-      };
+      mediaRecorder.value.onstart = start;
+      mediaRecorder.value.onstop = stop;
+      mediaRecorder.value.ondataavailable = dataavailable;
       mediaRecorder.value.start();
     } catch (e) {
       if (e instanceof Error) {

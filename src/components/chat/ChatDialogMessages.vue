@@ -118,7 +118,7 @@
             </QBtn>
           </div>
           <QList class="q-pa-sm" dense style="min-width: 100px">
-            <QItem :class="$style.menu_item" clickable v-close-popup @click="Util.copyTextToClipboard(msg.text)">
+            <QItem :class="$style.menu_item" clickable v-close-popup @click="copyText(msg.text)">
               <QItemSection avatar style="min-width: 20px">
                 <QIcon name="eva-copy" color="indigo" />
               </QItemSection>
@@ -145,8 +145,8 @@ import { Message, MessageImage, MessageVoice, ModalImage } from '~/chat';
 import { ref, computed, watch, nextTick } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useStore, useSocketStore } from '@/stores';
-import { Util } from '@/util';
 import { useI18n } from 'vue-i18n';
+import { copyText } from '@/util';
 
 interface Props {
   type: 'dialog' | 'group';

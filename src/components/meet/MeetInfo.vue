@@ -10,7 +10,7 @@
     <QCardSection class="column items-center">
       <h6>{{ t('meetId.info.labels.id') }}</h6>
       <div class="q-py-md text-caption">{{ link }}</div>
-      <QBtn dense flat round icon="eva-copy" color="indigo" @click="Util.copyTextToClipboard(link)">
+      <QBtn dense flat round icon="eva-copy" color="indigo" @click="copyText(link)">
         <QTooltip class="bg-indigo" :offset="[10, 10]" :delay="1000">{{ t('meetId.hints.copy') }}</QTooltip>
       </QBtn>
     </QCardSection>
@@ -18,7 +18,7 @@
 </template>
 
 <script setup lang="ts">
-import { Util } from '@/util';
+import { copyText } from '@/util';
 import { useI18n } from 'vue-i18n';
 
 interface Props {

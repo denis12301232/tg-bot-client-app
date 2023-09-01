@@ -12,5 +12,4 @@ export default class Alert {
     this.message = message;
     this.visible = true;
   }
-
 }
