@@ -6,7 +6,7 @@
     <QSeparator />
     <QCardSection>
       <QList>
-        <QItem v-for="user of users" clickable :key="user?._id">
+        <QItem v-for="user of users" v-ripple class="rounded-borders" clickable :key="user?._id">
           <QItemSection avatar>
             <UserAvatar :name="user?.name" :avatar="user?.avatar" />
           </QItemSection>

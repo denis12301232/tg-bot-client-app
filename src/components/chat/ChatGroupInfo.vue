@@ -44,7 +44,13 @@
           separator
           #="{ item }: { item: IUser }"
         >
-          <QItem :key="item._id">
+          <QItem
+            v-ripple
+            class="rounded-borders"
+            :key="item._id"
+            clickable
+            @click="$router.push({ name: 'userId', params: { id: item._id } })"
+          >
             <QItemSection avatar>
               <UserAvatar :name="item.name" :avatar="item.avatar" />
             </QItemSection>

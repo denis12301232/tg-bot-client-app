@@ -37,8 +37,10 @@
       <QCardSection class="q-pt-none">
         <h6 class="text-center text-subtitle">{{ t('taskId.task.card.takenBy') }}</h6>
         <div class="text-center q-my-sm text-bold text-positive">
-          {{ task?.user && task.user.name }}
-          <span v-if="!task.user" class="text-negative text-bold">{{ t('taskId.messages.untaken') }}</span>
+          <RouterLink v-if="task?.user" :class="$style.link" :to="{ name: 'userId', params: { id: task.user._id } }">
+            {{ task.user.name }}
+          </RouterLink>
+          <span v-else class="text-negative text-bold">{{ t('taskId.messages.untaken') }}</span>
         </div>
       </QCardSection>
     </QCard>
@@ -63,5 +65,14 @@ const { t } = useI18n();
 .card {
   width: 100%;
   max-width: 500px;
+}
+
+.link {
+  text-decoration: none;
+  color: inherit;
+
+  &:hover {
+    color: $orange;
+  }
 }
 </style>

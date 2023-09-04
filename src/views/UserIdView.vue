@@ -1,18 +1,18 @@
 <template>
-  <div class="row justify-center items-center">
+  <div class="row justify-center items-center" style="height: 70vh">
     <QCard :class="[$style.card, 'q-pa-md']">
       <QCardSection class="row justify-center">
         <UserAvatar :name="user?.name" :avatar="user?.avatar" size="120px" />
       </QCardSection>
-      <QCardSection class="row justify-center">
+      <QCardSection class="column items-center">
         <h5>
           {{ user?.name }}
           <span v-if="user?.roles.includes('admin')" class="text-caption">(admin)</span>
         </h5>
+        <div class="text-overline text-weight-light text-center">
+          {{ user?.status }}
+        </div>
       </QCardSection>
-      <QCardSerction class="row justify-center text-overline text-weight-light">
-        {{ user?.status }}
-      </QCardSerction>
     </QCard>
   </div>
 </template>
