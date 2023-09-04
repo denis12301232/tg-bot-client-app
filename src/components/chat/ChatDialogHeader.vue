@@ -8,7 +8,11 @@
         class="avatar q-mr-sm"
         :name="type === 'group' ? currentChat?.group.title : companion?.name"
         :avatar="type === 'group' ? currentChat?.group.avatar : companion?.avatar"
-        @click.stop="type === 'group' && emit('modal', 'modal:group-info')"
+        @click.stop="
+          type === 'group'
+            ? emit('modal', 'modal:group-info')
+            : router.push({ name: 'userId', params: { id: companion?._id } })
+        "
       />
       <div>
         <div class="text-h6">

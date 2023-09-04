@@ -30,10 +30,6 @@ export default class ToolsService {
     return $api.post('tools/google/service', { json: settings });
   }
 
-  static getUsers({ page, limit, filter }: { page: number; limit: number; filter: string }) {
-    return $api.get('tools/users', { searchParams: { limit, page, filter } });
-  }
-
   static fetchLocale(locale: string) {
     return fetch(`/locales/${locale}.json`)
       .then((response) => {

@@ -64,7 +64,7 @@ import type { QTable } from 'quasar';
 import type { IUser } from '@/types';
 import { onMounted, computed } from 'vue';
 import { useRequest, useFetch } from '@/hooks';
-import { ToolsService } from '@/api/services';
+import { UserService, ToolsService } from '@/api/services';
 import { useI18n } from 'vue-i18n';
 
 const { t } = useI18n();
@@ -78,7 +78,7 @@ const {
   filter,
   loading: isUsersLoading,
   data: users,
-} = useRequest<IUser>(ToolsService.getUsers, { limit: 3 });
+} = useRequest<IUser>(UserService.getUsers, { limit: 3 });
 const columns = computed<QTable['columns']>(() => [
   { name: 'name', label: t('tools.roles.table.columns.name'), align: 'left', field: 'name' },
   { name: 'login', label: t('tools.roles.table.columns.login'), align: 'left', field: 'login' },

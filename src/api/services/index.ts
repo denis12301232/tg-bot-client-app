@@ -6,3 +6,4 @@ export { default as ImageService } from './ImageService';
 export { default as MeetService } from './MeetService';
 export { default as ChatService } from './ChatService';
 export { default as BotService } from './BotService';
+export { default as UserService } from './UserService';

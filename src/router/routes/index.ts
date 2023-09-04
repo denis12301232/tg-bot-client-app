@@ -129,16 +129,24 @@ export const routes: RouteRecordRaw[] = [
     props: true,
   },
   {
+    path: '/users/:id',
+    name: 'userId',
+    component: () => import('@/views/UserIdView.vue'),
+    meta: { layout: 'SimpleLayout', layoutProps: { elevated: false, back: true } },
+    beforeEnter: [RouteMiddlewares.useAuthGuard],
+    props: true,
+  },
+  {
     path: '/:pathMatch(.*)*',
     name: '404',
     component: () => import('~/TheError.vue'),
     props: { code: 404, message: 'Not found' },
     meta: { layout: 'VoidLayout' },
   },
-  {
-    path: '/test',
-    name: 'test',
-    component: () => import('@/views/TestView.vue'),
-    meta: { layout: 'VoidLayout' },
-  },
+  // {
+  //   path: '/test',
+  //   name: 'test',
+  //   component: () => import('@/views/TestView.vue'),
+  //   meta: { layout: 'VoidLayout' },
+  // },
 ];
