@@ -36,7 +36,7 @@ import { useStore } from '@/stores';
 import { useI18n } from 'vue-i18n';
 import { useFetch } from '@/hooks';
 import { Validate } from '@/util';
-import { ToolsService } from '@/api/services';
+import { UserService } from '@/api/services';
 
 const { t } = useI18n();
 const store = useStore();
@@ -44,8 +44,8 @@ const email = ref(store.user?.email || '');
 const valid = ref(false);
 const formRef = ref<QForm | null>(null);
 const equal = computed(() => store.user?.email === email.value);
-const { request, loading, error } = useFetch(ToolsService.updateEmail, {
-  afterResponse: () => store.user?.email && (store.user.email = email.value),
+const { request, loading, error } = useFetch(UserService.updateEmail, {
+  afterSuccess: () => store.user?.email && (store.user.email = email.value),
   alert: true,
   successMsg: t('account.messages.email'),
 });

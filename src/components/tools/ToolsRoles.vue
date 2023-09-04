@@ -64,11 +64,11 @@ import type { QTable } from 'quasar';
 import type { IUser } from '@/types';
 import { onMounted, computed } from 'vue';
 import { useRequest, useFetch } from '@/hooks';
-import { UserService, ToolsService } from '@/api/services';
+import { UserService } from '@/api/services';
 import { useI18n } from 'vue-i18n';
 
 const { t } = useI18n();
-const { request, loading } = useFetch(ToolsService.updateRoles, {
+const { request, loading } = useFetch(UserService.updateRoles, {
   alert: true,
   successMsg: t('tools.roles.messages.update'),
 });

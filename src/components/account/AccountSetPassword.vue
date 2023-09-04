@@ -53,7 +53,7 @@
 import type { QForm } from 'quasar';
 import { ref, reactive, watch } from 'vue';
 import { useFetch } from '@/hooks';
-import { ToolsService } from '@/api/services';
+import { UserService } from '@/api/services';
 import { Validate } from '@/util';
 import { useI18n } from 'vue-i18n';
 
@@ -64,7 +64,7 @@ const password = reactive({
   new: { value: '', visible: false },
   old: { value: '', visible: false },
 });
-const { request, loading, error } = useFetch(ToolsService.updatePassword, {
+const { request, loading, error } = useFetch(UserService.updatePassword, {
   afterResponse: () => {
     password.new.value = password.old.value = '';
     setTimeout(() => formRef.value?.reset(), 0);

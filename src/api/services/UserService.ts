@@ -8,4 +8,24 @@ export default class UserService {
   static getUsers({ page, limit, filter }: { page: number; limit: number; filter: string }) {
     return $api.get('users', { searchParams: { limit, page, filter } });
   }
+
+  static updateEmail(email: string) {
+    return $api.patch('users/email', { json: { email } });
+  }
+
+  static updateName(name: string) {
+    return $api.patch('users/email', { json: { name } });
+  }
+
+  static updateAvatar(formData: FormData) {
+    return $api.patch('users/avatar', { body: formData });
+  }
+
+  static updatePassword(newPassword: string, oldPassword: string) {
+    return $api.patch('users/password', { json: { newPassword, oldPassword } });
+  }
+
+  static updateRoles(_id: string, roles: string[]) {
+    return $api.patch('users/roles', { json: { _id, roles } });
+  }
 }

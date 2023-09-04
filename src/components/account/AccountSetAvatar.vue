@@ -15,7 +15,7 @@ import SetAvatar from '~/SetAvatar.vue';
 import { ref, watch } from 'vue';
 import { useStore } from '@/stores';
 import { useFetch } from '@/hooks';
-import { ToolsService } from '@/api/services';
+import { UserService } from '@/api/services';
 
 interface Props {
   label: string;
@@ -25,8 +25,8 @@ interface Props {
 const props = defineProps<Props>();
 const store = useStore();
 const avatar = ref<File | null>(null);
-const { request, loading, error } = useFetch<{ avatar: string }, typeof ToolsService.updateAvatar>(
-  ToolsService.updateAvatar,
+const { request, loading, error } = useFetch<{ avatar: string }, typeof UserService.updateAvatar>(
+  UserService.updateAvatar,
   {
     afterSuccess: ({ data }) => {
       store.user?.avatar && (store.user.avatar = data.value.avatar);

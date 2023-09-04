@@ -1,26 +1,6 @@
 import { $api } from '@/api';
 
 export default class ToolsService {
-  static updateName(name: string) {
-    return $api.patch('tools/name', { json: { name } });
-  }
-
-  static updateEmail(email: string) {
-    return $api.patch('tools/email', { json: { email } });
-  }
-
-  static updatePassword(newPassword: string, oldPassword: string) {
-    return $api.patch('tools/password', { json: { newPassword, oldPassword } });
-  }
-
-  static updateAvatar(formData: FormData) {
-    return $api.patch('tools/avatar', { body: formData });
-  }
-
-  static updateRoles(_id: string, roles: string[]) {
-    return $api.patch('tools/roles', { json: { _id, roles } });
-  }
-
   static setGoogleServiceAccountSettings(settings: {
     serviceUser: string;
     servicePrivateKey: string;
