@@ -1,6 +1,7 @@
 <template>
   <div class="row justify-center items-center" style="height: 70vh">
-    <QCard :class="[$style.card, 'q-pa-md']">
+    <QSkeleton v-if="loading" :class="$style.card" style="height: 280px" />
+    <QCard v-else :class="[$style.card, 'q-pa-md']">
       <QCardSection class="row justify-center">
         <UserAvatar :name="user?.name" :avatar="user?.avatar" size="120px" />
       </QCardSection>
