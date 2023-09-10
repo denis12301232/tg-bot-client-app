@@ -102,14 +102,14 @@ const typing = computed(() => currentChat.value?.typing);
 const isGroupAdmin = computed(() => currentChat.value?.group?.roles?.admin?.includes(user.value?._id || ''));
 
 async function deleteChat() {
-  await ChatService.deleteChat(currentChatId.value!);
+  await ChatService.destroy(currentChatId.value!);
   chats.value.delete(currentChatId.value!);
   router.push('/chat');
 }
 
 async function leaveGroup() {
   if (currentChatId.value) {
-    await ChatService.deleteChat(currentChatId.value);
+    await ChatService.destroy(currentChatId.value);
     chats.value.delete(currentChatId.value);
     router.push('/chat');
   }

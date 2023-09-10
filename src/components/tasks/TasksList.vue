@@ -7,7 +7,7 @@
       :columns="columns"
       :rows="tasks"
       :filter="filter"
-      :loading="loading || isTaskStatusLoading || isSetUserLoading"
+      :loading="loading || isUpdating"
       :rows-per-page-options="[5, 10, 20]"
       :pagination-label="(f, l, a) => `${f}-${l} ${t('extra.table.of')} ${a}`"
       :loading-label="t('extra.table.loading')"
@@ -80,7 +80,7 @@
                   flat
                   icon="eva-plus-outline"
                   color="warning"
-                  @click="[setUserForTask(scope.row._id)]"
+                  @click="onUpdateTaskUser(scope.row._id, user?._id || '')"
                 >
                   <QTooltip class="bg-indigo" :offset="[10, 10]" :delay="1000">
                     {{ t('tasks.list.hints.take') }}
@@ -149,19 +149,7 @@ import { storeToRefs } from 'pinia';
 
 const { t, d } = useI18n();
 const { user, isAdmin } = storeToRefs(useStore());
-const { request: updateTaskStatus, loading: isTaskStatusLoading } = useFetch(TaskService.updateTaskStatus);
-const { request: setUserForTask, loading: isSetUserLoading } = useFetch<
-  { message: string; taskId: string },
-  typeof TaskService.setUserForTask
->(TaskService.setUserForTask, {
-  afterResponse: ({ data }) => {
-    const task = tasks.value?.find((task) => task._id === data.value.taskId);
-    if (task) {
-      task.status = 'performed';
-      (task.user as unknown as any) = user.value?._id;
-    }
-  },
-});
+const { request: update, loading: isUpdating } = useFetch(TaskService.update);
 const {
   request,
   data: tasks,
@@ -220,9 +208,18 @@ const options = computed(() => [
 onMounted(() => request({ pagination: pagination.value }));
 
 async function onUpdateTaskStatus(taskId: string, status: ITask['status']) {
-  await updateTaskStatus(taskId, status);
+  await update(taskId, { status });
   const task = tasks.value?.find((task) => task._id === taskId);
   task && (task.status = status);
+}
+
+async function onUpdateTaskUser(taskId: string, userId: string) {
+  await update(taskId, { userId, status: 'performed' });
+  const task = tasks.value?.find((task) => task._id === taskId);
+  if (task) {
+    task.status = 'performed';
+    (task.user as unknown as any) = user.value?._id;
+  }
 }
 </script>
 

@@ -28,7 +28,7 @@ import { storeToRefs } from 'pinia';
 import { useStore, useSocketStore } from '@/stores';
 import { useI18n } from 'vue-i18n';
 import { useFetch, useVModel } from '@/hooks';
-import { ChatService } from '@/api/services';
+import { UserService } from '@/api/services';
 import { useRouter } from 'vue-router';
 
 interface Props {
@@ -42,11 +42,11 @@ const search = useVModel<string>();
 const { user } = storeToRefs(useStore());
 const socketStore = useSocketStore();
 const { chats } = storeToRefs(socketStore);
-const { request: searchUsers, data: users } = useFetch<IUser[], typeof ChatService.findUsers>(ChatService.findUsers);
+const { request: searchUsers, data: users } = useFetch<IUser[], typeof UserService.getUsers>(UserService.getUsers);
 
 onMounted(() => socketStore.socket.on('chat:create', onChatCreate));
 onUnmounted(() => socketStore.socket.removeListener('chat:create', onChatCreate));
-watchEffect(() => searchUsers(search.value));
+watchEffect(() => searchUsers({ filter: search.value }));
 
 function onChatCreate(chat: Responses.Chat) {
   if (!chats.value.has(chat._id)) {

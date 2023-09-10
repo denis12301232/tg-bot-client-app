@@ -58,8 +58,8 @@ const form = ref({
   personalDataAgreement: false,
   photoAgreement: false,
 });
-const { request, loading } = useFetch<Responses.Assistance, (typeof AssistanceService)['saveForm']>(
-  AssistanceService.saveForm,
+const { request, loading } = useFetch<Responses.Assistance, typeof AssistanceService.store>(
+  AssistanceService.store,
   {
     alert: true,
     successMsg: t('home.messages.save'),

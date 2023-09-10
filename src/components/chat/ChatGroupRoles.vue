@@ -56,7 +56,7 @@ import { useI18n } from 'vue-i18n';
 const { t } = useI18n();
 const { currentChat } = storeToRefs(useSocketStore());
 const hasAdminRights = ref(currentChat.value?.group.roles.admin || []);
-const { request, loading } = useFetch(ChatService.updateRolesInGroup, {
+const { request, loading } = useFetch(ChatService.updateGroupRoles, {
   alert: true,
   successMsg: t('chat.groupSettings.messages.updated'),
   errorMsg: t('chat.groupSettings.messages.failed'),

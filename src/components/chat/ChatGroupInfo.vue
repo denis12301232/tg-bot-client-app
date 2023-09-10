@@ -102,8 +102,8 @@ const {
   request: getUsersList,
   loading,
   data: users,
-} = useFetch<IUser[], typeof ChatService.getUsersListInChat>(ChatService.getUsersListInChat);
-const { request: removeUser, loading: isRemoveUserLoading } = useFetch(ChatService.removeUserFromGroup, {
+} = useFetch<IUser[], typeof ChatService.chatMembers>(ChatService.chatMembers);
+const { request: removeUser, loading: isRemoveUserLoading } = useFetch(ChatService.updateGroupMembers, {
   afterSuccess: () => {
     users.value = users.value?.filter((user) => user._id !== selected.value);
     currentChat.value && currentChat.value.members_count--;
@@ -123,7 +123,7 @@ onMounted(() => getUsersList(currentChatId.value!));
 
 watch(selected, () => {
   if (selected.value) {
-    removeUser(currentChatId.value!, selected.value);
+    removeUser(currentChatId.value!, { userId: selected.value, action: 'kick' });
   }
 });
 

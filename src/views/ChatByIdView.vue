@@ -56,3 +56,4 @@ watch(
   grid-template-rows: 1fr auto;
 }
 </style>
+@/components/chats

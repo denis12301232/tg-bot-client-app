@@ -249,3 +249,4 @@ function onScroll(info: Q.ScrollEvent) {
   background-color: $grey-10;
 }
 </style>
+@/components/chats

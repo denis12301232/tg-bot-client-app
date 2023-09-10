@@ -28,7 +28,7 @@
       :loading="isUpdating"
       :reset="false"
       :title="t('infoById.form.title')"
-      @submit="form && updateForm(form, formId)"
+      @submit="form && update(formId, form)"
     >
       <template #submit="{ type, valid }">
         <QBtn
@@ -64,10 +64,10 @@ const router = useRouter();
 const route = useRoute();
 const formId = computed(() => String(route.params.id));
 const isEditable = computed(() => !!route.query.edit);
-const { request, data: form } = useFetch<Omit<Responses.Assistance, '_id'>, (typeof AssistanceService)['getFormById']>(
-  AssistanceService.getFormById
+const { request, data: form } = useFetch<Omit<Responses.Assistance, '_id'>, typeof AssistanceService.show>(
+  AssistanceService.show
 );
-const { request: updateForm, loading: isUpdating } = useFetch(AssistanceService.updateForm, {
+const { request: update, loading: isUpdating } = useFetch(AssistanceService.update, {
   afterResponse: () => router.push({ query: undefined }),
 });
 

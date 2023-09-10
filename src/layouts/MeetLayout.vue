@@ -81,8 +81,8 @@ import { MeetService } from '@/api/services';
 import { useI18n } from 'vue-i18n';
 
 type T = { title: string; roles: { admin: string[] } };
-type S = typeof MeetService.getMeetInfo;
-type Message = { user_id: string; msg: string };
+type S = typeof MeetService.show;
+type Message = { userId: string; msg: string };
 
 interface RightDrawer {
   component: Component;
@@ -97,7 +97,7 @@ const { addAlert } = useAlertStore();
 const { goBack } = useNavigation();
 const user = computed(() => store.user || ({} as IUser));
 const { abonents, streams, streamIds, captureMyStream } = useWebRtc(socket, user.value._id, { setChannelEvents });
-const { request: getMeetInfo, data: meetInfo, error } = useFetch<T, S>(MeetService.getMeetInfo);
+const { request: getMeetInfo, data: meetInfo, error } = useFetch<T, S>(MeetService.show);
 const open = reactive({ left: false, right: false });
 const videos = ref<Map<string, InstanceType<typeof CustomVideo> | null>>(new Map());
 const messages = ref<Message[]>([]);

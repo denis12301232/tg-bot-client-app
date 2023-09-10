@@ -4,12 +4,12 @@ import { ENV } from '@/util';
 
 export default class ImageService {
   static getImages(params: { skip: number; limit: number; sort: string; descending: boolean }) {
-    return $api.get('images/', { searchParams: params });
+    return $api.get('images', { searchParams: params });
   }
 
   static uploadImages(): QUploaderFactoryObject {
     return {
-      url: ENV.API_V1 + '/images/upload',
+      url: ENV.API_V1 + '/images',
       method: 'POST',
       headers: [{ name: 'Authorization', value: `Bearer ${localStorage.getItem('token')}` }],
       withCredentials: true,
@@ -17,10 +17,10 @@ export default class ImageService {
   }
 
   static deleteImages(ids: string[]) {
-    return $api.delete('images/delete', { json: ids, timeout: 6e5 });
+    return $api.delete('images', { json: ids, timeout: 6e5 });
   }
 
   static updateDescription(id: string, description: string) {
-    return $api.patch('images/description', { json: { id, description } });
+    return $api.patch(`images/${id}`, { json: { description } });
   }
 }

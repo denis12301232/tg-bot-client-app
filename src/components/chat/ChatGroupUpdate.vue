@@ -21,7 +21,7 @@
       :disable="!valid || loading"
       class="q-mt-md"
       color="primary"
-      @click="updateGroup({ formData, params })"
+      @click="updateGroup(group?._id || '', { formData, params })"
     >
       {{ t('chat.groupSettings.form.buttons.submit') }}
     </QBtn>
@@ -49,7 +49,6 @@ const formData = new FormData();
 const group = computed(() => currentChat.value?.group);
 const valid = computed(() => Boolean(settings.title || settings.avatar || settings.about));
 const params = computed(() => ({
-  group_id: group.value?._id || '',
   title: settings.title ? settings.title : undefined,
   about: settings.about ? settings.about : undefined,
 }));

@@ -70,11 +70,11 @@ const search = ref('');
 const page = ref(1);
 const total = ref(0);
 const {
-  request: findForms,
+  request,
   data: forms,
   loading,
   error,
-} = useFetch<Responses.Assistance[], typeof AssistanceService.search>(AssistanceService.search, {
+} = useFetch<Responses.Assistance[], typeof AssistanceService.catch>(AssistanceService.catch, {
   afterResponse: ({ response }) => {
     total.value = Number(response.headers.get('x-total-count')) || 0;
   },
@@ -89,7 +89,13 @@ watch(loading, (n) => {
 watch([search, page], async () => {
   error.value = '';
   if (search.value) {
-    findForms(search.value, LIMIT, page.value);
+    request({
+      limit: LIMIT,
+      page: page.value,
+      filter: { nameOrSurname: search.value },
+      sort: '_id',
+      descending: false,
+    });
   }
 });
 

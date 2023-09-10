@@ -29,3 +29,4 @@ function openModal() {
   modal.value = true;
 }
 </script>
+@/components/chats

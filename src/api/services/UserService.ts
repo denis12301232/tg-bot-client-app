@@ -5,7 +5,7 @@ export default class UserService {
     return $api.get(`users/${id}`);
   }
 
-  static getUsers({ page, limit, filter }: { page: number; limit: number; filter: string }) {
+  static getUsers({ page = 1, limit = 1e5, filter }: { page?: number; limit?: number; filter: string }) {
     return $api.get('users', { searchParams: { limit, page, filter } });
   }
 

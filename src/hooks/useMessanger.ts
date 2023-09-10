@@ -34,12 +34,12 @@ export default function useMessanger(socket: SocketTyped) {
     }
 
     const skip = chat.messages.length;
-    const messages = await ChatService.getChatMessages(chatId, skip, limit).json<IMessage[]>();
+    const messages = await ChatService.chatMessages(chatId, skip, limit).json<IMessage[]>();
     chat.messages.splice(0, 0, ...messages);
   }
 
   async function onGetUserChats() {
-    const data = await ChatService.getUserChats().json<Responses.Chat[]>();
+    const data = await ChatService.index().json<Responses.Chat[]>();
     data.forEach((chat) => chats.value.set(chat._id, chat));
   }
 
@@ -68,7 +68,7 @@ function useMessangerEvents({ chats, currentChatId }: MessangerEvents) {
       currentChatId.value !== message.chatId ? chat.unread++ : ChatService.updateRead(chat._id);
       chat.total++;
     } else {
-      const data = await ChatService.getUserChatById(message.chatId).json<Responses.Chat>();
+      const data = await ChatService.show(message.chatId).json<Responses.Chat>();
       chats.value.set(data._id, data);
     }
   }
@@ -81,18 +81,18 @@ function useMessangerEvents({ chats, currentChatId }: MessangerEvents) {
     }
   }
 
-  function onReadMessage(chatId: string, user_id: string) {
+  function onReadMessage(chatId: string, userId: string) {
     const chat = chats.value.get(chatId);
     if (chat) {
       for (let i = chat.messages.length - 1; i >= 0; i--) {
-        if (chat.messages[i]?.read.includes(user_id)) break;
-        else chat.messages[i]?.read.push(user_id);
+        if (chat.messages[i]?.read.includes(userId)) break;
+        else chat.messages[i]?.read.push(userId);
       }
     }
   }
 
-  function onUpdateStatus(user_id: string, status: 'online' | 'offline') {
-    const chat = [...chats.value.values()].find((chat) => chat.companion && chat.companion._id === user_id);
+  function onUpdateStatus(userId: string, status: 'online' | 'offline') {
+    const chat = [...chats.value.values()].find((chat) => chat.companion && chat.companion._id === userId);
     chat && (chat.companion.status = status);
   }
 
@@ -105,12 +105,12 @@ function useMessangerEvents({ chats, currentChatId }: MessangerEvents) {
     currentChatId.value === chatId && (currentChatId.value = null);
   }
 
-  function onTyping(chatId: string, user_name: string, user_id: string) {
+  function onTyping(chatId: string, user_name: string, userId: string) {
     const chat = chats.value.get(chatId);
     if (chat) {
       clearTimeout(timers.get(chatId));
-      !Object.prototype.hasOwnProperty.call(chat.typing, user_id) && (chat.typing[user_id] = user_name);
-      const timer = setTimeout(() => delete chat.typing[user_id], 1000);
+      !Object.prototype.hasOwnProperty.call(chat.typing, userId) && (chat.typing[userId] = user_name);
+      const timer = setTimeout(() => delete chat.typing[userId], 1000);
       timers.set(chatId, timer);
     }
   }

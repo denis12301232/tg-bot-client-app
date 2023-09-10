@@ -38,7 +38,7 @@
         :disable="!userToAdd?._id"
         :loading="isAddUserLoading"
         :label="t('chat.addUser.form.buttons.add')"
-        @click="addUser(currentChatId!, userToAdd!._id)"
+        @click="addUser(currentChatId!, { action: 'add', userId: userToAdd!._id })"
       />
     </QCardActions>
   </QCard>
@@ -51,7 +51,7 @@ import { ref, watch } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useSocketStore } from '@/stores';
 import { useFetch } from '@/hooks';
-import { ChatService } from '@/api/services';
+import { ChatService, UserService } from '@/api/services';
 import { useI18n } from 'vue-i18n';
 
 const { t } = useI18n();
@@ -62,9 +62,9 @@ const {
   request: findUsers,
   data: users,
   loading: isUsersLoading,
-} = useFetch<IUser[], typeof ChatService.findUsers>(ChatService.findUsers);
+} = useFetch<IUser[], typeof UserService.getUsers>(UserService.getUsers);
 
-const { request: addUser, loading: isAddUserLoading } = useFetch(ChatService.addUserToGroup, {
+const { request: addUser, loading: isAddUserLoading } = useFetch(ChatService.updateGroupMembers, {
   afterSuccess: () => {
     const chat = chats.value.get(currentChatId.value!);
     if (chat) {
@@ -78,7 +78,7 @@ const { request: addUser, loading: isAddUserLoading } = useFetch(ChatService.add
 });
 watch(search, (n) => {
   if (n) {
-    findUsers(n);
+    findUsers({ filter: n });
     userToAdd.value = null;
   } else {
     users.value = [];

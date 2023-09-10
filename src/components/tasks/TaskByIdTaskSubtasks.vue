@@ -72,7 +72,7 @@
               v-model="scope.row.status"
               #="data"
               :title="t('taskId.subtasks.table.columns.status')"
-              @save="(v) => updateSubtask({ subtask_id: scope.row._id, status: v })"
+              @save="(v) => updateSubtask(scope.row._id, { status: v })"
             >
               <QSelect
                 v-model="data.value"
@@ -99,7 +99,7 @@
               v-model="scope.row.cause"
               #="data"
               :title="t('taskId.subtasks.table.columns.extraInfo')"
-              @save="(v) => updateSubtask({ subtask_id: scope.row._id, cause: v })"
+              @save="(v) => updateSubtask(scope.row._id, { cause: v })"
             >
               <QInput
                 v-model="data.value"

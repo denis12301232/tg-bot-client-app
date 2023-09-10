@@ -10,14 +10,14 @@
           v-for="(msg, index) in messages"
           class="q-px-md"
           :key="index"
-          :sent="msg.user_id === user._id"
-          :bg-color="msg.user_id === user._id ? 'blue-8' : 'green-5'"
+          :sent="msg.userId === user._id"
+          :bg-color="msg.userId === user._id ? 'blue-8' : 'green-5'"
           text-color="white"
           :text="[msg.msg]"
         >
           <template #name>
             <div class="text-bold text-deep-orange">
-              {{ msg.user_id === user._id ? 'Я' : abonents.get(msg.user_id)?.info?.name }}
+              {{ msg.userId === user._id ? 'Я' : abonents.get(msg.userId)?.info?.name }}
             </div>
           </template>
         </QChatMessage>
@@ -58,11 +58,11 @@ import { useI18n } from 'vue-i18n';
 
 interface Props {
   abonents: Map<string, IAbonent>;
-  messages: { user_id: string; msg: string }[];
+  messages: { userId: string; msg: string }[];
 }
 
 const props = defineProps<Props>();
-const emit = defineEmits<{ 'my-msg': [msg: { user_id: string; msg: string }] }>();
+const emit = defineEmits<{ 'my-msg': [msg: { userId: string; msg: string }] }>();
 const { t } = useI18n();
 const store = useStore();
 const msg = ref('');
@@ -76,9 +76,9 @@ watch([() => props.messages.length], () => {
 
 function sendMessage() {
   if (!msg.value) return;
-  const message = new WebRtcDto('meet:msg', { user_id: user.value._id, msg: msg.value }).toString();
+  const message = new WebRtcDto('meet:msg', { userId: user.value._id, msg: msg.value }).toString();
   props.abonents.forEach((a) => a.channel?.send(message));
-  emit('my-msg', { user_id: user.value._id, msg: msg.value });
+  emit('my-msg', { userId: user.value._id, msg: msg.value });
   msg.value = '';
 }
 </script>
