@@ -11,7 +11,7 @@
     <QPageContainer class="window-height">
       <slot />
     </QPageContainer>
-    <QHeader class="footer" reveal elevated height-hint="98">
+    <QHeader class="footer" reveal :elevated="elevated" bordered height-hint="98">
       <QToolbar>
         <QBtn dense flat round icon="eva-arrow-back" color="primary" @click="goBack" />
         <QToolbarTitle>{{ t('meetId.layout.title') }}</QToolbarTitle>
@@ -88,6 +88,12 @@ interface RightDrawer {
   component: Component;
   props: { [name: string]: any };
 }
+
+interface Props {
+  elevated: boolean;
+}
+
+defineProps<Props>();
 
 const { t } = useI18n();
 const route = useRoute();

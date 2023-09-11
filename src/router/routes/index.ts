@@ -104,13 +104,13 @@ export const routes: RouteRecordRaw[] = [
     path: '/meets',
     name: 'meets',
     component: () => import('@/views/MeetView.vue'),
-    meta: { layout: 'SimpleLayout', layoutProps: { title: 'meets.layout.title' } },
+    meta: { layout: 'SimpleLayout', layoutProps: { title: 'meets.layout.title', elevated: false } },
     beforeEnter: [RouteMiddlewares.useAuthGuard],
   },
   {
     path: '/meet/:id',
     component: () => import('@/views/MeetByIdView.vue'),
-    meta: { layout: 'MeetLayout' },
+    meta: { layout: 'MeetLayout', layoutProps: { elevated: false } },
     beforeEnter: [RouteMiddlewares.useAuthGuard, RouteMiddlewares.useUUIDV4Guard],
   },
   {
