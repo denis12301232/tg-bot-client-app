@@ -2,18 +2,27 @@
   <div class="row justify-center items-center" style="height: 70vh">
     <QSkeleton v-if="loading" :class="$style.card" style="height: 280px" />
     <QCard v-else :class="[$style.card, 'q-pa-md']">
-      <QCardSection class="row justify-center">
+      <QCardSection class="row items-center">
         <UserAvatar :name="user?.name" :avatar="user?.avatar" size="120px" />
-      </QCardSection>
-      <QCardSection class="column items-center">
-        <h5>
-          {{ user?.name }}
-          <span v-if="user?.roles.includes('admin')" class="text-caption">(admin)</span>
-        </h5>
-        <div class="text-overline text-weight-light text-center">
-          {{ user?.status }}
+        <div class="q-ml-lg">
+          <h5>
+            {{ user?.name }}
+            <span v-if="user?.roles.includes('admin')" class="text-caption">(admin)</span>
+          </h5>
+          <div class="text-overline text-weight-light text-center">
+            <QBadge :color="user?.status === 'online' ? 'green' : 'red'">{{ user?.status }}</QBadge>
+          </div>
         </div>
       </QCardSection>
+      <h6 class="text-indigo text-center">{{ t('userId.messages.info') }}</h6>
+      <QCardSection>
+        <div>
+          <div class="text-subtitle1">{{ t('userId.messages.login') }}</div>
+          <QIcon class="text-body1 text-weight-light" name="eva-at-outline" />
+          <span class="text-body1 text-weight-light">{{ user?.login }}</span>
+        </div>
+      </QCardSection>
+      <QSeparator />
     </QCard>
   </div>
 </template>
@@ -25,12 +34,14 @@ import { onMounted, watch } from 'vue';
 import { UserService } from '@/api/services';
 import { useFetch } from '@/hooks';
 import { useRouter } from 'vue-router';
+import { useI18n } from 'vue-i18n';
 
 interface Props {
   id: string;
 }
 
 const props = defineProps<Props>();
+const { t } = useI18n();
 const router = useRouter();
 const { request, data: user, loading, error } = useFetch<IUser, (typeof UserService)['getUser']>(UserService.getUser);
 

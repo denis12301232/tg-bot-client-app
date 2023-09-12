@@ -863,6 +863,12 @@
       }
     }
   },
+  "userId": {
+    "messages": {
+      "info": "Information",
+      "login": "Login"
+    }
+  },
   "error": {
     "buttons": {
       "home": "Home"

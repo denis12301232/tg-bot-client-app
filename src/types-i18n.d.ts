@@ -869,6 +869,12 @@ declare module 'vue-i18n' {
         };
       };
     };
+    userId: {
+      messages: {
+        info: string;
+        login: string;
+      };
+    };
     error: {
       buttons: {
         home: string;
