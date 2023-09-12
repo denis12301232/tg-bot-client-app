@@ -97,7 +97,7 @@ export const routes: RouteRecordRaw[] = [
   {
     path: '/stats',
     component: () => import('@/views/StatsView.vue'),
-    meta: { layout: 'StatsLayout' },
+    meta: { layout: 'StatsLayout', layoutProps: { elevated: false } },
     beforeEnter: [RouteMiddlewares.useAuthGuard, RouteMiddlewares.useRoleGuard(['admin'])],
   },
   {
