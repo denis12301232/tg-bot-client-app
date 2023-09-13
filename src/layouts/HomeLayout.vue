@@ -34,8 +34,8 @@
       </QToolbar>
       <QTabs :class="$style.tabs" align="left" active-color="primary">
         <QRouteTab to="/" :label="t('home.tabs.form')" />
-        <QRouteTab v-if="store.isAdmin" to="/list" :label="t('home.tabs.list')" />
-        <QRouteTab v-if="store.isAdmin" to="/info" :label="t('home.tabs.search')" />
+        <QRouteTab v-if="store.isAdmin" to="/applications" :label="t('home.tabs.list')" />
+        <QRouteTab v-if="store.isAdmin" to="/applications/search" :label="t('home.tabs.search')" />
       </QTabs>
     </QHeader>
     <QDrawer v-model="drawers.left" side="left" bordered>

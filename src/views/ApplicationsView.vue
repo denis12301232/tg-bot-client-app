@@ -31,11 +31,11 @@
     >
       <template #top>
         <div class="row justify-between full-width items-center">
-          <div class="text-h5 q-ml-md">{{ t('list.table.title') }}</div>
+          <div class="text-h5 q-ml-md">{{ t('applications.table.title') }}</div>
           <div>
             <QBtn icon="eva-more-horizontal-outline" flat round>
               <QTooltip class="bg-white text-black" :offset="[10, 10]" :delay="1000">
-                {{ t('list.hints.columns') }}
+                {{ t('applications.hints.columns') }}
               </QTooltip>
               <QMenu max-width="200px" anchor="bottom left" self="top middle">
                 <QList>
@@ -48,7 +48,7 @@
             <QFab direction="down" flat padding="10px" icon="eva-arrow-ios-downward-outline">
               <QFabAction icon="eva-cloud-upload-outline" color="green" @click="openModal('import')">
                 <QTooltip class="bg-white text-black" :offset="[10, 10]" :delay="1000">
-                  {{ t('list.hints.import') }}
+                  {{ t('applications.hints.import') }}
                 </QTooltip>
               </QFabAction>
               <QFabAction
@@ -58,12 +58,12 @@
                 @click="openModal('export')"
               >
                 <QTooltip class="bg-white text-black" :offset="[10, 10]" :delay="1000">
-                  {{ t('list.hints.export') }}
+                  {{ t('applications.hints.export') }}
                 </QTooltip>
               </QFabAction>
               <QFabAction icon="eva-options-outline" color="deep-orange" @click="openModal('filters')">
                 <QTooltip class="bg-white text-black" :offset="[10, 10]" :delay="1000">
-                  {{ t('list.hints.filter') }}
+                  {{ t('applications.hints.filter') }}
                 </QTooltip>
               </QFabAction>
               <QFabAction
@@ -73,7 +73,7 @@
                 @click="onDelete(ids)"
               >
                 <QTooltip class="bg-white text-black" :offset="[10, 10]" :delay="1000">
-                  {{ t('list.hints.delete') }}
+                  {{ t('applications.hints.delete') }}
                 </QTooltip>
               </QFabAction>
             </QFab>

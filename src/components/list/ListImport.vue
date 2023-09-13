@@ -25,7 +25,7 @@
         }"
       >
         <div :class="$style.content">
-          <h5 class="text-center q-my-lg">{{ t('list.import.title') }}</h5>
+          <h5 class="text-center q-my-lg">{{ t('applications.import.title') }}</h5>
           <QSelect v-model="lang" class="q-mb-md" emit-value map-options label="Language" standout :options="options" />
           <QFile v-model="file" class="full-width" standout label="CSV" accept="text/csv" clearable>
             <template #prepend>
@@ -45,11 +45,11 @@
           </QFile>
           <div v-if="data" class="q-py-sm">
             <div>
-              <span class="text-subtitle1 text-positive">{{ t('list.import.messages.uploaded') }}:</span>
+              <span class="text-subtitle1 text-positive">{{ t('applications.import.messages.uploaded') }}:</span>
               {{ data.created }}
             </div>
             <div>
-              <span class="text-subtitle1 text-negative">{{ t('list.import.messages.errors') }}:</span>
+              <span class="text-subtitle1 text-negative">{{ t('applications.import.messages.errors') }}:</span>
               {{ data.errors.length }}
             </div>
           </div>
@@ -58,7 +58,7 @@
           class="q-my-md"
           color="pink-9"
           :icon="help ? 'eva-arrow-up-outline' : 'eva-arrow-down-outline'"
-          :label="t('list.import.messages.help')"
+          :label="t('applications.import.messages.help')"
           @click="showHelp"
         />
         <QCard v-if="help" style="width: 100%; max-width: 800px">
@@ -110,7 +110,7 @@ const { request, loading, data } = useFetch<
   typeof AssistanceService.uploadFormsListCSV
 >(AssistanceService.uploadFormsListCSV, {
   alert: true,
-  successMsg: t('list.import.messages.success'),
+  successMsg: t('applications.import.messages.success'),
   afterSuccess: () => (file.value = null),
 });
 const options = [

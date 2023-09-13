@@ -204,7 +204,7 @@ declare module 'vue-i18n' {
         save: string;
       };
     };
-    list: {
+    applications: {
       table: {
         title: string;
       };
@@ -264,7 +264,7 @@ declare module 'vue-i18n' {
         };
       };
     };
-    info: {
+    applicationsSearch: {
       title: string;
       search: {
         placeholder: string;
@@ -280,7 +280,7 @@ declare module 'vue-i18n' {
         title: string;
       };
     };
-    infoById: {
+    applicationsId: {
       layout: {
         title: string;
       };

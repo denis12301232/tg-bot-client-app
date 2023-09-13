@@ -1,56 +1,56 @@
 <template>
   <QCard :class="[$style.card, 'q-pa-lg', 'column', 'items-center']">
-    <h5 class="q-mb-sm">{{ t('list.filter.title') }}</h5>
+    <h5 class="q-mb-sm">{{ t('applications.filter.title') }}</h5>
     <QOptionGroup v-model="criterias" class="criterias q-py-sm" type="checkbox" :options="options" inline />
     <div class="full-width">
       <div v-if="criterias.includes('birth')">
-        <h6 class="q-mt-md q-mb-sm text-center">{{ t('list.filter.form.checkboxes[0]') }}</h6>
+        <h6 class="q-mt-md q-mb-sm text-center">{{ t('applications.filter.form.checkboxes[0]') }}</h6>
         <QBadge color="indigo">
           {{
-            `${t('list.filter.form.fields.year.min')} ${query.birth.min} ${t('list.filter.form.fields.year.max')} ${
-              query.birth.max
-            }`
+            `${t('applications.filter.form.fields.year.min')} ${query.birth.min} ${t(
+              'applications.filter.form.fields.year.max'
+            )} ${query.birth.max}`
           }}
         </QBadge>
         <QRange v-model="query.birth" :min="1920" :max="new Date().getFullYear()" color="secondary" />
       </div>
       <div v-if="criterias.includes('district')">
-        <h6 class="q-mt-md q-mb-sm text-center">{{ t('list.filter.form.checkboxes[1]') }}</h6>
+        <h6 class="q-mt-md q-mb-sm text-center">{{ t('applications.filter.form.checkboxes[1]') }}</h6>
         <QSelect
           v-model="query.district"
           class="full-width"
           :options="districtOptions"
           standout
-          :label="t('list.filter.form.fields.district.placeholder')"
+          :label="t('applications.filter.form.fields.district.placeholder')"
           map-options
           emit-value
         />
       </div>
       <div v-if="criterias.includes('street')">
-        <h6 class="q-mt-md q-mb-sm text-center">{{ t('list.filter.form.checkboxes[2]') }}</h6>
+        <h6 class="q-mt-md q-mb-sm text-center">{{ t('applications.filter.form.checkboxes[2]') }}</h6>
         <QSelect
           v-model="query.street"
           class="full-width"
           :options="streetOptions"
           standout
-          :label="t('list.filter.form.fields.street.placeholder')"
+          :label="t('applications.filter.form.fields.street.placeholder')"
           map-options
           emit-value
         >
           <template #no-option>
             <QItem>
-              <QItemSection class="text-negative">{{ t('list.filter.messages.district') }}</QItemSection>
+              <QItemSection class="text-negative">{{ t('applications.filter.messages.district') }}</QItemSection>
             </QItem>
           </template>
         </QSelect>
       </div>
       <div v-if="criterias.includes('sector')">
-        <h6 class="q-mt-md q-mb-sm text-center">{{ t('list.filter.form.checkboxes[3]') }}</h6>
-        <QInput v-model="query.sector" standout :label="t('list.filter.form.fields.sector.placeholder')" />
+        <h6 class="q-mt-md q-mb-sm text-center">{{ t('applications.filter.form.checkboxes[3]') }}</h6>
+        <QInput v-model="query.sector" standout :label="t('applications.filter.form.fields.sector.placeholder')" />
       </div>
       <div v-if="criterias.length" class="column items-center">
         <QBtn v-close-popup class="q-mt-md" color="primary">
-          {{ t('list.filter.form.buttons.set') }}
+          {{ t('applications.filter.form.buttons.set') }}
         </QBtn>
       </div>
     </div>
@@ -87,10 +87,10 @@ const query = useVModel<typeof props.query>('query');
 // eslint-disable-next-line vue/no-dupe-keys
 const criterias = useVModel<typeof props.criterias>('criterias');
 const options = computed(() => [
-  { label: t('list.filter.form.checkboxes[0]'), value: 'birth' },
-  { label: t('list.filter.form.checkboxes[1]'), value: 'district' },
-  { label: t('list.filter.form.checkboxes[2]'), value: 'street' },
-  { label: t('list.filter.form.checkboxes[3]'), value: 'sector' },
+  { label: t('applications.filter.form.checkboxes[0]'), value: 'birth' },
+  { label: t('applications.filter.form.checkboxes[1]'), value: 'district' },
+  { label: t('applications.filter.form.checkboxes[2]'), value: 'street' },
+  { label: t('applications.filter.form.checkboxes[3]'), value: 'sector' },
 ]);
 
 const districtOptions = computed(() =>

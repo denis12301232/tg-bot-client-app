@@ -200,7 +200,7 @@
       "save": "Сохранено!"
     }
   },
-  "list": {
+  "applications": {
     "table": {
       "title": "Полный список"
     },
@@ -260,7 +260,7 @@
       }
     }
   },
-  "info": {
+  "applicationsSearch": {
     "title": "Поиск",
     "search": {
       "placeholder": "Имя или фамилия",
@@ -276,7 +276,7 @@
       "title": "Найдено"
     }
   },
-  "infoById": {
+  "applicationsId": {
     "layout": {
       "title": "Заявка"
     },

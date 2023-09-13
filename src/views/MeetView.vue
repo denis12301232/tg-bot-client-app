@@ -52,11 +52,11 @@ function createNewMeet() {
 }
 
 function joinMeet() {
-  router.push({ path: `/meet/${meetId.value}` });
+  router.push({ path: `/meets/${meetId.value}` });
 }
 
 function onMeetCreate(meetId: string) {
-  router.push({ path: `/meet/${meetId}` });
+  router.push({ path: `/meets/${meetId}` });
 }
 </script>
 

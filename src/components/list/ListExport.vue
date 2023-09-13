@@ -11,10 +11,10 @@
         :content-active-style="{ position: 'relative', overflow: 'hidden', display: 'flex', justifyContent: 'center' }"
       >
         <form :class="$style.form" @submit.prevent="createReport(locale, type || 'xlsx')">
-          <h5 class="q-pa-lg text-center">{{ t('list.export.title') }}</h5>
+          <h5 class="q-pa-lg text-center">{{ t('applications.export.title') }}</h5>
           <QSelect
             v-model="type"
-            :label="t('list.export.type.placeholder')"
+            :label="t('applications.export.type.placeholder')"
             :options="typeOptions"
             map-options
             emit-value
@@ -28,10 +28,10 @@
               :loading="isLoading"
               :disable="!type || isLoading || !props.ids.length"
             >
-              {{ t('list.export.buttons.save') }}
+              {{ t('applications.export.buttons.save') }}
             </QBtn>
             <a v-if="url" :class="[$style.link, 'q-mt-sm']" target="_blank" :href="url">
-              {{ t('list.export.messages.link') }}
+              {{ t('applications.export.messages.link') }}
             </a>
           </div>
         </form>

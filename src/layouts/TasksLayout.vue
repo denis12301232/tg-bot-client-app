@@ -6,7 +6,7 @@
         <QToolbarTitle>{{ t('tasks.layout.title') }}</QToolbarTitle>
       </QToolbar>
       <QTabs align="left" active-color="primary">
-        <QRouteTab to="/tasks/list" :label="t('tasks.layout.tabs.list')" />
+        <QRouteTab to="/tasks" :label="t('tasks.layout.tabs.list')" />
         <QRouteTab v-if="store.isAdmin" to="/tasks/create" :label="t('tasks.layout.tabs.create')" />
       </QTabs>
     </QHeader>

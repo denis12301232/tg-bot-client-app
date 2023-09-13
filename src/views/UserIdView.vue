@@ -9,7 +9,7 @@
             {{ user?.name }}
             <span v-if="user?.roles.includes('admin')" class="text-caption">(admin)</span>
           </h5>
-          <div class="text-overline text-weight-light text-center">
+          <div class="text-overline text-weight-light">
             <QBadge :color="user?.status === 'online' ? 'green' : 'red'">{{ user?.status }}</QBadge>
           </div>
         </div>

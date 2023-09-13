@@ -105,7 +105,7 @@
                   flat
                   icon="eva-book-open-outline"
                   color="primary"
-                  @click="$router.push(`/task/${scope.row._id}`)"
+                  @click="$router.push(`/tasks/${scope.row._id}`)"
                 >
                   <QTooltip class="bg-indigo" :offset="[10, 10]" :delay="1000">
                     {{ t('tasks.list.hints.about') }}

@@ -200,7 +200,7 @@
       "save": "Saved!"
     }
   },
-  "list": {
+  "applications": {
     "table": {
       "title": "Full List"
     },
@@ -260,7 +260,7 @@
       }
     }
   },
-  "info": {
+  "apllicationsSearch": {
     "title": "Search",
     "search": {
       "placeholder": "First or last name",
@@ -276,7 +276,7 @@
       "title": "Found"
     }
   },
-  "infoById": {
+  "applicationsId": {
     "layout": {
       "title": "Application"
     },

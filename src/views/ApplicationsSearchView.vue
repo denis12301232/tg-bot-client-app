@@ -1,16 +1,16 @@
 <template>
   <div class="column items-center q-pa-sm">
-    <h4 class="text-center q-my-lg q-pb-sm">{{ t('info.title') }}</h4>
+    <h4 class="text-center q-my-lg q-pb-sm">{{ t('applicationsSearch.title') }}</h4>
     <div :class="$style.find">
       <QInput
         v-model="search"
         class="full-width"
         debounce="1000"
         standout
-        :label="t('info.search.placeholder')"
+        :label="t('applicationsSearch.search.placeholder')"
         :loading="loading"
         :error="!!error"
-        :error-message="t('info.search.errors.notFound')"
+        :error-message="t('applicationsSearch.search.errors.notFound')"
       >
         <template #append>
           <QIcon name="eva-search" />
@@ -23,22 +23,21 @@
         <th colspan="2">
           <div class="row justify-between">
             <div class="text-h6">
-              <span>{{ t('infoById.table.title') }}</span>
+              <span>{{ t('applicationsId.table.title') }}</span>
             </div>
             <div>
               <QBtnGroup dense flat>
-                <QBtn icon="eva-info-outline" color="teal" dense flat round @click="$router.push(`/info/${form._id}`)">
-                  <QTooltip class="bg-indigo" :offset="[10, 10]" :delay="1000">{{ t('info.hints.info') }}</QTooltip>
-                </QBtn>
                 <QBtn
-                  icon="eva-edit"
-                  color="orange"
+                  icon="eva-info-outline"
+                  color="teal"
                   dense
                   flat
                   round
-                  @click="$router.push(`/info/${form._id}?edit=true`)"
+                  @click="$router.push(`/applications/${form._id}`)"
                 >
-                  <QTooltip class="bg-indigo" :offset="[10, 10]" :delay="1000">{{ t('info.hints.edit') }}</QTooltip>
+                  <QTooltip class="bg-indigo" :offset="[10, 10]" :delay="1000">
+                    {{ t('applicationsSearch.hints.info') }}
+                  </QTooltip>
                 </QBtn>
               </QBtnGroup>
             </div>
@@ -82,7 +81,7 @@ const {
 
 watch(loading, (n) => {
   if (!n && search.value && !forms.value?.length) {
-    error.value = t('info.search.errors.notFound');
+    error.value = t('applicationsSearch.search.errors.notFound');
   }
 });
 
