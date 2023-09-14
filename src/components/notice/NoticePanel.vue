@@ -53,6 +53,7 @@
 </template>
 
 <script setup lang="ts">
+import { NoticeService } from '@/api/services';
 import { useAlertStore } from '@/stores';
 import { useI18n } from 'vue-i18n';
 
@@ -61,10 +62,12 @@ const alertStore = useAlertStore();
 
 function clearAll() {
   alertStore.notices.clear();
+  NoticeService.clear();
 }
 
 function clearOne(id: string) {
   alertStore.notices.delete(id);
+  NoticeService.destroy(id);
 }
 </script>
 

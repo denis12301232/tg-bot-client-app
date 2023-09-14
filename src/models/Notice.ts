@@ -1,17 +1,23 @@
-export default class Notice<T = null> {
+interface Data {
+  id?: string;
+  title: string;
+  time?: Date;
+  text: string;
+  show?: boolean;
+}
+
+export default class Notice {
   readonly id: string;
   readonly title: string;
-  readonly data: T | null;
-  readonly time: Date | string;
+  readonly time: Date;
   readonly text: string;
   show: boolean;
 
-  constructor(title: string, text: string, opts?: { data?: T; show?: boolean }) {
-    this.id = Date.now().toString() + Math.random();
+  constructor({ id, time, title, text, show }: Data) {
+    this.id = id || Date.now().toString() + Math.random();
     this.title = title;
-    this.data = opts?.data || null;
-    this.time = new Date();
+    this.time = time || new Date();
     this.text = text;
-    this.show = opts?.show || true;
+    this.show = show !== undefined ? show : true;
   }
 }
