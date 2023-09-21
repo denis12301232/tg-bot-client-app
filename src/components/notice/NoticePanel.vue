@@ -12,22 +12,26 @@
             v-for="n in alertStore.notices.values()"
             class="q-mb-sm"
             left-color="transparent"
-            @left="clearOne(n.id)"
-            :key="n.id"
+            :key="n._id"
+            @left="clearOne(n._id)"
           >
             <template v-slot:left> </template>
             <QItem :class="[$style.item, 'shadow-1', 'full-width']" clickable>
               <div class="row items-top justify-between full-width no-wrap">
                 <div :class="[$style.title, 'text-subtitle2']">{{ n.title }}</div>
-
                 <div class="row no-wrap items-top">
-                  <div class="text-caption">{{ d(n.time, 'time') }}</div>
+                  <div class="text-caption">{{ d(n.createdAt, 'time') }}</div>
                   <div :class="$style.close" style="width: 10px; height: 10px">
-                    <QBtn round dense flat icon="eva-close" size="10px" @click="clearOne(n.id)" />
+                    <QBtn round dense flat icon="eva-close" size="10px" @click="clearOne(n._id)" />
                   </div>
                 </div>
               </div>
-              <div class="text-body2 text-weight-light break-word">{{ n.text }}</div>
+              <div class="text-body2 text-weight-light break-word">
+                <RouterLink v-if="n.title === 'Invite to meet'" :to="n.text">Join meet</RouterLink>
+                <template v-else>
+                  {{ n.text }}
+                </template>
+              </div>
             </QItem>
           </QSlideItem>
         </QList>
@@ -45,7 +49,7 @@
         flat
         @click="alertStore.setMuted"
       />
-      <QBtn :disable="Boolean(!alertStore.notices.size)" color="negative" flat @click="clearAll">
+      <QBtn :disable="!alertStore.notices.size" color="negative" flat @click="clearAll">
         {{ t('home.menu.notice.buttons.clear') }}
       </QBtn>
     </div>
@@ -61,13 +65,11 @@ const { t, d } = useI18n();
 const alertStore = useAlertStore();
 
 function clearAll() {
-  alertStore.notices.clear();
-  NoticeService.clear();
+  NoticeService.clear().then(() => alertStore.notices.clear());
 }
 
 function clearOne(id: string) {
-  alertStore.notices.delete(id);
-  NoticeService.destroy(id);
+  NoticeService.destroy(id).then(() => alertStore.notices.delete(id));
 }
 </script>
 

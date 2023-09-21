@@ -1,7 +1,7 @@
 <template>
   <div
     :class="[$style.alert, $style[alert.type], 'q-pa-sm', 'row', 'q-mt-sm', 'items-center', 'no-wrap', 'text-cut']"
-    @click="emit('hideById', alert.id)"
+    @click="emit('hideById', alert._id)"
   >
     <div class="q-mr-sm">
       <QIcon :name="icon" size="25px" />
@@ -11,10 +11,10 @@
 </template>
 
 <script setup lang="ts">
-import { ChatAlert, type Alert } from '@/models';
+import type { IAlert } from '@/types';
 
 interface Props {
-  alert: Alert | ChatAlert;
+  alert: IAlert;
   icon: string;
 }
 

@@ -9,13 +9,34 @@ export interface IUser {
   status: 'online' | 'offline';
 }
 
-type TaskStatus = 'untaken' | 'performed' | 'canceled' | 'completed';
+export interface IMeet {
+  _id: string;
+  invited: [];
+  members: [];
+  roles: { [name: string]: string[] };
+}
+
+export interface INotice {
+  _id: string;
+  user: string;
+  text: string;
+  title: string;
+  show: boolean;
+  createdAt: string;
+}
+
+export interface IAlert {
+  _id: string;
+  message: string;
+  visible: boolean;
+  type: 'success' | 'info' | 'warning' | 'error';
+}
 
 export interface ITask {
   _id: string;
   title: string;
   tags: string[];
-  status: TaskStatus;
+  status: 'untaken' | 'performed' | 'canceled' | 'completed';
   subtasks: ISubtask[];
   user: IUser;
   createdAt: string;
@@ -25,7 +46,7 @@ export interface ISubtask {
   _id: string;
   title: string;
   description: string;
-  status: TaskStatus;
+  status: ITask['status'];
   cause: string;
 }
 
@@ -69,8 +90,6 @@ export interface IAbonent {
   info?: IUser;
   polite?: boolean;
 }
-
-export type IAlert = 'success' | 'info' | 'warning' | 'error';
 
 export interface Streams {
   screen: Map<string, MediaStream>;

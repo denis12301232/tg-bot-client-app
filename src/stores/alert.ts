@@ -1,28 +1,22 @@
-import type { IAlertType } from '@/types';
+import type { IAlert, INotice } from '@/types';
 import { onMounted, onUnmounted, ref } from 'vue';
 import { defineStore } from 'pinia';
-import { Alert, ChatAlert, Notice } from '@/models';
 import { useAudioAlert } from '@/hooks';
 import { NoticeService } from '@/api/services';
 
 export const useAlertStore = defineStore('alert', () => {
   const { play } = useAudioAlert('/audio/new-message.mp3');
   const muted = ref(false);
-  const alerts = ref<Array<Alert | ChatAlert>>([]);
+  const alerts = ref<IAlert[]>([]);
   const leaved = ref(false);
-  const notices = ref<Map<string, Notice>>(new Map());
+  const notices = ref<Map<string, INotice>>(new Map());
 
-  onMounted(async () => {
-    Notification.permission === 'denied' && Notification.requestPermission();
+  onMounted(() => {
     document.addEventListener('visibilitychange', onVisibilityChange);
+    Notification.permission === 'denied' && Notification.requestPermission();
     NoticeService.index()
-      .json<Notice[]>()
-      .then((n) => {
-        for (const item of n) {
-          const notice = new Notice(item);
-          notices.value.set(notice.id, notice);
-        }
-      });
+      .json<INotice[]>()
+      .then((nts) => nts.forEach((n) => notices.value.set(n._id, n)));
   });
   onUnmounted(() => document.removeEventListener('visibilitychange', onVisibilityChange));
 
@@ -35,14 +29,14 @@ export const useAlertStore = defineStore('alert', () => {
   }
 
   function addNotice(title: string, text: string) {
-    const notice = new Notice({ title, text });
-    notices.value.set(notice.id, notice);
-    NoticeService.store({ ...notice, show: false });
+    NoticeService.store({ title, text })
+      .json<INotice>()
+      .then((notice) => notices.value.set(notice._id, notice));
     !muted.value && play();
   }
 
-  function addAlert(type: IAlertType, message: string) {
-    alerts.value.push(new Alert(type, message));
+  function addAlert(type: IAlert['type'], message: string) {
+    alerts.value.push({ _id: Date.now().toString(), visible: true, message, type });
     !muted.value && play();
   }
 

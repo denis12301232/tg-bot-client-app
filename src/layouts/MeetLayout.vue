@@ -61,18 +61,7 @@
 import type { IUser } from '@/types';
 import type CustomVideo from '~/CustomVideo.vue';
 import Meet from '~/meet';
-import {
-  type Component,
-  ref,
-  reactive,
-  provide,
-  onMounted,
-  onBeforeUnmount,
-  onUnmounted,
-  shallowRef,
-  watch,
-  computed,
-} from 'vue';
+import { type Component, ref, reactive, provide, onMounted, onBeforeUnmount, shallowRef, watch, computed } from 'vue';
 import { useStore, useSocketStore, useAlertStore } from '@/stores';
 import { useNavigation, useWebRtc, useFetch } from '@/hooks';
 import { useRoute } from 'vue-router';
@@ -142,28 +131,23 @@ watch(error, () => {
 });
 
 onMounted(() => {
-  socket.on('error:meet-join', onErrorMeetJoin);
   getMeetInfo(meetId).then(() => {
     captureMyStream('camera', { video: true, audio: true })
-      .then(() => socket.emit('meet:join', meetId))
+      .then(() => MeetService.join(meetId))
       .catch(() => {
         goBack();
         addAlert('warning', t('meets.hints.noMic'));
       });
   });
 });
+
 onBeforeUnmount(() => {
-  for (const type of ['camera', 'screen'] as ['camera', 'screen']) {
+  for (const type of Object.keys(streams) as ['camera']) {
     const stream = streams[type].get(user.value._id);
     stream?.getTracks().forEach((track) => track.stop());
   }
-  socket.emit('meet:leave', meetId);
+  MeetService.leave(meetId);
 });
-onUnmounted(() => socket.removeListener('error:meet-join', onErrorMeetJoin));
-
-function onErrorMeetJoin(code: number, message: string) {
-  error.value = message;
-}
 
 function toggleDrawer(side: 'left' | 'right') {
   open[side] = !open[side];

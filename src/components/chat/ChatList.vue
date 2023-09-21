@@ -80,7 +80,7 @@ function showLastMessageText(msg: IMessage | undefined) {
 }
 
 function onOpenChat(chatId: string) {
-  router.push(`/chat/${chatId}`);
+  router.push({ name: 'chats-id', params: { id: chatId } });
 }
 
 function showDate(dateString: string) {

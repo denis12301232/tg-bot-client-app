@@ -72,7 +72,7 @@
           </QItemSection>
           <QItemSection>{{ t('home.menu.left.gallery') }}</QItemSection>
         </QItem>
-        <QItem v-if="store.isAuth" v-ripple clickable tag="a" to="/chat">
+        <QItem v-if="store.isAuth" v-ripple clickable tag="a" to="/chats">
           <QItemSection avatar>
             <QIcon color="primary" name="eva-message-circle-outline">
               <QBadge v-show="unread" color="positive" floating rounded>{{ unread }}</QBadge>
@@ -137,7 +137,6 @@
           </QItem>
         </QList>
       </template>
-
       <NoticePanel v-else :notices="notices" />
     </QDrawer>
     <QPageContainer class="window-height">

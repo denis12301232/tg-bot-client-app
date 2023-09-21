@@ -16,7 +16,7 @@
 </template>
 
 <script setup lang="ts">
-import type { IMessage, ITask } from './types';
+import type { IMessage, ITask, INotice } from './types';
 import { AlertList } from './components/alert';
 import NoticeList from '~/notice/NoticeList.vue';
 import LoaderPage from '~/LoaderPage.vue';
@@ -38,7 +38,7 @@ const { tg, isOpenedFromTg, theme, locale } = useTelegram();
 const route = useRoute();
 
 onMounted(() => {
-  const el = document.getElementById('loader');
+  const el = document.querySelector<HTMLElement>('#loader');
   el && (el.style.cssText = 'display: none');
   localStorage.getItem('token') && store.refresh();
   tg.ready();
@@ -52,10 +52,12 @@ watch(isAuth, () => {
     socketStore.connect();
     socketStore.socket.on('chat:message', showNewMessage);
     socketStore.socket.on('task:create', showNewTask);
+    socketStore.socket.on('notice:new', onNewNotice);
   } else {
     socketStore.socket.close();
     socketStore.socket.removeListener('chat:message', showNewMessage);
     socketStore.socket.removeAllListeners('task:create');
+    socketStore.socket.removeListener('notice:new', onNewNotice);
   }
 });
 
@@ -73,6 +75,10 @@ function showNewMessage(msg: IMessage) {
 function showNewTask(task: ITask) {
   alertStore.addNotice(t('home.menu.notice.newTask'), task.title);
   alertStore.sendPushNotification(t('home.menu.notice.newTask'), { body: task.title });
+}
+
+function onNewNotice(n: INotice) {
+  alertStore.notices.set(n._id, n);
 }
 </script>
 

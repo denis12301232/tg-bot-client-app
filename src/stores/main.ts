@@ -18,11 +18,12 @@ export const useStore = defineStore('main', () => {
     if (theme.value === 'dark' || theme.value === 'light') {
       return theme.value;
     } else if (theme.value === 'system') {
-      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      return matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
     } else {
       return 'light';
     }
   });
+
   watchEffect(() => {
     currentTheme.value === 'dark' ? $q.dark.set(true) : $q.dark.set(false);
     document.documentElement.setAttribute('class', currentTheme.value);

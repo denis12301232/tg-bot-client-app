@@ -28,35 +28,25 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue';
+import type { IMeet } from '@/types';
+import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { useSocketStore } from '@/stores';
 import { useI18n } from 'vue-i18n';
+import { MeetService } from '@/api/services';
 
 const { t } = useI18n();
 const router = useRouter();
-const { socket } = useSocketStore();
 const meetTitle = ref('');
 const meetId = ref('');
 
-onMounted(() => {
-  socket.on('meet:create', onMeetCreate);
-});
-
-onUnmounted(() => {
-  socket.removeListener('meet:create', onMeetCreate);
-});
-
 function createNewMeet() {
-  socket.emit('meet:create', meetTitle.value);
+  MeetService.create({ title: meetTitle.value, invited: [] })
+    .json<IMeet>()
+    .then((meet) => router.push({ path: `/meets/${meet._id}` }));
 }
 
 function joinMeet() {
   router.push({ path: `/meets/${meetId.value}` });
-}
-
-function onMeetCreate(meetId: string) {
-  router.push({ path: `/meets/${meetId}` });
 }
 </script>
 

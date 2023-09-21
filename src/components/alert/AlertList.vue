@@ -3,7 +3,7 @@
     <TransitionGroup :name="$style.animate">
       <AlertMessage
         v-for="alert of alerts"
-        :key="alert.id"
+        :key="alert._id"
         :icon="setIcon(alert.type)"
         :alert="alert"
         @hide-by-id="hideById"
@@ -14,19 +14,19 @@
 
 <script setup lang="ts">
 import AlertMessage from './AlertMessage.vue';
-import type { Alert, ChatAlert } from '@/models';
+import type { IAlert } from '@/types';
 import { watch } from 'vue';
 import { useVModel } from '@/hooks';
 
 interface Props {
-  modelValue: (Alert | ChatAlert)[];
+  modelValue: IAlert[];
 }
 
 defineProps<Props>();
 defineEmits<{
-  'update:modelValue': [alerts: Alert[]];
+  'update:modelValue': [alerts: IAlert[]];
 }>();
-const alerts = useVModel<Alert[]>();
+const alerts = useVModel<IAlert[]>();
 
 watch(
   () => alerts.value.length,
@@ -36,7 +36,7 @@ watch(
   { immediate: true }
 );
 
-function setIcon(type: Alert['type']) {
+function setIcon(type: IAlert['type']) {
   switch (type) {
     case 'success':
       return 'eva-checkmark-circle-2-outline';
@@ -58,7 +58,7 @@ function hideAlert() {
 }
 
 function hideById(id: string) {
-  alerts.value = alerts.value.filter((item) => item.id !== id);
+  alerts.value = alerts.value.filter((item) => item._id !== id);
 }
 </script>
 

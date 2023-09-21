@@ -64,8 +64,8 @@
           }
         },
         "birth": {
-          "placeholder": "date of birth",
-          "value": "date of birth",
+          "placeholder": "Birthday",
+          "value": "Birthday",
           "errors": {
             "required": "Fill in the field",
             "isYYYYMMDDD": "Please enter a valid date"
@@ -117,7 +117,7 @@
             "required": "Fill in the field"
           }
         },
-        "invalid": {
+        "invalids": {
           "value": "Disabled"
         },
         "kids": {
@@ -132,10 +132,10 @@
         "water": {
           "value": "Water"
         },
-        "medecines": {
+        "medicines": {
           "value": "Medicines"
         },
-        "medicineinfo": {
+        "medicinesInfo": {
           "placeholder": "Details",
           "value": "What medicines are needed"
         },

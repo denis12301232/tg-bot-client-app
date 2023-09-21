@@ -1,7 +1,37 @@
 <template>
   <QCard class="full-height">
+    <QDialog v-model="modal">
+      <QCard :class="$style.invite">
+        <QCardSection>
+          <h6>Добавить</h6>
+        </QCardSection>
+        <QCardSection>
+          <QInput v-model="query" standout debounce="500" label="Имя или логин" />
+        </QCardSection>
+        <QCardSection>
+          <QList>
+            <QItem v-for="user of finded" v-ripple class="rounded-borders" clickable :key="user?._id">
+              <QItemSection avatar>
+                <UserAvatar :name="user?.name" :avatar="user?.avatar" />
+              </QItemSection>
+              <QItemSection>
+                <QItemLabel> {{ user?.name }}</QItemLabel>
+                <QItemLabel caption>@{{ user?.login }}</QItemLabel>
+              </QItemSection>
+              <QItemSection side>
+                <QCheckbox v-model="selected" :key="user._id" :val="user._id" />
+              </QItemSection>
+            </QItem>
+          </QList>
+          <QBtn v-if="selected.length" v-close-popup class="q-mt-md" color="primary" flat @click="invite">
+            Пригласить
+          </QBtn>
+        </QCardSection>
+      </QCard>
+    </QDialog>
     <QCardSection>
-      <h5 class="text-center">{{ t('meetId.people.title') }}</h5>
+      <h6>{{ t('meetId.people.title') }} ({{ users.length }})</h6>
+      <QBtn class="q-mt-md" color="primary" flat @click="setModal">Добавить</QBtn>
     </QCardSection>
     <QSeparator />
     <QCardSection>
@@ -21,18 +51,45 @@
 </template>
 
 <script setup lang="ts">
-import type { IAbonent } from '@/types';
+import type { IAbonent, IUser } from '@/types';
 import UserAvatar from '~/UserAvatar.vue';
-import { computed } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { useStore } from '@/stores';
 import { useI18n } from 'vue-i18n';
+import { useFetch } from '@/hooks';
+import { UserService, MeetService } from '@/api/services';
+import { useRoute } from 'vue-router';
 
 interface Props {
   abonents: Map<string, IAbonent>;
 }
 
 const props = defineProps<Props>();
+const route = useRoute();
 const { t } = useI18n();
 const store = useStore();
+const modal = ref(false);
+const query = ref('');
+const selected = ref<string[]>([]);
 const users = computed(() => [store.user, ...Array.from(props.abonents.values()).map((a) => a.info)]);
+const { data: finded, request } = useFetch<IUser[], typeof UserService.getUsers>(UserService.getUsers);
+
+watch(query, () => request({ filter: query.value }));
+watch(selected, () => selected.value);
+
+function setModal() {
+  modal.value = !modal.value;
+}
+
+function invite() {
+  MeetService.invite(String(route.params.id), selected.value);
+}
 </script>
+
+<style lang="scss" module>
+.invite {
+  max-width: 500px;
+  min-width: 300px;
+  width: 100%;
+}
+</style>

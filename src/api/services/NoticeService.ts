@@ -1,4 +1,3 @@
-import type { Notice } from '@/models';
 import { $api } from '@/api';
 
 export default class MeetService {
@@ -6,8 +5,12 @@ export default class MeetService {
     return $api.get('notices');
   }
 
-  static store(json: Notice) {
+  static store(json: { title: string; text: string; show?: boolean }) {
     return $api.post(`notices`, { json });
+  }
+
+  static update(id: string, json: { show: boolean }) {
+    return $api.patch(`notices/${id}`, { json });
   }
 
   static clear() {

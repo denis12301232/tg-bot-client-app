@@ -1,5 +1,5 @@
 import type { Socket } from 'socket.io-client';
-import type { Responses, IMessage, IUser, ITask } from '@/types';
+import type { Responses, IMessage, IUser, ITask, INotice } from '@/types';
 
 export type SocketTyped = Socket<ServerToClientEvents, ClientToServerEvents>;
 
@@ -24,6 +24,7 @@ interface ServerToClientEvents {
   'meet:create': (meetId: string) => void;
   'error:meet-join': (code: number, message: string) => void;
   'task:create': (task: ITask) => void;
+  'notice:new': (notice: INotice) => void;
 }
 
 interface ClientToServerEvents {

@@ -1,5 +1,5 @@
 <template>
-  <div class="row justify-center">
+  <div class="row justify-center items-center" style="height: calc(100vh - 200px)">
     <QCard v-if="!task" :class="['q-pa-none', $style.card]" style="height: 387px">
       <QSkeleton class="fit" />
     </QCard>
@@ -32,12 +32,12 @@
       </QCardSection>
       <QCardSection class="q-pa-none">
         <h6 class="text-center text-subtitle">{{ t('taskId.task.card.date') }}</h6>
-        <div class="text-center q-my-sm">{{ new Date(task.createdAt || '').toLocaleDateString() }}</div>
+        <div class="text-center q-my-sm">{{ d(task.createdAt, 'YYYYMMDD') }}</div>
       </QCardSection>
       <QCardSection class="q-pt-none">
         <h6 class="text-center text-subtitle">{{ t('taskId.task.card.takenBy') }}</h6>
         <div class="text-center q-my-sm text-bold text-positive">
-          <RouterLink v-if="task?.user" :class="$style.link" :to="{ name: 'userId', params: { id: task.user._id } }">
+          <RouterLink v-if="task?.user" :class="$style.link" :to="{ name: 'users-id', params: { id: task.user._id } }">
             {{ task.user.name }}
           </RouterLink>
           <span v-else class="text-negative text-bold">{{ t('taskId.messages.untaken') }}</span>
@@ -58,7 +58,7 @@ interface Props {
 
 defineProps<Props>();
 
-const { t } = useI18n();
+const { t, d } = useI18n();
 </script>
 
 <style lang="scss" module>

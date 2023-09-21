@@ -3,14 +3,8 @@
     <QTab name="task" :label="t('taskId.tabs.task')" />
     <QTab name="subtasks" :label="t('taskId.tabs.subtasks')" />
   </QTabs>
-  <div>
-    <Tasks.TaskById v-if="tab === 'task'" :task="task" />
-    <Tasks.TaskByIdSubtasks
-      v-else-if="tab === 'subtasks' && task"
-      v-model:subtasks="task.subtasks"
-      :task-id="task._id"
-    />
-  </div>
+  <Tasks.TaskById v-if="tab === 'task'" :task="task" />
+  <Tasks.TaskByIdSubtasks v-else-if="tab === 'subtasks' && task" v-model:subtasks="task.subtasks" :task-id="task._id" />
 </template>
 
 <script setup lang="ts">
