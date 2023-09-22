@@ -2,7 +2,7 @@
   <div class="row justify-center items-center" style="height: calc(100vh - 50px)">
     <QResizeObserver @resize="onResize" />
     <QCard :class="[$style.card, 'text-center', 'relative-position']" :flat="width < 450" style="top: -50px">
-      <QForm ref="formRef" class="q-pa-lg" no-error-focus @submit.prevent="request(form)">
+      <QForm ref="formRef" class="q-pa-lg" no-error-focus @submit.prevent="registration(form)">
         <h4 class="q-pb-lg q-mb-sm">{{ t('registration.form.title') }}</h4>
         <QInput
           v-model.trim="form.name"
@@ -58,7 +58,9 @@
         </div>
         <div :class="$style.swap">
           {{ t('registration.form.messages.alreadyReg') }}
-          <RouterLink :class="$style.link" to="login">{{ t('registration.form.buttons.login') }}</RouterLink>
+          <RouterLink :class="$style.link" to="login">
+            {{ t('registration.form.buttons.login') }}
+          </RouterLink>
         </div>
       </QForm>
     </QCard>
@@ -66,15 +68,15 @@
 </template>
 
 <script setup lang="ts">
-import type { Responses } from '@/types';
 import type { QForm } from 'quasar';
 import { ref, reactive, watch } from 'vue';
 import { useStore } from '@/stores';
 import { Rules } from '@/util';
 import { AuthService } from '@/api/services';
-import { useFetch } from '@/hooks';
+import { useQuery } from '@/hooks';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
+import { HTTPError } from 'ky';
 
 const { t } = useI18n();
 const store = useStore();
@@ -85,30 +87,22 @@ const formRef = ref<QForm>();
 const width = ref(0);
 const errors = reactive({ name: '', login: '', email: '', password: '' });
 const form = reactive({ name: '', login: '', email: '', password: '' });
-const { request, loading, error } = useFetch<Responses.Login, (typeof AuthService)['registration']>(
-  AuthService.registration,
-  {
-    afterSuccess: ({ data }) => {
-      store.user = data.value.user;
-      localStorage.setItem('token', data.value.accessToken);
-      router.push('/');
-    },
-  }
-);
+const { query: registration, loading } = useQuery(AuthService.registration, { onSuccess, onError });
 const rules = Rules.registration(t);
 
-watch(form, () => {
-  formRef.value?.validate().then((v) => {
-    valid.value = v && !loading.value;
-  });
-});
-watch(error, () => {
-  if (typeof error.value === 'object') {
-    if (error.value.errors.includes('login')) errors.login = t('registration.form.fields.login.errors.alreadyTaken');
-    else if (error.value.errors.includes('email'))
-      errors.email = t('registration.form.fields.email.errors.alreadyTaken');
-  }
-});
+watch(form, () => formRef.value?.validate().then((v) => (valid.value = v && !loading.value)));
+
+function onSuccess(data: Awaited<ReturnType<typeof AuthService.registration>>) {
+  store.user = data.user;
+  localStorage.setItem('token', data.accessToken);
+  router.push('/');
+}
+
+async function onError(error: HTTPError) {
+  const e: { name: string; message: string; errors: string[] } = await error.response.json();
+  if (e.errors.includes('login')) errors.login = t('registration.form.fields.login.errors.alreadyTaken');
+  else if (e.errors.includes('email')) errors.email = t('registration.form.fields.email.errors.alreadyTaken');
+}
 
 function showPassword() {
   isPasswordVisible.value = !isPasswordVisible.value;

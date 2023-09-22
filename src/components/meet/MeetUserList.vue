@@ -51,12 +51,12 @@
 </template>
 
 <script setup lang="ts">
-import type { IAbonent, IUser } from '@/types';
+import type { IAbonent } from '@/types';
 import UserAvatar from '~/UserAvatar.vue';
 import { computed, ref, watch } from 'vue';
 import { useStore } from '@/stores';
 import { useI18n } from 'vue-i18n';
-import { useFetch } from '@/hooks';
+import { useQuery } from '@/hooks';
 import { UserService, MeetService } from '@/api/services';
 import { useRoute } from 'vue-router';
 
@@ -72,9 +72,9 @@ const modal = ref(false);
 const query = ref('');
 const selected = ref<string[]>([]);
 const users = computed(() => [store.user, ...Array.from(props.abonents.values()).map((a) => a.info)]);
-const { data: finded, request } = useFetch<IUser[], typeof UserService.getUsers>(UserService.getUsers);
+const { query: getUsers, data: finded } = useQuery(UserService.index);
 
-watch(query, () => request({ filter: query.value }));
+watch(query, () => getUsers({ filter: query.value }));
 watch(selected, () => selected.value);
 
 function setModal() {

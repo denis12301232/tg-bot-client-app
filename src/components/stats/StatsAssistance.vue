@@ -44,7 +44,7 @@
 import { ref, onMounted, watch, computed, shallowRef, watchEffect } from 'vue';
 import { Chart, registerables, type ChartConfiguration, type ChartType, type ChartDataset } from 'chart.js';
 import { AssistanceService } from '@/api/services';
-import { useFetch } from '@/hooks';
+import { useQuery } from '@/hooks';
 import { useI18n } from 'vue-i18n';
 
 interface Props {
@@ -61,11 +61,7 @@ const date = ref(now.toISOString().replace('-', '/').split('T')[0].replace('-', 
 const canvas = ref<HTMLCanvasElement | null>(null);
 const timestamp = computed(() => (!date.value ? Date.now() : new Date(date.value).getTime()));
 const monthes = computed(() => Object.values(messages.value[locale.value].extra.calendar.monthsShort));
-const {
-  request: getStats,
-  data: stats,
-  loading,
-} = useFetch<object, typeof AssistanceService.getStats>(AssistanceService.getStats);
+const { query: getStats, data: stats, loading } = useQuery(AssistanceService.getStats);
 const config: ChartConfiguration = {
   type: 'line',
   data: { datasets: [{} as ChartDataset] },

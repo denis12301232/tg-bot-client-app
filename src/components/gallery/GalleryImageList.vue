@@ -1,7 +1,9 @@
 <template>
   <div class="q-pa-sm">
     <h3 class="text-center q-pa-lg q-my-sm">{{ t('gallery.title') }}</h3>
-    <h5 v-if="!images.length && !loading" class="text-center text-negative">{{ error || t('gallery.errors.none') }}</h5>
+    <h5 v-if="!images.length && !loading" class="text-center text-negative">
+      {{ error || t('gallery.errors.none') }}
+    </h5>
     <div class="row justify-center q-gutter-sm">
       <QIntersection
         v-for="(image, index) of images"

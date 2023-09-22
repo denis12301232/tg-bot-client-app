@@ -21,13 +21,13 @@
 </template>
 
 <script setup lang="ts">
-import type { IUser, Responses } from '@/types';
+import type { Responses } from '@/types';
 import UserAvatar from '~/UserAvatar.vue';
 import { onMounted, onUnmounted, watchEffect } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useStore, useSocketStore } from '@/stores';
 import { useI18n } from 'vue-i18n';
-import { useFetch, useVModel } from '@/hooks';
+import { useQuery, useVModel } from '@/hooks';
 import { UserService } from '@/api/services';
 import { useRouter } from 'vue-router';
 
@@ -42,7 +42,7 @@ const search = useVModel<string>();
 const { user } = storeToRefs(useStore());
 const socketStore = useSocketStore();
 const { chats } = storeToRefs(socketStore);
-const { request: searchUsers, data: users } = useFetch<IUser[], typeof UserService.getUsers>(UserService.getUsers);
+const { query: searchUsers, data: users } = useQuery(UserService.index);
 
 onMounted(() => socketStore.socket.on('chat:create', onChatCreate));
 onUnmounted(() => socketStore.socket.removeListener('chat:create', onChatCreate));

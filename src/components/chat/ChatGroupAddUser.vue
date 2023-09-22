@@ -36,9 +36,9 @@
         v-close-popup
         color="primary"
         :disable="!userToAdd?._id"
-        :loading="isAddUserLoading"
+        :loading="loading"
         :label="t('chat.addUser.form.buttons.add')"
-        @click="addUser(currentChatId!, { action: 'add', userId: userToAdd!._id })"
+        @click="updateGroupMembers(currentChatId!, { action: 'add', userId: userToAdd!._id })"
       />
     </QCardActions>
   </QCard>
@@ -49,33 +49,19 @@ import type { IUser } from '@/types';
 import UserAvatar from '~/UserAvatar.vue';
 import { ref, watch } from 'vue';
 import { storeToRefs } from 'pinia';
-import { useSocketStore } from '@/stores';
-import { useFetch } from '@/hooks';
+import { useAlertStore, useSocketStore } from '@/stores';
+import { useQuery } from '@/hooks';
 import { ChatService, UserService } from '@/api/services';
 import { useI18n } from 'vue-i18n';
 
 const { t } = useI18n();
+const alertStore = useAlertStore();
 const { chats, currentChatId } = storeToRefs(useSocketStore());
 const search = ref('');
 const userToAdd = ref<IUser | null>(null);
-const {
-  request: findUsers,
-  data: users,
-  loading: isUsersLoading,
-} = useFetch<IUser[], typeof UserService.getUsers>(UserService.getUsers);
+const { query: findUsers, data: users, loading: isUsersLoading } = useQuery(UserService.index);
+const { query: updateGroupMembers, loading } = useQuery(ChatService.updateGroupMembers, { onSuccess, onError });
 
-const { request: addUser, loading: isAddUserLoading } = useFetch(ChatService.updateGroupMembers, {
-  afterSuccess: () => {
-    const chat = chats.value.get(currentChatId.value!);
-    if (chat) {
-      !chat.users.find((user) => user._id === userToAdd.value?._id) ? chat.users.push(userToAdd.value!) : '';
-      chat.members_count++;
-    }
-  },
-  alert: true,
-  successMsg: t('chat.addUser.messages.added'),
-  errorMsg: t('chat.addUser.messages.error'),
-});
 watch(search, (n) => {
   if (n) {
     findUsers({ filter: n });
@@ -87,6 +73,19 @@ watch(search, (n) => {
 
 function select(user: IUser) {
   userToAdd.value?._id === user._id ? (userToAdd.value = null) : (userToAdd.value = user);
+}
+
+function onSuccess() {
+  const chat = chats.value.get(currentChatId.value!);
+  if (chat) {
+    !chat.users.find((user) => user._id === userToAdd.value?._id) ? chat.users.push(userToAdd.value!) : '';
+    chat.members_count++;
+  }
+  alertStore.addAlert('success', t('chat.addUser.messages.added'));
+}
+
+function onError() {
+  alertStore.addAlert('error', t('chat.addUser.messages.error'));
 }
 </script>
 

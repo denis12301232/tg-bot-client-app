@@ -6,7 +6,7 @@
       :title="t('home.form.title')"
       :loading="loading"
       reset
-      @submit="request(form)"
+      @submit="query(form)"
     >
       <template #submit="{ type, valid }">
         <QBtn
@@ -22,13 +22,14 @@
 </template>
 
 <script setup lang="ts">
-import type { Responses } from '@/types';
 import FormAssistance from '~/FormAssistance.vue';
 import { ref } from 'vue';
-import { useFetch, useTelegram } from '@/hooks';
+import { useTelegram, useQuery } from '@/hooks';
 import { AssistanceService, BotService } from '@/api/services';
 import { useI18n } from 'vue-i18n';
+import { useAlertStore } from '@/stores';
 
+const alertStore = useAlertStore();
 const { t } = useI18n();
 const { tg, isOpenedFromTg } = useTelegram();
 const form = ref({
@@ -58,17 +59,15 @@ const form = ref({
   personalDataAgreement: false,
   photoAgreement: false,
 });
-const { request, loading } = useFetch<Responses.Assistance, typeof AssistanceService.store>(
-  AssistanceService.store,
-  {
-    alert: true,
-    successMsg: t('home.messages.save'),
-    errorMsg: 'Error',
-    afterResponse() {
-      isOpenedFromTg && BotService.assistance(tg.initDataUnsafe.query_id || '', t('home.messages.save'));
-    },
+const { query, loading } = useQuery(AssistanceService.store, { onSuccess });
+
+function onSuccess() {
+  if (isOpenedFromTg) {
+    BotService.assistance(tg.initDataUnsafe.query_id || '', t('home.messages.save'));
+  } else {
+    alertStore.addAlert('success', t('home.messages.save'));
   }
-);
+}
 </script>
 
 <style lang="scss" module>

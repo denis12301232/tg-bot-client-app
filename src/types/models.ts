@@ -13,6 +13,7 @@ export interface IMeet {
   _id: string;
   invited: [];
   members: [];
+  title: string;
   roles: { [name: string]: string[] };
 }
 

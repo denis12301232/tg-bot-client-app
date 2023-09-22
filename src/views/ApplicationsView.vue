@@ -10,8 +10,8 @@
       v-model:selected="select"
       :class="$style.table"
       :columns="columns"
-      :rows="forms"
-      :loading="loading || isDelLoading || isUpdating"
+      :rows="forms || []"
+      :loading="loading || isDeleting || isUpdating"
       :rows-per-page-options="[5, 10, 20, 50, 100, 1000]"
       binary-state-sort
       :pagination-label="(f, l, a) => `${f}-${l} ${t('extra.table.of')} ${a}`"
@@ -69,8 +69,8 @@
               <QFabAction
                 icon="eva-trash"
                 color="negative"
-                :disable="loading || isDelLoading || !select.length"
-                @click="onDelete(ids)"
+                :disable="loading || isDeleting || !select.length"
+                @click="destroy(ids)"
               >
                 <QTooltip class="bg-white text-black" :offset="[10, 10]" :delay="1000">
                   {{ t('applications.hints.delete') }}
@@ -92,7 +92,7 @@
             <QPopupEdit
               v-model="scope.row.sector"
               #default="props"
-              @update:model-value="update(scope.row._id, scope.row,)"
+              @update:model-value="update(scope.row._id, scope.row)"
             >
               <QInput
                 v-model.trim="props.value"
@@ -111,7 +111,7 @@
             <QPopupEdit
               v-model="scope.row.surname"
               #default="props"
-              @update:model-value="update(scope.row._id, scope.row,)"
+              @update:model-value="update(scope.row._id, scope.row)"
             >
               <QForm @submit="props.set">
                 <QInput
@@ -137,7 +137,7 @@
             <QPopupEdit
               v-model="scope.row.name"
               #default="props"
-              @update:model-value="update(scope.row._id, scope.row,)"
+              @update:model-value="update(scope.row._id, scope.row)"
             >
               <QForm @submit="props.set">
                 <QInput
@@ -163,7 +163,7 @@
             <QPopupEdit
               v-model="scope.row.patronymic"
               #default="props"
-              @update:model-value="update(scope.row._id, scope.row,)"
+              @update:model-value="update(scope.row._id, scope.row)"
             >
               <QForm @submit="props.set">
                 <QInput
@@ -189,7 +189,7 @@
             <QPopupEdit
               v-model="scope.row.phone"
               #default="props"
-              @update:model-value="update(scope.row._id, scope.row,)"
+              @update:model-value="update(scope.row._id, scope.row)"
             >
               <QForm @submit="props.set">
                 <QInput
@@ -216,7 +216,7 @@
             <QPopupEdit
               v-model="scope.row.birth"
               #default="props"
-              @update:model-value="update(scope.row._id, scope.row,)"
+              @update:model-value="update(scope.row._id, scope.row)"
             >
               <QForm @submit="props.set">
                 <QInput
@@ -257,7 +257,7 @@
             <QPopupEdit
               v-model="scope.row.district"
               #default="props"
-              @update:model-value="update(scope.row._id, scope.row,)"
+              @update:model-value="update(scope.row._id, scope.row)"
             >
               <QForm @submit="props.set">
                 <QSelect
@@ -282,7 +282,7 @@
             <QPopupEdit
               v-model="scope.row.street"
               #default="props"
-              @update:model-value="update(scope.row._id, scope.row,)"
+              @update:model-value="update(scope.row._id, scope.row)"
             >
               <QForm @submit="props.set">
                 <QSelect
@@ -313,7 +313,7 @@
             <QPopupEdit
               v-model="scope.row.house"
               #default="props"
-              @update:model-value="update(scope.row._id, scope.row,)"
+              @update:model-value="update(scope.row._id, scope.row)"
             >
               <QForm @submit="props.set">
                 <QInput
@@ -337,7 +337,7 @@
             <QPopupEdit
               v-model="scope.row.flat"
               #default="props"
-              @update:model-value="update(scope.row._id, scope.row,)"
+              @update:model-value="update(scope.row._id, scope.row)"
             >
               <QForm @submit="props.set">
                 <QInput
@@ -361,7 +361,7 @@
             <QPopupEdit
               v-model="scope.row.peopleCount"
               #default="props"
-              @update:model-value="update(scope.row._id, scope.row,)"
+              @update:model-value="update(scope.row._id, scope.row)"
             >
               <QForm @submit="props.set">
                 <QInput
@@ -386,7 +386,7 @@
               v-if="scope.row.peopleCount > 1"
               v-model="scope.row.peopleFio"
               #default="props"
-              @update:model-value="update(scope.row._id, scope.row,)"
+              @update:model-value="update(scope.row._id, scope.row)"
             >
               <QInput
                 v-for="i in scope.row.peopleCount - 1 > 10 ? 10 : scope.row.peopleCount - 1"
@@ -407,7 +407,7 @@
             <QPopupEdit
               v-model="scope.row.invalids"
               #default="props"
-              @update:model-value="update(scope.row._id, scope.row,)"
+              @update:model-value="update(scope.row._id, scope.row)"
             >
               <QOptionGroup v-model="props.value" :options="yesNoOptions" color="indigo" />
               <div class="row justify-between">
@@ -421,7 +421,7 @@
             <QPopupEdit
               v-model="scope.row.kids"
               #default="props"
-              @update:model-value="update(scope.row._id, scope.row,)"
+              @update:model-value="update(scope.row._id, scope.row)"
             >
               <QOptionGroup v-model="props.value" :options="yesNoOptions" color="indigo" />
               <div class="row justify-between">
@@ -436,7 +436,7 @@
               v-if="scope.row.kids"
               v-model="scope.row.kidsAge"
               #default="props"
-              @update:model-value="update(scope.row._id, scope.row,)"
+              @update:model-value="update(scope.row._id, scope.row)"
             >
               <QOptionGroup v-model="props.value" type="checkbox" :options="kidsAgeOptions" color="indigo" />
               <div class="row justify-between">
@@ -450,7 +450,7 @@
             <QPopupEdit
               v-model="scope.row.food"
               #default="props"
-              @update:model-value="update(scope.row._id, scope.row,)"
+              @update:model-value="update(scope.row._id, scope.row)"
             >
               <QOptionGroup v-model="props.value" :options="yesNoOptions" color="indigo" />
               <div class="row justify-between">
@@ -464,7 +464,7 @@
             <QPopupEdit
               v-model="scope.row.water"
               #default="props"
-              @update:model-value="update(scope.row._id, scope.row,)"
+              @update:model-value="update(scope.row._id, scope.row)"
             >
               <QOptionGroup v-model="props.value" :options="yesNoOptions" color="indigo" />
               <div class="row justify-between">
@@ -478,7 +478,7 @@
             <QPopupEdit
               v-model="scope.row.medicines"
               #default="props"
-              @update:model-value="update(scope.row._id, scope.row,)"
+              @update:model-value="update(scope.row._id, scope.row)"
             >
               <QOptionGroup v-model="props.value" :options="yesNoOptions" color="indigo" />
               <div class="row justify-between">
@@ -493,7 +493,7 @@
               v-if="scope.row.medicines"
               v-model="scope.row.medicinesInfo"
               #default="props"
-              @update:model-value="update(scope.row._id, scope.row,)"
+              @update:model-value="update(scope.row._id, scope.row)"
             >
               <QInput
                 v-model.trim="props.value"
@@ -512,7 +512,7 @@
             <QPopupEdit
               v-model="scope.row.hygiene"
               #default="props"
-              @update:model-value="update(scope.row._id, scope.row,)"
+              @update:model-value="update(scope.row._id, scope.row)"
             >
               <QOptionGroup v-model="props.value" :options="yesNoOptions" color="indigo" />
               <div class="row justify-between">
@@ -527,7 +527,7 @@
               v-if="scope.row.hygiene"
               v-model="scope.row.hygieneInfo"
               #default="props"
-              @update:model-value="update(scope.row._id, scope.row,)"
+              @update:model-value="update(scope.row._id, scope.row)"
             >
               <QInput
                 v-model.trim="props.value"
@@ -546,7 +546,7 @@
             <QPopupEdit
               v-model="scope.row.pampers"
               #default="props"
-              @update:model-value="update(scope.row._id, scope.row,)"
+              @update:model-value="update(scope.row._id, scope.row)"
             >
               <QOptionGroup v-model="props.value" :options="yesNoOptions" color="indigo" />
               <div class="row justify-between">
@@ -561,7 +561,7 @@
               v-if="scope.row.pampers"
               v-model="scope.row.pampersInfo"
               #default="props"
-              @update:model-value="update(scope.row._id, scope.row,)"
+              @update:model-value="update(scope.row._id, scope.row)"
             >
               <QInput
                 v-model.trim="props.value"
@@ -580,7 +580,7 @@
             <QPopupEdit
               v-model="scope.row.extraInfo"
               #default="props"
-              @update:model-value="update(scope.row._id, scope.row,)"
+              @update:model-value="update(scope.row._id, scope.row)"
             >
               <QInput
                 v-model.trim="props.value"
@@ -614,13 +614,10 @@ import ListFilters from '~/list/ListFilters.vue';
 import type { QTable } from 'quasar';
 import type { Responses } from '@/types';
 import { onMounted, ref, computed, watch } from 'vue';
-import { useRequest, useFetch, useAssistanceFormOptions } from '@/hooks';
+import { useRequest, useQuery, useAssistanceFormOptions } from '@/hooks';
 import { AssistanceService } from '@/api/services';
 import { Util, Rules } from '@/util';
 import { useI18n } from 'vue-i18n';
-
-type T = { acknowledged: boolean; deletedCount: number };
-type S = typeof AssistanceService.destroy;
 
 const { t, messages, locale } = useI18n();
 const rules = Rules.assistance(t);
@@ -637,13 +634,8 @@ const {
   limit: 10,
   filters: { district: '', street: '', birth: { min: 1920, max: new Date().getFullYear() }, sector: '' },
 });
-const { request: onDelete, loading: isDelLoading } = useFetch<T, S>(AssistanceService.destroy, {
-  afterResponse: ({ data }) => {
-    data.value.acknowledged && request({ pagination: pagination.value });
-    select.value.length = 0;
-  },
-});
-const { request: update, loading: isUpdating } = useFetch(AssistanceService.update);
+const { query: destroy, loading: isDeleting } = useQuery(AssistanceService.destroy, { onSuccess });
+const { query: update, loading: isUpdating } = useQuery(AssistanceService.update);
 const criterias = ref<('district' | 'birth' | 'street' | 'sector')[]>([]);
 const select = ref<Responses.Assistance[]>([]);
 const modal = ref(false);
@@ -878,6 +870,11 @@ watch(visibleColumns, () => localStorage.setItem('listTableColumns', JSON.string
 function openModal(name: 'import' | 'export' | 'filters') {
   is.value = name;
   modal.value = true;
+}
+
+function onSuccess(data: Awaited<ReturnType<typeof AssistanceService.destroy>>) {
+  data.acknowledged && request({ pagination: pagination.value });
+  select.value.length = 0;
 }
 </script>
 

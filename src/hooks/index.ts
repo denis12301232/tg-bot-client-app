@@ -1,4 +1,3 @@
-export { default as useFetch } from './useFetch';
 export { default as useRequest } from './useRequest';
 export { default as useWebRtc } from './useWebRtc';
 export { default as useSocketIo } from './useSocketIo';
@@ -12,3 +11,4 @@ export { default as useAssistanceFormOptions } from './useAssistanceFormOptions'
 export { default as useGetTempUrl } from './useGetTempUrl';
 export { default as useAudioAlert } from './useAudioAlert';
 export { default as useOnline } from './useOnline';
+export { default as useQuery } from './useQuery';

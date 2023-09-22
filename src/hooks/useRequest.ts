@@ -17,7 +17,7 @@ export default function useRequest<T>(
   const loading = ref(false);
   const error = ref('');
   const filter = ref(filters);
-  const data = ref<T[]>([]) as Ref<T[]>;
+  const data: Ref<T | null> = ref(null);
   const pagination = ref({
     sortBy: sort,
     descending: descending,
@@ -37,7 +37,7 @@ export default function useRequest<T>(
         sort: sortBy,
         descending,
       });
-      data.value = await response.json<T[]>();
+      data.value = await response.json<T>();
       pagination.value = { ...props.pagination, rowsNumber: Number(response.headers.get('x-total-count')) };
     } catch (e) {
       if (e instanceof HTTPError) {

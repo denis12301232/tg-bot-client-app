@@ -9,14 +9,14 @@
         v-model:current-index="currentIndex"
         :loading="loading"
         :total="total"
-        @request="request({ skip, limit: 10, descending: true, sort: 'createdAt' })"
+        @request="index({ skip, limit: 10, descending: true, sort: 'createdAt' })"
       />
     </QDialog>
     <GalleryImageList
       :loading="loading"
-      :error="typeof error === 'object' ? error.message : error"
+      :error="error?.message || ''"
       @open="onOpenImage"
-      @request="request({ skip, limit: 10, descending: true, sort: 'createdAt' })"
+      @request="index({ skip, limit: 10, descending: true, sort: 'createdAt' })"
     />
   </div>
 </template>
@@ -25,24 +25,20 @@
 import GalleryImageFull from '~/gallery/GalleryImageFull.vue';
 import GalleryImageList from '~/gallery/GalleryImageList.vue';
 import GalleryImageUpload from '~/gallery/GalleryImageUpload.vue';
-import type { Injected, Responses } from '@/types';
-import { inject, ref, watch } from 'vue';
-import { useFetch } from '@/hooks';
+import type { Injected } from '@/types';
+import { inject, ref } from 'vue';
+import { useQuery } from '@/hooks';
 import { ImageService } from '@/api/services';
 
 const { images, total, skip, uploadModal } = inject<Injected.Image>('data')!;
 const modal = ref(false);
 const currentIndex = ref(0);
-const { request, loading, data, error } = useFetch<Responses.Images, typeof ImageService.getImages>(
-  ImageService.getImages
-);
+const { query: index, loading, error } = useQuery(ImageService.index, { onSuccess });
 
-watch(data, () => {
-  if (data.value) {
-    images.value = images.value.concat(data.value.images);
-    total.value = data.value.count;
-  }
-});
+function onSuccess(data: Awaited<ReturnType<typeof ImageService.index>>) {
+  images.value = images.value.concat(data.images);
+  total.value = data.count;
+}
 
 function onOpenImage(index: number) {
   currentIndex.value = index;

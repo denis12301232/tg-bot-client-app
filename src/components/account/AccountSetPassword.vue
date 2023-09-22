@@ -1,5 +1,5 @@
 <template>
-  <QForm ref="formRef" @submit.prevent="request(password.new.value, password.old.value)">
+  <QForm ref="formRef" @submit.prevent="query(password.new.value, password.old.value)">
     <QInput
       v-model="password.old.value"
       class="q-mt-sm"
@@ -8,7 +8,7 @@
       :type="password.old.visible ? 'text' : 'password'"
       lazy-rules
       :error="!!error"
-      :error-message="typeof error === 'object' ? error.message : error"
+      :error-message="error?.message"
     >
       <template #append>
         <QIcon
@@ -52,11 +52,13 @@
 <script setup lang="ts">
 import type { QForm } from 'quasar';
 import { ref, reactive, watch } from 'vue';
-import { useFetch } from '@/hooks';
+import { useQuery } from '@/hooks';
 import { UserService } from '@/api/services';
 import { Validate } from '@/util';
 import { useI18n } from 'vue-i18n';
+import { useAlertStore } from '@/stores';
 
+const alertStore = useAlertStore();
 const { t } = useI18n();
 const formRef = ref<QForm | null>(null);
 const valid = ref(false);
@@ -64,17 +66,7 @@ const password = reactive({
   new: { value: '', visible: false },
   old: { value: '', visible: false },
 });
-const { request, loading, error } = useFetch(UserService.updatePassword, {
-  afterResponse: () => {
-    password.new.value = password.old.value = '';
-    setTimeout(() => formRef.value?.reset(), 0);
-  },
-  afterSuccess() {
-    error.value = '';
-  },
-  alert: true,
-  successMsg: t('account.messages.password'),
-});
+const { query, loading, error } = useQuery(UserService.updatePassword, { onFinally, onSuccess });
 const rules = [
   (v: string) => Validate.required(v) || t('account.form.fields.newPassword.errors.required'),
   (v: string) => Validate.lengthInterval(6, 20)(v) || t('account.form.fields.newPassword.errors.lengthInterval'),
@@ -83,6 +75,15 @@ const rules = [
 watch([() => password.new.value], () => {
   formRef.value?.validate().then((v) => (valid.value = v && !loading.value));
 });
+
+function onSuccess() {
+  alertStore.addAlert('success', t('account.messages.password'));
+}
+
+function onFinally() {
+  password.new.value = password.old.value = '';
+  setTimeout(() => formRef.value?.reset(), 0);
+}
 
 function showPassword(type: 'old' | 'new') {
   password[type].visible = !password[type].visible;

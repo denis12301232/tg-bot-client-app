@@ -28,11 +28,10 @@
 </template>
 
 <script setup lang="ts">
-import type { IUser } from '@/types';
 import UserAvatar from '@/components/UserAvatar.vue';
-import { onMounted, watch } from 'vue';
+import { onMounted } from 'vue';
 import { UserService } from '@/api/services';
-import { useFetch } from '@/hooks';
+import { useQuery } from '@/hooks';
 import { useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 
@@ -43,10 +42,13 @@ interface Props {
 const props = defineProps<Props>();
 const { t } = useI18n();
 const router = useRouter();
-const { request, data: user, loading, error } = useFetch<IUser, (typeof UserService)['getUser']>(UserService.getUser);
+const { query, data: user, loading } = useQuery(UserService.show, { onError });
 
-onMounted(() => request(props.id));
-watch(error, () => router.push('/'));
+onMounted(() => query(props.id));
+
+function onError() {
+  router.push('/');
+}
 </script>
 
 <style lang="scss" module>

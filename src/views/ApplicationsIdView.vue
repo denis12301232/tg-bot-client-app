@@ -53,9 +53,8 @@
 
 <script setup lang="ts">
 import FormAssistance from '~/FormAssistance.vue';
-import type { Responses } from '@/types';
 import { onMounted, ref } from 'vue';
-import { useFetch } from '@/hooks';
+import { useQuery } from '@/hooks';
 import { AssistanceService } from '@/api/services';
 import { Util } from '@/util';
 import { useI18n } from 'vue-i18n';
@@ -67,14 +66,14 @@ interface Props {
 const props = defineProps<Props>();
 const { t } = useI18n();
 const isEditable = ref(false);
-const { request, data: form } = useFetch<Omit<Responses.Assistance, '_id'>, typeof AssistanceService.show>(
-  AssistanceService.show
-);
-const { request: update, loading: isUpdating } = useFetch(AssistanceService.update, {
-  afterResponse: setEditable,
-});
+const { query: show, data: form } = useQuery(AssistanceService.show);
+const { query: update, loading: isUpdating } = useQuery(AssistanceService.update, { onSuccess });
 
-onMounted(() => request(props.id));
+onMounted(() => show(props.id));
+
+function onSuccess() {
+  setEditable();
+}
 
 function setEditable() {
   isEditable.value = !isEditable.value;

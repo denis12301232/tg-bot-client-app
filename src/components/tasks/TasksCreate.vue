@@ -36,7 +36,7 @@
             color="primary"
             :label="t('tasks.create.second.form.buttons.create')"
             :disable="!task.subtasks.length"
-            @click="request(task)"
+            @click="create(task)"
           />
           <QBtn
             class="q-ml-sm"
@@ -54,7 +54,7 @@
 <script setup lang="ts">
 import Tasks from '~/tasks';
 import { ref, reactive } from 'vue';
-import { useFetch } from '@/hooks';
+import { useQuery } from '@/hooks';
 import { TaskService } from '@/api/services';
 import { useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
@@ -63,18 +63,13 @@ const { t } = useI18n();
 const router = useRouter();
 const step = ref(1);
 const valid = reactive({ first: false, second: false });
-const task = reactive({
-  title: '',
-  tags: [] as string[],
-  subtasks: [] as { title: string; description: string }[],
-});
-const subtask = reactive({
-  title: '',
-  description: '',
-});
-const { request, loading } = useFetch(TaskService.createTask, {
-  afterResponse: () => router.push('/tasks/list'),
-});
+const task = reactive({ title: '', tags: [] as string[], subtasks: [] as { title: string; description: string }[] });
+const subtask = reactive({ title: '', description: '' });
+const { query: create, loading } = useQuery(TaskService.create, { onSuccess });
+
+function onSuccess() {
+  router.push('/tasks/list');
+}
 
 function setFirstStepValid(value: boolean) {
   valid.first = value;

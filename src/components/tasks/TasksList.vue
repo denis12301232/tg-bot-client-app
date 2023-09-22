@@ -5,7 +5,7 @@
       v-model:pagination="pagination"
       :class="$style.table"
       :columns="columns"
-      :rows="tasks"
+      :rows="tasks || []"
       :filter="filter"
       :loading="loading || isUpdating"
       :rows-per-page-options="[5, 10, 20]"
@@ -141,7 +141,7 @@ import type { QTable } from 'quasar';
 import type { ITask } from '@/types';
 import { computed, onMounted } from 'vue';
 import { useStore } from '@/stores';
-import { useFetch, useRequest } from '@/hooks';
+import { useQuery, useRequest } from '@/hooks';
 import { TaskService } from '@/api/services';
 import { Util } from '@/util';
 import { useI18n } from 'vue-i18n';
@@ -149,14 +149,14 @@ import { storeToRefs } from 'pinia';
 
 const { t, d } = useI18n();
 const { user, isAdmin } = storeToRefs(useStore());
-const { request: update, loading: isUpdating } = useFetch(TaskService.update);
+const { query: update, loading: isUpdating } = useQuery(TaskService.update);
 const {
   request,
   data: tasks,
   pagination,
   filter,
   loading,
-} = useRequest<ITask>(TaskService.getTasks, {
+} = useRequest<ITask[]>(TaskService.getTasks, {
   sort: 'createdAt',
   limit: 5,
 });

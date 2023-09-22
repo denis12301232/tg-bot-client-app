@@ -59,7 +59,6 @@
 import type { Responses } from '@/types';
 import { AssistanceService } from '@/api/services';
 import { ref, watch } from 'vue';
-import { useFetch } from '@/hooks';
 import { Util } from '@/util';
 import { useI18n } from 'vue-i18n';
 
@@ -68,16 +67,9 @@ const LIMIT = 1;
 const search = ref('');
 const page = ref(1);
 const total = ref(0);
-const {
-  request,
-  data: forms,
-  loading,
-  error,
-} = useFetch<Responses.Assistance[], typeof AssistanceService.catch>(AssistanceService.catch, {
-  afterResponse: ({ response }) => {
-    total.value = Number(response.headers.get('x-total-count')) || 0;
-  },
-});
+const loading = ref(false);
+const forms = ref<Responses.Assistance[]>([]);
+const error = ref('');
 
 watch(loading, (n) => {
   if (!n && search.value && !forms.value?.length) {
@@ -88,13 +80,7 @@ watch(loading, (n) => {
 watch([search, page], async () => {
   error.value = '';
   if (search.value) {
-    request({
-      limit: LIMIT,
-      page: page.value,
-      filter: { nameOrSurname: search.value },
-      sort: '_id',
-      descending: false,
-    });
+    catchForms();
   }
 });
 
@@ -103,6 +89,25 @@ watch(error, () => {
     forms.value = [];
   }
 });
+
+async function catchForms() {
+  try {
+    loading.value = true;
+    const response = await AssistanceService.catchQ({
+      limit: LIMIT,
+      page: page.value,
+      filter: { nameOrSurname: search.value },
+      sort: '_id',
+      descending: false,
+    });
+    total.value = Number(response.headers.get('x-total-count'));
+    forms.value = await response.json<Responses.Assistance[]>();
+  } catch (e: any) {
+    error.value = e.message;
+  } finally {
+    loading.value = false;
+  }
+}
 </script>
 
 <style module lang="scss">

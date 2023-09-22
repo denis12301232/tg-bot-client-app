@@ -4,7 +4,7 @@
     <QTable
       v-model:pagination="pagination"
       :class="$style.table"
-      :rows="users"
+      :rows="users || []"
       :columns="columns"
       :rows-per-page-options="[5, 10]"
       :filter="filter"
@@ -48,7 +48,7 @@
                 type="checkbox"
                 :options="options"
                 :disable="loading"
-                @update:model-value="request(row._id, row.roles)"
+                @update:model-value="query(row._id, row.roles)"
               >
               </QOptionGroup>
             </div>
@@ -63,22 +63,21 @@
 import type { QTable } from 'quasar';
 import type { IUser } from '@/types';
 import { onMounted, computed } from 'vue';
-import { useRequest, useFetch } from '@/hooks';
+import { useRequest, useQuery } from '@/hooks';
 import { UserService } from '@/api/services';
 import { useI18n } from 'vue-i18n';
+import { useAlertStore } from '@/stores';
 
+const alertStore = useAlertStore();
 const { t } = useI18n();
-const { request, loading } = useFetch(UserService.updateRoles, {
-  alert: true,
-  successMsg: t('tools.roles.messages.update'),
-});
+const { query, loading } = useQuery(UserService.updateRoles, { onSuccess });
 const {
   request: getUsers,
   pagination,
   filter,
   loading: isUsersLoading,
   data: users,
-} = useRequest<IUser>(UserService.getUsers, { limit: 3 });
+} = useRequest<IUser[]>(UserService.indexQ, { limit: 3 });
 const columns = computed<QTable['columns']>(() => [
   { name: 'name', label: t('tools.roles.table.columns.name'), align: 'left', field: 'name' },
   { name: 'login', label: t('tools.roles.table.columns.login'), align: 'left', field: 'login' },
@@ -90,6 +89,10 @@ const options = computed(() => [
 ]);
 
 onMounted(() => getUsers({ pagination: pagination.value }));
+
+function onSuccess() {
+  alertStore.addAlert('success', t('tools.roles.messages.update'));
+}
 </script>
 
 <style lang="scss" module>

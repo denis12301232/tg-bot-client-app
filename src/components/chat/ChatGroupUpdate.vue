@@ -29,16 +29,16 @@
 </template>
 
 <script setup lang="ts">
-import type { Responses } from '@/types';
 import SetAvatar from '~/SetAvatar.vue';
 import { reactive, computed, watchEffect } from 'vue';
 import { storeToRefs } from 'pinia';
-import { useSocketStore } from '@/stores';
-import { useFetch } from '@/hooks';
+import { useAlertStore, useSocketStore } from '@/stores';
+import { useQuery } from '@/hooks';
 import { ChatService } from '@/api/services';
 import { useI18n } from 'vue-i18n';
 
 const { t } = useI18n();
+const alertStore = useAlertStore();
 const { currentChat } = storeToRefs(useSocketStore());
 const settings = reactive({
   avatar: null as File | null,
@@ -52,26 +52,26 @@ const params = computed(() => ({
   title: settings.title ? settings.title : undefined,
   about: settings.about ? settings.about : undefined,
 }));
-const { request: updateGroup, loading } = useFetch<Responses.Chat['group'], typeof ChatService.updateGroup>(
-  ChatService.updateGroup,
-  {
-    afterSuccess: ({ data }) => {
-      if (currentChat.value?.group) {
-        currentChat.value.group = data.value;
-      }
-      settings.avatar = null;
-    },
-    alert: true,
-    successMsg: t('chat.groupSettings.messages.updated'),
-    errorMsg: t('chat.groupSettings.messages.failed'),
-  }
-);
+const { query: updateGroup, loading } = useQuery(ChatService.updateGroup, { onSuccess, onError });
+
 watchEffect((onCleanup) => {
   if (settings.avatar) {
     formData.append('avatar', settings.avatar);
   }
   onCleanup(() => formData.delete('avatar'));
 });
+
+function onSuccess(group: Awaited<ReturnType<typeof ChatService.updateGroup>>) {
+  if (currentChat.value?.group) {
+    currentChat.value.group = group;
+  }
+  settings.avatar = null;
+  alertStore.addAlert('success', t('chat.groupSettings.messages.updated'));
+}
+
+function onError() {
+  alertStore.addAlert('error', t('chat.groupSettings.messages.failed'));
+}
 </script>
 
 <style lang="scss" module>

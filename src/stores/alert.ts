@@ -14,9 +14,7 @@ export const useAlertStore = defineStore('alert', () => {
   onMounted(() => {
     document.addEventListener('visibilitychange', onVisibilityChange);
     Notification.permission === 'denied' && Notification.requestPermission();
-    NoticeService.index()
-      .json<INotice[]>()
-      .then((nts) => nts.forEach((n) => notices.value.set(n._id, n)));
+    NoticeService.index().then((nts) => nts.forEach((n) => notices.value.set(n._id, n)));
   });
   onUnmounted(() => document.removeEventListener('visibilitychange', onVisibilityChange));
 
@@ -29,9 +27,7 @@ export const useAlertStore = defineStore('alert', () => {
   }
 
   function addNotice(title: string, text: string) {
-    NoticeService.store({ title, text })
-      .json<INotice>()
-      .then((notice) => notices.value.set(notice._id, notice));
+    NoticeService.store({ title, text }).then((notice) => notices.value.set(notice._id, notice));
     !muted.value && play();
   }
 

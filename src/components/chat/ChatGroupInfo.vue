@@ -56,7 +56,10 @@
             </QItemSection>
             <QItemSection>
               <QItemLabel>{{ item.name }}</QItemLabel>
-              <QItemLabel caption> <QIcon name="eva-at-outline" />{{ item.login }} </QItemLabel>
+              <QItemLabel caption>
+                <QIcon name="eva-at-outline" />
+                {{ item.login }}
+              </QItemLabel>
             </QItemSection>
             <QItemSection v-if="canRemove && item._id !== user?._id" side>
               <QBtn
@@ -65,7 +68,7 @@
                 round
                 icon="eva-trash"
                 color="negative"
-                :loading="isRemoveUserLoading"
+                :loading="isUpdating"
                 @click="select(item._id)"
               />
             </QItemSection>
@@ -87,7 +90,7 @@ import UserAvatar from '~/UserAvatar.vue';
 import { ref, onMounted, computed, watch } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useStore, useSocketStore } from '@/stores';
-import { useFetch } from '@/hooks';
+import { useQuery } from '@/hooks';
 import { ChatService } from '@/api/services';
 import { useI18n } from 'vue-i18n';
 
@@ -98,34 +101,29 @@ const filter = ref('');
 const selected = ref('');
 const avatar = computed(() => currentChat.value?.group?.avatar);
 const name = computed(() => currentChat.value?.group?.title);
-const {
-  request: getUsersList,
-  loading,
-  data: users,
-} = useFetch<IUser[], typeof ChatService.chatMembers>(ChatService.chatMembers);
-const { request: removeUser, loading: isRemoveUserLoading } = useFetch(ChatService.updateGroupMembers, {
-  afterSuccess: () => {
-    users.value = users.value?.filter((user) => user._id !== selected.value);
-    currentChat.value && currentChat.value.members_count--;
-    selected.value = '';
-  },
-});
 const filteredUsers = computed(() => {
   return filter.value
     ? users.value?.filter((user) => user.name.includes(filter.value) || user.login.includes(filter.value))
-    : users.value;
+    : users.value || [];
 });
 const canRemove = computed(() =>
   currentChat.value?.group.roles.admin?.includes(user.value?._id || '') ? true : false
 );
+const { query: chatMembers, loading, data: users } = useQuery(ChatService.chatMembers);
+const { query: updateGroupMembers, loading: isUpdating } = useQuery(ChatService.updateGroupMembers, { onSuccess });
 
-onMounted(() => getUsersList(currentChatId.value!));
-
+onMounted(() => chatMembers(currentChatId.value!));
 watch(selected, () => {
   if (selected.value) {
-    removeUser(currentChatId.value!, { userId: selected.value, action: 'kick' });
+    updateGroupMembers(currentChatId.value!, { userId: selected.value, action: 'kick' });
   }
 });
+
+function onSuccess() {
+  users.value = users.value?.filter((user) => user._id !== selected.value) || null;
+  currentChat.value && currentChat.value.members_count--;
+  selected.value = '';
+}
 
 function select(id: string) {
   selected.value = id;

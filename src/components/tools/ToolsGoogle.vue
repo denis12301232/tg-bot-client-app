@@ -1,6 +1,6 @@
 <template>
   <div class="column items-center q-pa-sm">
-    <form :class="$style.form" @submit.prevent="request(google)">
+    <form :class="$style.form" @submit.prevent="query(google)">
       <h5 class="q-pa-lg text-center">{{ t('tools.google.title') }}</h5>
       <QInput v-model="google.serviceUser" class="q-mb-md" standout clearable label="Service account user" />
       <QInput
@@ -25,10 +25,12 @@
 
 <script setup lang="ts">
 import { reactive, computed } from 'vue';
-import { useFetch } from '@/hooks';
+import { useQuery } from '@/hooks';
 import { ToolsService } from '@/api/services';
 import { useI18n } from 'vue-i18n';
+import { useAlertStore } from '@/stores';
 
+const alertStore = useAlertStore();
 const { t } = useI18n();
 const google = reactive({
   serviceUser: '',
@@ -37,12 +39,16 @@ const google = reactive({
   folderId: '',
 });
 const valid = computed(() => !!Object.values(google).reduce((sum, item) => (sum += item.length), 0));
-const { request, loading } = useFetch(ToolsService.setGoogleServiceAccountSettings, {
-  afterResponse: () => Object.keys(google).forEach((key) => (google[key as keyof typeof google] = '')),
-  alert: true,
-  successMsg: t('tools.google.messages.success'),
-  errorMsg: t('tools.google.messages.error'),
-});
+const { query, loading } = useQuery(ToolsService.setGoogleServiceAccountSettings, { onSuccess, onError });
+
+function onSuccess() {
+  Object.keys(google).forEach((key) => (google[key as keyof typeof google] = ''));
+  alertStore.addAlert('success', t('tools.google.messages.success'));
+}
+
+function onError() {
+  alertStore.addAlert('error', t('tools.google.messages.error'));
+}
 </script>
 
 <style lang="scss" module>

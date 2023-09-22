@@ -28,7 +28,6 @@
 </template>
 
 <script setup lang="ts">
-import type { IMeet } from '@/types';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
@@ -40,9 +39,9 @@ const meetTitle = ref('');
 const meetId = ref('');
 
 function createNewMeet() {
-  MeetService.create({ title: meetTitle.value, invited: [] })
-    .json<IMeet>()
-    .then((meet) => router.push({ path: `/meets/${meet._id}` }));
+  MeetService.create({ title: meetTitle.value, invited: [] }).then((meet) =>
+    router.push({ path: `/meets/${meet._id}` })
+  );
 }
 
 function joinMeet() {

@@ -39,7 +39,7 @@
                 round
                 color="positive"
                 :loading="loading"
-                @click="request(formData, lang)"
+                @click="query(formData, lang)"
               />
             </template>
           </QFile>
@@ -95,24 +95,19 @@
 
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue';
-import { useFetch } from '@/hooks';
+import { useQuery } from '@/hooks';
 import { AssistanceService } from '@/api/services';
 import { QIcon } from 'quasar';
 import { useI18n } from 'vue-i18n';
+import { useAlertStore } from '@/stores';
 
 const formData = new FormData();
+const alertStore = useAlertStore();
 const { t, locale, messages } = useI18n();
 const file = ref<File | null>(null);
 const help = ref(false);
 const lang = ref('uk');
-const { request, loading, data } = useFetch<
-  { created: number; errors: { message: string; row: number }[] },
-  typeof AssistanceService.uploadFormsListCSV
->(AssistanceService.uploadFormsListCSV, {
-  alert: true,
-  successMsg: t('applications.import.messages.success'),
-  afterSuccess: () => (file.value = null),
-});
+const { query, data, loading } = useQuery(AssistanceService.uploadFormsCSV, { onSuccess });
 const options = [
   { label: 'Русский', value: 'ru' },
   { label: 'Українська', value: 'uk' },
@@ -128,6 +123,11 @@ watchEffect((onCleanup) => {
 
 function showHelp() {
   help.value = !help.value;
+}
+
+function onSuccess() {
+  alertStore.addAlert('success', t('applications.import.messages.success'));
+  file.value = null;
 }
 
 const example = [

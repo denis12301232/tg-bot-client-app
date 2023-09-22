@@ -3,7 +3,7 @@ import { $auth } from '@/api';
 
 export default class AuthService {
   static login(loginOrEmail: string, password: string) {
-    return $auth.post('auth/login', { json: { loginOrEmail, password } });
+    return $auth.post('auth/login', { json: { loginOrEmail, password } }).json<Responses.Login>();
   }
 
   static refresh() {
@@ -15,14 +15,14 @@ export default class AuthService {
   }
 
   static registration(user: { login: string; email: string; password: string; name: string }) {
-    return $auth.post('auth/registration', { json: user });
+    return $auth.post('auth/registration', { json: user }).json<Responses.Login>();
   }
 
   static restorePassword(email: string) {
-    return $auth.post('auth/restore/password', { json: { email } });
+    return $auth.post('auth/restore/password', { json: { email } }).json<null>();
   }
 
   static setPassword(password: string, link: string) {
-    return $auth.post('auth/set/password', { json: { password, link } });
+    return $auth.post('auth/set/password', { json: { password, link } }).json<null>();
   }
 }

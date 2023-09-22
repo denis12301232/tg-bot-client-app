@@ -32,7 +32,7 @@
               flat
               icon="eva-checkmark-outline"
               color="positive"
-              @click="[scope.set(), onSave(imgs[index]._id, scope.value)]"
+              @click="[scope.set(), ImageService.update(imgs[index]._id, scope.value)]"
             />
             <QBtn round dense flat icon="eva-close-outline" color="negative" @click="scope.cancel" />
           </div>
@@ -97,10 +97,6 @@ async function onNext() {
 function changeImage(event: KeyboardEvent) {
   if (event.key === 'ArrowLeft') onPrev();
   else if (event.key === 'ArrowRight') onNext();
-}
-
-async function onSave(id: string, value: string) {
-  await ImageService.updateDescription(id, value).json();
 }
 </script>
 

@@ -33,7 +33,7 @@
                 class="q-pr-sm"
                 :val="row._id"
                 :label="t('chat.groupSettings.table.checkboxes[0]')"
-                @update:model-value="request(currentChat!.group._id, 'admin', hasAdminRights)"
+                @update:model-value="updateGroupRoles(currentChat!.group._id, 'admin', hasAdminRights)"
               />
             </div>
           </QTd>
@@ -47,21 +47,17 @@
 import type { QTable } from 'quasar';
 import type { IUser } from '@/types';
 import { ref } from 'vue';
-import { useFetch } from '@/hooks';
+import { useQuery } from '@/hooks';
 import { ChatService } from '@/api/services';
 import { storeToRefs } from 'pinia';
-import { useSocketStore } from '@/stores';
+import { useAlertStore, useSocketStore } from '@/stores';
 import { useI18n } from 'vue-i18n';
 
 const { t } = useI18n();
+const alertStore = useAlertStore();
 const { currentChat } = storeToRefs(useSocketStore());
 const hasAdminRights = ref(currentChat.value?.group.roles.admin || []);
-const { request, loading } = useFetch(ChatService.updateGroupRoles, {
-  alert: true,
-  successMsg: t('chat.groupSettings.messages.updated'),
-  errorMsg: t('chat.groupSettings.messages.failed'),
-});
-
+const { query: updateGroupRoles, loading } = useQuery(ChatService.updateGroupRoles, { onSuccess, onError });
 const columns: QTable['columns'] = [
   {
     name: 'name',
@@ -83,6 +79,14 @@ const columns: QTable['columns'] = [
   },
   { name: 'roles', label: 'Роль', align: 'center', field: 'roles', headerStyle: 'font-size: 1.1em;' },
 ];
+
+function onSuccess() {
+  alertStore.addAlert('success', t('chat.groupSettings.messages.updated'));
+}
+
+function onError() {
+  alertStore.addAlert('error', t('chat.groupSettings.messages.failed'));
+}
 </script>
 
 <style module lang="scss">

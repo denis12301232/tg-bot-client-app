@@ -1,5 +1,5 @@
 <template>
-  <QForm ref="formRef" :class="$style.settings" @submit.prevent="request(password, link)">
+  <QForm ref="formRef" :class="$style.settings" @submit.prevent="setPassword(password, link)">
     <h4 class="q-pa-lg text-center">{{ t('restore.link.form.title') }}</h4>
     <QInput
       v-model="password"
@@ -12,7 +12,7 @@
       maxlength="20"
       autocomplete="new-password"
       :error="!!error"
-      :error-message="typeof error === 'object' ? error.message : error"
+      :error-message="error?.message"
     >
       <template #append>
         <QIcon :name="visible ? 'eva-eye' : 'eva-eye-off'" :class="$style.icon" @click="showPassword" />
@@ -31,7 +31,7 @@
 import type { QForm } from 'quasar';
 import { ref, watch, computed } from 'vue';
 import { useRoute } from 'vue-router';
-import { useFetch } from '@/hooks';
+import { useQuery } from '@/hooks';
 import { Validate } from '@/util';
 import { AuthService } from '@/api/services';
 import { useI18n } from 'vue-i18n';
@@ -48,19 +48,17 @@ const rules = [
   (v: string) => Validate.required(v) || t('restore.link.form.fields.password.errors.required'),
   (v: string) => Validate.lengthInterval(6, 20)(v) || t('restore.link.form.fields.password.errors.lengthInterval'),
 ];
-const { request, loading, error } = useFetch(AuthService.setPassword, {
-  afterResponse: () => {
-    password.value = '';
-    message.value = t('restore.msgs.set');
-  },
-});
+const { query: setPassword, loading, error } = useQuery(AuthService.setPassword, { onSuccess });
 
-watch(password, () => {
-  formRef.value?.validate().then((v) => (valid.value = v && !loading.value));
-});
+watch(password, () => formRef.value?.validate().then((v) => (valid.value = v && !loading.value)));
 
 function showPassword() {
   visible.value = !visible.value;
+}
+
+function onSuccess() {
+  password.value = '';
+  message.value = t('restore.msgs.set');
 }
 </script>
 

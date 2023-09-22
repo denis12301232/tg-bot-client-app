@@ -7,7 +7,7 @@ export default class ToolsService {
     sheetId: string;
     folderId: string;
   }) {
-    return $api.post('tools/google/service', { json: settings });
+    return $api.post('tools/google/service', { json: settings }).json<null>();
   }
 
   static fetchLocale(locale: string) {

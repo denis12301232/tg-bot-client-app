@@ -63,14 +63,12 @@ import type CustomVideo from '~/CustomVideo.vue';
 import Meet from '~/meet';
 import { type Component, ref, reactive, provide, onMounted, onBeforeUnmount, shallowRef, watch, computed } from 'vue';
 import { useStore, useSocketStore, useAlertStore } from '@/stores';
-import { useNavigation, useWebRtc, useFetch } from '@/hooks';
+import { useNavigation, useWebRtc, useQuery } from '@/hooks';
 import { useRoute } from 'vue-router';
 import { WebRtcDto } from '@/api/dto';
 import { MeetService } from '@/api/services';
 import { useI18n } from 'vue-i18n';
 
-type T = { title: string; roles: { admin: string[] } };
-type S = typeof MeetService.show;
 type Message = { userId: string; msg: string };
 
 interface RightDrawer {
@@ -92,7 +90,7 @@ const { addAlert } = useAlertStore();
 const { goBack } = useNavigation();
 const user = computed(() => store.user || ({} as IUser));
 const { abonents, streams, streamIds, captureMyStream } = useWebRtc(socket, user.value._id, { setChannelEvents });
-const { request: getMeetInfo, data: meetInfo, error } = useFetch<T, S>(MeetService.show);
+const { query: show, data: meet, error } = useQuery(MeetService.show);
 const open = reactive({ left: false, right: false });
 const videos = ref<Map<string, InstanceType<typeof CustomVideo> | null>>(new Map());
 const messages = ref<Message[]>([]);
@@ -106,7 +104,7 @@ watch(
   is,
   (n) => {
     if (n === 'info') {
-      rightDrawer.value = { component: Meet.Info, props: { link: meetId, title: meetInfo.value?.title } };
+      rightDrawer.value = { component: Meet.Info, props: { link: meetId, title: meet.value?.title } };
     } else if (n === 'user-list') {
       rightDrawer.value = { component: Meet.UserList, props: { abonents: abonents.value } };
     } else {
@@ -131,7 +129,7 @@ watch(error, () => {
 });
 
 onMounted(() => {
-  getMeetInfo(meetId).then(() => {
+  show(meetId).then(() => {
     captureMyStream('camera', { video: true, audio: true })
       .then(() => MeetService.join(meetId))
       .catch(() => {

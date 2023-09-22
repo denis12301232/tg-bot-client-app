@@ -130,7 +130,7 @@ import Tasks from '~/tasks';
 import type { QTable } from 'quasar';
 import type { ISubtask } from '@/types';
 import { ref, computed } from 'vue';
-import { useFetch, useVModel } from '@/hooks';
+import { useQuery, useVModel } from '@/hooks';
 import { TaskService } from '@/api/services';
 import { Util } from '@/util';
 import { useI18n } from 'vue-i18n';
@@ -148,20 +148,12 @@ const modal = ref(false);
 const selected = ref<ISubtask[]>([]);
 // eslint-disable-next-line vue/no-dupe-keys
 const subtasks = useVModel<ISubtask[]>('subtasks');
-const { request: updateSubtask, loading: isUpdating } = useFetch(TaskService.updateSubtask);
-const {
-  request: createTaskCsv,
-  loading: isCsvCreating,
-  data: csvUrl,
-} = useFetch(TaskService.createTaskCsv, {
-  afterResponse: async ({ response }) => {
-    const blob = await response.blob();
-    const file = new File([blob], 'subtasks', { type: 'text/csv' });
-    csvUrl.value = URL.createObjectURL(file);
-  },
-  type: 'blob',
-});
-const { request: deleteSubtask, loading: isDeleting } = useFetch(TaskService.deleteSubtask);
+const { query: deleteSubtask, loading: isDeleting } = useQuery(TaskService.deleteSubtask);
+const { query: updateSubtask, loading: isUpdating } = useQuery(TaskService.updateSubtask);
+const { query: createTaskCsv, data: blob, loading: isCsvCreating } = useQuery(TaskService.createTaskCsv);
+const csvUrl = computed(() =>
+  blob.value ? URL.createObjectURL(new File([blob.value], 'subtasks', { type: 'text/csv' })) : null
+);
 const columns = computed<QTable['columns']>(() => [
   {
     name: 'title',

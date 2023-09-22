@@ -1,5 +1,5 @@
 <template>
-  <QForm ref="formRef" :class="$style.settings" @submit="sendMail(email)">
+  <QForm ref="formRef" :class="$style.settings" @submit="restorePassword(email)">
     <h4 class="q-pa-lg text-center">{{ t('restore.form.title') }}</h4>
     <QInput
       v-model="email"
@@ -11,7 +11,7 @@
       :rules="rules"
       lazy-rules
       :error="!!error"
-      :error-message="typeof error === 'object' ? error.message : error"
+      :error-message="error?.message"
     >
       <template #append> </template>
     </QInput>
@@ -25,7 +25,7 @@
 <script setup lang="ts">
 import type { QForm } from 'quasar';
 import { ref, watch } from 'vue';
-import { useFetch } from '@/hooks';
+import { useQuery } from '@/hooks';
 import { Validate } from '@/util';
 import { AuthService } from '@/api/services';
 import { useI18n } from 'vue-i18n';
@@ -39,21 +39,14 @@ const rules = [
   (v: string) => Validate.required(v) || t('restore.form.fields.email.errors.required'),
   (v: string) => Validate.isEmail(v) || t('restore.form.fields.email.errors.isEmail'),
 ];
+const { query: restorePassword, loading, error } = useQuery(AuthService.restorePassword, { onSuccess });
 
-const {
-  request: sendMail,
-  loading,
-  error,
-} = useFetch(AuthService.restorePassword, {
-  afterResponse: () => {
-    message.value = `${t('restore.messages.link')} ${email.value}`;
-    email.value = '';
-  },
-});
+watch(email, () => formRef.value?.validate().then((v) => (valid.value = v)));
 
-watch(email, () => {
-  formRef.value?.validate().then((v) => (valid.value = v));
-});
+function onSuccess() {
+  message.value = `${t('restore.messages.link')} ${email.value}`;
+  email.value = '';
+}
 </script>
 
 <style lang="scss" module>

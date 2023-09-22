@@ -26,7 +26,7 @@ export default function useMessanger(socket: SocketTyped) {
     }
   });
 
-  async function getChatMessages(chatId: string, limit: number = 10) {
+  function getChatMessages(chatId: string, limit: number = 10) {
     const chat = chats.value.get(chatId);
 
     if (!chat) {
@@ -34,13 +34,11 @@ export default function useMessanger(socket: SocketTyped) {
     }
 
     const skip = chat.messages.length;
-    const messages = await ChatService.chatMessages(chatId, skip, limit).json<IMessage[]>();
-    chat.messages.splice(0, 0, ...messages);
+    ChatService.chatMessages(chatId, skip, limit).then((messages) => chat.messages.splice(0, 0, ...messages));
   }
 
-  async function onGetUserChats() {
-    const data = await ChatService.index().json<Responses.Chat[]>();
-    data.forEach((chat) => chats.value.set(chat._id, chat));
+  function onGetUserChats() {
+    ChatService.index().then((data) => data.forEach((chat) => chats.value.set(chat._id, chat)));
   }
 
   return { chats, currentChatId, currentChat, sortedChats, onGetUserChats, unread, getChatMessages };
@@ -68,8 +66,7 @@ function useMessangerEvents({ chats, currentChatId }: MessangerEvents) {
       currentChatId.value !== message.chatId ? chat.unread++ : ChatService.updateRead(chat._id);
       chat.total++;
     } else {
-      const data = await ChatService.show(message.chatId).json<Responses.Chat>();
-      chats.value.set(data._id, data);
+      ChatService.show(message.chatId).then((data) => chats.value.set(data._id, data));
     }
   }
 

@@ -6,7 +6,7 @@
       :class="$style.table"
       :loading="loading || isMoving"
       :columns="columns"
-      :rows="tasks"
+      :rows="tasks || []"
       :pagination-label="(f, l, a) => `${f}-${l} ${t('extra.table.of')} ${a}`"
       :loading-label="t('extra.table.loading')"
       :no-data-label="t('extra.table.noData')"
@@ -84,7 +84,7 @@
 import type { QTable } from 'quasar';
 import type { ITask } from '@/types';
 import { ref, onMounted } from 'vue';
-import { useRequest, useFetch } from '@/hooks';
+import { useRequest, useQuery } from '@/hooks';
 import { TaskService } from '@/api/services';
 import { Util } from '@/util';
 import { useI18n } from 'vue-i18n';
@@ -103,13 +103,11 @@ const {
   pagination,
   loading,
   data: tasks,
-} = useRequest<ITask>(TaskService.getTasks, {
+} = useRequest<ITask[]>(TaskService.getTasks, {
   limit: 5,
   sort: 'createdAt',
 });
-const { request: moveSubtask, loading: isMoving } = useFetch(TaskService.moveSubtask, {
-  afterResponse: () => emit('move', props.subtaskId),
-});
+const { query: moveSubtask, loading: isMoving } = useQuery(TaskService.moveSubtask, { onSuccess });
 const columns: QTable['columns'] = [
   { name: 'title', required: true, label: t('taskId.task.card.title'), align: 'center', field: 'title' },
   { name: 'tags', label: t('taskId.task.card.tags'), align: 'center', field: 'tags' },
@@ -117,6 +115,10 @@ const columns: QTable['columns'] = [
 ];
 
 onMounted(() => request({ pagination: pagination.value }));
+
+function onSuccess() {
+  emit('move', props.subtaskId);
+}
 </script>
 
 <style lang="scss" module>

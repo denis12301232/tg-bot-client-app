@@ -7,7 +7,7 @@
       standout
       :rules="rules"
       :error="!!error"
-      :error-message="typeof error === 'object' ? error.message : error"
+      :error-message="error?.message"
       lazy-rules
       counter
       maxlength="30"
@@ -22,7 +22,7 @@
           flat
           round
           color="positive"
-          @click="request(name)"
+          @click="query(name)"
         />
       </template>
     </QInput>
@@ -32,23 +32,20 @@
 <script setup lang="ts">
 import type { QForm } from 'quasar';
 import { ref, watch, computed } from 'vue';
-import { useStore } from '@/stores';
-import { useFetch } from '@/hooks';
+import { useAlertStore, useStore } from '@/stores';
+import { useQuery } from '@/hooks';
 import { Validate } from '@/util';
 import { UserService } from '@/api/services';
 import { useI18n } from 'vue-i18n';
 
 const { t } = useI18n();
 const store = useStore();
+const alertStore = useAlertStore();
 const name = ref(store.user?.name || '');
 const valid = ref(false);
 const formRef = ref<QForm | null>(null);
 const equal = computed(() => store.user?.name === name.value);
-const { request, loading, error } = useFetch(UserService.updateName, {
-  afterResponse: () => store.user?.name && (store.user.name = name.value),
-  alert: true,
-  successMsg: t('account.messages.name'),
-});
+const { query, loading, error } = useQuery(UserService.updateName, { onSuccess });
 const rules = [
   (v: string) => Validate.required(v) || t('account.form.fields.name.errors.required'),
   (v: string) => Validate.lengthInterval(3, 30)(v) || t('account.form.fields.name.errors.lengthInterval'),
@@ -57,6 +54,11 @@ const rules = [
 watch(name, () => {
   formRef.value?.validate().then((v) => (valid.value = v && !loading.value));
 });
+
+function onSuccess() {
+  store.user?.name && (store.user.name = name.value);
+  alertStore.addAlert('success', t('account.messages.name'));
+}
 </script>
 
 <style scoped lang="scss"></style>

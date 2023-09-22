@@ -7,7 +7,7 @@ export default function useGetTempUrl(filename: string, mimetype: string) {
 
   async function getUrl() {
     loading.value = true;
-    const blob = await ChatService.chatAttachment(filename).blob();
+    const blob = await ChatService.chatAttachment(filename);
     const file = new File([blob], filename, { type: mimetype });
     src.value = URL.createObjectURL(file);
     loading.value = false;

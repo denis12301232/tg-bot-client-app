@@ -3,23 +3,23 @@ import { $api } from '@/api';
 
 export default class AssistanceService {
   static store(json: Omit<Responses.Assistance, '_id' | 'sector'>) {
-    return $api.post('assistance', { json });
+    return $api.post('assistance', { json }).json<Responses.Assistance>();
   }
 
   static destroy(json: string[]) {
-    return $api.delete('assistance', { json });
+    return $api.delete('assistance', { json }).json<{ acknowledged: boolean; deletedCount: number }>();
   }
 
-  static catch(json: Q.PaginationRequest) {
+  static catchQ(json: Q.PaginationRequest) {
     return $api.post('assistance/catch', { json });
   }
 
   static update(formId: string, json: Omit<Responses.Assistance, '_id'>) {
-    return $api.patch(`assistance/${formId}`, { json });
+    return $api.patch(`assistance/${formId}`, { json }).json<null>();
   }
 
   static show(formId: string) {
-    return $api.get(`assistance/${formId}`);
+    return $api.get(`assistance/${formId}`).json<Omit<Responses.Assistance, '_id'>>();
   }
 
   static saveFormsToSheet(locale: string, ids: string[]) {
@@ -27,7 +27,7 @@ export default class AssistanceService {
   }
 
   static getStats(filters: { by: 'month' | 'year'; timestamp: number }) {
-    return $api.get('assistance/stats', { searchParams: filters });
+    return $api.get('assistance/stats', { searchParams: filters }).json<object>();
   }
 
   static getStatsPdf(formData: FormData) {
@@ -38,7 +38,7 @@ export default class AssistanceService {
     return $api.post('assistance/report', { json: { locale, type, ids } });
   }
 
-  static uploadFormsListCSV(formData: FormData, locale: string) {
-    return $api.post('assistance/list', { body: formData, searchParams: { locale } });
+  static uploadFormsCSV(formData: FormData, locale: string) {
+    return $api.post('assistance/list', { body: formData, searchParams: { locale } }).json<{ created: number; errors: { message: string; row: number }[] }>();
   }
 }

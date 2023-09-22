@@ -1,10 +1,11 @@
 import type { QUploaderFactoryObject } from 'quasar';
+import type { Responses } from '@/types';
 import { $api } from '@/api';
 import { ENV } from '@/util';
 
 export default class ImageService {
-  static getImages(params: { skip: number; limit: number; sort: string; descending: boolean }) {
-    return $api.get('images', { searchParams: params });
+  static index(params: { skip: number; limit: number; sort: string; descending: boolean }) {
+    return $api.get('images', { searchParams: params }).json<Responses.Images>();
   }
 
   static uploadImages(): QUploaderFactoryObject {
@@ -16,11 +17,11 @@ export default class ImageService {
     };
   }
 
-  static deleteImages(ids: string[]) {
-    return $api.delete('images', { json: ids, timeout: 6e5 });
+  static destroy(ids: string[]) {
+    return $api.delete('images', { json: ids, timeout: 6e5 }).json<string[]>();
   }
 
-  static updateDescription(id: string, description: string) {
-    return $api.patch(`images/${id}`, { json: { description } });
+  static update(id: string, description: string) {
+    return $api.patch(`images/${id}`, { json: { description } }).json<null>();
   }
 }
