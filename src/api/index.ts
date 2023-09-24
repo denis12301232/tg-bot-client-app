@@ -6,7 +6,12 @@ export const $auth = ky.extend({
   prefixUrl: ENV.API_V1,
   credentials: 'include',
   hooks: {
-    beforeRequest: [(request) => request.headers.set('Authorization', `Bearer ${localStorage.getItem('token')}`)],
+    beforeRequest: [
+      (request) => {
+        request.headers.set('Accept-Language', localStorage.getItem('lang') || 'ru');
+        request.headers.set('Authorization', `Bearer ${localStorage.getItem('token')}`);
+      },
+    ],
   },
 });
 

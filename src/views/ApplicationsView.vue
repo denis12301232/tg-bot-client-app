@@ -628,7 +628,7 @@ const {
   data: forms,
   loading,
   filter,
-} = useRequest<Responses.Assistance[]>(AssistanceService.catch, {
+} = useRequest<Responses.Assistance[]>(AssistanceService.catchQ, {
   sort: '_id',
   descending: true,
   limit: 10,
