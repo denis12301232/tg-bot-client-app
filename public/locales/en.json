@@ -14,7 +14,7 @@
         "address": "Residential address",
         "peopleCount": "How many people live with you",
         "peopleFio": "Name and age of residents",
-        "invalids": "invalids",
+        "invalids": "Invalids",
         "kids": "Children",
         "kidsAge": "Kids Age",
         "food": "Food",
@@ -229,7 +229,9 @@
         "save": "Upload"
       },
       "messages": {
-        "link": "Link to uploaded orders"
+        "link": "Link to uploaded orders",
+        "success": "Formed",
+        "error": "Error"
       }
     },
     "filter": {
@@ -622,6 +624,16 @@
       "send": {
         "placeholder": "Your message"
       }
+    },
+    "invite": {
+      "title": "Add",
+      "add": {
+        "placeholder": "Name or login"
+      }
+    },
+    "buttons": {
+      "add": "Add",
+      "invite": "Invite"
     }
   },
   "chat": {

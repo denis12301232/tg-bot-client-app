@@ -22,8 +22,8 @@ export default class AssistanceService {
     return $api.get(`assistance/${formId}`).json<Omit<Responses.Assistance, '_id'>>();
   }
 
-  static saveFormsToSheet(locale: string, ids: string[]) {
-    return $api.post('assistance/sheet', { json: { locale, ids } });
+  static saveFormsToSheet(ids: string[]) {
+    return $api.post('assistance/sheet', { json: { ids } }).json<{ link: string }>();
   }
 
   static getStats(filters: { by: 'month' | 'year'; timestamp: number }) {
@@ -31,14 +31,16 @@ export default class AssistanceService {
   }
 
   static getStatsPdf(formData: FormData) {
-    return $api.post('assistance/stats/pdf', { body: formData });
+    return $api.post('assistance/stats/pdf', { body: formData }).blob();
   }
 
-  static createReport(locale: string, type: 'xlsx' | 'csv' | 'google-sheets', ids: string[]) {
-    return $api.post('assistance/report', { json: { locale, type, ids } });
+  static createReport(type: 'xlsx' | 'csv', ids: string[]) {
+    return $api.post('assistance/report', { json: {  type, ids } }).blob();
   }
 
   static uploadFormsCSV(formData: FormData, locale: string) {
-    return $api.post('assistance/list', { body: formData, searchParams: { locale } }).json<{ created: number; errors: { message: string; row: number }[] }>();
+    return $api
+      .post('assistance/list', { body: formData, searchParams: { locale } })
+      .json<{ created: number; errors: { message: string; row: number }[] }>();
   }
 }

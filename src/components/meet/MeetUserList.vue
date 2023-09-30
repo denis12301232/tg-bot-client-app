@@ -3,10 +3,10 @@
     <QDialog v-model="modal">
       <QCard :class="$style.invite">
         <QCardSection>
-          <h6>Добавить</h6>
+          <h6>{{ t('meetId.invite.title') }}</h6>
         </QCardSection>
         <QCardSection>
-          <QInput v-model="query" standout debounce="500" label="Имя или логин" />
+          <QInput v-model="query" standout debounce="500" :label="t('meetId.invite.add.placeholder')" />
         </QCardSection>
         <QCardSection>
           <QList>
@@ -24,14 +24,14 @@
             </QItem>
           </QList>
           <QBtn v-if="selected.length" v-close-popup class="q-mt-md" color="primary" flat @click="invite">
-            Пригласить
+            {{ t('meetId.buttons.invite') }}
           </QBtn>
         </QCardSection>
       </QCard>
     </QDialog>
     <QCardSection>
       <h6>{{ t('meetId.people.title') }} ({{ users.length }})</h6>
-      <QBtn class="q-mt-md" color="primary" flat @click="setModal">Добавить</QBtn>
+      <QBtn class="q-mt-md" color="primary" flat @click="setModal">{{ t('meetId.buttons.add') }}</QBtn>
     </QCardSection>
     <QSeparator />
     <QCardSection>

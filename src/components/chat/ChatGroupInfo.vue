@@ -56,10 +56,7 @@
             </QItemSection>
             <QItemSection>
               <QItemLabel>{{ item.name }}</QItemLabel>
-              <QItemLabel caption>
-                <QIcon name="eva-at-outline" />
-                {{ item.login }}
-              </QItemLabel>
+              <QItemLabel caption> <QIcon name="eva-at-outline" />{{ item.login }} </QItemLabel>
             </QItemSection>
             <QItemSection v-if="canRemove && item._id !== user?._id" side>
               <QBtn

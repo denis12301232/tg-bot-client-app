@@ -10,7 +10,7 @@
         :content-style="{ position: 'relative', overflow: 'hidden', display: 'flex', justifyContent: 'center' }"
         :content-active-style="{ position: 'relative', overflow: 'hidden', display: 'flex', justifyContent: 'center' }"
       >
-        <form :class="$style.form" @submit.prevent="createReport(locale, type || 'xlsx')">
+        <form :class="$style.form" @submit.prevent="query">
           <h5 class="q-pa-lg text-center">{{ t('applications.export.title') }}</h5>
           <QSelect
             v-model="type"
@@ -25,8 +25,8 @@
               class="q-mt-md"
               color="primary"
               type="submit"
-              :loading="isLoading"
-              :disable="!type || isLoading || !props.ids.length"
+              :loading="loading"
+              :disable="!type || loading || !props.ids.length"
             >
               {{ t('applications.export.buttons.save') }}
             </QBtn>
@@ -41,46 +41,50 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import { AssistanceService } from '@/api/services';
 import { useAlertStore } from '@/stores';
 import { useI18n } from 'vue-i18n';
+import { useQuery } from '@/hooks';
 
 interface Props {
   ids: string[];
 }
 
 const props = defineProps<Props>();
+const { t } = useI18n();
 const { addAlert } = useAlertStore();
-const { t, locale } = useI18n();
+const { query, loading } = useQuery(createReport, { onSuccess, onError });
 const type = ref<'xlsx' | 'csv' | 'google-sheets' | null>(null);
 const url = ref('');
-const isLoading = ref(false);
+const mime = computed(() =>
+  type.value === 'csv' ? 'text/csv' : 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+);
 const typeOptions = [
   { label: 'XLSX', value: 'xlsx' },
   { label: 'CSV', value: 'csv' },
   { label: 'GOOGLE SHEETS', value: 'google-sheets' },
 ];
 
-async function createReport(locale: string, fileType: 'xlsx' | 'csv' | 'google-sheets') {
-  try {
-    isLoading.value = true;
-    if (type.value === 'google-sheets') {
-      const data = await AssistanceService.saveFormsToSheet(locale, props.ids).json<{ link: string }>();
-      url.value = data.link;
-    } else if (type.value === 'csv' || type.value === 'xlsx') {
-      const blob = await AssistanceService.createReport(locale, fileType, props.ids).blob();
-      const file = new File([blob], 'subtasks', {
-        type: type.value === 'csv' ? 'text/csv' : 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-      });
-      url.value = URL.createObjectURL(file);
-    }
-    addAlert('success', t('tools.sheets.msgs.success'));
-  } catch (e) {
-    addAlert('error', t('tools.sheets.msgs.error'));
-  } finally {
-    isLoading.value = false;
-  }
+function createReport() {
+  const data =
+    type.value === 'xlsx' || type.value === 'csv'
+      ? AssistanceService.createReport(type.value, props.ids)
+      : AssistanceService.saveFormsToSheet(props.ids);
+
+  return data;
+}
+
+function onSuccess(value: { link: string } | Blob) {
+  value instanceof Blob
+    ? (url.value = URL.createObjectURL(new File([value], 'file', { type: mime.value })))
+    : (url.value = value.link);
+
+  addAlert('success', t('applications.export.messages.success'));
+}
+
+function onError() {
+  addAlert('error', t('applications.export.messages.error'));
 }
 </script>
 

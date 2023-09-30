@@ -142,7 +142,7 @@ async function createPdf() {
       return;
     }
     formData.append('image', blob);
-    const pdf = await AssistanceService.getStatsPdf(formData).blob();
+    const pdf = await AssistanceService.getStatsPdf(formData);
     const file = new File([pdf], 'chart.pdf', { type: pdf.type });
 
     const a = document.createElement('a');

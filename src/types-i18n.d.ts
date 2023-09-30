@@ -234,6 +234,8 @@ declare module 'vue-i18n' {
         };
         messages: {
           link: string;
+          success: string;
+          error: string;
         };
       };
       filter: {
@@ -626,6 +628,16 @@ declare module 'vue-i18n' {
         send: {
           placeholder: string;
         };
+      };
+      invite: {
+        title: string;
+        add: {
+          placeholder: string;
+        };
+      };
+      buttons: {
+        add: string;
+        invite: string;
       };
     };
     chat: {

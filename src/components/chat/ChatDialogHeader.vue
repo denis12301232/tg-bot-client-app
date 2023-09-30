@@ -2,7 +2,7 @@
   <div class="row justify-between items-center q-pa-sm">
     <div class="row items-center">
       <div class="q-mr-sm">
-        <QBtn dense flat round icon="eva-arrow-back" color="primary" @click="$router.push('/chat')" />
+        <QBtn dense flat round icon="eva-arrow-back" color="primary" @click="$router.push('/chats')" />
       </div>
       <UserAvatar
         class="avatar q-mr-sm"
