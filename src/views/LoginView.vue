@@ -36,7 +36,7 @@
           <QBtn type="submit" :loading="loading" :disable="!valid" color="primary">
             {{ t('login.form.buttons.login') }}
           </QBtn>
-          <div class="q-mt-md q-mb-sm text-body1 text-uppercase">
+          <div class="q-mt-md q-mb-sm text-body1 text-uppercase text-weight-light">
             {{ t('login.form.messages.or') }}
           </div>
           <div>
@@ -68,7 +68,7 @@
 <script setup lang="ts">
 import type { QForm } from 'quasar';
 import type { HTTPError } from 'ky';
-import { ref, reactive, watch, computed } from 'vue';
+import { ref, reactive, watch } from 'vue';
 import { useStore } from '@/stores';
 import { Rules } from '@/util';
 import { AuthService } from '@/api/services';
@@ -86,9 +86,9 @@ const formRef = ref<QForm>();
 const width = ref(0);
 const form = reactive({ loginOrEmail: '', password: '' });
 const errors = reactive({ loginOrEmail: '', password: '' });
-const oauth = computed(() => `${ENV.API_V1}/auth/oauth2/`);
 const { query: login, loading } = useQuery(AuthService.login, { onSuccess, onError });
 const rules = Rules.login(t);
+const oauth = `${ENV.API_V1}/auth/oauth2/`;
 
 watch(form, () => formRef.value?.validate().then((v) => (valid.value = v && !loading.value)));
 
