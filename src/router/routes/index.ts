@@ -138,6 +138,11 @@ export const routes: RouteRecordRaw[] = [
     props: true,
   },
   {
+    path: '/oauth2',
+    name: 'ouath-2',
+    component: () => import('@/views/OAuth2View.vue'),
+  },
+  {
     path: '/:pathMatch(.*)*',
     name: '404',
     component: () => import('~/TheError.vue'),

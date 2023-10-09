@@ -790,7 +790,8 @@
       },
       "messages": {
         "notRegister": "Not registered yet?",
-        "restore": "Forgot your password?"
+        "restore": "Forgot your password?",
+        "or": "or"
       }
     }
   },

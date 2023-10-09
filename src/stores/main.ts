@@ -35,24 +35,22 @@ export const useStore = defineStore('main', () => {
     currentTheme.value === 'dark' ? (theme.value = 'light') : (theme.value = 'dark');
   }
 
-  async function refresh() {
-    try {
-      const response = await AuthService.refresh();
-      localStorage.setItem('token', response.accessToken);
-      user.value = response.user;
-    } catch (e: unknown) {
-      console.error(e);
-    }
+  function refresh() {
+    return AuthService.refresh()
+      .then((response) => {
+        localStorage.setItem('token', response.accessToken);
+        user.value = response.user;
+      })
+      .catch(console.error);
   }
 
-  async function logout() {
-    try {
-      const response = await AuthService.logout();
-      localStorage.removeItem('token');
-      user.value = response;
-    } catch (e: unknown) {
-      console.error(e);
-    }
+  function logout() {
+    AuthService.logout()
+      .then((response) => {
+        localStorage.removeItem('token');
+        user.value = response;
+      })
+      .catch(console.error);
   }
 
   async function setLocale(lang: string) {

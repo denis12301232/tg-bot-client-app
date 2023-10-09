@@ -797,6 +797,7 @@ declare module 'vue-i18n' {
         messages: {
           notRegister: string;
           restore: string;
+          or: string;
         };
       };
     };

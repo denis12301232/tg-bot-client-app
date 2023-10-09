@@ -32,10 +32,21 @@
             <QIcon :name="isPasswordVisible ? 'eva-eye' : 'eva-eye-off'" :class="$style.icon" @click="showPassword" />
           </template>
         </QInput>
-        <div class="row justify-center q-my-md">
+        <div class="column items-center q-my-md">
           <QBtn type="submit" :loading="loading" :disable="!valid" color="primary">
             {{ t('login.form.buttons.login') }}
           </QBtn>
+          <div class="q-mt-md q-mb-sm text-body1 text-uppercase">
+            {{ t('login.form.messages.or') }}
+          </div>
+          <div>
+            <a :href="oauth + 'google'">
+              <QBtn icon="eva-google-outline" color="red" round dense flat />
+            </a>
+            <a :href="oauth + 'facebook'">
+              <QBtn icon="eva-facebook-outline" color="blue" round dense flat />
+            </a>
+          </div>
         </div>
         <div :class="$style.swap">
           {{ t('login.form.messages.notRegister') }}
@@ -57,13 +68,14 @@
 <script setup lang="ts">
 import type { QForm } from 'quasar';
 import type { HTTPError } from 'ky';
-import { ref, reactive, watch } from 'vue';
+import { ref, reactive, watch, computed } from 'vue';
 import { useStore } from '@/stores';
 import { Rules } from '@/util';
 import { AuthService } from '@/api/services';
 import { useQuery } from '@/hooks';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
+import { ENV } from '@/util';
 
 const { t } = useI18n();
 const store = useStore();
@@ -74,6 +86,7 @@ const formRef = ref<QForm>();
 const width = ref(0);
 const form = reactive({ loginOrEmail: '', password: '' });
 const errors = reactive({ loginOrEmail: '', password: '' });
+const oauth = computed(() => `${ENV.API_V1}/auth/oauth2/`);
 const { query: login, loading } = useQuery(AuthService.login, { onSuccess, onError });
 const rules = Rules.login(t);
 

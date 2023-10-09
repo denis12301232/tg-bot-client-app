@@ -1,7 +1,7 @@
 import type { INotice } from '@/types';
 import { $api } from '@/api';
 
-export default class MeetService {
+export default class NoticeService {
   static index() {
     return $api.get('notices').json<INotice[]>();
   }

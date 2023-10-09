@@ -1,11 +1,13 @@
 import type { IAlert, INotice } from '@/types';
-import { onMounted, onUnmounted, ref } from 'vue';
-import { defineStore } from 'pinia';
+import { onMounted, onUnmounted, ref, watch } from 'vue';
+import { defineStore, storeToRefs } from 'pinia';
 import { useAudioAlert } from '@/hooks';
 import { NoticeService } from '@/api/services';
+import { useStore } from '@/stores';
 
 export const useAlertStore = defineStore('alert', () => {
   const { play } = useAudioAlert('/audio/new-message.mp3');
+  const { user } = storeToRefs(useStore());
   const muted = ref(false);
   const alerts = ref<IAlert[]>([]);
   const leaved = ref(false);
@@ -14,9 +16,16 @@ export const useAlertStore = defineStore('alert', () => {
   onMounted(() => {
     document.addEventListener('visibilitychange', onVisibilityChange);
     Notification.permission === 'denied' && Notification.requestPermission();
-    NoticeService.index().then((nts) => nts.forEach((n) => notices.value.set(n._id, n)));
   });
   onUnmounted(() => document.removeEventListener('visibilitychange', onVisibilityChange));
+
+  const unwatch = watch(user, (n) => {
+    if (n) {
+      NoticeService.index()
+        .then((nts) => nts.forEach((n) => notices.value.set(n._id, n)))
+        .then(unwatch);
+    }
+  });
 
   function onVisibilityChange() {
     document.visibilityState === 'visible' ? (leaved.value = false) : (leaved.value = true);
