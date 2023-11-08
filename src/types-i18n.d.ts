@@ -426,6 +426,13 @@ declare module 'vue-i18n' {
         upload: string;
       };
     };
+    imageComments: {
+      title: string;
+      messages: {
+        likes: string;
+        input: string;
+      }
+    };
     tasks: {
       layout: {
         title: string;

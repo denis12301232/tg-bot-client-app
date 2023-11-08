@@ -1,4 +1,4 @@
-import type { IUser, IChat } from '@/types';
+import type { IUser, IChat, IComment } from '@/types';
 
 export namespace Responses {
   export interface List {
@@ -50,7 +50,13 @@ export namespace Responses {
       description: string;
       mimetype: string;
       ext: string;
+      comments: string[];
     }[];
+    count: number;
+  }
+
+  export interface Comments {
+    comments: IComment[];
     count: number;
   }
 

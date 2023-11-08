@@ -70,12 +70,11 @@ import type { QForm } from 'quasar';
 import type { HTTPError } from 'ky';
 import { ref, reactive, watch } from 'vue';
 import { useStore } from '@/stores';
-import { Rules } from '@/util';
+import { Rules, ENV } from '@/util';
 import { AuthService } from '@/api/services';
 import { useQuery } from '@/hooks';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
-import { ENV } from '@/util';
 
 const { t } = useI18n();
 const store = useStore();

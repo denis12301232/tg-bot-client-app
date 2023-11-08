@@ -92,6 +92,15 @@ export interface IAbonent {
   polite?: boolean;
 }
 
+export interface IComment {
+  _id: string;
+  media: string;
+  user: IUser;
+  text: string;
+  reactions: string[];
+  createdAt: string;
+}
+
 export interface Streams {
   screen: Map<string, MediaStream>;
   camera: Map<string, MediaStream>;

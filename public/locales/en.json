@@ -422,6 +422,13 @@
       "upload": "Upload"
     }
   },
+  "imageComments": {
+    "title": "Comments",
+    "messages": {
+      "likes": "{n} likes | {n} like | {n} likes",
+      "input": "Leave comment"
+    }
+  },
   "tasks": {
     "layout": {
       "title": "Tasks",

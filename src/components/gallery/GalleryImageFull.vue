@@ -2,9 +2,14 @@
   <QCard class="fit column">
     <div class="row justify-between items-center">
       <div class="text-primary total">{{ index + 1 + ' / ' + total }}</div>
-      <QBtn v-close-popup icon="eva-close" dense flat round color="negative" size="15px" />
+      <div style="padding: 5px 0">
+        <QBtn icon="eva-message-circle-outline" dense flat round color="teal" size="15px" @click="openComments">
+          <QBadge floating transparent rounded align="middle" :label="imgs[index].comments.length" color="indigo" />
+        </QBtn>
+        <QBtn v-close-popup icon="eva-close" dense flat round color="negative" size="15px" />
+      </div>
     </div>
-    <div class="row justify-center items-center" style="flex: 1 1 auto">
+    <div class="row justify-center items-center flex-auto">
       <QImg
         class="img"
         :src="`${ENV.IMAGE_URL}/${imgs[index].fileName}.${imgs[index].ext}`"
@@ -40,12 +45,16 @@
       </div>
     </div>
   </QCard>
+  <QDialog v-model="isCommentsOpen" maximized>
+    <GalleryImageComments :id="imgs[index]._id" />
+  </QDialog>
 </template>
 
 <script setup lang="ts">
 import LoaderWheel from '~/LoaderWheel.vue';
+import GalleryImageComments from './GalleryImageComments.vue';
 import type { Responses } from '@/types';
-import { onMounted, onUnmounted, nextTick } from 'vue';
+import { onMounted, onUnmounted, nextTick, ref } from 'vue';
 import { ImageService } from '@/api/services';
 import { useStore } from '@/stores';
 import { useVModel } from '@/hooks';
@@ -70,6 +79,7 @@ const store = useStore();
 const { t } = useI18n();
 const index = useVModel<number>('currentIndex');
 const imgs = useVModel<Responses.Images['images']>('images');
+const isCommentsOpen = ref(false);
 
 onMounted(() => document.addEventListener('keydown', changeImage));
 onUnmounted(() => document.removeEventListener('keydown', changeImage));
@@ -97,6 +107,10 @@ async function onNext() {
 function changeImage(event: KeyboardEvent) {
   if (event.key === 'ArrowLeft') onPrev();
   else if (event.key === 'ArrowRight') onNext();
+}
+
+function openComments() {
+  isCommentsOpen.value = !isCommentsOpen.value;
 }
 </script>
 
