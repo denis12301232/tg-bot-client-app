@@ -1,2 +1,7 @@
-export { default as AlertList } from './AlertList.vue';
-export { default as AlertMessage } from './AlertMessage.vue';
+import AlertList from './AlertList.vue';
+import AlertMessage from './AlertMessage.vue';
+
+export namespace Alert {
+  export const List = AlertList;
+  export const Message = AlertMessage;
+}

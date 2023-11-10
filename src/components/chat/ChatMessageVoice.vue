@@ -20,14 +20,11 @@
 
 <script setup lang="ts">
 import type { QLinearProgress } from 'quasar';
+import type { Props } from '@/types';
 import { ref, onMounted, onBeforeUnmount, watch } from 'vue';
 import { useAudioDuration, useGetTempUrl } from '@/hooks';
 
-interface Props {
-  filename: string;
-}
-
-const props = defineProps<Props>();
+const props = defineProps<Props.Chat.MessageVoice>();
 let audio: HTMLAudioElement | null = null;
 const { src, loading, getUrl } = useGetTempUrl(props.filename, 'audio/webm');
 const duration = ref(0);

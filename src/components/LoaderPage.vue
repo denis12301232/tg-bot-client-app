@@ -5,12 +5,9 @@
 </template>
 
 <script setup lang="ts">
-interface Props {
-  loading: boolean;
-  color?: string;
-}
+import type { Props } from '@/types';
 
-withDefaults(defineProps<Props>(), { color: '#3f51b5' });
+withDefaults(defineProps<Props.Common.LoaderPage>(), { color: '#3f51b5' });
 </script>
 
 <style lang="scss" module>

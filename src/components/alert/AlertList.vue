@@ -13,16 +13,12 @@
 </template>
 
 <script setup lang="ts">
+import type { IAlert, Props } from '@/types';
 import AlertMessage from './AlertMessage.vue';
-import type { IAlert } from '@/types';
 import { watch } from 'vue';
 import { useVModel } from '@/hooks';
 
-interface Props {
-  modelValue: IAlert[];
-}
-
-defineProps<Props>();
+defineProps<Props.Alert.List>();
 defineEmits<{
   'update:modelValue': [alerts: IAlert[]];
 }>();
@@ -52,9 +48,7 @@ function setIcon(type: IAlert['type']) {
 }
 
 function hideAlert() {
-  setTimeout(() => {
-    alerts.value.splice(0, 1);
-  }, 3000);
+  setTimeout(() => alerts.value.splice(0, 1), 3000);
 }
 
 function hideById(id: string) {

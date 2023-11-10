@@ -47,18 +47,14 @@
 </template>
 
 <script setup lang="ts">
+import type { Props } from '@/types';
 import type { QForm } from 'quasar';
 import { ref, watch } from 'vue';
 import { Validate } from '@/util';
 import { useVModel } from '@/hooks';
 import { useI18n } from 'vue-i18n';
 
-interface Props {
-  title: string;
-  tags: string[];
-}
-
-defineProps<Props>();
+defineProps<Props.Tasks.CreateFirstStep>();
 const emit = defineEmits<{
   'update:title': [title: string];
   'update:tags': [tags: string[]];

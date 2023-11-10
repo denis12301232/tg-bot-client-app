@@ -128,21 +128,15 @@
 <script setup lang="ts">
 import Tasks from '~/tasks';
 import type { QTable } from 'quasar';
-import type { ISubtask } from '@/types';
+import type { ISubtask, Props } from '@/types';
 import { ref, computed } from 'vue';
 import { useQuery, useVModel } from '@/hooks';
 import { TaskService } from '@/api/services';
 import { Util } from '@/util';
 import { useI18n } from 'vue-i18n';
 
-interface Props {
-  taskId: string;
-  subtasks: ISubtask[];
-}
-
-const props = defineProps<Props>();
+const props = defineProps<Props.Tasks.Subtask>();
 defineEmits<{ 'update:subtasks': [value: ISubtask[]] }>();
-
 const { t } = useI18n();
 const modal = ref(false);
 const selected = ref<ISubtask[]>([]);

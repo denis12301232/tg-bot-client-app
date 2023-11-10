@@ -21,7 +21,7 @@
 </template>
 
 <script setup lang="ts">
-import type { Responses } from '@/types';
+import type { Responses, Props} from '@/types';
 import UserAvatar from '~/UserAvatar.vue';
 import { onMounted, onUnmounted, watchEffect } from 'vue';
 import { storeToRefs } from 'pinia';
@@ -31,11 +31,9 @@ import { useQuery, useVModel } from '@/hooks';
 import { UserService } from '@/api/services';
 import { useRouter } from 'vue-router';
 
-interface Props {
-  modelValue: string;
-}
 
-defineProps<Props>();
+
+defineProps<Props.Chat.ListSearch>();
 const { t } = useI18n();
 const router = useRouter();
 const search = useVModel<string>();

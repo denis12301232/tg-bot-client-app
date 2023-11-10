@@ -138,7 +138,7 @@
 </template>
 
 <script setup lang="ts">
-import type { IMessage, Q } from '@/types';
+import type { IMessage, Q, Props } from '@/types';
 import type { QScrollArea } from 'quasar';
 import UserAvatar from '~/UserAvatar.vue';
 import { Message, MessageImage, MessageVoice, ModalImage } from '~/chat';
@@ -148,11 +148,7 @@ import { useStore, useSocketStore } from '@/stores';
 import { useI18n } from 'vue-i18n';
 import { copyText } from '@/util';
 
-interface Props {
-  type: 'dialog' | 'group';
-}
-
-defineProps<Props>();
+defineProps<Props.Chat.DialogMessages>();
 const LIMIT = 10;
 const { t } = useI18n();
 const socketStore = useSocketStore();
@@ -170,16 +166,15 @@ const verticalScroll = ref(1);
 
 watch(
   () => currentChat.value?.total,
-  async () => {
-    await nextTick();
-    setTimeout(() => scroll.value?.setScrollPercentage('vertical', 1));
+  () => {
+    nextTick().then(() => setTimeout(() => scroll.value?.setScrollPercentage('vertical', 1)));
   }
 );
 
 async function onLoad(index: number, done: (stop?: boolean | undefined) => void) {
   if (currentChat.value && currentChat.value.total > messages.value.length) {
     loading.value = true;
-    await socketStore.getChatMessages(currentChatId.value!, LIMIT);
+    socketStore.getChatMessages(currentChatId.value!, LIMIT);
     loading.value = false;
     return done();
   }

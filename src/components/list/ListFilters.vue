@@ -58,24 +58,12 @@
 </template>
 
 <script setup lang="ts">
+import type { Props } from '@/types';
 import { computed, watch } from 'vue';
 import { useVModel } from '@/hooks';
 import { useI18n } from 'vue-i18n';
 
-interface Props {
-  query: {
-    district: string;
-    street: string;
-    sector: string;
-    birth: {
-      min: number;
-      max: number;
-    };
-  };
-  criterias: ('district' | 'birth' | 'street' | 'sector')[];
-}
-
-const props = defineProps<Props>();
+const props = defineProps<Props.List.Filters>();
 defineEmits<{
   'update:query': [query: typeof props.query];
   'update:criterias': [critery: typeof props.criterias];

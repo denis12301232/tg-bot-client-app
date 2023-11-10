@@ -55,8 +55,8 @@ import { ChatService, UserService } from '@/api/services';
 import { useI18n } from 'vue-i18n';
 
 const { t } = useI18n();
-const alertStore = useAlertStore();
 const { chats, currentChatId } = storeToRefs(useSocketStore());
+const alertStore = useAlertStore();
 const search = ref('');
 const userToAdd = ref<IUser | null>(null);
 const { query: findUsers, data: users, loading: isUsersLoading } = useQuery(UserService.index);

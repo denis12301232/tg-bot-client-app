@@ -18,20 +18,14 @@
 </template>
 
 <script setup lang="ts">
+import type { Props } from '@/types';
 import { computed, ref } from 'vue';
 import { ENV } from '@/util';
 
-interface Props {
-  avatar?: string;
-  name?: string;
-  size?: string;
-  color?: string;
-}
-
-const props = withDefaults(defineProps<Props>(), { size: '45px', color: 'primary' });
+const props = withDefaults(defineProps<Props.Common.UserAvatar>(), { size: '45px', color: 'primary' });
 const loading = ref(!!props.avatar);
 const colorShow = computed(() => (props.avatar ? '' : props.color));
-
+            
 function onLoad() {
   loading.value = false;
 }

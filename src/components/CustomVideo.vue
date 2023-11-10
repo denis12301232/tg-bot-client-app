@@ -18,15 +18,10 @@
 </template>
 
 <script setup lang="ts">
+import type { Props } from '@/types';
 import { ref, reactive, watch, watchEffect, onMounted, onUnmounted } from 'vue';
 
-export interface Props extends /* @vue-ignore */ Partial<HTMLVideoElement> {
-  stream: MediaStream | null;
-  btns?: { fullscreen: boolean };
-  mute?: { audio: boolean; video: boolean };
-}
-
-const props = withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<Props.Common.CustomVid>(), {
   btns: () => ({ fullscreen: false }),
   mute: () => ({ audio: false, video: false }),
 });

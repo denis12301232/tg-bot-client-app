@@ -78,7 +78,7 @@
 </template>
 
 <script setup lang="ts">
-import type { IComment } from '@/types';
+import type { IComment, Props } from '@/types';
 import type { QInput, VueStyleProp } from 'quasar';
 import UserAvatar from '~/UserAvatar.vue';
 import EmojiPicker from '~/EmojiPicker.vue';
@@ -88,11 +88,7 @@ import { ImageService } from '@/api/services';
 import { useI18n } from 'vue-i18n';
 import { useStore } from '@/stores';
 
-interface Props {
-  id: string;
-}
-
-const props = defineProps<Props>();
+const props = defineProps<Props.Gallery.ImageComments>();
 const store = useStore();
 const { t, d } = useI18n();
 const { query: getComments, loading } = useQuery(ImageService.getComments, { onSuccess: onGetCommentsSuccess });

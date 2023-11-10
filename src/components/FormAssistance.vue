@@ -220,7 +220,7 @@
 </template>
 
 <script setup lang="ts">
-import type { Responses } from '@/types';
+import type { Responses, Props } from '@/types';
 import type { QForm } from 'quasar';
 import FormAssistanceGroup from '~/FormAssistanceGroup.vue';
 import { ref, watch } from 'vue';
@@ -228,14 +228,7 @@ import { useAssistanceFormOptions, useVModel } from '@/hooks';
 import { Rules } from '@/util';
 import { useI18n } from 'vue-i18n';
 
-interface Props {
-  modelValue: Omit<Responses.Assistance, '_id' | 'sector'>;
-  title: string;
-  loading: boolean;
-  reset: boolean;
-}
-
-const props = defineProps<Props>();
+const props = defineProps<Props.Common.FormAssistance>();
 const emit = defineEmits<{ submit: [] }>();
 const { t, messages, locale } = useI18n();
 const { districtOptions, kidsAgeOptions, yesNoOptions, getStreetOptions } = useAssistanceFormOptions();

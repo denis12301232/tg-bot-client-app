@@ -11,18 +11,14 @@
 </template>
 
 <script setup lang="ts">
+import type { Props } from '@/types';
 import SetAvatar from '~/SetAvatar.vue';
 import { ref, watch } from 'vue';
 import { useAlertStore, useStore } from '@/stores';
 import { useQuery } from '@/hooks';
 import { UserService } from '@/api/services';
 
-interface Props {
-  label: string;
-  successMsg: string;
-}
-
-const props = defineProps<Props>();
+const props = defineProps<Props.Account.SetAvatar>();
 const store = useStore();
 const alertStore = useAlertStore();
 const avatar = ref<File | null>(null);

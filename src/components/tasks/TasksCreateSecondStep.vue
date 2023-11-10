@@ -34,23 +34,18 @@
 </template>
 
 <script setup lang="ts">
+import type { Props } from '@/types';
 import type { QForm } from 'quasar';
 import { ref, watch } from 'vue';
 import { Validate } from '@/util';
 import { useVModel } from '@/hooks';
 import { useI18n } from 'vue-i18n';
 
-interface Props {
-  title: string;
-  description: string;
-  subtasks: { title: string; description: string }[];
-}
-
-defineProps<Props>();
+defineProps<Props.Tasks.CreateSecondStep>();
 defineEmits<{
   'update:title': [value: string];
   'update:description': [value: string];
-  'update:subtasks': [value: Props['subtasks'][0]];
+  'update:subtasks': [value: Props.Tasks.CreateSecondStep['subtasks'][0]];
 }>();
 
 const { t } = useI18n();
@@ -61,7 +56,7 @@ const title = useVModel<string>('title');
 // eslint-disable-next-line vue/no-dupe-keys
 const description = useVModel<string>('description');
 // eslint-disable-next-line vue/no-dupe-keys
-const subtasks = useVModel<Props['subtasks']>('subtasks');
+const subtasks = useVModel<Props.Tasks.CreateSecondStep['subtasks']>('subtasks');
 
 const rules = {
   title: [(v: string) => Validate.required(v) || t('tasks.create.second.form.fields.title.errors.required')],

@@ -78,7 +78,7 @@
 </template>
 
 <script setup lang="ts">
-import type { Extra } from '@/types';
+import type { Extra, Props } from '@/types';
 import UserAvatar from '~/UserAvatar.vue';
 import { computed } from 'vue';
 import { storeToRefs } from 'pinia';
@@ -87,11 +87,7 @@ import { ChatService } from '@/api/services';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 
-interface Props {
-  type: 'dialog' | 'group';
-}
-
-defineProps<Props>();
+defineProps<Props.Chat.DialogHeader>();
 const emit = defineEmits<{ modal: [name: Extra.Chat.ModalName] }>();
 const { t } = useI18n();
 const router = useRouter();
@@ -101,17 +97,19 @@ const companion = computed(() => currentChat.value?.companion);
 const typing = computed(() => currentChat.value?.typing);
 const isGroupAdmin = computed(() => currentChat.value?.group?.roles?.admin?.includes(user.value?._id || ''));
 
-async function deleteChat() {
-  await ChatService.destroy(currentChatId.value!);
-  chats.value.delete(currentChatId.value!);
-  router.push('/chat');
+function deleteChat() {
+  if (currentChatId.value) {
+    ChatService.destroy(currentChatId.value)
+      .then(() => chats.value.delete(currentChatId.value!))
+      .then(() => router.push('/chat'));
+  }
 }
 
-async function leaveGroup() {
+function leaveGroup() {
   if (currentChatId.value) {
-    await ChatService.destroy(currentChatId.value);
-    chats.value.delete(currentChatId.value);
-    router.push('/chat');
+    ChatService.destroy(currentChatId.value)
+      .then(() => chats.value.delete(currentChatId.value!))
+      .then(() => router.push('/chat'));
   }
 }
 </script>

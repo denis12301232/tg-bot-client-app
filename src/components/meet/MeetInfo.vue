@@ -18,15 +18,11 @@
 </template>
 
 <script setup lang="ts">
+import type { Props } from '@/types';
 import { copyText } from '@/util';
 import { useI18n } from 'vue-i18n';
 
-interface Props {
-  link: string;
-  title: string;
-}
-
-defineProps<Props>();
+defineProps<Props.Meet.Info>();
 
 const { t } = useI18n();
 </script>

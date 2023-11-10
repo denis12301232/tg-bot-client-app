@@ -32,18 +32,11 @@
 </template>
 
 <script setup lang="ts">
+import type { Props } from '@/types';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 
-interface Props {
-  text?: string;
-  read?: boolean;
-  time: Date | string;
-  sent?: boolean;
-  color?: string;
-}
-
-const props = withDefaults(defineProps<Props>(), { read: false, sent: false, color: '#1976d2' });
+const props = withDefaults(defineProps<Props.Chat.Message>(), { read: false, sent: false, color: '#1976d2' });
 const { d } = useI18n();
 const icon = computed(() => (props.read ? 'eva-done-all-outline' : 'eva-checkmark-outline'));
 </script>

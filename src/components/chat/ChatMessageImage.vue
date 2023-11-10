@@ -32,18 +32,13 @@
 </template>
 
 <script setup lang="ts">
+import type { Props } from '@/types';
 import LoaderWheel from '@/components/LoaderWheel.vue';
 import { ref, computed, onMounted } from 'vue';
 import { useGetTempUrl } from '@/hooks';
 import { useI18n } from 'vue-i18n';
 
-interface Props {
-  images: string[];
-  time: Date | string;
-  sent: boolean;
-}
-
-const props = defineProps<Props>();
+const props = defineProps<Props.Chat.MessageImage>();
 const emit = defineEmits<{ open: [link: string] }>();
 const { d } = useI18n();
 const imgs = ref(props.images.map((image) => useGetTempUrl(image, 'image/*')));

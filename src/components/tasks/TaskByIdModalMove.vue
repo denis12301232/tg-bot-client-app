@@ -82,19 +82,14 @@
 
 <script setup lang="ts">
 import type { QTable } from 'quasar';
-import type { ITask } from '@/types';
+import type { ITask, Props } from '@/types';
 import { ref, onMounted } from 'vue';
 import { useRequest, useQuery } from '@/hooks';
 import { TaskService } from '@/api/services';
 import { Util } from '@/util';
 import { useI18n } from 'vue-i18n';
 
-interface Props {
-  taskId: string;
-  subtaskId: string;
-}
-
-const props = defineProps<Props>();
+const props = defineProps<Props.Tasks.ModalMove>();
 const emit = defineEmits<{ move: [id: string] }>();
 const { t } = useI18n();
 const selected = ref<ITask[]>([]);

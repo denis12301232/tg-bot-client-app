@@ -54,8 +54,8 @@ import { useAlertStore, useSocketStore } from '@/stores';
 import { useI18n } from 'vue-i18n';
 
 const { t } = useI18n();
-const alertStore = useAlertStore();
 const { currentChat } = storeToRefs(useSocketStore());
+const alertStore = useAlertStore();
 const hasAdminRights = ref(currentChat.value?.group.roles.admin || []);
 const { query: updateGroupRoles, loading } = useQuery(ChatService.updateGroupRoles, { onSuccess, onError });
 const columns: QTable['columns'] = [

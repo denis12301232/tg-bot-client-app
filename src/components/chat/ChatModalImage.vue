@@ -6,11 +6,9 @@
 </template>
 
 <script setup lang="ts">
-interface Props {
-  src: string;
-}
+import type { Props } from '@/types';
 
-defineProps<Props>();
+defineProps<Props.Chat.ModalImage>();
 </script>
 
 <style module lang="scss">

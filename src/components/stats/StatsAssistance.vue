@@ -41,18 +41,14 @@
 </template>
 
 <script setup lang="ts">
+import type { Props } from '@/types';
 import { ref, onMounted, watch, computed, shallowRef, watchEffect } from 'vue';
 import { Chart, registerables, type ChartConfiguration, type ChartType, type ChartDataset } from 'chart.js';
 import { AssistanceService } from '@/api/services';
 import { useQuery } from '@/hooks';
 import { useI18n } from 'vue-i18n';
 
-interface Props {
-  label: string;
-  by: 'month' | 'year';
-}
-
-const props = defineProps<Props>();
+const props = defineProps<Props.Stats.Assistance>();
 const { t, messages, locale } = useI18n();
 const now = new Date();
 const chart = shallowRef<Chart | null>(null);

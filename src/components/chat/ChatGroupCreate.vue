@@ -65,16 +65,13 @@
 </template>
 
 <script setup lang="ts">
-import type { Responses } from '@/types';
+import type { Responses, Props } from '@/types';
 import SetAvatar from '~/SetAvatar.vue';
 import { ref, reactive, onMounted, onUnmounted } from 'vue';
 import { useStore, useSocketStore } from '@/stores';
 import { useI18n } from 'vue-i18n';
 
-const props = defineProps<{
-  onCloseModal: () => void;
-}>();
-
+const props = defineProps<Props.Chat.GroupCreate>();
 const { t } = useI18n();
 const store = useStore();
 const socketStore = useSocketStore();
@@ -89,7 +86,7 @@ function setStep(value: number) {
   step.value = value;
 }
 
-async function createGroup() {
+function createGroup() {
   socketStore.socket.emit('chat:create-group', {
     users: [store.user?._id || ''],
     about: group.about,

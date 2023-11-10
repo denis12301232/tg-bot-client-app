@@ -7,14 +7,10 @@
 </template>
 
 <script setup lang="ts">
+import type { Props } from '@/types';
 import { useI18n } from 'vue-i18n';
 
-interface Props {
-  code: number;
-  message: string;
-}
-
-defineProps<Props>();
+defineProps<Props.Common.TheError>();
 
 const { t } = useI18n();
 </script>

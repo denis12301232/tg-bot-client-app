@@ -49,19 +49,14 @@
 </template>
 
 <script setup lang="ts">
-import type { IAbonent, IUser } from '@/types';
+import type { Props, IUser } from '@/types';
 import type { QScrollArea } from 'quasar';
 import { computed, ref, watch } from 'vue';
 import { useStore } from '@/stores';
 import { WebRtcDto } from '@/api/dto';
 import { useI18n } from 'vue-i18n';
 
-interface Props {
-  abonents: Map<string, IAbonent>;
-  messages: { userId: string; msg: string }[];
-}
-
-const props = defineProps<Props>();
+const props = defineProps<Props.Meet.Chat>();
 const emit = defineEmits<{ 'my-msg': [msg: { userId: string; msg: string }] }>();
 const { t } = useI18n();
 const store = useStore();

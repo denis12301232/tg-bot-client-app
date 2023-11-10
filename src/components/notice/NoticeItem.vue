@@ -9,15 +9,13 @@
 </template>
 
 <script setup lang="ts">
-import type { INotice } from '@/types';
+import type { Props} from '@/types';
 import { onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 
-interface Props {
-  notice: INotice;
-}
 
-const props = defineProps<Props>();
+
+const props = defineProps<Props.Notice.Item>();
 const emit = defineEmits<{ hide: [id: string] }>();
 const { d } = useI18n();
 const timer = ref(0);

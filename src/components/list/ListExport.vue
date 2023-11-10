@@ -41,17 +41,14 @@
 </template>
 
 <script setup lang="ts">
+import type { Props } from '@/types';
 import { computed, ref } from 'vue';
 import { AssistanceService } from '@/api/services';
 import { useAlertStore } from '@/stores';
 import { useI18n } from 'vue-i18n';
 import { useQuery } from '@/hooks';
 
-interface Props {
-  ids: string[];
-}
-
-const props = defineProps<Props>();
+const props = defineProps<Props.List.Export>();
 const { t } = useI18n();
 const { addAlert } = useAlertStore();
 const { query, loading } = useQuery(createReport, { onSuccess, onError });

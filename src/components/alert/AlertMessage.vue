@@ -11,14 +11,9 @@
 </template>
 
 <script setup lang="ts">
-import type { IAlert } from '@/types';
+import type { Props } from '@/types';
 
-interface Props {
-  alert: IAlert;
-  icon: string;
-}
-
-defineProps<Props>();
+defineProps<Props.Alert.Message>();
 const emit = defineEmits<{ hideById: [id: string] }>();
 </script>
 

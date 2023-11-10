@@ -37,19 +37,14 @@
 </template>
 
 <script setup lang="ts">
+import type { Injected, Props } from '@/types';
 import LoaderWheel from '~/LoaderWheel.vue';
-import type { Injected } from '@/types';
 import { onMounted, inject } from 'vue';
 import { useStore } from '@/stores';
 import { ENV } from '@/util';
 import { useI18n } from 'vue-i18n';
 
-interface Props {
-  loading: boolean;
-  error: string;
-}
-
-const props = defineProps<Props>();
+const props = defineProps<Props.Gallery.ImageList>();
 const emit = defineEmits<{
   open: [index: number];
   request: [];

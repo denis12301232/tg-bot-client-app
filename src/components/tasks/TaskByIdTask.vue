@@ -48,16 +48,11 @@
 </template>
 
 <script setup lang="ts">
-import type { ITask } from '@/types';
+import type { Props } from '@/types';
 import { Util } from '@/util';
 import { useI18n } from 'vue-i18n';
 
-interface Props {
-  task?: ITask;
-}
-
-defineProps<Props>();
-
+defineProps<Props.Tasks.Task>();
 const { t, d } = useI18n();
 </script>
 

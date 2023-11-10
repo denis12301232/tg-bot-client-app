@@ -101,9 +101,9 @@ import { QIcon } from 'quasar';
 import { useI18n } from 'vue-i18n';
 import { useAlertStore } from '@/stores';
 
-const formData = new FormData();
-const alertStore = useAlertStore();
 const { t, locale, messages } = useI18n();
+const alertStore = useAlertStore();
+const formData = new FormData();
 const file = ref<File | null>(null);
 const help = ref(false);
 const lang = ref('uk');

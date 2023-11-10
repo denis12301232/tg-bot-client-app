@@ -7,18 +7,14 @@
 </template>
 
 <script setup lang="ts">
-import type { INotice } from '@/types';
+import type { INotice, Props } from '@/types';
 import NoticeItem from './NoticeItem.vue';
 import { computed } from 'vue';
 import { useVModel } from '@/hooks';
 import { NoticeService } from '@/api/services';
 
-interface Props {
-  modelValue: Map<string, INotice>;
-}
-
-defineProps<Props>();
-defineEmits<{ 'update:modelValue': [value: Map<string,INotice>] }>();
+defineProps<Props.Notice.List>();
+defineEmits<{ 'update:modelValue': [value: Map<string, INotice>] }>();
 const notices = useVModel<Map<string, INotice>>();
 const noticesShow = computed(() =>
   Array.from(notices.value).reduce<INotice[]>((arr, [, notice]) => (notice.show ? [...arr, notice] : arr), [])

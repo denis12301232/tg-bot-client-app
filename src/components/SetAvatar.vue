@@ -23,18 +23,16 @@
 </template>
 
 <script setup lang="ts">
+import type { Props } from '@/types';
 import { ref } from 'vue';
 import { ENV } from '@/util';
 
-interface Props {
-  modelValue: File | null;
-  size?: string;
-  src?: string;
-  color?: string;
-  accept?: string;
-}
-
-const props = withDefaults(defineProps<Props>(), { size: '45px', color: 'blue-grey-3', src: '', accept: 'image/*' });
+const props = withDefaults(defineProps<Props.Common.SetAvatar>(), {
+  size: '45px',
+  color: 'blue-grey-3',
+  src: '',
+  accept: 'image/*',
+});
 const emit = defineEmits<{ 'update:modelValue': [file: File | null] }>();
 const fileRef = ref<HTMLInputElement | null>(null);
 const avatarTempUrl = ref(props.src && ENV.IMAGE_URL + '/' + props.src);

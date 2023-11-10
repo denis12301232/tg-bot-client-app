@@ -30,8 +30,8 @@ import { ToolsService } from '@/api/services';
 import { useI18n } from 'vue-i18n';
 import { useAlertStore } from '@/stores';
 
-const alertStore = useAlertStore();
 const { t } = useI18n();
+const alertStore = useAlertStore();
 const google = reactive({
   serviceUser: '',
   servicePrivateKey: '',

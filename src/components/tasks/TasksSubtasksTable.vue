@@ -27,7 +27,7 @@
         </QTooltip>
       </QBtn>
     </template>
-    <template #body="scope: { row: Props['subtasks'][0], rowIndex: number, selected: boolean }">
+    <template #body="scope: { row: Props.Tasks.SubtaskTable['subtasks'][0], rowIndex: number, selected: boolean }">
       <QTr :key="scope.rowIndex">
         <QTd>
           <QCheckbox v-model="scope.selected" />
@@ -40,25 +40,22 @@
 </template>
 
 <script setup lang="ts">
+import type { Props } from '@/types';
 import type { QTable } from 'quasar';
 import { ref, computed } from 'vue';
 import { useVModel } from '@/hooks';
 import { useI18n } from 'vue-i18n';
 
-interface Props {
-  subtasks: { title: string; description: string }[];
-}
-
-defineProps<Props>();
+defineProps<Props.Tasks.SubtaskTable>();
 defineEmits<{
-  'update:subtasks': [value: Props['subtasks']];
+  'update:subtasks': [value: Props.Tasks.SubtaskTable['subtasks']];
 }>();
 
 const { t } = useI18n();
-const select = ref<(Props['subtasks'][0] & { id: number })[]>([]);
+const select = ref<(Props.Tasks.SubtaskTable['subtasks'][0] & { id: number })[]>([]);
 const pagination = ref({ rowsPerPage: 0 });
 // eslint-disable-next-line vue/no-dupe-keys
-const subtasks = useVModel<Props['subtasks']>('subtasks');
+const subtasks = useVModel<Props.Tasks.SubtaskTable['subtasks']>('subtasks');
 const subtasksWithId = computed(() => subtasks.value.map((item, index) => Object.assign({ id: index }, item)));
 const columns = computed<QTable['columns']>(() => [
   {

@@ -30,14 +30,12 @@
 </template>
 
 <script setup lang="ts">
-import type { Extra } from '@/types';
+import type { Extra, Props } from '@/types';
 import { useI18n } from 'vue-i18n';
 
-interface Props {
-  visible: boolean;
-}
 
-defineProps<Props>();
+
+defineProps<Props.Chat.LeftMenu>();
 const emit = defineEmits<{ modal: [name: Extra.Chat.ModalName] }>();
 const { t } = useI18n();
 </script>

@@ -1,6 +1,6 @@
 <template>
   <BannerOffline />
-  <AlertList v-model="alerts" />
+  <Alert.List v-model="alerts" />
   <NoticeList v-model="alertStore.notices" />
   <LoaderPage :loading="store.isPageLoading" />
   <component :is="$route.meta.layoutComponent" :="$route.meta.layoutProps">
@@ -17,7 +17,7 @@
 
 <script setup lang="ts">
 import type { IMessage, ITask, INotice } from './types';
-import { AlertList } from './components/alert';
+import { Alert } from './components/alert';
 import NoticeList from '~/notice/NoticeList.vue';
 import LoaderPage from '~/LoaderPage.vue';
 import BannerOffline from '~/BannerOffline.vue';

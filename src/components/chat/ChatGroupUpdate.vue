@@ -38,8 +38,8 @@ import { ChatService } from '@/api/services';
 import { useI18n } from 'vue-i18n';
 
 const { t } = useI18n();
-const alertStore = useAlertStore();
 const { currentChat } = storeToRefs(useSocketStore());
+const alertStore = useAlertStore();
 const settings = reactive({
   avatar: null as File | null,
   title: currentChat.value?.group.title || '',

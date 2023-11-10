@@ -51,9 +51,9 @@
 </template>
 
 <script setup lang="ts">
+import type { Responses, Props } from '@/types';
 import LoaderWheel from '~/LoaderWheel.vue';
 import GalleryImageComments from './GalleryImageComments.vue';
-import type { Responses } from '@/types';
 import { onMounted, onUnmounted, nextTick, ref } from 'vue';
 import { ImageService } from '@/api/services';
 import { useStore } from '@/stores';
@@ -61,13 +61,7 @@ import { useVModel } from '@/hooks';
 import { ENV } from '@/util';
 import { useI18n } from 'vue-i18n';
 
-const props = defineProps<{
-  currentIndex: number;
-  total: number;
-  images: Responses.Images['images'];
-  loading: boolean;
-}>();
-
+const props = defineProps<Props.Gallery.ImageFull>();
 const emit = defineEmits<{
   next: [];
   prev: [];

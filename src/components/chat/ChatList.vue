@@ -69,9 +69,9 @@ import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 
 const { t, d } = useI18n();
-const router = useRouter();
 const { user, currentTheme } = storeToRefs(useStore());
 const { currentChatId, sortedChats } = storeToRefs(useSocketStore());
+const router = useRouter();
 
 function showLastMessageText(msg: IMessage | undefined) {
   if (msg?.text) return msg.text;

@@ -6,12 +6,9 @@
 </template>
 
 <script setup lang="ts">
-interface Props {
-  title: string;
-  error?: boolean;
-}
+import type { Props } from '@/types';
 
-withDefaults(defineProps<Props>(), { error: false });
+withDefaults(defineProps<Props.Common.FormAssistanceGroup>(), { error: false });
 </script>
 
 <style lang="scss" module>

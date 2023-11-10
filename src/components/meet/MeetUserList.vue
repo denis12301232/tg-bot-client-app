@@ -51,7 +51,7 @@
 </template>
 
 <script setup lang="ts">
-import type { IAbonent } from '@/types';
+import type { Props } from '@/types';
 import UserAvatar from '~/UserAvatar.vue';
 import { computed, ref, watch } from 'vue';
 import { useStore } from '@/stores';
@@ -60,13 +60,9 @@ import { useQuery } from '@/hooks';
 import { UserService, MeetService } from '@/api/services';
 import { useRoute } from 'vue-router';
 
-interface Props {
-  abonents: Map<string, IAbonent>;
-}
-
-const props = defineProps<Props>();
-const route = useRoute();
+const props = defineProps<Props.Meet.UserList>();
 const { t } = useI18n();
+const route = useRoute();
 const store = useStore();
 const modal = ref(false);
 const query = ref('');
