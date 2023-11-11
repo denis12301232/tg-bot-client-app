@@ -426,7 +426,8 @@
     "title": "Comments",
     "messages": {
       "likes": "{n} likes | {n} like | {n} likes",
-      "input": "Leave comment"
+      "input": "Leave comment",
+      "noComments": "No comments yet"
     }
   },
   "tasks": {

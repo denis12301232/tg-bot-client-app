@@ -167,7 +167,7 @@ const verticalScroll = ref(1);
 watch(
   () => currentChat.value?.total,
   () => {
-    nextTick().then(() => setTimeout(() => scroll.value?.setScrollPercentage('vertical', 1)));
+    nextTick(() => setTimeout(() => scroll.value?.setScrollPercentage('vertical', 1)));
   }
 );
 
@@ -244,4 +244,3 @@ function onScroll(info: Q.ScrollEvent) {
   background-color: $grey-10;
 }
 </style>
-@/components/chats

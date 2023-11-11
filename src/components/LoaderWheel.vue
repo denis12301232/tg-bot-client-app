@@ -5,7 +5,7 @@
 <script setup lang="ts">
 import type { Props } from '@/types';
 
-withDefaults(defineProps<Props.Common.LoaderWheel>(), { duration: 3 });
+withDefaults(defineProps<Props.Common.LoaderWheel>(), { duration: 3});
 </script>
 
 <style lang="scss" module>

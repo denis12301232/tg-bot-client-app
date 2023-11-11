@@ -11,7 +11,7 @@
         @click.stop="
           type === 'group'
             ? emit('modal', 'modal:group-info')
-            : router.push({ name: 'userId', params: { id: companion?._id } })
+            : router.push({ name: 'users-id', params: { id: companion?._id } })
         "
       />
       <div>
@@ -90,9 +90,9 @@ import { useRouter } from 'vue-router';
 defineProps<Props.Chat.DialogHeader>();
 const emit = defineEmits<{ modal: [name: Extra.Chat.ModalName] }>();
 const { t } = useI18n();
-const router = useRouter();
 const { user } = storeToRefs(useStore());
 const { chats, currentChatId, currentChat } = storeToRefs(useSocketStore());
+const router = useRouter();
 const companion = computed(() => currentChat.value?.companion);
 const typing = computed(() => currentChat.value?.typing);
 const isGroupAdmin = computed(() => currentChat.value?.group?.roles?.admin?.includes(user.value?._id || ''));

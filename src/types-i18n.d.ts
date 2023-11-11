@@ -431,6 +431,7 @@ declare module 'vue-i18n' {
       messages: {
         likes: string;
         input: string;
+        noComments: string;
       }
     };
     tasks: {

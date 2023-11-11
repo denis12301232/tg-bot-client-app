@@ -8,3 +8,4 @@ export { default as ChatService } from './ChatService';
 export { default as BotService } from './BotService';
 export { default as UserService } from './UserService';
 export { default as NoticeService } from './NoticeService';
+export { default as CommentService } from './CommentService';

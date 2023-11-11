@@ -11,14 +11,25 @@
       :content-active-style="style"
     >
       <QCard class="full-width" style="max-width: 600px">
-        <QIntersection v-for="comment of comments" :key="comment._id" transition="scale" once @visibility="onVisible">
+        <QCardSection v-if="!comments.length" class="row justify-center text-center text-subtitle2">
+          <LoaderWheel v-if="loading" size="30px" color="primary" />
+          <span v-else>{{ t('imageComments.messages.noComments') }}</span>
+        </QCardSection>
+        <QIntersection
+          v-else
+          v-for="comment of comments"
+          :key="comment._id"
+          transition="scale"
+          once
+          @visibility="onVisible"
+        >
           <QItem>
             <QItemSection avatar>
               <UserAvatar :avatar="comment.user.avatar" :name="comment.user.name" />
             </QItemSection>
             <QItemSection>
               <QItemLabel caption lines="2">
-                <span class="text-subtitle2 text-black">{{ comment.user.login }}</span>
+                <span class="text-subtitle2 text-primary">{{ comment.user.login }}</span>
                 {{ comment.text }}
               </QItemLabel>
               <QItemLabel caption>
@@ -69,7 +80,7 @@
             icon="eva-paper-plane-outline"
             style="transform: rotate(41deg)"
             :disable="!comment.length"
-            @click="saveComment(id, comment)"
+            @click="saveComment({ mediaId: id, text: comment })"
           />
         </template>
       </QInput>
@@ -80,19 +91,20 @@
 <script setup lang="ts">
 import type { IComment, Props } from '@/types';
 import type { QInput, VueStyleProp } from 'quasar';
+import LoaderWheel from '~/LoaderWheel.vue';
 import UserAvatar from '~/UserAvatar.vue';
 import EmojiPicker from '~/EmojiPicker.vue';
 import { onMounted, ref, computed } from 'vue';
 import { useQuery } from '@/hooks';
-import { ImageService } from '@/api/services';
+import { CommentService } from '@/api/services';
 import { useI18n } from 'vue-i18n';
 import { useStore } from '@/stores';
 
 const props = defineProps<Props.Gallery.ImageComments>();
 const store = useStore();
 const { t, d } = useI18n();
-const { query: getComments, loading } = useQuery(ImageService.getComments, { onSuccess: onGetCommentsSuccess });
-const { query: saveComment } = useQuery(ImageService.saveComment, { onFinally, onSuccess });
+const { query: getComments, loading } = useQuery(CommentService.index, { onSuccess: onGetCommentsSuccess });
+const { query: saveComment } = useQuery(CommentService.store, { onFinally, onSuccess });
 const inputRef = ref<QInput | null>(null);
 const comment = ref('');
 const comments = ref<IComment[]>([]);
@@ -106,18 +118,18 @@ const style: VueStyleProp = {
   alignItems: 'center',
 };
 
-onMounted(() => getComments(props.id, { skip: skip.value, limit: 15, descending: false, sort: 'createdAt' }));
+onMounted(() => getComments({ mediaId: props.id, skip: skip.value, limit: 15, descending: false, sort: 'createdAt' }));
 
 function onFinally() {
   comment.value = '';
 }
 
-function onGetCommentsSuccess(data: Awaited<ReturnType<typeof ImageService.getComments>>) {
+function onGetCommentsSuccess(data: Awaited<ReturnType<typeof CommentService.index>>) {
   comments.value = comments.value.concat(data.comments);
   total.value = data.count;
 }
 
-function onSuccess(comment: Awaited<ReturnType<typeof ImageService.saveComment>>) {
+function onSuccess(comment: Awaited<ReturnType<typeof CommentService.store>>) {
   comments.value.push({ ...comment, user: store.user! });
   total.value++;
 }
@@ -126,7 +138,7 @@ function onVisible() {
   if (total.value === comments.value.length || loading.value) {
     return;
   }
-  getComments(props.id, { skip: skip.value, limit: 15, descending: false, sort: 'createdAt' });
+  getComments({ mediaId: props.id, skip: skip.value, limit: 15, descending: false, sort: 'createdAt' });
 }
 
 function likeComment(id: string) {
@@ -135,7 +147,7 @@ function likeComment(id: string) {
     ? (comment.reactions = comment.reactions.filter((item) => item !== store.user?._id))
     : comment?.reactions.push(store.user?._id || '');
 
-  ImageService.updateComment(id, { reactions: comment?.reactions || [] });
+  CommentService.update(id, { reactions: comment?.reactions || [] });
 }
 
 function onPickEmoji(emoji: string) {
@@ -146,6 +158,6 @@ function onKeyup() {
   if (!comment.value) {
     return;
   }
-  saveComment(props.id, comment.value);
+  saveComment({ mediaId: props.id, text: comment.value });
 }
 </script>
